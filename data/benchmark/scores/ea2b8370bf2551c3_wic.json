@@ -1,0 +1,44 @@
+{
+ "judged_game_quality": 39.9,
+ "judged_sections": {
+  "Visuals": 40.5,
+  "Animation": 23.0,
+  "Combat feel": 60.5,
+  "Story presentation": 12.0,
+  "UI polish": 55.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "frames": 62,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78",
+   "game: a new game did not open the class selection screen"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together and is recognisable. It has textured brick and stone, cobbled roads, Gothic church geometry, bikes, railings, trees and market stalls, but lighting is flat with only weak soft shadows, no visible ambient occlusion and little atmospheric depth. Characters are very primitive: the walking player is a blocky figure with stick legs, the wizards are simple cone-robed shapes and the enemies are low-detail. The market stall goods are flat coloured blocks and many building surfaces are plain, so it reads as an early prototype that is only a little past the 40 anchor."
+   },
+   "Animation": {
+    "all": "The walking character looks almost the same in all four exploration frames: a stiff, blocky figure with straight legs and no visible stride or arm swing. In combat, the robed wizards stand in a static cone-shaped pose while effects, projectiles and damage numbers carry the action, with no visible casting wind-ups, hit reactions or secondary motion. Enemies look like rigid floating or hovering props with no readable attack or death animations, and nothing in the environment moves (the trees, crowds and market stalls are all still)."
+   },
+   "Combat feel": {
+    "hexweaver": "The rubric's 60 tier is clearly met. Frames show damage numbers and crit popups, a ground telegraph under the boss, and a named boss with a phased health bar and an 'enraged' banner. Loot has rarity-coloured labels and a legendary drop, and six distinct spells appear on the hotbar. The biggest gaps: the boss dies by 15 s, and the second half of the clip is mostly empty streets with loot labels everywhere. Casting leans on one ability (60 of 81 casts are hex_dart), there is no visible hit-stop, knockback or crowd control, and many floating labels clutter the screen. Only one class is shown, so differences between classes can't be judged.",
+    "pyromancer": "There's a lot of working feedback here. Six spells are used, crit damage numbers show up, and named enemy attacks appear as telegraphs (Belfry Drop, Peal of Shatter). The boss has three phases with on-screen phase and enrage banners, and loot drops come with rarity-coloured labels and tooltips, so this meets the 60 anchor. The fight leans heavily on one spell, though: ember_bolt is 76 of the 96 casts. Spell effects are mostly soft glows and blobs without clear shapes, there's no visible hit-stop, knockback or crowd control, and fights in the second half are sparse, sometimes with no enemies nearby. That keeps it well short of the 80 anchor.",
+    "stormcaller": "The fight shows working, readable combat. There are six distinct spells with cooldowns, floating damage numbers including CRIT, and a Bellwarden boss with a phase bar and Phase II and 'enraged' banners. Loot drops come with rarity-coloured beams and labels, and the event log shows a busy, varied fight with plenty of sound. The biggest gaps are weak impact: there's no visible hit-stop, screen shake or knockback, the spell effects are generic blue circles and glows, and enemies are small and their attacks aren't clearly telegraphed. About half the frames have no enemies at all, and only one class is shown here, so I can't credit differences between classes.",
+    "warden": "The fight has the core features of the 60 anchor. There are clear floating damage numbers including CRIT callouts, a named boss with a segmented phase bar and a 'Phase II' banner, rarity-coloured loot beams and pickup cards, six abilities on cooldown, and enemies that wind up before attacking. Impact and readability are only middling: damage numbers overlap into garbled strings ('32149'), the granite-skin bubble often hides the player, frame 1 is cluttered with VFX, and pebble_shot makes up 68 of the 89 casts. There's no visible hit-stop, knockback or screen feedback, and only one class is shown, so differences between classes can't be judged."
+   },
+   "Story presentation": {
+    "all": "The only story content is a single plain-text toast, \"You walk the path of the Pyromancer\". The player is attacked by an enemy right away, with no setup. There is no dialogue, no named characters, no quest log or objective tracker, and no visible quest markers, so the premise of wizards in a real city comes through only in the setting."
+   },
+   "UI polish": {
+    "all": "The HUD and menus share one dark-panel serif style. It includes health and mana bars, a numbered spell bar with readable cooldown numbers, a boss bar with a name, loot pickups with rarity colours, and a minimap. The class selection and talent screens are clear but plain and text-heavy. The inventory is a bare text list with no item icons, and the talent screen is mostly empty. During combat the loot popups, floating labels and overlapping banners (e.g. 'Vanquished' over the market) clutter the screen and get cut off at the edges, and there is little visible craft beyond flat panels."
+   }
+  }
+ }
+}

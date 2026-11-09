@@ -109,8 +109,21 @@ async function sceneExplore() {
     await settle(page);
     await page.evaluate(() => { window.__rafHold = true; });
     await gate(page);
+    // keep the fixed yaw if it has >= 20 m of walkable ground ahead, else the nearest direction that does (so a new
+    // wall or a shifted spawn does not turn the frame into a close-up of masonry); the yaw used goes in the label
+    const yaw = await page.evaluate(pref => {
+      const P = window.__p, W = window.__world, free = a => { let z = P.z, d = 0;
+        for (; d < 40; d += 1) { const nz = W.standAt(P.x - Math.sin(a) * (d + 1), P.y + Math.cos(a) * (d + 1), z); if (nz == null) break; z = nz; }
+        // and nothing rendered (facades without collision, screens, railings) within 20 m at eye height
+        const T = window.__THREE, rc = new T.Raycaster(new T.Vector3(P.x, P.z + 1.65, -P.y), new T.Vector3(-Math.sin(a), 0, -Math.cos(a)), 0.3, 20);
+        const hit = rc.intersectObjects(window.__scene.children, true).find(h => h.object.visible !== false && !h.object.isSprite);
+        return hit ? Math.min(d, hit.distance) : d; };
+      for (let k = 0; k <= 16; k++) for (const sgn of [1, -1]) { const a = pref + sgn * k * Math.PI / 16; if (free(a) >= 20) return a; }
+      return pref;
+    }, s.yaw);
+    if (Math.abs(yaw - s.yaw) > 1e-6) manifest.errors.push(`note: explore ${s.name} yaw ${s.yaw} blocked, used ${yaw.toFixed(2)}`);
     for (const view of [1, 3]) {
-      await page.evaluate(([yaw, view]) => { const P = window.__p; P.view = view; P.yaw = yaw; P.pitch = view === 3 ? -0.15 : 0; }, [s.yaw, view]);
+      await page.evaluate(([yaw, view]) => { const P = window.__p; P.view = view; P.yaw = yaw; P.pitch = view === 3 ? -0.15 : 0; }, [yaw, view]);
       await step(page, 1.2, ['KeyW']);
       await shot(page, 'explore', `spot${i + 1}_${view === 1 ? 'fp' : 'tp'}.jpg`, `${s.name}, ${view === 1 ? 'first person' : 'third person'}, walking`);
     }
