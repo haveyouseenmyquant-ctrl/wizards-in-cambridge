@@ -1,0 +1,44 @@
+{
+ "judged_game_quality": 40.8,
+ "judged_sections": {
+  "Visuals": 44.0,
+  "Animation": 23.0,
+  "Combat feel": 61.5,
+  "Story presentation": 10.0,
+  "UI polish": 55.5
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "frames": 62,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78",
+   "game: a new game did not open the class selection screen"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city looks coherent and easy to recognise. Building facades have textures and window detail, there are props like bikes, railings, bollards, trees and market stalls, the brick and paving materials are believable, and the skybox is reasonable. Lighting is flat and even, though: shadows are weak or missing and I can't see ambient occlusion or atmospheric depth. Geometry is low-detail and boxy (stalls are simple slabs, some walls are plain flat panels), and the characters are crude: the explorer is a stick-limbed capsule figure and the wizards are simple cone-robed shapes, with blob-like enemies and VFX made of flat spheres. That puts it well short of the 60 anchor."
+   },
+   "Animation": {
+    "all": "The walking character is a blocky figure with stick legs. The legs are slightly apart in some frames, but the arms are fixed and the pose is close to the same everywhere, which suggests at most a crude leg swing. In combat the wizards are cone-shaped robes with no visible limb or cast poses, so attacks show up only as projectiles and effects. The golem-like enemies and the bell boss look like rigid models, with no visible wind-ups, hit reactions, death animations, secondary motion or environmental motion such as foliage, crowds or traffic."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show combat that clearly works. There are crit-styled floating damage numbers, several distinct spell effects (purple ground swaths, wisps, a violet pillar), red ground telegraphs and summoning circles, and a phased boss with 'enraged' and 'Vanquished' banners. Loot comes in rarity tiers, kills come thick and fast (34), and 910 sound voices were triggered. The weak points: VFX are often cluttered, bright blobs that hide the targets, there's no visible hit-stop, knockback or screen shake, and enemies cluster loosely with little sign of formations. The player barely ever gets threatened (6 hits, never below full HP for long), and with only one class recorded, class differences can't be shown.",
+    "pyromancer": "The frames show readable combat feedback: damage numbers with crit tags, a named boss with a phased health bar plus 'Phase II', 'enraged' and 'Vanquished' banners, ground telegraphs, rarity-coloured loot beams and cards, and a varied enemy roster, all backed by dense casts, hits and sound in the log. Spell use is dominated by ember_bolt (83 of 102 casts), so the variety visible in play is limited. There is no visible hit-stop, knockback or crowd control, VFX are often muddy blobs against a cluttered market, and only one class is shown, so differences between classes can't be judged.",
+    "stormcaller": "The first 17 s have readable combat: a boss with a health bar, phase banners and an 'enraged' state, red telegraph zones under the boss, glyph-circle AoE effects, crit numbers, rarity-coloured loot beams and tooltips, plus 6 spells and a busy event log of hits, crits, kills and sound. Damage takes over half the clip, though: from frame 5 on there are almost no enemies, and the camera wanders empty streets and ends up staring into a wall. Spark Lance makes up 57 of the 81 casts, and no frame shows hit-stop, knockback or crowd control changing a fight.",
+    "warden": "The frames show real spell combat with several distinct warden spells: a granite-skin shield bubble, spike bursts from the quake stomp, a ground ring from the boulder leap and the monolith pillar. They also show floating damage numbers with crit callouts, a three-phase boss with a named telegraphed attack and red ground rings, and loot beams with rarity-coloured labels and stat cards, which together meet the 60 anchor. Holding it back: pebble_shot makes up 72 of the 95 casts, so play is repetitive. Visuals are heavy with simple primitive shapes, and frames are cluttered with labels, which hurts readability. There is no visible evidence of hit-stop, knockback or crowd control changing fights, and only one class is shown, so class differences can't be judged."
+   },
+   "Story presentation": {
+    "all": "The only story content is one line of flavour text ('You walk the path of the Pyromancer') and a class label. There's a minimap with markers and a real-city setting, but no dialogue, named characters, quest log or objective text. Within 3 seconds the player is being hit by an enemy, with no framing or setup. That puts it below the plain-text 20 anchor."
+   },
+   "UI polish": {
+    "all": "The UI holds together as one style: serif headers on dark panels, matching health and mana bars, a numbered spell bar with icons and cooldown numbers, a boss bar, rarity-coloured loot callouts and a minimap. The class select and talent screen are clear but plain text panels with almost no art, and the inventory is a text list with no item icons or real tooltips. In combat the screen gets cluttered with overlapping loot popups, name labels and 'Vanquished' banners over the action, and on the class screen debug-like text leaks through the panels."
+   }
+  }
+ }
+}

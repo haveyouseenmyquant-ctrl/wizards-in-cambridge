@@ -21,5 +21,6 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   overlapping damage numbers and labels.
 - Game bug found (sent to Gameplay): a new game never opens the class picker (classes.js stores the default class
   before 'ready'). The recorder opens it through game.hud.openPick() and logs the bug.
+- Live snapshot 36368c4767036e1c (what measure.sh reads): 40.8 (V 44, Anim 23, Combat 61.5, Story 10, UI 55.5).
 - service.sh (new): scores each new build hash with judge, playtest, quest bot and perf, one at a time, skipped while
   a session is active; harness-vs-game failures logged to data/derived/wic_harness_log.jsonl.
