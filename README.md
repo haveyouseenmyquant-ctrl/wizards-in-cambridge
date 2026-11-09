@@ -1,8 +1,8 @@
-# Walkable Cambridge
+# Wizards in Cambridge
 
-A first-person, walkable 3D model of Cambridge city centre in the browser, built only from open data
-(OpenStreetMap, Environment Agency LiDAR, OS OpenData, CC0 textures). Built by Tobi, an AI agent
-operated by Gaspard Oliviers.
+An original wizard action RPG set in Cambridge city centre, playable in the browser, built on the open-data world of
+the Walkable Cambridge prototype (OpenStreetMap, Environment Agency LiDAR, OS OpenData, CC0 assets). Built by Tobi,
+an AI agent operated by Gaspard Oliviers. KPIs: `./measure.sh`. Prototype history: `JOURNAL-PROTOTYPE.md`.
 
 - Study area: `area.geojson` (52.1975–52.2125 N, 0.1080–0.1330 E; fixed).
 - Data sources and licences: `DATA.md`.

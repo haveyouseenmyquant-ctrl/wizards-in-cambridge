@@ -1,76 +1,26 @@
 #!/bin/bash
-# Prints one JSON object of KPI readings. Measures the published site if SITE_URL exists
-# (one line: the GitHub Pages URL), otherwise the local build in site/.
-# Rules: FORMAT.md. Targets (denominators) come from the fixed OSM extract via scripts/osm_targets.py.
-# load_seconds / site_errors come from service.sh's hourly headless-Chrome run (60 s walk), if under 3 h old.
+# Wizards in Cambridge KPIs: prints one JSON object, reading only cached per-build results (fast).
+# Current build = the published snapshot data/derived/live_site if present (written by publish.sh), else site/.
+# Contract for the scoring scripts (owned by the teams, run by publish.sh / service.sh):
+#   data/benchmark/scores/<BUILD_HASH>_wic.json   any of the KPI keys below, measured on that exact build
+#   data/derived/browser_kpi.json                 {"hash", "result": {"fps_median", "load_seconds"}} (prototype harness)
+# A KPI not measured on the current build prints 0.
 cd "$(dirname "$0")"
 PY=.venv/bin/python
-[ -f data/derived/osm_targets.json ] || $PY -I scripts/osm_targets.py >/dev/null 2>&1
-SRC=site
-[ -s SITE_URL ] && SRC=$(head -n1 SITE_URL | tr -d '[:space:]')
-export SRC
-export BUILD_HASH=$($PY -I scripts/build_hash.py "$SRC" 2>/dev/null)
-export GAME_HASH=$($PY -I scripts/build_hash.py "$SRC" --game 2>/dev/null)
-# kpi.py reads every tile (~25-50 s); its result depends only on the build, so cache it per build hash.
-KC=data/derived/kpi_cache_$BUILD_HASH.json
-if [ -n "$BUILD_HASH" ] && [ -s "$KC" ]; then cat "$KC"; else
-  K=$($PY -I scripts/kpi.py "$SRC" 2>/dev/null); echo "$K"
-  [ -n "$BUILD_HASH" ] && echo "$K" | grep -q walkable_coverage_pct && ! echo "$K" | grep -q fetch_failures && echo "$K" > "$KC"
-fi | $PY -I -c '
-import json, os, sys, time
-out = json.loads(sys.stdin.read())
-p = "data/derived/browser_kpi.json"
-if os.path.exists(p):
-    b = json.load(open(p))
-    # session 72: or measured on this very build (service.sh runs it once per new live hash)
-    if time.time() - b["ts"] < 3 * 3600 or (b.get("hash") and b.get("hash") == os.environ.get("BUILD_HASH")):
-        out.update(b["result"])
-# photo_match_score / judged_realism / visual_quality: cached per build hash by scripts/bench.sh (benchmark renders + DINOv2)
-# roof_match_pct: cached per build hash by scripts/roof_match.py (reads every GLB; run by publish.sh and bench.sh)
-h = os.environ.get("BUILD_HASH", "")
-for k, suf in (("judged_realism", "_judge"), ("visual_quality", "_quality"), ("roof_match_pct", "_roof"),
-               ("market_square_realism", "_msjudge")):
-    f = "data/benchmark/scores/%s%s.json" % (h, suf)
-    if h and os.path.exists(f):
-        out[k] = json.load(open(f))[k]
-# facade_geometry_match_pct / painted_detail_pct: Market Square zone, from the local build (= the live one after publish.sh)
-try:
-    import subprocess
-    # session 58: read the published snapshot when it is the live build (site/ may hold unpublished session work)
-    zs = "site"
-    if os.path.isdir("data/derived/live_site") and subprocess.run([".venv/bin/python", "-I", "scripts/build_hash.py", "data/derived/live_site"], capture_output=True, text=True, timeout=10).stdout.strip() == h:
-        zs = "data/derived/live_site"
-    out.update(json.loads(subprocess.run([".venv/bin/python", "-I", "scripts/zone_kpi.py", zs], capture_output=True, text=True, timeout=30).stdout))
-except Exception:
-    pass
-try:
-    out.update(json.loads(subprocess.run([".venv/bin/python", "-I", "scripts/encounter_coverage.py", os.environ.get("SRC", "site")], capture_output=True, text=True, timeout=20).stdout))
-except Exception:
-    pass
-# session 40 (Gaspard, 8 Nov 2026): building_coverage_pct is retired into site_errors (one error per missing OSM building);
-# photo_match_score, market_square_photo_match and painted_detail_pct are retired.
-miss = out.pop("buildings_missing", None)
-cov = out.pop("building_coverage_pct", None)
-if miss is None and cov is not None:
-    miss = round((100.0 - cov) / 100.0 * 2091)
-if miss is not None and "site_errors" in out:
-    out["site_errors"] = out["site_errors"] + miss
-for k in ("photo_match_score", "market_square_photo_match", "painted_detail_pct"):
-    out.pop(k, None)
-# game KPIs: cached per build hash by scripts/game_kpi.sh (headless combat/item/class tests; run by publish + service.sh)
-gh = os.environ.get("GAME_HASH", "")   # session 75: game scores are keyed by the game-only hash
-gf = "data/benchmark/scores/%s_game.json" % gh
-if gh and os.path.exists(gf):
-    out.update({k: v for k, v in json.load(open(gf)).items() if isinstance(v, (int, float))})   # per_class stays in the file
-# Gaspard (8 Nov 2026): always print all six game KPIs for the live build, 0 when not measured yet;
-# gameplay_judged is cached per build by scripts/gameplay_kpi.sh (service.sh)
-gp = "data/benchmark/scores/%s_gameplay.json" % gh
-if gh and os.path.exists(gp):
-    out["gameplay_judged"] = json.load(open(gp))["gameplay_judged"]
-for k in ("playable_classes", "mob_types", "equipment_effects", "encounter_coverage_pct", "playtest_pass_pct", "gameplay_judged"):
-    out.setdefault(k, 0)
-for k in ("ground_coverage_pct", "height_accuracy_pct", "landmarks_detailed", "building_coverage_pct"):
-    out.pop(k, None)
-out.pop("fetch_failures", None)
-out.pop("real_facade_pct", None)   # retired by Gaspard (8 Nov 2026): photo-baked facades are being replaced by geometry
-print(json.dumps(out))'
+S=site; [ -d data/derived/live_site ] && S=data/derived/live_site
+H=$($PY -I scripts/build_hash.py "$S" 2>/dev/null)
+$PY -I - "$H" <<'EOF'
+import json, os, sys
+h = sys.argv[1]
+keys = ("judged_game_quality", "main_quests_shipped", "playtest_pass_pct", "fps_median", "load_seconds")
+out = dict.fromkeys(keys, 0)
+b = "data/derived/browser_kpi.json"
+if h and os.path.exists(b):
+    d = json.load(open(b))
+    if d.get("hash") == h:
+        out.update({k: d["result"][k] for k in ("fps_median", "load_seconds") if k in d.get("result", {})})
+f = "data/benchmark/scores/%s_wic.json" % h
+if h and os.path.exists(f):
+    out.update({k: v for k, v in json.load(open(f)).items() if k in keys and isinstance(v, (int, float))})
+print(json.dumps(out))
+EOF
