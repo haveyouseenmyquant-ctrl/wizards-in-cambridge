@@ -9,6 +9,7 @@ import { makeFacades } from './facades.js';
 import { makeMarkings } from './markings.js';
 import { buildingVcolMat, groundVcolMat } from './materials.js';
 import { zoneMat } from './zone.js';
+import { Q as QP } from './quality.js';
 
 const DEBUG = /debug/.test(location.search);
 const Q = new URLSearchParams(location.search);
@@ -19,9 +20,7 @@ const layerOn = (man, k) => Q.has(k) ? Q.get(k) !== '0' : !!man.layers?.[k];
 const LOAD_R = 400, UNLOAD_R = 550, MAX_JOBS = 4;
 // Session 35: city-wide 3D facades (scripts/city_facades.py, site/cityfac/<tile>.glb) stream in within FAC_R of the
 // player (they are the bulk of the triangles); ?cityfac=0 disables them. Low quality: a smaller radius.
-const COARSE = matchMedia('(pointer: coarse)').matches;
-const QUAL = Q.get('quality') || (COARSE ? 'low' : 'high');
-const FAC_R = +(Q.get('facr') || (QUAL === 'low' ? 60 : QUAL === 'medium' ? 120 : 200)), FAC_UNLOAD_R = FAC_R + 80;
+const FAC_R = +(Q.get('facr') || QP.facR), FAC_UNLOAD_R = FAC_R + 80;
 
 // Surface class colours (FORMAT.md) for the collision fallback mesh and the minimap.
 export const SURFACE_COLORS = {
