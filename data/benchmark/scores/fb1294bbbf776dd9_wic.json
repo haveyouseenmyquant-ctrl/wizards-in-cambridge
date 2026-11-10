@@ -1,81 +1,134 @@
 {
-  "fps_median": 60,
-  "load_seconds": 0.66,
-  "perf_detail": {
-    "seconds": 60,
-    "viewport": "1280x720",
-    "query": "",
-    "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
-    "preset": "high",
-    "game_ready_s": 2.28,
-    "programs": [
-      65,
-      82
-    ],
-    "fps_p5": 59,
-    "fps_min": 48,
-    "fight_pct": 100,
-    "casts": 187,
-    "kills": 26,
-    "maxMobs": 36,
-    "dist": 201,
-    "laps": 1,
-    "draw_calls_median": 1838,
-    "tris_median": 7390521,
-    "tiles": 17,
-    "errors": 0,
-    "first_errors": [],
-    "at": "2026-11-10T08:40:08.670Z"
+ "fps_median": 60,
+ "load_seconds": 0.66,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 2.28,
+  "programs": [
+   65,
+   82
+  ],
+  "fps_p5": 59,
+  "fps_min": 48,
+  "fight_pct": 100,
+  "casts": 187,
+  "kills": 26,
+  "maxMobs": 36,
+  "dist": 201,
+  "laps": 1,
+  "draw_calls_median": 1838,
+  "tris_median": 7390521,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-10T08:40:08.670Z"
+ },
+ "judged_game_quality": 45.2,
+ "judged_sections": {
+  "Visuals": 50,
+  "Animation": 22,
+  "Combat feel": 55.1,
+  "Story presentation": 54,
+  "UI polish": 43
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0,
+   "Animation": 0,
+   "Combat feel": 0.2,
+   "Story presentation": 0,
+   "UI polish": 2
   },
-  "judged_game_quality": 45.2,
-  "judged_sections": {
-    "Visuals": 50,
-    "Animation": 22,
-    "Combat feel": 55.1,
-    "Story presentation": 54,
-    "UI polish": 43
+  "quality_spread": 0.2,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together well. Streets are recognisable, with brick and stone fa\u00e7ades, Gothic church detail, real-time shadows, warm low-sun lighting with some atmospheric haze, and real-looking props like bikes, railings, trees and market stalls. The player character is a primitive low-poly blob with a cone hat, and the combat enemies look just as blocky. Large areas are flat and low-detail (blank shop interiors, plain pavements, simple boxy stalls), there is little clutter or wear, and the fight frames are buried under the dialogue box and overlapping VFX and text. That puts it well below the 60 anchor for character detail and density."
+   },
+   "Animation": {
+    "all": "The player is a simple cloaked blob with a hat. It holds the same rigid pose in all four walking frames, with no visible limbs, stride or robe motion. In combat, attacks show up only as projectiles, beams, ground rings and 'Staggered' text, with no matching cast poses. Enemies are hard to make out, and there is no visible wind-up, hit-reaction or death animation, no secondary motion and no environmental motion such as crowds or foliage."
+   },
+   "Combat feel": {
+    "hexweaver": "The combat feedback is strong. There are damage numbers, crits, chain counters, Staggered/Interrupted status labels, a boss with phase bars and a 'Phase II' banner, and loot toasts with rarity tags (common/epic). The hexweaver casts six different spells, and the event log shows a lot of enemy variety and high kill throughput. The scenes are hard to read, though: the narration box never leaves the screen, VFX overlap into a cluttered mush of blocky shapes, and no frame clearly shows an enemy telegraph, hit-stop or a meaningful threat to the player (only 51 damage taken). Only one class appears, so I couldn't judge how different the classes feel.",
+    "pyromancer": "Combat clearly works and gives plenty of feedback. The frames show floating damage numbers, CRIT labels, a chain counter, 'Interrupted' callouts, a boss with a segmented health bar and a 'Phase II' banner, and loot pickups tagged by rarity, and the log records 6 spells, 9 enemy types and 588 sound voices. Readability is poor, though: a large narration box covers the lower third of every frame, quest and loot panels crowd the screen, and the effects are mostly soft glows and blobs with no clear spell shapes, telegraphs, hit-stop or visible crowd control. Ember bolt makes up 61 of 90 casts, half the clip has few or no enemies nearby, and the player takes only 29 damage, so the fight shows little threat or depth.",
+    "stormcaller": "There is plenty of visible feedback: big damage numbers with crit callouts, chain counters, Staggered and Interrupted labels, a boss bar with a Phase II banner, and loot beams and tooltips colour-coded by rarity. The event log also shows a varied spell kit with crowd control and a dash. But the effects are faint, washed-out shapes on very simple enemy models, and a dialogue box covers the lower third of the screen in every frame. There is no visible hit-stop, knockback or enemy attack warning, and the player took almost no damage, so the fights look one-sided with little threat.",
+    "warden": "There's real combat feedback: damage numbers, a chain counter, 'Staggered' and 'Interrupted' callouts, a boss with a phased health bar and an 'enraged' banner, red ground telegraphs, and loot labels with rarity tooltips. The event log shows a varied kit with crowd control and mobility. But the persistent narration box covers the lower half of every frame, so the player and fights are hard to read. pebble_shot makes up 75% of casts, the spell VFX are washed-out blobs with little visible impact or hit-stop, and the player rarely takes damage (4 hits, 22 total), so the fights look low-threat."
+   },
+   "Story presentation": {
+    "all": "Dialogue is well written and fits the setting: speaker names and roles, small portraits, letterbox bars, a prologue title card, a quest-complete card with rewards and a yellow waypoint marker give a clear original premise tied to a real Cambridge location. But the speaking characters and the Bellwarden boss never appear in the frame, so conversations aren't staged, and every shot is the same over-the-shoulder market view. A 'Loading...' overlay stays on screen, the tracker still says 'Speak to Nell Tapscott' after the quest is complete, and there are no choices or animated performances."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent serif/dark-panel theme: a clean class selection with icons, rarity-tagged item cards, crit/chain/status combat text and a quest tracker. Readability is poor in many frames, though. Dialogue boxes, the 'Quest Complete' banner and loot toasts sit on top of the inventory and talent screens and cover the spell bar and health bars during combat, so the HUD looks cluttered and layered without a clear hierarchy. The inventory is a plain text list, and the talent screen is almost unreadable behind overlapping popups."
+   }
+  }
+ },
+ "main_quests_shipped": 2,
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 91.7,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
   },
-  "judge_meta": {
-    "rubric_version": "1",
-    "rubric_sha": "8e0dceab019e",
-    "model": "claude-opus-5-5",
-    "samples": 2,
-    "calls": 16,
-    "failed_calls": 0,
-    "section_spread": {
-      "Visuals": 0,
-      "Animation": 0,
-      "Combat feel": 0.2,
-      "Story presentation": 0,
-      "UI polish": 2
-    },
-    "quality_spread": 0.2,
-    "frames": 68,
-    "recording_errors": [
-      "note: explore King's Parade yaw 2.89 blocked, used 1.91",
-      "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
-    ],
-    "reasons": {
-      "Visuals": {
-        "all": "The city holds together well. Streets are recognisable, with brick and stone fa\u00e7ades, Gothic church detail, real-time shadows, warm low-sun lighting with some atmospheric haze, and real-looking props like bikes, railings, trees and market stalls. The player character is a primitive low-poly blob with a cone hat, and the combat enemies look just as blocky. Large areas are flat and low-detail (blank shop interiors, plain pavements, simple boxy stalls), there is little clutter or wear, and the fight frames are buried under the dialogue box and overlapping VFX and text. That puts it well below the 60 anchor for character detail and density."
-      },
-      "Animation": {
-        "all": "The player is a simple cloaked blob with a hat. It holds the same rigid pose in all four walking frames, with no visible limbs, stride or robe motion. In combat, attacks show up only as projectiles, beams, ground rings and 'Staggered' text, with no matching cast poses. Enemies are hard to make out, and there is no visible wind-up, hit-reaction or death animation, no secondary motion and no environmental motion such as crowds or foliage."
-      },
-      "Combat feel": {
-        "hexweaver": "The combat feedback is strong. There are damage numbers, crits, chain counters, Staggered/Interrupted status labels, a boss with phase bars and a 'Phase II' banner, and loot toasts with rarity tags (common/epic). The hexweaver casts six different spells, and the event log shows a lot of enemy variety and high kill throughput. The scenes are hard to read, though: the narration box never leaves the screen, VFX overlap into a cluttered mush of blocky shapes, and no frame clearly shows an enemy telegraph, hit-stop or a meaningful threat to the player (only 51 damage taken). Only one class appears, so I couldn't judge how different the classes feel.",
-        "pyromancer": "Combat clearly works and gives plenty of feedback. The frames show floating damage numbers, CRIT labels, a chain counter, 'Interrupted' callouts, a boss with a segmented health bar and a 'Phase II' banner, and loot pickups tagged by rarity, and the log records 6 spells, 9 enemy types and 588 sound voices. Readability is poor, though: a large narration box covers the lower third of every frame, quest and loot panels crowd the screen, and the effects are mostly soft glows and blobs with no clear spell shapes, telegraphs, hit-stop or visible crowd control. Ember bolt makes up 61 of 90 casts, half the clip has few or no enemies nearby, and the player takes only 29 damage, so the fight shows little threat or depth.",
-        "stormcaller": "There is plenty of visible feedback: big damage numbers with crit callouts, chain counters, Staggered and Interrupted labels, a boss bar with a Phase II banner, and loot beams and tooltips colour-coded by rarity. The event log also shows a varied spell kit with crowd control and a dash. But the effects are faint, washed-out shapes on very simple enemy models, and a dialogue box covers the lower third of the screen in every frame. There is no visible hit-stop, knockback or enemy attack warning, and the player took almost no damage, so the fights look one-sided with little threat.",
-        "warden": "There's real combat feedback: damage numbers, a chain counter, 'Staggered' and 'Interrupted' callouts, a boss with a phased health bar and an 'enraged' banner, red ground telegraphs, and loot labels with rarity tooltips. The event log shows a varied kit with crowd control and mobility. But the persistent narration box covers the lower half of every frame, so the player and fights are hard to read. pebble_shot makes up 75% of casts, the spell VFX are washed-out blobs with little visible impact or hit-stop, and the player rarely takes damage (4 hits, 22 total), so the fights look low-threat."
-      },
-      "Story presentation": {
-        "all": "Dialogue is well written and fits the setting: speaker names and roles, small portraits, letterbox bars, a prologue title card, a quest-complete card with rewards and a yellow waypoint marker give a clear original premise tied to a real Cambridge location. But the speaking characters and the Bellwarden boss never appear in the frame, so conversations aren't staged, and every shot is the same over-the-shoulder market view. A 'Loading...' overlay stays on screen, the tracker still says 'Speak to Nell Tapscott' after the quest is complete, and there are no choices or animated performances."
-      },
-      "UI polish": {
-        "all": "The UI has a consistent serif/dark-panel theme: a clean class selection with icons, rarity-tagged item cards, crit/chain/status combat text and a quest tracker. Readability is poor in many frames, though. Dialogue boxes, the 'Quest Complete' banner and loot toasts sit on top of the inventory and talent screens and cover the spell bar and health bars during combat, so the HUD looks cluttered and layered without a clear hierarchy. The inventory is a plain text list, and the talent screen is almost unreadable behind overlapping popups."
-      }
-    }
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
   },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 2,
+   "harness_fails": 0,
+   "fails": [
+    "route: softlock: no progress for 60 s game time (leg 4 senate-house-hill, at -180.1,22.7,9.9, travel senate-house-hill active true mobs 6 dead 0 removed 0)"
+   ],
+   "pass_pct": 66.7
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 8.8,
   "main_quests_shipped": 2,
-  "quest_bot_pass_pct": 100
+  "wall_s": 835,
+  "at": "2026-11-10T09:29:14.681Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "quest_bot": true
+ }
 }
