@@ -10,6 +10,9 @@
 # Heavy jobs never run while a work session is active (data/derived/session_active touched < 75 min ago).
 # One instance at a time (/tmp/wic_service.lock); a step that fails for harness reasons is logged to
 # data/derived/wic_harness_log.jsonl (harness_flake_pct) and retried on the next pass (max 3 per hash and step).
+# Half-published builds are never scored: publish.sh holds /tmp/wic_publish.lock while it rewrites live_site; a pass
+# is skipped while that lock exists, and after each step the hash is recomputed: if it changed (or a publish started),
+# the step is logged 'stale' and its result is not merged (the <hash>_wic.json snapshot from before the step is restored).
 cd "$(dirname "$0")"
 PY=.venv/bin/python
 LOCK=/tmp/wic_service.lock
@@ -18,6 +21,7 @@ if ! mkdir "$LOCK" 2>/dev/null; then
 fi
 trap 'rm -rf "$LOCK"' EXIT
 HLOG=data/derived/wic_harness_log.jsonl
+PLOCK=/tmp/wic_publish.lock
 mkdir -p data/derived data/benchmark/scores
 
 session_active() { [ -f data/derived/session_active ] && [ $(( $(date +%s) - $(stat -f %m data/derived/session_active) )) -lt 4500 ]; }
@@ -28,15 +32,26 @@ f = sys.argv[1]; new = json.loads(sys.stdin.read())
 d = json.load(open(f)) if os.path.exists(f) and os.path.getsize(f) else {}
 d.update(new); json.dump(d, open(f + ".tmp", "w"), indent=1); os.replace(f + ".tmp", f)' "data/benchmark/scores/${H}_wic.json"
 }
-tries() { [ -f "$HLOG" ] && grep -c "\"hash\": \"$H\", \"step\": \"$1\"" "$HLOG" || echo 0; }
+tries() { local n; [ -f "$HLOG" ] && n=$(grep "\"hash\": \"$H\", \"step\": \"$1\"" "$HLOG" | grep -vc '"stale"'); echo "${n:-0}"; }
+publishing() { # publish lock held (a lock older than 2 h is a dead publish.sh: ignore it)
+  [ -d "$PLOCK" ] && [ -z "$(find "$PLOCK" -maxdepth 0 -mmin +120 2>/dev/null)" ]
+}
+build_hash() { publishing && return; $PY -I scripts/build_hash.py "$S" 2>/dev/null; }
 logrun() { # step status(ok|game_fail|harness_fail) seconds
   echo "{\"hash\": \"$H\", \"step\": \"$1\", \"status\": \"$2\", \"secs\": $3, \"t\": \"$(date -u +%FT%TZ)\"}" >> "$HLOG"
 }
 run_step() { # name command...   (exit 0 ok, 2 game failure, else harness failure)
   local name=$1; shift
   [ "$(tries "$name")" -ge 3 ] && return
-  local t0=$(date +%s); "$@" > "/tmp/wic_${name}.out" 2> "/tmp/wic_${name}.err"; local rc=$?
+  [ -n "$STALE" ] || publishing && return
+  local sf="data/benchmark/scores/${H}_wic.json" snap="/tmp/wic_snap_${name}.json"
+  rm -f "$snap"; [ -f "$sf" ] && cp "$sf" "$snap"
+  local t0=$(date +%s); WIC_BUILD_HASH=$H "$@" > "/tmp/wic_${name}.out" 2> "/tmp/wic_${name}.err"; local rc=$?
   local st=ok; [ $rc -eq 2 ] && st=game_fail; [ $rc -ne 0 ] && [ $rc -ne 2 ] && st=harness_fail
+  if [ "$(build_hash)" != "$H" ]; then # build changed (or is being published) under the step: drop its result
+    st=stale; STALE=1; if [ -f "$snap" ]; then cp "$snap" "$sf"; else rm -f "$sf"; fi
+  fi
+  rm -f "$snap"
   logrun "$name" $st $(( $(date +%s) - t0 ))
   echo "$(date -u +%FT%TZ) $H $name: $st $(tail -n1 /tmp/wic_${name}.out | cut -c1-300)"
 }
@@ -61,7 +76,7 @@ perf() { node scripts/wic_perf.mjs "$S" | tail -n1 | python3 -c 'import json,sys
 ONCE=0; [ "$1" = "--once" ] && ONCE=1
 while true; do
   S=site; [ -d data/derived/live_site ] && S=data/derived/live_site
-  H=$($PY -I scripts/build_hash.py "$S" 2>/dev/null)
+  H=$(build_hash); STALE=
   if [ -n "$H" ] && ! session_active; then
     has_key judged_game_quality || run_step judge judge
     session_active || has_key playtest_pass_pct || run_step playtest playtest
