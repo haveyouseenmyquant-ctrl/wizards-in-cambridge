@@ -29,11 +29,11 @@
  },
  "judged_game_quality": 49.3,
  "judged_sections": {
-  "Visuals": 54.0,
-  "Animation": 30.0,
+  "Visuals": 54,
+  "Animation": 30,
   "Combat feel": 60.1,
   "Story presentation": 48.5,
-  "UI polish": 50.0
+  "UI polish": 50
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -43,11 +43,11 @@
   "calls": 16,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 0.0,
-   "Animation": 0.0,
+   "Visuals": 0,
+   "Animation": 0,
    "Combat feel": 0.2,
-   "Story presentation": 3.0,
-   "UI polish": 0.0
+   "Story presentation": 3,
+   "UI polish": 0
   },
   "quality_spread": 0.5,
   "frames": 68,
@@ -75,5 +75,7 @@
     "all": "The UI has a consistent serif/dark-panel theme: health and mana bars, numbered spell bar with cooldown numbers and icons, a styled minimap, quest tracker, boss bar, and item cards with rarity labels, so the HUD reads as designed rather than default. The big problems are layering and clutter. A 'Quest Complete / The Thirteenth Chime' banner and an NPC dialogue box sit over the inventory and talent screens, making them hard to read. During combat, loot toasts, item cards, quest text, damage numbers and the banner pile up over the scene. The inventory is a plain text list with empty slots, and the talent screen is mostly hidden under these overlays."
    }
   }
- }
+ },
+ "main_quests_shipped": 3,
+ "quest_bot_pass_pct": 100
 }

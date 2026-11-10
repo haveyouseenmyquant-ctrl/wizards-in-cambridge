@@ -27,10 +27,6 @@
 - 9b1abea2 (s10, Graphics Quaternius wizard CC-BY): judged 50.0 (Anim 33.5), playtest 100 (softlock gone; 9d0d cancelled).
   Judge asks: enemy attack/death/hit clips + bigger enemies; menus overlaid by banners/dialogue, text-only inventory,
   debug FPS/Quality/'Loading...' labels visible; stale tracker; NPCs never framed; stalls flat blocks.
-- fb1294bb (s9, merged EnvVFX interior-mapped windows + wall weathering): judged 45.2 (V 50, Anim 22,
-  Combat 55, Story 54, UI 43); playtest 91.7 (hexweaver softlock senate-house-hill -> Gameplay 9d0d).
-- Prev trunk 0657a325 (s7, merged Optimisation shadow proxies/LOD/grid raycast): fps 60 (p5 59), draws 1743, load 0.52;
-  judged 44.3, quests 2, playtest 100 (service.sh). s8: merged QA gate; no other node had new commits.
 - Prev trunk 44f67e9a (s6, merged Gameplay progression: L20, spell ranks, 3x3 talents, sets): judged 46.2 (V 50,
   Anim 27, Combat 54.5, Story 54, UI 44), quests 2 (4/4), playtest 100, fps 52 (p5 44, min 32), load 0.77.
   build_hash.py now includes quests.js/npc_rig.js/quests/*.json, so any quest edit = new hash = rescore needed. Judge noise is ~±2 (Visuals 50->45 with no visual change). Animation stuck ~22:
