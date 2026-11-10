@@ -19,7 +19,6 @@
 - Trunk 448ceb612bcec57f (s15, merged Gameplay uiscreens.js grid inventory/talents): gate 6/6 (158 s), judged 51.4
   (V 51, Anim 30, Combat 60.9, Story 53, UI 63). Story Q4 branch NOT merged: quest_bot 2/4 classes (bell-stay). Gameplay 11ba = Combat>66.
   s15 publish: Pages failed again (6th) but publish.sh swapped live_site to 448ceb61 anyway (bug -> Optimisation task); Pages serves 1665d3ca.
-- Lead memory = ./MEMORY.md in repo.
 - Trunk 52065493273d6f48 (s14, merged EnvVFX stall goods + shop-window geometry; after merge rerun
   `.venv/bin/python -I scripts/zone_build.py` (17 s) then `git checkout data/derived/facade_geometry.json`): gate 6/6,
   judged 49.3 (V 54, Anim 30, Combat 60.1, Story 48.5, UI 50). Publish: Pages timed out again (5th); publish.sh auto-reruns and
