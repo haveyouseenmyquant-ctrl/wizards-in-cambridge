@@ -117,3 +117,9 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Cancelled Story 6b1b (Q3 live). Told Gaspard that Safari testing needs `safaridriver --enable`.
 - The Pages deploy for 91047adec failed 3 times (deploy-pages timeout, GitHub side), so the site still serves b1d7eff5. Added 1665d3ca_wic.json as an alias, because the hash of live_site changed only through build_hash FILES.
   Optimisation re-activated with task 9ff3 to make the deploy reliable. measure.sh: judged 49.5, quests 3, playtest 100, fps 60, load 0.52.
+
+## 2026-11-10 QA s4
+- Task 6266 closed: publish.sh holds /tmp/wic_publish.lock around the live_site swap; service.sh skips while held and
+  re-hashes after each step: changed hash -> logs 'stale', restores the pre-step <hash>_wic.json, skips the rest of the
+  pass. Stale runs don't count as retries or in harness_flake_pct. wic_playtest.mjs honours WIC_BUILD_HASH.
+- wic_gate.py: one retry per failed test (WIC_GATE_RETRIES=1); pass-on-retry = ok + flaky:true, top-level "flaky" list.

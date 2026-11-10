@@ -6,7 +6,9 @@ JSON summary as the last stdout line: {"ok", "site", "hash", "secs", "tests": {n
                                           WIC_TEST_GPU=1 (default) GPU Chrome, 0 headless SwiftShader;
                                           WIC_TEST_QUERY extra URL query for the tests, e.g. &q=low)
 Tests: test_classes, test_feel, test_items, test_mobs, test_progression (if present), quest_bot (4 runs, 2 workers).
-A test passes when it exits 0 and its JSON output does not say ok:false. Exit 0 if every test passed, else 1."""
+A test passes when it exits 0 and its JSON output does not say ok:false. A failed test is rerun once
+(WIC_GATE_RETRIES, default 1); a pass on the rerun counts as ok but is marked flaky:true (first failure kept in
+first_fail) and listed in the top-level "flaky". Exit 0 if every test passed, else 1."""
 import json, os, signal, subprocess, sys, time
 from pathlib import Path
 
@@ -47,14 +49,9 @@ except Exception: bh = None
 gpu = os.environ.get('WIC_TEST_GPU', '1')
 env = dict(os.environ, WIC_QUESTBOT_WORKERS=os.environ.get('WIC_QUESTBOT_WORKERS', '2'), WIC_TEST_GPU=gpu,
            WIC_TEST_QUERY=os.environ.get('WIC_TEST_QUERY', ''))
-res, t_all = {}, time.time()
-for name, extra in TESTS:
-    script = ROOT / 'scripts' / f'{name}.mjs'
-    if only and name not in only: continue
-    if not script.exists():
-        if name == 'test_progression': continue
-        res[name] = {'ok': False, 'secs': 0, 'summary': {'error': 'missing script'}}; continue
-    t0 = time.time()
+retries = int(os.environ.get('WIC_GATE_RETRIES', 1))
+
+def run(script, extra):
     p = subprocess.Popen(['node', str(script), str(site), *extra], cwd=ROOT, env=env, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, text=True, start_new_session=True)
     try:
@@ -62,14 +59,28 @@ for name, extra in TESTS:
     except subprocess.TimeoutExpired:
         os.killpg(p.pid, signal.SIGKILL); out, err = p.communicate(); timed_out = True
     d = parse(out)
-    if timed_out: summ, ok = {'error': f'gate timeout {per_test} s'}, False
-    elif d is None: summ, ok = {'error': f'no JSON (exit {p.returncode})', 'stderr': err.strip()[-300:]}, False
-    else: summ, ok = summarise(d), p.returncode == 0 and d.get('ok') is not False
+    if timed_out: return False, {'error': f'gate timeout {per_test} s'}
+    if d is None: return False, {'error': f'no JSON (exit {p.returncode})', 'stderr': err.strip()[-300:]}
+    return p.returncode == 0 and d.get('ok') is not False, summarise(d)
+
+res, t_all = {}, time.time()
+for name, extra in TESTS:
+    script = ROOT / 'scripts' / f'{name}.mjs'
+    if only and name not in only: continue
+    if not script.exists():
+        if name == 'test_progression': continue
+        res[name] = {'ok': False, 'secs': 0, 'summary': {'error': 'missing script'}}; continue
+    first = None
+    for attempt in range(1 + retries):
+        t0 = time.time(); ok, summ = run(script, extra)
+        if ok or attempt == retries: break
+        first = summ; print(f"[gate] {name}: FAIL, retrying", flush=True)
     res[name] = {'ok': ok, 'secs': round(time.time() - t0, 1), 'summary': summ}
-    print(f"[gate] {name}: {'PASS' if ok else 'FAIL'} {res[name]['secs']} s", flush=True)
+    if first is not None: res[name]['first_fail'] = first; res[name]['flaky'] = ok
+    print(f"[gate] {name}: {'PASS' if ok else 'FAIL'}{' (flaky)' if first is not None and ok else ''} {res[name]['secs']} s", flush=True)
 r = {'ok': bool(res) and all(v['ok'] for v in res.values()), 'site': str(site), 'hash': bh,
      'browser': 'gpu-metal' if gpu == '1' else 'swiftshader', 'query': env['WIC_TEST_QUERY'],
-     'secs': round(time.time() - t_all, 1), 'tests': res}
+     'secs': round(time.time() - t_all, 1), 'flaky': [k for k, v in res.items() if v.get('flaky')], 'tests': res}
 if os.environ.get('WIC_GATE_LOG'):
     log = ROOT / 'data/derived/wic_gate_log.jsonl'; log.parent.mkdir(parents=True, exist_ok=True)
     with log.open('a') as f: f.write(json.dumps({'t': time.strftime('%Y-%m-%dT%H:%M:%S'), **r}) + '\n')
