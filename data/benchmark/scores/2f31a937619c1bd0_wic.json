@@ -26,5 +26,54 @@
   "errors": 0,
   "first_errors": [],
   "at": "2026-11-10T08:53:21.411Z"
+ },
+ "judged_game_quality": 45.6,
+ "judged_sections": {
+  "Visuals": 47.0,
+  "Animation": 23.0,
+  "Combat feel": 55.2,
+  "Story presentation": 52.0,
+  "UI polish": 51.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0.0,
+   "Animation": 2.0,
+   "Combat feel": 3.0,
+   "Story presentation": 4.0,
+   "UI polish": 2.0
+  },
+  "quality_spread": 0.5,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together: buildings are recognisable, with brick and stone textures, a Gothic church, bikes, railings, trees and market stalls, plus real-time shadows, a warm sky and some atmospheric haze, which lifts it above prototype level. The geometry is still simple and blocky. Shop interiors are flat, blurry pastel textures, and the materials repeat. The player character is a simple, untextured teal blob wearing a hat, and the enemies are blurry, ghostly shapes. In combat, the VFX are washed-out overlays that sit poorly in the scene, well short of the 60 anchor's character and material detail."
+   },
+   "Animation": {
+    "all": "The player is a squat robed blob in a hat, and in all four walking frames it holds nearly the same pose with no visible limb movement, apart from a slight change in where the wand sits. The enemies are simple chibi or ghost figures shown mostly as dark or glowing silhouettes, and the combat frames convey action almost entirely through projectiles, beams, damage numbers and 'Staggered' text, with no visible cast or hit-reaction poses. The world has no visible motion such as crowds or foliage, and there is no secondary motion or anticipation."
+   },
+   "Combat feel": {
+    "hexweaver": "The event log shows real combat: 6 spells including mobility and debuffs, a boss with two phase changes, crits, interrupt and stagger states, chain counters, big floating damage numbers and a lot of loot with rarity labels. The frames are hard to read, though. The dialogue box covers the lower third of every shot, combat fills only the first ~18 s, and half the frames are empty streets. Spell effects are small, plain glowing blobs, and there's no visible hit-stop, screen feedback or clear enemy telegraph. The player was hit only twice, so the fight barely threatened them.",
+    "pyromancer": "Combat is busy and gives plenty of feedback: damage numbers, crit and chain counters, \"Interrupted\"/\"Staggered\" tags, white hit flashes, a boss bar with multiple phases and a \"Phase II\" banner, and loot with rarity labels. The summary also shows six distinct spells, varied enemies and 634 sound voices. But readability suffers badly: a dialogue box that never goes away covers the lower third of every frame, and quest and loot popups clutter the screen. The spell effects themselves are small, vague blobs, and nothing shows clear enemy telegraphs, hit-stop, crowd control or other classes for comparison.",
+    "stormcaller": "The frames show plenty of feedback: damage numbers, crit callouts, chain counters, Staggered and Interrupted status labels, a boss health bar with a Phase II banner, loot beams in different colours with rarity-tagged pickup cards, and 647 sound voices over the clip. The event log shows six different spells, including wind_dash for mobility. The biggest gap is readability: a dialogue box that never goes away covers the bottom third of every frame, the spell effects look thin and wispy in the stills, and enemies are small blocky shapes. There is no visible attack telegraph, hit-stop or screen feedback, and the bellwarden boss dies in about 13 s after taking almost no damage from the player, so the boss fight isn't memorable.",
+    "warden": "The fight shows working, varied combat: crit damage numbers, chain counters, Staggered/Interrupted status callouts, a multi-segment boss bar with a 'Phase II' banner, and loot beams with rarity-coloured labels. On the other hand, the player character is mostly hidden behind large translucent spheres and clutter, a narration box covers the lower third of every frame, and pebble_shot makes up 67 of 86 casts. Mobility and crowd control appear in the log but not clearly on screen, and there's no visible hit-stop or clear telegraphs of enemy attacks."
+   },
+   "Story presentation": {
+    "all": "The writing is good, the premise is original (Cambridge's Market Hill, Great St Mary's thirteenth chime) and there are named speakers with portraits and roles, letterbox bars, a prologue title card, a quest tracker with a world marker, and a quest-complete reward card. However, the characters never appear on screen: Nell is only a yellow cone marker, and the Bellwarden 'set piece' is just narration over an empty market. There is no camera staging, character animation or branching choice, and a persistent 'Loading...' overlay, cluttered HUD panels and a stale tracker ('Speak to Nell' stays up through quest completion) undercut the presentation."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent dark-panel style with serif headings across the class selection, quest tracker, dialogue box, inventory and talents, and the class cards come with clear ability lists and rarity labels on items. The biggest gaps are clutter and overlap: the quest-complete banner and dialogue box sit over the inventory and talent screens, and a large narration box covers the lower third of the screen in every combat frame. Floating combat text also stacks on top of the action, the 'Loading...' overlay and minimap get covered, and the inventory screen is a plain text list with no item icons."
+   }
+  }
  }
 }
