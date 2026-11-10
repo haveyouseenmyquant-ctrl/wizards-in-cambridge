@@ -29,8 +29,8 @@ const server = http.createServer((req, res) => {
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
 const browser = await puppeteer.launch({
   executablePath: CHROME, headless: true,
-  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=1280,720'],
-  defaultViewport: { width: 1280, height: 720 }, protocolTimeout: 600000,
+  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=960,540'],
+  defaultViewport: { width: 960, height: 540 }, protocolTimeout: 600000,
 });
 const errors = [];
 let out = { ok: false };

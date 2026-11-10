@@ -37,7 +37,7 @@ const WATCHDOG_S = +(process.env.WC_TEST_WATCHDOG_S || 900);
 setTimeout(() => { console.log(JSON.stringify({ ok: false, error: `watchdog ${WATCHDOG_S} s` })); process.exit(1); }, WATCHDOG_S * 1000).unref();
 const errors = [];
 let out = { ok: false };
-const URL0 = () => `http://127.0.0.1:${server.address().port}/?debug&nopick`;
+const URL0 = () => `http://127.0.0.1:${server.address().port}/?debug&nopick${process.env.WIC_TEST_QUERY || ''}`;
 async function load(page) {
   await page.waitForFunction('window.__walkReady === true', { timeout: 300000 });
   await page.waitForFunction('window.__game && window.__game.caster && window.__game.items && window.__progression', { timeout: 120000 });

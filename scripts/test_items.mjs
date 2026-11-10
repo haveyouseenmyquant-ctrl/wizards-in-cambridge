@@ -35,7 +35,7 @@ try {
   const errors = [];
   page.on('pageerror', e => errors.push(String(e.message)));
   page.on('console', m => { if (m.type() === 'warning' && /items/.test(m.text())) errors.push(m.text()); });
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug`, { waitUntil: 'domcontentloaded', timeout: 300000 });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug${process.env.WIC_TEST_QUERY || ''}`, { waitUntil: 'domcontentloaded', timeout: 300000 });
   await page.waitForFunction('window.__walkReady === true && !!window.__game && !!window.__itemTest', { timeout: 300000 });
   const ids = await page.evaluate(() => window.__itemIds());
   const results = [];

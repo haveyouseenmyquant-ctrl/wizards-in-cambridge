@@ -45,7 +45,7 @@ try {
     if (m.type() === 'error' && !/404|Failed to load resource/.test(t)) errors.push(t);
     if (m.type() === 'warning' && /\[(game|classes|feel)\]/.test(t)) errors.push(t);
   });
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug&nopick`, { waitUntil: 'domcontentloaded', timeout: 300000 });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug&nopick${process.env.WIC_TEST_QUERY || ''}`, { waitUntil: 'domcontentloaded', timeout: 300000 });
   await page.waitForFunction('window.__walkReady === true', { timeout: 300000 });
   await page.waitForFunction('window.__game && window.__game.mobSystem && window.__game.feel && window.__game.caster', { timeout: 120000 });
 

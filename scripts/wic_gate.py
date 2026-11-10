@@ -2,7 +2,8 @@
 """Merge gate: runs every game test on a site dir, one at a time (parallel headless browsers time out), and prints one
 JSON summary as the last stdout line: {"ok", "site", "hash", "secs", "tests": {name: {"ok", "secs", "summary"}}}.
   tools/wic_gate.sh [site_dir]          (env: WIC_GATE_TEST_S per-test timeout, default 300; WIC_GATE_LOG=1 appends the
-                                          result to data/derived/wic_gate_log.jsonl; WIC_GATE_ONLY=a,b runs a subset)
+                                          result to data/derived/wic_gate_log.jsonl; WIC_GATE_ONLY=a,b runs a subset;
+                                          WIC_TEST_QUERY extra URL query for the tests, default &q=low)
 Tests: test_classes, test_feel, test_items, test_mobs, test_progression (if present), quest_bot (4 runs, 2 workers).
 A test passes when it exits 0 and its JSON output does not say ok:false. Exit 0 if every test passed, else 1."""
 import json, os, signal, subprocess, sys, time
@@ -40,7 +41,9 @@ def summarise(d):
 
 try: bh = subprocess.run([sys.executable, str(ROOT / 'scripts/build_hash.py'), str(site)], capture_output=True, text=True, timeout=60).stdout.strip().split()[-1]
 except Exception: bh = None
-env = dict(os.environ, WIC_QUESTBOT_WORKERS=os.environ.get('WIC_QUESTBOT_WORKERS', '2'))
+# ?q=low for every test (rendering preset only; game logic is the same) keeps the whole gate under 10 min on SwiftShader
+env = dict(os.environ, WIC_QUESTBOT_WORKERS=os.environ.get('WIC_QUESTBOT_WORKERS', '2'),
+           WIC_TEST_QUERY=os.environ.get('WIC_TEST_QUERY', '&q=low'))
 res, t_all = {}, time.time()
 for name, extra in TESTS:
     script = ROOT / 'scripts' / f'{name}.mjs'

@@ -43,7 +43,7 @@ try {
   page.on('pageerror', e => errors.push(String(e)));
   const missing = [];
   page.on('response', r => { if (r.status() === 404) missing.push(new URL(r.url()).pathname); });
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug`, { waitUntil: 'domcontentloaded', timeout: 300000 });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug${process.env.WIC_TEST_QUERY || ''}`, { waitUntil: 'domcontentloaded', timeout: 300000 });
   await page.waitForFunction('window.__walkReady === true', { timeout: 300000 });
   await page.waitForFunction('window.__game && window.__game.mobSystem && window.__mobTest', { timeout: +(process.env.MOB_WAIT_MS || 120000) });
   await sleep(3000);   // let encounters near the spawn point stream in
