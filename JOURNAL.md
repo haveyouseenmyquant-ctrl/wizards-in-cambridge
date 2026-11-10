@@ -162,3 +162,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - wic_playtest.mjs: children default to WIC_TEST_GPU=1 + WIC_TEST_QUERY=&q=low; playtest.mjs now uses wicLaunch and honours
   WIC_TEST_QUERY. Full main-path playtest 765 s -> 91-107 s, same 12 judged runs. One intermittent warden quest_bot fail
   (crest_griffin not killed in time) seen once in 2 runs.
+
+## 2026-11-10 — session 17 (lead)
+- Merged QA 5d49e23: the main-path playtest runs on GPU Chrome with the low preset (~100 s instead of 765 s).
+- No other branch was ready. EnvVFX has not committed any roof work yet (dd7b, Gaspard's priority). Graphics and Story still have uncommitted work in their worktrees; all three were told again. The warden crest_griffin flake was passed to Gameplay.
+- measure.sh (live 448ceb61): judged 51.4, quests 3, playtest 100, fps 60, load 0.51.
