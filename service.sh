@@ -6,6 +6,7 @@
 #   2. scripts/wic_playtest.mjs (else playtest.mjs)     -> playtest_pass_pct, per_class
 #   3. scripts/quest_bot.mjs (Story, once it exists)    -> main_quests_shipped
 #   4. scripts/wic_perf.mjs (Optimisation, once it exists) -> fps_median, load_seconds
+#   5. tools/wic_gate.sh (merge gate, all game tests)   -> gate_ok, gate_tests; full result in data/derived/wic_gate_log.jsonl
 # Heavy jobs never run while a work session is active (data/derived/session_active touched < 75 min ago).
 # One instance at a time (/tmp/wic_service.lock); a step that fails for harness reasons is logged to
 # data/derived/wic_harness_log.jsonl (harness_flake_pct) and retried on the next pass (max 3 per hash and step).
@@ -50,6 +51,11 @@ playtest() {   # wic_playtest.mjs merges its own keys; exit 2 = game failures (s
   tail -n1 /tmp/wic_pt.json | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(json.dumps({"playtest_pass_pct": d["playtest_pass_pct"], "per_class": d.get("per_class", d.get("classes"))}))' | merge
 }
 quests() { node scripts/quest_bot.mjs "$S" | tail -n1 | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(json.dumps({"main_quests_shipped": d["main_quests_shipped"]}))' | merge; }
+gate() {   # merge gate per hash: full result -> data/derived/wic_gate_log.jsonl, gate_ok + per-test ok -> <hash>_wic.json
+  WIC_GATE_LOG=1 tools/wic_gate.sh "$S" > /tmp/wic_gate.out; local rc=$?
+  tail -n1 /tmp/wic_gate.out | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(json.dumps({"gate_ok": d["ok"], "gate_tests": {k: v["ok"] for k, v in d["tests"].items()}}))' | merge || return 1
+  [ $rc = 0 ] || return 2
+}
 perf() { node scripts/wic_perf.mjs "$S" | tail -n1 | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(json.dumps({k: d[k] for k in ("fps_median", "load_seconds") if k in d}))' | merge; }
 
 ONCE=0; [ "$1" = "--once" ] && ONCE=1
@@ -61,6 +67,7 @@ while true; do
     session_active || has_key playtest_pass_pct || run_step playtest playtest
     [ -f scripts/quest_bot.mjs ] && ! session_active && ! has_key main_quests_shipped && run_step quests quests
     [ -f scripts/wic_perf.mjs ] && ! session_active && ! has_key fps_median && run_step perf perf
+    [ -x tools/wic_gate.sh ] && ! session_active && ! has_key gate_ok && run_step gate gate
   fi
   [ $ONCE = 1 ] && break
   sleep 600
