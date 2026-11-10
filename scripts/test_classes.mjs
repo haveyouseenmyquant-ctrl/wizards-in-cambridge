@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Headless check of the game classes: every class casts all 6 spells (base and with talents) at a dummy target.
 //   node scripts/test_classes.mjs [site_dir]
-// Prints JSON {ok, classes:{cls:{spells:{id:{cast, dmg}}}}, errors}; exit code 1 on console errors or failed casts.
+// Prints JSON {ok, classes:{cls:{spells:{id:{cast, dmg}}, talents:{id:{cast, dmg}}}}, load_s, errors}; exit 1 on console errors or failed casts.
+// Loads with ?q=low (spell logic doesn't depend on the preset) and waits up to WIC_LOAD_TIMEOUT_S (default 180) for the
+// world and the game layer: under SwiftShader on the merged trunk the game layer takes ~25 s after the world, more under load.
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -13,6 +15,7 @@ const puppeteer = createRequire(path.join(ROOT, 'tools/'))('puppeteer-core');
 const SRC = path.resolve(process.argv[2] || path.join(ROOT, 'site'));
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary' };
+const LOAD_MS = 1000 * +(process.env.WIC_LOAD_TIMEOUT_S || 180);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const server = http.createServer((req, res) => {
@@ -39,13 +42,15 @@ try {
     if (m.type() === 'error' && !/404|Failed to load resource/.test(t)) errors.push(t);
     if (m.type() === 'warning' && /\[(game|classes)\]/.test(t) && !/mobs\.js|items\.js/.test(t)) errors.push(t);
   });
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug&nopick`, { waitUntil: 'domcontentloaded' });
-  await page.waitForFunction('window.__walkReady === true', { timeout: 90000 });
-  await page.waitForFunction('window.__game && window.__game.caster && window.__game.hud', { timeout: 30000 });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug&nopick&q=low`, { waitUntil: 'domcontentloaded' });
+  const t0 = Date.now();
+  await page.waitForFunction('window.__walkReady === true', { timeout: LOAD_MS, polling: 500 });
+  await page.waitForFunction('window.__game && window.__game.caster && window.__game.hud', { timeout: LOAD_MS, polling: 500 });
+  out.load_s = +((Date.now() - t0) / 1000).toFixed(1);
   // quiet arena: no encounters, no live mobs (the test spawns its own stunned target per cast)
   await page.evaluate(() => { const g = window.__game; if (g.mobSystem) { g.mobSystem.encountersEnabled = false; for (const m of [...g.mobs]) g.mobSystem.remove(m); } });
   const cls = await page.evaluate(() => Object.keys(window.__game.caster.classes));
-  out = { ok: true, classes: {}, modules: await page.evaluate(() => ({ mobs: window.__game.mobs.length, items: !!window.__game.items })) };
+  out = { ok: true, load_s: out.load_s, classes: {}, modules: await page.evaluate(() => ({ mobs: window.__game.mobs.length, items: !!window.__game.items })) };
   for (const c of cls) {
     for (const withTalents of [false, true]) {
       await page.evaluate((c, wt) => {
@@ -78,7 +83,7 @@ try {
         if (!r.cast) out.ok = false;
         res[r.id] = r;
       }
-      (out.classes[c + (withTalents ? '+talents' : '')] = res);
+      (out.classes[c] ||= {})[withTalents ? 'talents' : 'spells'] = res;
     }
   }
   out.fps = await page.evaluate(() => new Promise(ok => { let n = 0; const t0 = performance.now(); const f = () => { if (++n < 30 && performance.now() - t0 < 20000) requestAnimationFrame(f); else ok(+(n * 1000 / (performance.now() - t0)).toFixed(1)); }; requestAnimationFrame(f); }));
