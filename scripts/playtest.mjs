@@ -15,6 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { wicLaunch } from './lib/wic_launch.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const puppeteer = createRequire(path.join(ROOT, 'tools/'))('puppeteer-core');
@@ -39,12 +40,12 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(f));
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
-const URL0 = `http://127.0.0.1:${server.address().port}/?debug&nopick`;
-const launch = () => puppeteer.launch({
+const URL0 = `http://127.0.0.1:${server.address().port}/?debug&nopick${process.env.WIC_TEST_QUERY || ''}`;
+const launch = () => puppeteer.launch(wicLaunch({
   executablePath: CHROME, headless: true, protocolTimeout: 0,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=480,270'],
   defaultViewport: { width: 480, height: 270 },   // small canvas: swiftshader frames between sim chunks stay cheap
-});
+}));
 let browser = await launch();
 // session 82: the s81 live run lost Chrome at 304 s ('Connection closed') and every later run failed against the dead
 // browser (playable_classes 0). Relaunch once per crash; runs in flight on the old browser retry as harness errors.

@@ -157,3 +157,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Roof priority: EnvVFX told dd7b comes first, with before/after shots in data/derived/roof_shots/; I'll merge and publish when it's ready.
 - Graphics (mob rigs) and Story (Q4 fixes) have uncommitted work; both told to commit. New QA task d022: faster playtest.
 - measure.sh (live 448ceb61): judged 51.4, quests 3, fps 60, load 0.51, playtest 0 (not yet scored by service.sh).
+
+## 2026-11-10 QA s5
+- wic_playtest.mjs: children default to WIC_TEST_GPU=1 + WIC_TEST_QUERY=&q=low; playtest.mjs now uses wicLaunch and honours
+  WIC_TEST_QUERY. Full main-path playtest 765 s -> 91-107 s, same 12 judged runs. One intermittent warden quest_bot fail
+  (crest_griffin not killed in time) seen once in 2 runs.

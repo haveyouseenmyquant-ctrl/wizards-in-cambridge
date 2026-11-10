@@ -26,7 +26,7 @@ if (!hash) { log('no build hash for', SITE); process.exit(1); }
 function child(script, args) {   // run a bot, stderr passed through, returns its last stdout JSON line (or null)
   return new Promise(ok => {
     const p = spawn(process.execPath, [path.join(ROOT, 'scripts', script), SITE, ...args.map(String)],
-      { env: { ...process.env, WIC_SOFTLOCK_S: String(SOFT_S) }, stdio: ['ignore', 'pipe', 'inherit'] });
+      { env: { WIC_TEST_GPU: '1', WIC_TEST_QUERY: '&q=low', ...process.env, WIC_SOFTLOCK_S: String(SOFT_S) }, stdio: ['ignore', 'pipe', 'inherit'] });
     let out = '';
     p.stdout.on('data', d => out += d);
     p.on('close', code => {
