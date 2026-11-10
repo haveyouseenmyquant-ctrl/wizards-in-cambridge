@@ -111,5 +111,14 @@
   "main_quests_shipped": 2,
   "wall_s": 228,
   "at": "2026-11-10T07:33:06.693Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "quest_bot": true
  }
 }

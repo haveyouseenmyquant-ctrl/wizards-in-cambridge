@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 7)
+## State (2026-11-10, after session 8)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PRIVATE). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -16,7 +16,7 @@
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
 - Trunk 0657a325 (s7, merged Optimisation shadow proxies/LOD/grid raycast): fps 60 (p5 59), draws 1743, load 0.52;
-  judge/quests rescored by lead s7 (see JOURNAL).
+  judged 44.3, quests 2, playtest 100 (service.sh). s8: merged QA gate; no other node had new commits.
 - Prev trunk 44f67e9a (s6, merged Gameplay progression: L20, spell ranks, 3x3 talents, sets): judged 46.2 (V 50,
   Anim 27, Combat 54.5, Story 54, UI 44), quests 2 (4/4), playtest 100, fps 52 (p5 44, min 32), load 0.77.
   build_hash.py now includes quests.js/npc_rig.js/quests/*.json, so any quest edit = new hash = rescore needed. Judge noise is ~±2 (Visuals 50->45 with no visual change). Animation stuck ~22:
@@ -26,11 +26,11 @@
 - scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").
 - skills/wic-rescore = how to score a build by hand (judge ~8 min, playtest ~35 min).
 - Merging: JOURNAL.md conflicts -> keep both sides; site/app/game/index.js MODULES line conflicts -> union.
-  Run game tests one at a time (parallel browsers time out; recorder breaks and perf drops if the playtest runs too). Once QA ships tools/wic_gate.sh, use it as merge gate.
+  Run game tests one at a time (parallel browsers time out; recorder breaks and perf drops if the playtest runs too). Merge gate = tools/wic_gate.sh site (~170 s GPU Chrome, last line JSON). test_feel dodgeIFrames flaked once in gate (Gameplay told).
   data/derived/wic_harness_log.jsonl is dirtied by service.sh: `git checkout` it before merging QA.
 
 ## Organisation (6 nodes, all children of root)
-- qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring. Task ce60 merge gate + judge spread.
+- qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring (+gate step per hash). No open task.
 - story: quests/dialogue, quest_bot (?q=low, 4 workers, ~150 s). s5 task 6b1b: quest 3 in ring 2.
 - gameplay: feel.js, progression (merged s6), boss TTK d623 (OK'd to add bossTTK to quest_bot), UI polish 02a9.
 - graphics: characters+animation only. 8228 mob glbs, e9f5 NPC glbs, 8765 Animation>40. Told judge still sees
