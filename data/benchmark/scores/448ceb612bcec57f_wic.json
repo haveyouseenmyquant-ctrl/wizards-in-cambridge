@@ -47,5 +47,10 @@
     "all": "The interface has one consistent dark-and-gold serif theme across class select, inventory, talents and the HUD. It has clear resource bars, numbered skill slots with cooldowns, a minimap, a boss bar with phases, rarity-coloured loot callouts and a structured talent tree. It falls short of 80 for several reasons. Spell icons are tiny and generic, and the talent icons are placeholder circles. Combat gets cluttered, with the quest tracker, toasts, damage numbers and a large loot banner overlapping the action and boss text. The quest-complete overlay crowds the spawn frame, and the class-selection cards cover the HUD that sits faintly behind them."
    }
   }
- }
+ },
+ "mob_types": 12,
+ "bosses_ok": 3,
+ "equipment_effects": 58,
+ "feel_checks_passed": 17,
+ "feel_checks_total": 17
 }
