@@ -11,3 +11,21 @@
 {"hash":"38af3295c7c7b07c","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T02:12:04.443Z"}
 {"hash":"38af3295c7c7b07c","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T02:12:04.443Z"}
 {"hash":"38af3295c7c7b07c","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T02:12:04.443Z"}
+{"hash": "5d1d03387ad7e1ca", "step": "judge", "status": "ok", "secs": 735, "t": "2026-11-10T05:23:43Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:pyromancer","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:stormcaller","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T05:24:31.895Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:pyromancer","status":"ok","t":"2026-11-10T05:27:36.358Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:stormcaller","status":"ok","t":"2026-11-10T05:27:36.358Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-10T05:27:36.358Z"}
+{"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-10T05:27:36.358Z"}
+{"hash": "5d1d03387ad7e1ca", "step": "playtest", "status": "ok", "secs": 233, "t": "2026-11-10T05:27:36Z"}

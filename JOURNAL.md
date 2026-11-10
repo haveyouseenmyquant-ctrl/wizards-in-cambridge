@@ -56,3 +56,9 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged Graphics (mob_rig/npc_rig/explore_rig, NPC glbs) and EnvVFX (golden hour, AgX, bloom, class spell VFX) -> b4c82868.
   feel 17/17, items 45, mobs 12+3, quest_bot 4/4; GPU perf 60 fps / 0.48 s. test_classes times out on merge (SwiftShader) -> QA c0ca.
 - Judge b4c82868: 45 (Visuals 38->50, Animation 22 unchanged: player still reads as blocky/static) -> note to Graphics.
+
+## 2026-11-10 — session 5 (lead)
+- Merged Story quest 2 'Rung Down' -> 5d1d0338. quest_bot 4/4 (main_quests_shipped 2), playtest 12/12 (100).
+- Judge 43.5 (V 45, Anim 18.5, Combat 57, Story 52, UI 43): within noise of 45. GPU perf fps 52 (was 60) -> Optimisation 5145.
+- Recorder fails (menus/story scene ENOENT) when run alongside the playtest bot: run judge/perf alone, never in parallel.
+- New task Story 6b1b: quest 3 in ring 2.

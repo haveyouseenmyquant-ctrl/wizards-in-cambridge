@@ -1,4 +1,111 @@
 {
  "main_quests_shipped": 2,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "fps_median": 52,
+ "load_seconds": 0.76,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 2.59,
+  "fps_p5": 43,
+  "fps_min": 37,
+  "fight_pct": 100,
+  "casts": 174,
+  "kills": 30,
+  "maxMobs": 36,
+  "dist": 190,
+  "laps": 1,
+  "draw_calls_median": 1,
+  "tris_median": 1,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-10T05:25:43.242Z"
+ },
+ "judged_game_quality": 43.5,
+ "judged_sections": {
+  "Visuals": 45.0,
+  "Animation": 18.5,
+  "Combat feel": 57.0,
+  "Story presentation": 52.0,
+  "UI polish": 43.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together well. Its golden-hour sky gives warm light with real-time shadows and some atmospheric haze, and the facades, church tracery, bike racks, railings and trees are recognisable. The geometry is still blocky, though: window glass and shopfronts are flat and untextured, and the market stalls are repeated boxes in flat colours. There is little clutter or wear. The biggest gap is the characters. The player is a smooth, featureless teal blob with a hat, and the combat frames show primitive enemies and noisy, poorly integrated VFX, which makes the build look like a prototype."
+   },
+   "Animation": {
+    "all": "The player is a robed, limbless blob with a hat, and it holds the same pose in all four walking frames and every combat frame, so no walk cycle, cast pose or hit reaction can be seen. The enemies are simple primitive shapes (white ghost-like blobs, a bell, a red egg-shaped boss) with no visible limb or attack animation, and attacks show up only as beams, rings and damage numbers. There's no secondary motion, crowd or environmental animation, and the sheet doesn't match its brief: it shows four classes at the same two timestamps rather than the hexweaver at evenly spaced times."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show good hit feedback: crit damage numbers, chain counters, Staggered/Interrupted callouts, a boss health bar split into phases with an 'enraged' announcement, and loot beams colored by rarity. The event log adds evidence of crowd control, mobility and lots of sound. The biggest gaps: one spell (hex_dart) makes up about 75% of casts, enemies and spell effects are small primitive shapes that are hard to read, and a dialogue box that never closes covers the bottom of the screen the whole time. More than half the clip has no enemies at all, and none of the frames show hit-stop, screen shake or enemy attack wind-ups.",
+    "pyromancer": "The frames show damage numbers, crit callouts, combo chains, Interrupted/Staggered tags, a boss bar with phase markers, a Phase II and enrage banner, and loot beams and labels coloured by rarity. The event log adds varied enemies and about 558 sound voices. The play itself is thin: 70 of the 90 casts are the same ember bolt, the spell effects are small, smeared blobs with no clear shapes, and a narration box plus an overlapping quest panel cover large parts of the fight. There's no visible hit-stop, knockback or crowd control, and only one class is shown, so nothing shows how the classes differ.",
+    "stormcaller": "The combat systems are there: six different spells are cast, damage and crit numbers appear, the chain counter rises, enemies get staggered and interrupted, enemy attacks show red ground markers, the boss has a phase bar and a Vanquished moment, and loot drops come with rarity colours and light beams. But the frames are hard to read. A narration box and the quest text cover much of the screen in every frame, the spell effects are mostly faint flashes with no clear shapes, and enemies look small, sparse and similar to one another. The player took only one hit in 60 s, so the fights have little threat or depth, and only one class is shown, so there is no evidence that classes play differently.",
+    "warden": "Combat is busy and has real feedback: damage numbers, crits, chain counters, 'Staggered'/'Interrupted' labels, a boss health bar with marked Phase II and a 'Great Toll' windup, and loot toasts colour-coded by rarity. That puts it close to the 60 anchor. It is held back by readability: a narrative dialogue box covers the lower third of every frame, damage numbers and stagger text pile up over unclear effects, and pebble_shot makes up 62 of the 81 casts, so the fight looks repetitive. Only one class is shown, so nothing shows the classes playing differently, and there is no visible hit-stop, crowd control or mobility shaping the fights."
+   },
+   "Story presentation": {
+    "all": "The writing is good and fits a clear premise in a real place: Market Hill, Great St Mary's, the thirteenth chime. Dialogue boxes have portraits, speaker names and roles, and there are letterbox bars, a prologue title card, a quest-complete reward screen, a tracker, a waypoint marker and a minimap. But the speaking NPCs and the Bellwarden boss never appear on screen. There is no camera staging, character animation or branching choice. A stuck 'Loading...' label, a quest tracker that never updates and cluttered item tooltips also hurt the cinematic framing."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent serif and dark-panel theme: the class selection cards are clear, there is a quest tracker with a distance readout, the boss bar shows phase marks, crit numbers are styled and there is a minimap. The layout is badly cluttered, though. Quest-complete banners, dialogue boxes and loot popups stay stacked on top of the inventory and talent screens, and the dialogue/narration box covers the spell bar and resource bars throughout combat. The inventory is a plain text list with no icons or real rarity colours, the talent screen is hidden behind overlapping panels, and floating text in combat piles up into clutter that is hard to read."
+   }
+  }
+ },
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 1,
+   "passed": 1,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 1,
+   "passed": 1,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 1,
+   "passed": 1,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 1,
+   "passed": 1,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 4,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": null,
+  "main_quests_shipped": 2,
+  "wall_s": 233,
+  "at": "2026-11-10T05:27:36.356Z"
+ }
 }
