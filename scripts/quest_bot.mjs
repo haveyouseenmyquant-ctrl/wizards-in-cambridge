@@ -8,6 +8,7 @@
 //   node scripts/quest_bot.mjs [site_dir] [runs=4]      (runs cycle through the classes)
 // Last stdout line: {"main_quests_shipped": n, "quest_bot_pass_pct": p, "runs": [...], ...}
 // Also merges main_quests_shipped and quest_bot_pass_pct into data/benchmark/scores/<build_hash>_wic.json.
+import { wicLaunch } from './lib/wic_launch.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -38,11 +39,11 @@ const server = http.createServer((req, res) => {
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
 const URL0 = `http://127.0.0.1:${server.address().port}/?debug&nopick&q=low`;   // low preset (rendering only): 4 runs 297 s -> 180 s wall, inside the 5 min task-check cap
-const browser = await puppeteer.launch({
+const browser = await puppeteer.launch(wicLaunch({
   executablePath: CHROME, headless: true, protocolTimeout: 0,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=480,270'],
   defaultViewport: { width: 480, height: 270 },
-});
+}));
 
 // ---------------- the in-page bot (window.__qbot)
 function installBot(softS = 0) {

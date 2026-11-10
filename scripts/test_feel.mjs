@@ -7,6 +7,7 @@
 //   again) · hard lock eases the view onto the target · exploration toggle (G) drops the game and returns to 1st person.
 //   node scripts/test_feel.mjs [site_dir]
 // Last line: {"ok": bool, "checks": {...}, ...}; exit code 1 on failure.
+import { wicLaunch } from './lib/wic_launch.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -28,11 +29,11 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(f));
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
-const browser = await puppeteer.launch({
+const browser = await puppeteer.launch(wicLaunch({
   executablePath: CHROME, headless: true, protocolTimeout: 0,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=960,540'],
   defaultViewport: { width: 960, height: 540 },
-});
+}));
 const WATCHDOG_S = +(process.env.WC_TEST_WATCHDOG_S || 900);
 setTimeout(() => { console.log(JSON.stringify({ ok: false, error: `watchdog ${WATCHDOG_S} s` })); process.exit(1); }, WATCHDOG_S * 1000).unref();
 const errors = [];

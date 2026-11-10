@@ -4,6 +4,7 @@
 // Prints JSON {ok, classes:{cls:{spells:{id:{cast, dmg}}, talents:{id:{cast, dmg}}}}, load_s, errors}; exit 1 on console errors or failed casts.
 // Loads with ?q=low (spell logic doesn't depend on the preset) and waits up to WIC_LOAD_TIMEOUT_S (default 180) for the
 // world and the game layer: under SwiftShader on the merged trunk the game layer takes ~25 s after the world, more under load.
+import { wicLaunch } from './lib/wic_launch.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -27,11 +28,11 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(f));
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
-const browser = await puppeteer.launch({
+const browser = await puppeteer.launch(wicLaunch({
   executablePath: CHROME, headless: true,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=960,540'],
   defaultViewport: { width: 960, height: 540 }, protocolTimeout: 600000,
-});
+}));
 const errors = [];
 let out = { ok: false };
 try {
