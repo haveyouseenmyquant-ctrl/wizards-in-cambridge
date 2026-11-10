@@ -152,6 +152,23 @@ export function install(game) {
 
   const spawn0 = sys.spawn.bind(sys);
   sys.spawn = (...args) => { const mob = spawn0(...args); if (MOB_MODELS[mob.type.id]) attach(mob) || (mob.glbPending = true); return mob; };
+  // s4: rigged mobs keep their body after death. The procedural death styles (stretch, spin, swell) would mangle a
+  // skinned model, so a rigged mob plays its death clip, flyers drop to the ground, the body lies still, then sinks and
+  // fades. The whole thing stays under the 3 s the self-test (__mobTest) allows for removal.
+  const DEATH_HOLD = 2.0, DEATH_END = 2.7;
+  const tickDeath0 = sys.tickDeath.bind(sys);
+  sys.tickDeath = (mob, dt) => {
+    if (!mob.glb) return tickDeath0(mob, dt);
+    mob.deathT += dt; const t = mob.deathT, gz = mob.groundZ ?? mob.z;
+    if (mob.aura) mob.aura.material.opacity = Math.max(0, 0.5 * (1 - t / 0.6));
+    if (mob.type.flying) { const f = Math.min(1, t / 0.7); mob.group.position.y = mob.z + (gz - mob.z) * f * f; }
+    if (t > DEATH_HOLD) {
+      const f = Math.min(1, (t - DEATH_HOLD) / (DEATH_END - DEATH_HOLD));
+      mob.group.position.y = (mob.type.flying ? gz : mob.z) - f * 0.5 * mob.type.scale;
+      for (const c of mob.mats) { c.transparent = true; c.depthWrite = f < 0.5; c.opacity = Math.max(0, 1 - f); }
+    }
+    if (t > DEATH_END) sys.remove(mob);
+  };
   const update0 = sys.update.bind(sys);
   const tick = (dt) => {
     for (const mob of game.mobs) {
