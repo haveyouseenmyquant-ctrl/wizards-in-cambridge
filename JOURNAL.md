@@ -72,3 +72,9 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Judged 0657a325: 45.4 this run, 44.3 averaged in measure.sh (V 48.5, Anim 22-24, Combat 55, Story 50-52, UI 44-45): unchanged within noise, as expected for a perf-only merge.
   quest_bot 4/4 (main_quests_shipped 2). The main-path playtest on this hash is left to service.sh (~35 min).
 - Animation is still the weakest section after 3 builds -> note to Graphics to work from the judge's stated reasons.
+
+## 2026-11-10 QA s3
+- Merge gate tools/wic_gate.sh: 6 game tests run one at a time, JSON summary; GPU Chrome by default (155 s, all pass on
+  0657a325), SwiftShader fallback (683 s with q=low). service.sh step 'gate' logs per hash (gate_ok, gate_tests,
+  data/derived/wic_gate_log.jsonl). test_classes fixed on merged trunk (?q=low, 180 s load timeout, per-class output).
+  wic_judge judge_meta now has section_spread / quality_spread.
