@@ -19,7 +19,7 @@ const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const puppeteer = createRequire(path.join(ROOT, 'tools/'))('puppeteer-core');
 const SRC = path.resolve(process.argv[2] || path.join(ROOT, 'site'));
 const RUNS = +(process.argv[3] || 4);
-const WORKERS = Math.max(1, +(process.env.WIC_QUESTBOT_WORKERS || 2));
+const WORKERS = Math.max(1, +(process.env.WIC_QUESTBOT_WORKERS || 4));
 const SOFT_S = +(process.env.WIC_SOFTLOCK_S || 0);   // QA main-path bot: soft-lock after this much game time without progress (0 = off)
 const RUN_WALL_S = +(process.env.WIC_QUESTBOT_RUN_WALL_S || 1500);
 const CLASSES = ['pyromancer', 'stormcaller', 'warden', 'hexweaver'];
@@ -37,7 +37,7 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(f));
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
-const URL0 = `http://127.0.0.1:${server.address().port}/?debug&nopick`;
+const URL0 = `http://127.0.0.1:${server.address().port}/?debug&nopick&q=low`;   // low preset (rendering only): 4 runs 297 s -> 180 s wall, inside the 5 min task-check cap
 const browser = await puppeteer.launch({
   executablePath: CHROME, headless: true, protocolTimeout: 0,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=480,270'],
