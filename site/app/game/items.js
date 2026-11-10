@@ -112,7 +112,7 @@ export function install(game) {
       applyStats(d, -1); delete sv.eq[slot]; sv.inv.push(id);
       game.emit('unequip', { item: d, id, slot }); game.persist(); render(); return true; },
     drop(id, x, y, z) { return spawnPickup(id, x, y, z); },
-    roll(rarity) { const pool = Object.keys(ITEMS).filter(k => !ITEMS[k].starter && ITEMS[k].rarity === rarity); if (!pool.length) return null;
+    roll(rarity) { const pool = Object.keys(ITEMS).filter(k => !ITEMS[k].starter && !ITEMS[k].quest && ITEMS[k].rarity === rarity); if (!pool.length) return null;
       const fresh = pool.filter(k => !S.owns(k)); const p = fresh.length ? fresh : pool; return p[Math.floor(Math.random() * p.length)]; },
   };
   S.drop = (...a) => items.drop(...a);
