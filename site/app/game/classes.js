@@ -32,11 +32,14 @@ export const CLASSES = {
     ],
     talents: [
       [{ name: 'Split Embers', desc: 'Ember Bolt fires 3 bolts in a fan', f: S => { S.ember_bolt.count = 3; } },
-       { name: 'Searing Core', desc: 'Ember Bolt +40% damage and burns', f: S => { S.ember_bolt.dmg *= 1.4; S.ember_bolt.burn = { dps: 4, dur: 2 }; } }],
-      [{ name: 'Wide Blast', desc: 'Fireburst Orb radius +60%', f: S => { S.fireburst.splash *= 1.6; } },
-       { name: 'Long Spray', desc: 'Cinder Spray range +50%, burns twice as hot', f: S => { S.cinder_spray.range *= 1.5; S.cinder_spray.burn.dps *= 2; } }],
-      [{ name: 'Endless Dawn', desc: 'Sunfall lasts 50% longer', f: S => { S.sunfall.dur *= 1.5; } },
-       { name: 'Quick Kindling', desc: 'All Pyromancer cooldowns -20%', f: S => { for (const k in S) S[k].cd *= 0.8; } }],
+       { name: 'Searing Core', desc: 'Ember Bolt +40% damage and burns', f: S => { S.ember_bolt.dmg *= 1.4; S.ember_bolt.burn = { dps: 4, dur: 2 }; } },
+       { name: 'Piercing Ember', desc: 'Ember Bolt punches through 2 foes', f: S => { S.ember_bolt.pierce = (S.ember_bolt.pierce || 0) + 2; } }],
+      [{ name: 'Wide Blast', desc: 'Fireburst Orb radius +60% and hurls foes back', f: S => { S.fireburst.splash *= 1.6; S.fireburst.knock = 4; } },
+       { name: 'Long Spray', desc: 'Cinder Spray range +50%, burns twice as hot, choking smoke slows', f: S => { S.cinder_spray.range *= 1.5; S.cinder_spray.burn.dps *= 2; S.cinder_spray.slow = 2; } },
+       { name: 'Scorched Path', desc: 'Flame Step sets the foes it hits burning (6/s for 4 s)', f: S => { S.flame_step.burn = { dps: 6, dur: 4 }; } }],
+      [{ name: 'Endless Dawn', desc: 'Sunfall lasts 50% longer and each meteor staggers (0.3 s stun)', f: S => { S.sunfall.dur *= 1.5; S.sunfall.stun = 0.3; } },
+       { name: 'Quick Kindling', desc: 'All cooldowns -20%; Kindle Ring sears foes (+20% damage taken, 4 s)', f: S => { for (const k in S) S[k].cd *= 0.8; S.kindle_ring.curse = 1.2; S.kindle_ring.curseDur = 4; } },
+       { name: 'Sun Mantle', desc: 'Sunfall centres on you and travels with you', f: S => { S.sunfall.follow = true; } }],
     ],
   },
   stormcaller: {
@@ -51,12 +54,15 @@ export const CLASSES = {
       { id: 'tempest', name: 'Tempest', glyph: '☈', kind: 'zone', type: 'storm', mana: 50, cd: 70, dmg: 24, radius: 12, dur: 5, interval: 0.3, tick: 'strike', follow: true, color: 0xe0f0ff, sfx: 'tempest', look: 'tempest', ult: true },
     ],
     talents: [
-      [{ name: 'Forked Lance', desc: 'Spark Lance chains to 2 more foes', f: S => { S.spark_lance.chain += 2; } },
-       { name: 'Charged Lance', desc: 'Spark Lance +35% damage', f: S => { S.spark_lance.dmg *= 1.35; } }],
+      [{ name: 'Forked Lance', desc: 'Spark Lance chains to 2 more foes and slows them', f: S => { S.spark_lance.chain += 2; S.spark_lance.slow = 1; } },
+       { name: 'Charged Lance', desc: 'Spark Lance +35% damage and jolts (0.25 s stun)', f: S => { S.spark_lance.dmg *= 1.35; S.spark_lance.stun = 0.25; } },
+       { name: 'Galvanic Lance', desc: 'Spark Lance heals you for 15% of its damage', f: S => { S.spark_lance.drain = 0.15; } }],
       [{ name: 'Slipstream', desc: 'Wind Dash +60% distance and brief invulnerability', f: S => { S.wind_dash.dist *= 1.6; S.wind_dash.invuln = 0.6; } },
-       { name: 'Thunderclap', desc: 'Gale Burst stuns for 1 s', f: S => { S.gale_burst.stun = 1; } }],
-      [{ name: 'Eye of the Storm', desc: 'Tempest strikes twice as often', f: S => { S.tempest.interval /= 2; } },
-       { name: 'Wide Field', desc: 'Static Field radius +50%, lasts 2 s longer', f: S => { S.static_field.radius *= 1.5; S.static_field.dur += 2; } }],
+       { name: 'Thunderclap', desc: 'Gale Burst stuns for 1 s', f: S => { S.gale_burst.stun = 1; } },
+       { name: 'Thunder Wake', desc: 'Wind Dash leaves a thunderclap where you stood (20 dmg, 3.5 m, slows)', f: S => { Object.assign(S.wind_dash, { wake: true, dmg: 20, radius: 3.5, slow: 2 }); } }],
+      [{ name: 'Eye of the Storm', desc: 'Tempest strikes twice as often and each strike stuns 0.2 s', f: S => { S.tempest.interval /= 2; S.tempest.stun = 0.2; } },
+       { name: 'Wide Field', desc: 'Static Field +50% radius, +2 s; foes inside are conductive (+20% damage taken)', f: S => { S.static_field.radius *= 1.5; S.static_field.dur += 2; S.static_field.curse = 1.2; S.static_field.curseDur = 3; } },
+       { name: 'Storm Cloak', desc: 'Static Field forms around you and moves with you', f: S => { S.static_field.follow = true; } }],
     ],
   },
   warden: {
@@ -70,12 +76,15 @@ export const CLASSES = {
       { id: 'monolith', name: 'Monolith Ward', glyph: '▲', kind: 'shield', type: 'stone', mana: 50, cd: 75, amount: 120, dur: 10, dmg: 130, radius: 9, stun: 3, color: 0xffd890, sfx: 'monolith', look: 'monolith', ult: true },
     ],
     talents: [
-      [{ name: 'Bedrock', desc: 'Granite Skin absorbs 60% more', f: S => { S.granite_skin.amount *= 1.6; } },
-       { name: 'Quick Set', desc: 'Granite Skin cooldown -40%', f: S => { S.granite_skin.cd *= 0.6; } }],
-      [{ name: 'Fault Line', desc: 'Quake Stomp radius +40%', f: S => { S.quake_stomp.radius *= 1.4; } },
-       { name: 'Aftershock', desc: 'Quake Stomp stuns 1 s longer', f: S => { S.quake_stomp.stun += 1; } }],
-      [{ name: 'Crater', desc: 'Boulder Leap landing radius x2, +50% damage', f: S => { S.boulder_leap.radius *= 2; S.boulder_leap.dmg *= 1.5; } },
-       { name: 'Ancient Ward', desc: 'Monolith Ward cooldown -35%', f: S => { S.monolith.cd *= 0.65; } }],
+      [{ name: 'Bedrock', desc: 'Granite Skin absorbs 60% more and its forming shoves foes back (10 dmg, 3.5 m)', f: S => { S.granite_skin.amount *= 1.6; Object.assign(S.granite_skin, { radius: 3.5, dmg: 10, knock: 4 }); } },
+       { name: 'Quick Set', desc: 'Granite Skin cooldown -40% and 0.5 s invulnerability as it sets', f: S => { S.granite_skin.cd *= 0.6; S.granite_skin.invuln = 0.5; } },
+       { name: 'Twin Pebbles', desc: 'Pebble Shot fires 2 stones', f: S => { S.pebble_shot.count = 2; } }],
+      [{ name: 'Fault Line', desc: 'Quake Stomp radius +40% and leaves foes slowed', f: S => { S.quake_stomp.radius *= 1.4; S.quake_stomp.slow = 2.5; } },
+       { name: 'Aftershock', desc: 'Quake Stomp stuns 1 s longer and throws foes back', f: S => { S.quake_stomp.stun += 1; S.quake_stomp.knock = 3; } },
+       { name: 'Rootgrasp', desc: 'Rootbind Spikes root foes in place (1.5 s stun)', f: S => { S.rootbind.stun = 1.5; } }],
+      [{ name: 'Crater', desc: 'Boulder Leap landing radius x2, +50% damage, throws foes outward', f: S => { S.boulder_leap.radius *= 2; S.boulder_leap.dmg *= 1.5; S.boulder_leap.knock = 4; } },
+       { name: 'Ancient Ward', desc: 'Monolith Ward cooldown -35%; its shockwave cracks armour (+25% damage taken, 6 s)', f: S => { S.monolith.cd *= 0.65; S.monolith.curse = 1.25; S.monolith.curseDur = 6; } },
+       { name: 'Living Stone', desc: "Monolith Ward's shockwave heals you for 50% of its damage", f: S => { S.monolith.drain = 0.5; } }],
     ],
   },
   hexweaver: {
@@ -89,12 +98,15 @@ export const CLASSES = {
       { id: 'night_bloom', name: 'Night Bloom', glyph: '✿', kind: 'zone', type: 'hex', mana: 50, cd: 70, dmg: 28, radius: 8, dur: 4, interval: 0.5, tick: 'field', curse: 1.5, curseDur: 6, drain: 0.25, range: 30, color: 0x9030ff, sfx: 'bloom', look: 'bloom', ult: true },
     ],
     talents: [
-      [{ name: 'Gluttony', desc: 'Hex Dart drains 60% of damage dealt', f: S => { S.hex_dart.drain = 0.6; } },
-       { name: 'Needle Hex', desc: 'Hex Dart pierces through 2 foes', f: S => { S.hex_dart.pierce = 2; } }],
-      [{ name: 'Deep Wither', desc: 'Withering Mark curse 1.6x damage taken', f: S => { S.withering_mark.curse = 1.6; } },
-       { name: 'Third Wisp', desc: 'Bound Wisps summons 3 wisps', f: S => { S.bound_wisps.count = 3; } }],
-      [{ name: 'Overgrowth', desc: 'Night Bloom radius +50%', f: S => { S.night_bloom.radius *= 1.5; } },
-       { name: 'Shadow Wake', desc: 'Shade Step leaves a cursing burst where you were', f: S => { Object.assign(S.shade_step, { wake: true, dmg: 15, radius: 3.5, curse: 1.3, curseDur: 5 }); } }],
+      [{ name: 'Gluttony', desc: 'Hex Dart drains 60% of damage dealt and saps its victim (slow)', f: S => { S.hex_dart.drain = 0.6; S.hex_dart.slow = 1.5; } },
+       { name: 'Needle Hex', desc: 'Hex Dart pierces through 2 foes', f: S => { S.hex_dart.pierce = 2; } },
+       { name: 'Hex Volley', desc: 'Hex Dart fires 2 darts', f: S => { S.hex_dart.count = 2; } }],
+      [{ name: 'Deep Wither', desc: 'Withering Mark curse 1.6x damage taken and paralyses for 0.5 s', f: S => { S.withering_mark.curse = 1.6; S.withering_mark.stun = 0.5; } },
+       { name: 'Third Wisp', desc: 'Bound Wisps summons 3 wisps whose bites slow', f: S => { S.bound_wisps.count = 3; S.bound_wisps.slow = 1; } },
+       { name: 'Siphon Chain', desc: 'Soul Siphon leaps on to 2 more foes', f: S => { S.soul_siphon.chain = 2; S.soul_siphon.chainRange = 8; } }],
+      [{ name: 'Overgrowth', desc: 'Night Bloom radius +50% and its thorns slow', f: S => { S.night_bloom.radius *= 1.5; S.night_bloom.slow = 1; } },
+       { name: 'Shadow Wake', desc: 'Shade Step leaves a cursing burst where you were', f: S => { Object.assign(S.shade_step, { wake: true, dmg: 15, radius: 3.5, curse: 1.3, curseDur: 5 }); } },
+       { name: 'Bloom Mantle', desc: 'Night Bloom opens around you and follows you', f: S => { S.night_bloom.follow = true; } }],
     ],
   },
 };
@@ -124,6 +136,7 @@ export function install(game) {
     });
     const picks = caster.picks;
     def.talents.forEach((tier, t) => { const c = picks[t]; if (c != null && game.stats.level >= TALENT_LEVELS[t]) tier[c]?.f(S); });
+    for (const f of game.spellMods || []) { try { f(S, game.stats.level, caster.cls); } catch (e) { console.warn('[classes] spellMod', e); } }   // progression.js ranks
     caster.spells = list;
     game.emit('spellsChanged', { cls: caster.cls });
   }
@@ -644,6 +657,8 @@ export function install(game) {
     },
     shield(sp) {
       game.shield = Math.max(game.shield || 0, sp.amount); game.shieldUntil = game.time + sp.dur;
+      if (sp.invuln) game.invulnUntil = Math.max(game.invulnUntil || 0, game.time + sp.invuln);
+      if (sp.radius && !sp.ult) { aoe(p.x, p.y, p.z + 1, sp.radius, sp); vfx.ring(p.x, p.y, p.z, sp.color, 0.4, sp.radius * 1.1, 0.5, 0.8); }   // Bedrock shove
       vfx.dome(sp.color, sp.ult ? 1.8 : 1.4, () => game.shield > 0);
       // session 52: a collar of stone shards bursts up around the caster as the rune shell closes, plus a dust skirt
       for (let k = 0; k < 7; k++) { const a = k / 7 * 6.283 + Math.random() * 0.3; vfx.spike(p.x + Math.cos(a) * 1.6, p.y + Math.sin(a) * 1.6, p.z, 0.9 + Math.random() * 0.5, 0.7, 0xa09070); }
@@ -652,7 +667,7 @@ export function install(game) {
       vfx.ring(p.x, p.y, p.z, sp.color, 0.4, 2.6, 0.45, 0.8); vfx.light(p.x, p.y, p.z + 1.2, 0xffc060, 0.8, 0.4);
       vfx.burst(p.x, p.y, p.z + 0.3, 24, { tex: 'shard', color: 0xffd890, color2: 0xa07030, speed: 1, radial: 2.5, size: 0.28, life: 0.9, ring: 1.6, up: 3, grav: 4, spin: 5 });
       vfx.burst(p.x, p.y, p.z + 0.2, 10, { tex: 'rune', color: sp.color, speed: 0, size: 0.5, life: 1.2, ring: 1.5, up: 1.6, drag: 0, spin: 1.5 });
-      if (sp.radius) {   // Monolith Ward: stun nova + a ring of standing stones
+      if (sp.radius && sp.ult) {   // Monolith Ward: stun nova + a ring of standing stones
         aoe(p.x, p.y, p.z + 1, sp.radius, sp);
         vfx.ring(p.x, p.y, p.z, 0xffd890, 0.5, sp.radius * 1.2, 0.9); vfx.ring(p.x, p.y, p.z, 0xffa040, 0.5, sp.radius * 0.8, 0.6, 0.7);
         vfx.decal('rune', p.x, p.y, p.z, sp.radius * 0.75, 3.5, 0xffb040, 0.95, 0.4); vfx.decal('crack', p.x, p.y, p.z, sp.radius * 1.1, 6, 0xffffff, 0.9);

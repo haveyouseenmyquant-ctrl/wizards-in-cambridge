@@ -413,7 +413,7 @@ body.explore #game-hud .gh-loots{display:none}`;
       hpB.f.style.width = (100 * s.hp / s.maxHp).toFixed(1) + '%'; hpB.t.textContent = `${Math.ceil(s.hp)} / ${s.maxHp}`;
       shB.f.style.width = (100 * Math.min(1, (game.shield || 0) / s.maxHp)).toFixed(1) + '%';
       mnB.f.style.width = (100 * s.mana / s.maxMana).toFixed(1) + '%'; mnB.t.textContent = `${Math.floor(s.mana)} / ${s.maxMana}`;
-      const need = game.xpToNext(); xpB.f.style.width = (100 * s.xp / need).toFixed(1) + '%'; xpB.t.textContent = `Lv ${s.level} · ${Math.floor(s.xp)} / ${need} xp`;
+      const need = game.xpToNext(), max = !isFinite(need); xpB.f.style.width = max ? '100%' : (100 * s.xp / need).toFixed(1) + '%'; xpB.t.textContent = max ? `Lv ${s.level} · max level` : `Lv ${s.level} · ${Math.floor(s.xp)} / ${need} xp`;
       // session 72: low-HP danger warning. Below 30% HP a red screen-edge vignette beats like a heart (lub-dub, faster as
       // HP falls), the HP bar pulses and a 'LOW HEALTH' tag shows; a soft heartbeat thump plays on each beat.
       const low = s.hp / s.maxHp, danger = low < 0.3 && s.hp > 0;

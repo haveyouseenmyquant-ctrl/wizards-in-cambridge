@@ -2,6 +2,8 @@
 // through c.on(...) (auto-unsubscribed on unequip) and a `test(t)` used by window.__itemTest (scripts/test_items.mjs).
 // c = effect context: {game, S (item system helpers), on(ev, fn), cleanup(fn)}.  Ids are stable (saved in localStorage).
 
+import { SET_ITEMS } from './itemsets.js';
+
 export const RARITY = {
   common:    { color: '#c8c8c8', hex: 0xc8c8c8, order: 0 },
   uncommon:  { color: '#4fdc5a', hex: 0x4fdc5a, order: 1 },
@@ -325,6 +327,6 @@ const U2 = {
       c.cleanup(() => { bombs.length = 0; }); },
     test(t) { const p = t.game.player; p.mode = 'broom'; const m = t.mob(6, 0); t.ticks(8); return [m.hp <= m.maxHp - 25, `hp ${m.hp}`]; } },
 };
-Object.assign(U, U2);
+Object.assign(U, U2, SET_ITEMS);
 Object.assign(defs, U);
 export const ITEMS = defs;
