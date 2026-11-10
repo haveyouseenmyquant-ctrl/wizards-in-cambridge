@@ -1,0 +1,14 @@
+#!/bin/bash
+# Rebuild the character models from the CC0 KayKit packs (download to /tmp/wic_dl, trim with build_char_glb.mjs).
+# usage: GT=<dir with @gltf-transform/{core,functions,extensions} + meshoptimizer in node_modules> scripts/build_chars.sh
+set -e; cd "$(dirname "$0")/.."
+D=/tmp/wic_dl; mkdir -p $D site/models/player site/models/mobs
+B=https://raw.githubusercontent.com/KayKit-Game-Assets
+[ -f $D/Mage.glb ] || curl -sSL -o $D/Mage.glb $B/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/gltf/Mage.glb
+for s in Mage Minion Rogue Warrior; do [ -f $D/Skeleton_$s.glb ] || curl -sSL -o $D/Skeleton_$s.glb $B/KayKit-Character-Pack-Skeletons-1.0/main/addons/kaykit_character_pack_skeletons/Characters/gltf/Skeleton_$s.glb; done
+node scripts/build_char_glb.mjs $D/Mage.glb site/models/player/wizard.glb '{"clips":{"idle":"Idle","walk":"Walking_A","run":"Running_A","cast":"Spellcast_Shoot","cast_raise":"Spellcast_Raise","cast_long":"Spellcast_Long","hit":"Hit_A","death":"Death_A","jump":"Jump_Full_Short","dash":"Dodge_Forward","block":"Blocking","sit":"Sit_Chair_Idle"},"drop":["Spellbook","Spellbook_open","1H_Wand"]}'
+mob() { node scripts/build_char_glb.mjs $D/$1.glb site/models/mobs/$2.glb "{\"clips\":{\"idle\":\"Idle_Combat\",\"walk\":\"Walking_D_Skeletons\",\"run\":\"Running_C\",\"attack\":\"$3\",\"attack2\":\"$4\",\"hit\":\"Hit_A\",\"death\":\"Death_C_Skeletons\",\"spawn\":\"Spawn_Ground_Skeletons\",\"taunt\":\"Taunt\"}}"; }
+mob Skeleton_Warrior statue 1H_Melee_Attack_Chop 2H_Melee_Attack_Spin
+mob Skeleton_Mage wraith Spellcast_Shoot Spellcast_Raise
+mob Skeleton_Rogue automaton Unarmed_Melee_Attack_Punch_A Unarmed_Melee_Attack_Kick
+mob Skeleton_Minion imp Unarmed_Melee_Attack_Punch_B Throw
