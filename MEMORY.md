@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 12)
+## State (2026-11-10, after session 13)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -15,7 +15,7 @@
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
 - Trunk 91047adec8ca0046 (s12, merged Optimisation mainmerge.js: Low/Medium static mesh batching, draws 1279->761 on Low):
-  gate 6/6 (166 s). NOT live: Pages deploy-pages timed out 3x (GitHub side) -> Optimisation 9ff3. Live = b1d7eff5
+  gate 6/6 (166 s). NOT live: Pages deploy-pages timed out 4x (s13 rerun too; artifact 207 MB = same as OK runs) -> Optimisation 9ff3. Live = b1d7eff5
   content; scores aliased to 1665d3ca_wic.json (hash changed only via build_hash FILES). After 9ff3, live_site = 91047adec.
 - b1d7eff5 (s11, merged Story Q3 'Lion at the Gate' + Gameplay uipolish/boss TTK): gate 6/6, quests 3,
   judged 49.5 (V 51, Anim 31, Combat 59.1, Story 52, UI 53); service.sh scored it under bogus hash d59023d6 (hashed live_site mid-publish):
@@ -41,7 +41,7 @@
   data/derived/wic_harness_log.jsonl is dirtied by service.sh: `git checkout` it before merging QA.
 
 ## Organisation (6 nodes, all children of root)
-- qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring (+gate step per hash). 6266 publish-race fix.
+- qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring (+gate step per hash). 6266 publish lock merged s13.
 - story: quests/dialogue, quest_bot (~25 s GPU). 6b1b cancelled (Q3 live); b0f8 = Q4 (quests>=4).
 - gameplay: feel.js, progression (merged s6), boss TTK d623 (OK'd to add bossTTK to quest_bot), UI polish 02a9 (told: hit-stop, less muddy VFX).
 - graphics: characters+animation only. 8228 mob glbs, e9f5 NPC glbs, 8765 Animation>40. Told judge still sees
