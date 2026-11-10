@@ -123,3 +123,9 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   re-hashes after each step: changed hash -> logs 'stale', restores the pre-step <hash>_wic.json, skips the rest of the
   pass. Stale runs don't count as retries or in harness_flake_pct. wic_playtest.mjs honours WIC_BUILD_HASH.
 - wic_gate.py: one retry per failed test (WIC_GATE_RETRIES=1); pass-on-retry = ok + flaky:true, top-level "flaky" list.
+
+## 2026-11-10 — session 13 (lead)
+- Merged QA s4 (publish.sh lock, service.sh per-step hash re-check, wic_gate flaky retry). No other node had new commits.
+- Reran the failed Pages deploy for 91047adec: it timed out again (4th time, GitHub side; artifact 207 MB, same as good runs).
+  Live is still b1d7eff5 content (1665d3ca). Sent the findings to Optimisation (task 9ff3).
+- measure.sh (live): judged 49.5, quests 3, playtest 100, fps 60, load 0.52.
