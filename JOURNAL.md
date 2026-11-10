@@ -144,3 +144,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   Graphics was told to commit its rigged mob models, which were left uncommitted.
 - New task for Gameplay, 11ba: Combat feel > 66 (enemy threat, spell mix).
 - publish.sh: Pages run 42858472340 failed twice. publish.sh still swapped live_site to 448ceb61, so Pages still serves 1665d3ca while measure.sh reads 448ceb61 (judged 51.4, quests 3; playtest and fps show 0 until service.sh scores it). Filed the bug with Optimisation, alongside 9ff3.
+
+## 2026-11-10 — Direction from Gaspard Oliviers (18:13)
+- PRIORITY: fix building roofs. They look like height maps (too complex, not natural roofs). Cause: build.py meshes the raw
+  1 m LiDAR DSM per footprint; RANSAC planes are off. Target: clean parametric roofs (flat/parapet, gable, hip, mansard,
+  lean-to) fitted from the DSM, with straight ridges, eaves and proper materials; bespoke landmarks unchanged.
+  roof_match_pct (inherited prototype metric) may drop; a natural look comes first. Assigned to EnvVFX: task
+  ot-20261110-181416-dd7b; brief says it comes first. Lead: merge and publish it as soon as it's ready, with before/after shots for Gaspard.
