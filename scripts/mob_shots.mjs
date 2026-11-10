@@ -37,7 +37,9 @@ try {
   for (let i = 0; i < SHOTS.length; i++) {
     await page.evaluate(async (S) => {
       const g = window.__game, sys = g.mobSystem;
+      window.__unpause ??= setInterval(() => { const pk = document.querySelector('.gh-pick'); if (pk) pk.hidden = true; g.paused = false; }, 100);
       window.__player.teleport(-186, 0);
+      for (let i = 0; i < 100 && g.mobRig && !g.mobRig.ready(); i++) await new Promise(r => setTimeout(r, 200));
       await new Promise(r => setTimeout(r, 1500));
       for (const m of [...g.mobs]) { sys.remove(m); g.mobs.splice(g.mobs.indexOf(m), 1); }
       const X0 = -190, Y0 = -5, shot = [];
@@ -53,7 +55,7 @@ try {
         else m.state = S.pose === 'walk' ? 'chase' : 'idle';
         const mv = S.pose === 'walk' ? 1 : 0;
         sys.animate(m, dt, mv); sys.bodyLanguage(m, dt, mv); sys.place(m);
-      } };
+      } g.mobRig?.tick(dt); };
       const mid = shot[Math.floor(shot.length / 2)];
       const gz = mid.groundZ ?? mid.z; window.__cam = { pos: [X0 + 6.5, Y0 + 5.1 - 3.5, gz + 2.6], at: [X0, Y0 + 5.1, gz + 1.2], fov: 60 };
       await new Promise(r => setTimeout(r, 2500));
