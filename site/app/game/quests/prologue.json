@@ -1,0 +1,66 @@
+{
+  "id": "prologue",
+  "main": true,
+  "chapter": "Prologue",
+  "title": "The Thirteenth Chime",
+  "summary": "Dusk on Market Hill. Great St Mary's strikes the hour, and then strikes once more. Nobody else seems to hear it.",
+  "npcs": {
+    "nell": { "name": "Nell Tapscott", "role": "Flower-seller, Market Hill", "x": -106.5, "y": 90.5, "face": 0,
+              "robe": "#3f6b4a", "trim": "#e9c46a", "skin": "#e0b48f", "hair": "#8a4b2a", "hat": "scarf" },
+    "pip":  { "name": "Pip Hobbe", "role": "Hob of the Guildhall cellars", "x": -98, "y": 37, "face": 0, "scale": 0.62,
+              "robe": "#5b4a3a", "trim": "#c98b4a", "skin": "#b9a07a", "hair": "#3b3026", "hat": "hood" },
+    "narrator": { "name": "", "role": "" }
+  },
+  "intro": [
+    { "who": "narrator", "line": "Dusk on Market Hill. The stalls are packing up; Great St Mary's begins to strike the hour." },
+    { "who": "narrator", "line": "Eleven. Twelve. Thirteen. The last stroke rings in your teeth, and nobody else so much as looks up." }
+  ],
+  "steps": [
+    { "id": "meet_nell", "type": "talk", "npc": "nell",
+      "text": "Speak to Nell Tapscott at her flower stall",
+      "dialogue": [
+        { "who": "nell", "line": "You heard that. Don't pretend you didn't; you flinched like a cat at a firework." },
+        { "who": "player", "line": "The bell struck thirteen. That isn't a thing bells do." },
+        { "who": "nell", "line": "Not ours, no. Not unless something has got into the Concord and started unwinding it." },
+        { "who": "nell", "line": "The old fountain in the middle of the market. Something fell into it on that last stroke. Go and look, quick as you like." }
+      ] },
+    { "id": "fountain", "type": "collect", "item": "Cracked bell-shard", "place": { "x": -96.3, "y": 65.2, "r": 1.6, "name": "Hobson's Conduit fountain" },
+      "text": "Find what fell into the market fountain",
+      "dialogue": [
+        { "who": "narrator", "line": "A shard of old bronze lies in the basin, humming the thirteenth stroke over and over." },
+        { "who": "narrator", "line": "On the rooftops round the square, something shakes itself loose." }
+      ] },
+    { "id": "drive_off", "type": "kill", "spawn": [ "bell_bats", "bell_bats", "gargoyle" ], "at": { "x": -98, "y": 70 }, "count": 3,
+      "text": "Drive off the creatures woken by the chime",
+      "dialogue": [
+        { "who": "nell", "line": "Not bad for somebody who walked into the market for a sandwich." },
+        { "who": "nell", "line": "Take that shard to Pip at the Guildhall steps. Bring a candle-end if you have one. You won't." }
+      ] },
+    { "id": "pip", "type": "talk", "npc": "pip",
+      "text": "Take the bell-shard to Pip Hobbe at the Guildhall steps",
+      "dialogue": [
+        { "who": "pip", "line": "Ooh, bronze. Bronze and... sniff... clock oil. Fine oil. Expensive, ticky, nasty oil." },
+        { "who": "pip", "line": "That's the Unwinder's smell. He's been at the market bell. Cracked it right through, and let out what was bound in it." },
+        { "who": "player", "line": "What was bound in it?" },
+        { "who": "pip", "line": "Whatever's standing up in the middle of the market. Look behind you. No, further. Bigger." }
+      ] },
+    { "id": "bellwarden", "type": "kill", "mob": "bellwarden", "count": 1, "at": { "x": -102.9, "y": 57.4 },
+      "text": "Defeat the Bellwarden of Market Hill",
+      "intro": [
+        { "who": "narrator", "line": "The Bellwarden of Market Hill wakes: a cracked bronze bell on legs of stone and iron, ringing for blood." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The Bellwarden folds in on itself with one long, clean note. For the first time tonight, the square is quiet." }
+      ] },
+    { "id": "return_nell", "type": "talk", "npc": "nell",
+      "text": "Return to Nell Tapscott",
+      "dialogue": [
+        { "who": "nell", "line": "Well. That's the first bell answered, and the market still standing. Mostly." },
+        { "who": "nell", "line": "The Concord keeps the Undertide out of this town: bells, clocks, conduits, all of it. Somebody is unpicking it stroke by stroke." },
+        { "who": "nell", "line": "Take this posy. It's charmed, and it's the last of the marigolds. You're a Warden now, whether you like it or not." },
+        { "who": "nell", "line": "Go and find Absalom Crane on the steps of Great St Mary's. He'll want to know his tower struck thirteen." }
+      ] }
+  ],
+  "rewards": { "xp": 250, "items": [ "quest_nells_posy" ], "title": "Warden of Market Hill" },
+  "next": "Find Absalom Crane at Great St Mary's (coming soon)"
+}
