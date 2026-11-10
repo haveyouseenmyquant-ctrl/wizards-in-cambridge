@@ -28,5 +28,54 @@
   "at": "2026-11-10T12:33:39.409Z"
  },
  "main_quests_shipped": 3,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "judged_game_quality": 48.8,
+ "judged_sections": {
+  "Visuals": 48.5,
+  "Animation": 30.0,
+  "Combat feel": 61.9,
+  "Story presentation": 50.0,
+  "UI polish": 51.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 3.0,
+   "Animation": 0.0,
+   "Combat feel": 0.2,
+   "Story presentation": 0.0,
+   "UI polish": 2.0
+  },
+  "quality_spread": 1.1,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together well. It has recognisable architecture with brick and stone textures, a church, bikes, railings, trees and real-time shadows under warm low-sun lighting with some atmospheric haze. But the geometry is blocky and low in detail, the market stalls and stock are plain coloured boxes, and building facades and windows look flat and repetitive. Characters are small, simple stylised figures, enemies barely read, and the VFX are basic flat glows, so this sits between an early prototype and the 60 anchor."
+   },
+   "Animation": {
+    "all": "The player character is small and looks nearly identical in every walking and combat frame. There is no clear stride, cast pose or hit reaction, so attacks show up only as projectiles, beams and text popups. Enemies are tiny and hard to read, with no visible attack wind-ups or death animations, and the only environmental motion is market stalls and trees that don't appear to move."
+   },
+   "Combat feel": {
+    "hexweaver": "Combat is solid and readable at the 60 level. Six distinct spells were used, with visible hex circles and runes. There is plenty of hit feedback: damage numbers, crit labels, a chain counter and Staggered/Interrupted labels. A named boss shows a phase bar and a 'Phase II' banner, and loot drops come as rarity-coloured beams and labels, and the event log shows lots of sound. The biggest gaps: the effects are muddled and many frames are cluttered with floating loot labels. Mid-clip, frames 4\u20136 show no enemies on screen, enemy wind-up telegraphs are hard to make out, there is no visible hit-stop or screen shake, and only one class is shown, so class variety can't be judged.",
+    "pyromancer": "The combat has real hit feedback: damage numbers, crits, Staggered and Interrupted callouts, a chain counter, telegraph rings and a boss bar with phases (Phase II, an enraged state). Loot drops show rarity colours, a legendary drop was recorded and there are 6 spells with cooldowns, which puts it a little above the 60 anchor. It falls short of 80 because the spell effects are mostly vague blobs and light pillars, enemies are simple and hard to tell apart, nothing shows hit-stop or screen feedback, frames 6\u20138 have long stretches with no combat, and only one class is shown, so class variety can't be judged.",
+    "stormcaller": "The fight shows the main systems working. There's a boss with a phase bar and Phase II/Enraged banners, a red telegraph circle under its wind-up, and Staggered and Interrupted states. Damage numbers, crit numbers and a chain counter appear on hits, loot shows rarity colours and light beams, and six skills cycle with many sound voices. The fight falls apart after about 17 s: most later frames show the player wandering empty streets or with the camera stuck against a wall (frame 11). Hit-stop, knockback and crowd control can't be seen, the effects are mostly faint and hard to read, and the rest of the clip is spark_lance spam.",
+    "warden": "The rubric's 60-level features are all visible: floating damage numbers with crits, a chain counter, 'Staggered'/'Interrupted' callouts, a named boss whose health bar shows phases and an enrage banner, rarity-coloured loot beams and loot tooltips, and several warden spells including CC, a leap and a stomp. Readability is hurt by a large pale-blue shield blob that hides the player and the impact point in most frames, and by small, low-detail enemies whose attack windups are hard to see. The fight looks nearly risk-free (5 damage taken in 60 s, with pebble_shot as 65 of 88 casts), and there is no visible hit-stop, screen feedback or formation variety, so the combat feels short of punchy."
+   },
+   "Story presentation": {
+    "all": "The game has named dialogue boxes with small portraits, a quest tracker, a world marker with distance, title cards, a quest-complete reward screen and well-written original lines set at real Cambridge places (Market Hill, Great St Mary's). There is no staging. The camera never frames a conversation, characters show up as placeholder blobs or tiny figures, and frame 7's boss reveal shows only a red wall. Other gaps: the tracker doesn't update between steps (frame 4's label says it should, but the panel still reads 'Speak to Nell Tapscott'), 'Loading...' overlays sit on screen, there are no choices, and nothing marks the dialogue as voiced."
+   },
+   "UI polish": {
+    "all": "The UI looks the same across HUD and menus: serif titles, dark translucent panels, health and mana bars, numbered spell icons with cooldown numbers, a minimap, a quest tracker and boss bars. Class selection is clear and the item labels use rarity colours. But screens overlap badly: the big 'Quest Complete / The Thirteenth Chime' banner and NPC dialogue sit on top of the inventory and talent screens, so the talent tree is mostly hidden. The menus are plain text lists with no item or talent icons, and combat frames get cluttered with overlapping popups and the chain counter."
+   }
+  }
+ }
 }

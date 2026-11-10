@@ -109,6 +109,37 @@ class Mesh:
             for i in range(n):
                 self.tri(ctr, hi[i], hi[(i + 1) % n], top or col)
 
+    def ball(self, c, r, col, sq=1.0, fine=False, rot=0.0):
+        """Low-poly fruit / veg: octahedron (8 tris) or icosahedron (20 tris, fine=True), z squashed by sq,
+        flat-shaded with a lighter cap so piles read as individual items (s3 EnvVFX)."""
+        c = np.asarray(c, float)
+        cs, sn = np.cos(rot), np.sin(rot)
+        lit = tuple(min(1.0, x * 1.18 + 0.03) for x in col)
+        dk = tuple(x * 0.72 for x in col)
+        if not fine:
+            V = [np.array([cs, sn, 0]), np.array([-sn, cs, 0]), np.array([-cs, -sn, 0]), np.array([sn, -cs, 0])]
+            top, bot = c + [0, 0, r * sq], c - [0, 0, r * sq]
+            for i in range(4):
+                a, b = c + V[i] * r, c + V[(i + 1) % 4] * r
+                self.tri(a, b, top, lit if i % 2 else col)
+                self.tri(b, a, bot, dk)
+            return
+        t = (1 + 5 ** 0.5) / 2
+        P = [(-1, t, 0), (1, t, 0), (-1, -t, 0), (1, -t, 0), (0, -1, t), (0, 1, t), (0, -1, -t), (0, 1, -t),
+             (t, 0, -1), (t, 0, 1), (-t, 0, -1), (-t, 0, 1)]
+        P = [np.array([x * cs - y * sn, x * sn + y * cs, z * sq]) / np.sqrt(1 + t * t) * r + c
+             for x, y, z in ((p[0], p[2], p[1]) for p in P)]
+        F = [(0, 11, 5), (0, 5, 1), (0, 1, 7), (0, 7, 10), (0, 10, 11), (1, 5, 9), (5, 11, 4), (11, 10, 2), (10, 7, 6),
+             (7, 1, 8), (3, 9, 4), (3, 4, 2), (3, 2, 6), (3, 6, 8), (3, 8, 9), (4, 9, 5), (2, 4, 11), (6, 2, 10),
+             (8, 6, 7), (9, 8, 1)]
+        for f in F:
+            a, b, d = P[f[0]], P[f[1]], P[f[2]]
+            n = np.cross(b - a, d - a)
+            if np.dot(n, (a + b + d) / 3 - c) < 0:
+                b, d = d, b
+            zc = ((a + b + d) / 3 - c)[2] / (r * sq + 1e-9)
+            self.tri(a, b, d, lit if zc > 0.45 else (dk if zc < -0.3 else col))
+
     def out(self, name):
         return {"name": name, "tris": np.asarray(self.t, np.float32).reshape(-1, 3, 3),
                 "col": np.asarray(self.c, np.float32).reshape(-1, 3)}
@@ -267,6 +298,148 @@ def stall_strip(m, B, g, gB, centre, seed, base=None):
     return cnt
 
 
+# s3 EnvVFX (judge: "stall goods coloured blocks"): produce as heaps of individual fruit/veg in slatted crates,
+# non-food stalls stocked with book rows, jars, potted plants, folded textile stacks and garments with sleeves.
+# (colour, radius m, z squash, icosahedron?)
+FRUIT = [((0.78, 0.12, 0.08), 0.042, 1.0, False), ((0.93, 0.50, 0.08), 0.045, 1.0, False),
+         ((0.95, 0.82, 0.18), 0.036, 0.85, False), ((0.45, 0.68, 0.22), 0.04, 1.0, False),
+         ((0.20, 0.42, 0.14), 0.085, 0.85, True), ((0.30, 0.55, 0.20), 0.075, 0.8, True),
+         ((0.55, 0.40, 0.25), 0.038, 0.7, False), ((0.40, 0.12, 0.30), 0.032, 1.0, False),
+         ((0.88, 0.84, 0.70), 0.04, 0.9, False), ((0.62, 0.06, 0.08), 0.03, 1.0, False),
+         ((0.85, 0.30, 0.10), 0.05, 1.0, False), ((0.30, 0.12, 0.20), 0.045, 0.9, False)]
+JAR = [(0.85, 0.55, 0.12), (0.55, 0.10, 0.12), (0.92, 0.75, 0.30), (0.35, 0.18, 0.10), (0.50, 0.62, 0.25)]
+LIDS = [(0.85, 0.82, 0.75), (0.75, 0.62, 0.20), (0.12, 0.12, 0.13), (0.62, 0.10, 0.12)]
+BOOKS = [(0.45, 0.10, 0.10), (0.12, 0.20, 0.40), (0.15, 0.32, 0.20), (0.80, 0.72, 0.55), (0.20, 0.18, 0.16),
+         (0.72, 0.45, 0.15), (0.55, 0.55, 0.60), (0.35, 0.20, 0.35)]
+POT = (0.66, 0.36, 0.22)
+LEAF = [(0.20, 0.42, 0.16), (0.30, 0.52, 0.20), (0.15, 0.32, 0.14)]
+FLOWER = [(0.85, 0.20, 0.35), (0.95, 0.85, 0.25), (0.75, 0.45, 0.85), (0.95, 0.95, 0.92), (0.95, 0.45, 0.15)]
+
+
+def _jit(col, rng, a=0.12):
+    f = 1 + rng.uniform(-a, a)
+    return tuple(min(1.0, x * f) for x in col)
+
+
+def produce_heap(m, o, u, v, w, lu, lv, fr, rng):
+    """Mounded heap of fruit on the rectangle o + [0,lu]*u + [0,lv]*v (u, v unit, w up)."""
+    col, r, sq, fine = fr
+    p = 2 * r * 1.05
+    nu, nv = max(1, int(lu / p)), max(1, int(lv / p))
+    du, dv = lu / nu, lv / nv
+    for i in range(nu):
+        for j in range(nv):
+            c = o + u * (du * (i + 0.5) + rng.uniform(-0.2, 0.2) * r) + v * (dv * (j + 0.5) + rng.uniform(-0.2, 0.2) * r)
+            m.ball(c + w * r * sq * 0.7, r, _jit(col, rng), sq, fine, rng.uniform(0, 1.6))
+    for i in range(nu - 1):   # second, offset layer: the mound
+        for j in range(nv - 1):
+            if rng.random() < 0.45:
+                c = o + u * du * (i + 1) + v * dv * (j + 1)
+                m.ball(c + w * r * sq * 1.95, r, _jit(col, rng), sq, fine, rng.uniform(0, 1.6))
+
+
+def produce_crate(m, o, u, v, w, lu, lv, cc, fr, rng):
+    """Shallow open crate (4 walls, slat seam) tilted towards the aisle (u along row, v down-slope, w crate up),
+    filled with a heap of fruit."""
+    h, t = 0.13, 0.015
+    dk = tuple(x * 0.55 for x in cc)
+    m.box(o, u * lu, v * lv, w * 0.05, tuple(x * 0.5 for x in fr[0]))         # shadowed produce fill
+    m.box(o, u * lu, v * t, w * h, cc)                                        # back wall
+    m.box(o + v * (lv - t), u * lu, v * t, w * h * 0.8, cc)                   # front wall (lower lip)
+    m.box(o, u * t, v * lv, w * h, cc)
+    m.box(o + u * (lu - t), u * t, v * lv, w * h, cc)
+    m.quad(o + v * (lv + 0.001) + w * h * 0.4, o + u * lu + v * (lv + 0.001) + w * h * 0.4,
+           o + u * lu + v * (lv + 0.001) + w * h * 0.46, o + v * (lv + 0.001) + w * h * 0.46, dk)   # slat gap
+    produce_heap(m, o + u * t + v * t + w * 0.03, u, v, w, lu - 2 * t, lv - 2 * t, fr, rng)
+
+
+def nonfood_goods(m, P, A3, F3, up, tw, by, fy, th, rng):
+    kind = rng.integers(4)
+    x = -tw / 2 + 0.06
+    if kind == 0:     # books / records in low trays, spines up
+        while x < tw / 2 - 0.4:
+            wtr = min(rng.uniform(0.45, 0.8), tw / 2 - 0.05 - x)
+            tr = P(x, by + 0.1, th)
+            m.box(tr, A3 * wtr, F3 * 0.6, up * 0.06, (0.40, 0.30, 0.20))
+            s_ = 0.01
+            while s_ < wtr - 0.03:
+                bt = rng.uniform(0.02, 0.045)
+                bh = rng.uniform(0.18, 0.28)
+                m.box(tr + A3 * s_ + F3 * 0.03 + up * 0.02, A3 * bt * 0.9, F3 * rng.uniform(0.4, 0.54), up * bh,
+                      _jit(BOOKS[rng.integers(len(BOOKS))], rng), top=(0.88, 0.85, 0.76))
+                s_ += bt
+            x += wtr + 0.05
+    elif kind == 1:   # jars of honey / jam / chutney in rows, a few stacked tins
+        for row in range(3):
+            t_ = fy - 0.12 - row * 0.15
+            zb = th + row * 0.05
+            if row:
+                m.box(P(-tw / 2 + 0.03, t_ - 0.08, th), A3 * (tw - 0.06), F3 * 0.16, up * row * 0.05, (0.4, 0.3, 0.2))
+            jc = JAR[rng.integers(len(JAR))]
+            lc = LIDS[rng.integers(len(LIDS))]
+            s_ = -tw / 2 + 0.1
+            while s_ < tw / 2 - 0.08:
+                q = P(s_, t_, zb)
+                m.prism(q[0], q[1], q[2], q[2] + 0.1, 0.035, 5, _jit(jc, rng, 0.06), top=lc)
+                m.prism(q[0], q[1], q[2] + 0.1, q[2] + 0.125, 0.037, 5, lc)
+                s_ += 0.09
+                if rng.random() < 0.15:
+                    jc = JAR[rng.integers(len(JAR))]
+    elif kind == 2:   # potted plants and cut flowers
+        s_ = -tw / 2 + 0.12
+        while s_ < tw / 2 - 0.1:
+            for t_ in (fy - 0.15, fy - 0.45, by + 0.15):
+                q = P(s_ + rng.uniform(-0.03, 0.03), t_, th)
+                pr = rng.uniform(0.06, 0.09)
+                m.prism(q[0], q[1], q[2], q[2] + pr * 1.4, pr * 0.75, 6, POT, top=(0.25, 0.18, 0.12), r_top=pr)
+                lc = LEAF[rng.integers(len(LEAF))]
+                m.ball(q + up * (pr * 1.4 + pr * 0.9), pr * 1.5, _jit(lc, rng), 0.9, True, rng.uniform(0, 1))
+                if rng.random() < 0.6:
+                    fc = FLOWER[rng.integers(len(FLOWER))]
+                    for _ in range(int(rng.integers(2, 4))):
+                        d = rng.normal(size=3) * pr * 0.8
+                        d[2] = abs(d[2]) + pr
+                        m.ball(q + up * (pr * 1.4 + pr * 0.9) + d, 0.025, fc, 0.8)
+            s_ += 0.24
+    else:             # folded textiles / knitwear in stacks
+        s_ = -tw / 2 + 0.05
+        while s_ < tw / 2 - 0.35:
+            wd = rng.uniform(0.28, 0.38)
+            for t0 in (fy - 0.4, by + 0.08):
+                z_ = th
+                col = GOODS[rng.integers(len(GOODS))]
+                for k in range(int(rng.integers(3, 8))):
+                    if rng.random() < 0.4:
+                        col = GOODS[rng.integers(len(GOODS))]
+                    hh = rng.uniform(0.03, 0.05)
+                    jit = rng.uniform(-0.015, 0.015)
+                    m.box(P(s_ + jit, t0 + jit, z_), A3 * wd, F3 * 0.3, up * hh, _jit(col, rng, 0.08))
+                    m.box(P(s_ + jit - 0.002, t0 + jit + 0.3, z_ + hh * 0.45), A3 * (wd + 0.004), F3 * 0.002,
+                          up * hh * 0.1, tuple(x * 0.6 for x in col))   # fold line
+                    z_ += hh
+            s_ += wd + 0.06
+
+
+def garment(m, top, A3, F3, up, rng):
+    """Hanging shirt / jumper / bag from a rail point: hook, shoulders + sleeves, body (s3)."""
+    col = _jit(GOODS[rng.integers(len(GOODS))], rng, 0.1)
+    m.box(top - A3 * 0.004, A3 * 0.008, F3 * 0.008, -up * 0.06, (0.25, 0.25, 0.27))
+    if rng.random() < 0.3:   # bag: body + handle
+        bw_, bh_ = rng.uniform(0.22, 0.32), rng.uniform(0.2, 0.3)
+        m.box(top - up * 0.06 - A3 * 0.015, A3 * 0.012, F3 * 0.012, -up * 0.12, tuple(x * 0.7 for x in col))
+        m.box(top - up * 0.06 + A3 * 0.005, A3 * 0.012, F3 * 0.012, -up * 0.12, tuple(x * 0.7 for x in col))
+        m.box(top - up * (0.18 + bh_) - A3 * bw_ / 2, A3 * bw_, F3 * 0.06, up * bh_, col)
+        return
+    sw = rng.uniform(0.34, 0.44)
+    ln = rng.uniform(0.45, 0.7)
+    sh = top - up * 0.07
+    m.box(sh - A3 * 0.05 - up * 0.03, A3 * 0.1, F3 * 0.006, up * 0.03, (0.3, 0.22, 0.15))       # hanger bar
+    m.box(sh - A3 * (sw / 2 + 0.1) - up * 0.16, A3 * (sw + 0.2), F3 * 0.03, up * 0.13, col)       # shoulders+sleeves
+    m.box(sh - A3 * (sw / 2) - up * ln, A3 * sw, F3 * 0.035, up * (ln - 0.03), col)               # body
+    m.box(sh - A3 * (sw / 2 + 0.002) - up * ln, A3 * (sw + 0.004), F3 * 0.04, up * 0.05,
+          tuple(x * 0.75 for x in col))                                                           # hem band
+
+
 def stall(m, g, c, ax, front, depth, width, rng, ze, hgt, off):
     """Stall under the shared canopy, centred at c; front = unit towards the aisle. Session 39: open-fronted
     trestle stall instead of solid cloth boxes. Trestle table (thin top on thin legs) with a cloth/astroturf top and
@@ -321,22 +494,20 @@ def stall(m, g, c, ax, front, depth, width, rng, ze, hgt, off):
             Wv = up * np.cos(ang) + F3 * np.sin(ang)
             for row, (t0, h0) in enumerate(((fy - 0.55, th), (by + 0.04, th + 0.2))):
                 for k in range(n):
-                    gc = PRODUCE[rng.integers(len(PRODUCE))]
-                    ch = rng.uniform(0.12, 0.2)
+                    pr = FRUIT[rng.integers(len(FRUIT))]
                     o = P(-tw / 2 + cw * k + 0.03, t0, h0 + 0.12)
-                    m.box(o, A3 * (cw - 0.06), V * 0.48, Wv * ch, CRATE_COLS[rng.integers(len(CRATE_COLS))], top=gc)
-                    if rng.random() < 0.35:   # price card stuck in the produce
-                        q = P(-tw / 2 + cw * k + cw / 2, t0 + 0.4, h0 + 0.12 + ch)
+                    produce_crate(m, o, A3, V, Wv, cw - 0.06, 0.48, CRATE_COLS[rng.integers(len(CRATE_COLS))], pr, rng)
+                    if rng.random() < 0.35:   # price card on a stick in the produce
+                        q = P(-tw / 2 + cw * k + cw / 2, t0 + 0.4, h0 + 0.12 + 0.2)
+                        m.box(q - A3 * 0.005, A3 * 0.01, F3 * 0.01, up * 0.08, (0.35, 0.28, 0.2))
+                        q = q + up * 0.06
                         m.quad(q + A3 * 0.08, q - A3 * 0.08, q - A3 * 0.08 + up * 0.1, q + A3 * 0.08 + up * 0.1,
                                (0.97, 0.97, 0.95), two=True)
+                        m.quad(q + A3 * 0.06 + up * 0.035 + F3 * 0.002, q - A3 * 0.06 + up * 0.035 + F3 * 0.002,
+                               q - A3 * 0.06 + up * 0.06 + F3 * 0.002, q + A3 * 0.06 + up * 0.06 + F3 * 0.002,
+                               (0.15, 0.15, 0.17) if rng.random() < 0.6 else (0.7, 0.1, 0.1), two=True)
         else:
-            # flat trays / folded goods / boxes of varied colours
-            n = int(rng.integers(3, 7))
-            cw = tw / n
-            for k in range(n):
-                gc = GOODS[rng.integers(len(GOODS))]
-                m.box(P(-tw / 2 + cw * k + 0.04, by + rng.uniform(0.05, 0.3), th), A3 * (cw - 0.08),
-                      F3 * rng.uniform(0.35, 0.6), up * rng.uniform(0.04, 0.25), gc)
+            nonfood_goods(m, P, A3, F3, up, tw, by, fy, th, rng)
     # back sheet: dark tarp at the back of the bay, up to the canopy underside (most bays)
     sheet = rng.random() < 0.75
     if sheet:
@@ -356,21 +527,24 @@ def stall(m, g, c, ax, front, depth, width, rng, ze, hgt, off):
         nh = int(rng.integers(4, 9))
         for k in range(nh):
             s0 = -hw + 0.2 + k * (width - 0.5) / nh
-            ln = rng.uniform(0.3, 0.75)
-            m.box(P(s0, hd - 0.13, zr - z - 0.03 - ln), A3 * rng.uniform(0.15, 0.28), F3 * 0.04, up * ln,
-                  GOODS[rng.integers(len(GOODS))])
+            garment(m, P(s0, hd - 0.13, zr - z - 0.03), A3, F3, up, rng)
     if sheet and not food and rng.random() < 0.6:   # garments / bags pinned to the back sheet
         for k in range(int(rng.integers(3, 6))):
             s0 = -hw + 0.3 + k * 0.5
             if s0 > hw - 0.4:
                 break
-            ln = rng.uniform(0.4, 0.8)
-            m.box(P(s0, -hd + 0.07, 1.1), A3 * 0.38, F3 * 0.03, up * ln, GOODS[rng.integers(len(GOODS))])
+            garment(m, P(s0, -hd + 0.07, 1.1 + rng.uniform(0.5, 0.8)), A3, F3, up, rng)
     # crates stacked behind the table
     for k in range(int(rng.integers(0, 3))):
         s0 = rng.uniform(-hw + 0.2, hw - 0.7)
-        m.box(P(s0, -hd + 0.15, 0), A3 * 0.5, F3 * 0.35, up * (0.3 * (k + 1)), CRATE_COLS[rng.integers(len(CRATE_COLS))],
-              top=PRODUCE[rng.integers(len(PRODUCE))] if food else None)
+        h_ = 0.3 * (k + 1)
+        cc = CRATE_COLS[rng.integers(len(CRATE_COLS))]
+        m.box(P(s0, -hd + 0.15, 0), A3 * 0.5, F3 * 0.35, up * h_, cc)
+        for j in range(1, k + 1):   # stacked crate seams
+            m.box(P(s0 - 0.005, -hd + 0.145, 0.3 * j - 0.012), A3 * 0.51, F3 * 0.36, up * 0.024, tuple(x * 0.6 for x in cc))
+        if food and rng.random() < 0.7:
+            fr = FRUIT[rng.integers(len(FRUIT))]
+            produce_heap(m, P(s0 + 0.03, -hd + 0.18, h_), A3, F3, up, 0.44, 0.29, fr, rng)
 
 
 def fountain(m, g, cx, cy):
