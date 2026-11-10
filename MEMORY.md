@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 14)
+## State (2026-11-10, after session 15)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,6 +12,9 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
+- Trunk 448ceb612bcec57f (s15, merged Gameplay uiscreens.js grid inventory/talents): gate 6/6 (158 s), judged 51.4
+  (V 51, Anim 30, Combat 60.9, Story 53, UI 63). Story Q4 branch NOT merged: quest_bot 2/4 classes (bell-stay). Gameplay 11ba = Combat>66.
+- Lead memory is ./MEMORY.md in the repo (the ~/.claude memory dir does not exist).
 - Trunk 52065493273d6f48 (s14, merged EnvVFX stall goods + shop-window geometry; after merge rerun
   `.venv/bin/python -I scripts/zone_build.py` (17 s) then `git checkout data/derived/facade_geometry.json`): gate 6/6,
   judged 49.3 (V 54, Anim 30, Combat 60.1, Story 48.5, UI 50). Publish: Pages timed out again (5th); publish.sh auto-reruns and
@@ -27,10 +30,7 @@
 - 9b1abea2 (s10, Graphics Quaternius wizard CC-BY): judged 50.0 (Anim 33.5), playtest 100 (softlock gone; 9d0d cancelled).
   Judge asks: enemy attack/death/hit clips + bigger enemies; menus overlaid by banners/dialogue, text-only inventory,
   debug FPS/Quality/'Loading...' labels visible; stale tracker; NPCs never framed; stalls flat blocks.
-- Prev trunk 44f67e9a (s6, merged Gameplay progression: L20, spell ranks, 3x3 talents, sets): judged 46.2 (V 50,
-  Anim 27, Combat 54.5, Story 54, UI 44), quests 2 (4/4), playtest 100, fps 52 (p5 44, min 32), load 0.77.
-  build_hash.py now includes quests.js/npc_rig.js/quests/*.json, so any quest edit = new hash = rescore needed. Judge noise is ~±2 (Visuals 50->45 with no visual change). Animation stuck ~22:
-  judge still sees blocky static player in recordings (Graphics told to verify frames from wic_record).
+- Judge noise ~±2. build_hash.py includes quests.js/npc_rig.js/quests/*.json: any quest edit = new hash = rescore.
 - test_classes.mjs times out on merged trunk under SwiftShader (each branch alone passes; GPU perf fine):
   QA task c0ca. No `timeout` command on this Mac.
 - scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").

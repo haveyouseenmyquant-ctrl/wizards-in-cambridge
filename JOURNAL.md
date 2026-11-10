@@ -136,3 +136,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - publish.sh: the Pages deploy timed out again; its auto-rerun outlasted my shell limit, so live_site was not swapped and the live site is still b1d7eff5 content. Optimisation 9ff3 told to shrink the artifact.
 - New task Story 69f7 (staging, tracker, Story presentation > 58). Sent judge-reason notes to Gameplay, EnvVFX and Graphics.
 - measure.sh (live): judged 49.5, quests 3, playtest 100, fps 60, load 0.52.
+
+## 2026-11-10 — session 15 (lead)
+- Merged Gameplay s4 (uiscreens.js: grid inventory, framed talents, menu focus, toast queue) -> trunk 448ceb61. Gate 6/6 (158 s).
+  Gameplay score: judged 51.4 (V 51, Anim 30, Combat 60.9, Story 53, UI 63).
+- Did not merge Story Q4 (The Ferry Bell): only 2 of 4 classes finish it in quest_bot, so Story was told to fix it first.
+  Graphics was told to commit its rigged mob models, which were left uncommitted.
+- New task for Gameplay, 11ba: Combat feel > 66 (enemy threat, spell mix).
