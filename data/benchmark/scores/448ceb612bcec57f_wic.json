@@ -120,9 +120,9 @@
   "runs_judged": 12,
   "harness_fails": 0,
   "softlock_s": 60,
-  "boss_ttk_median_s": 6.8,
+  "boss_ttk_median_s": 10.4,
   "main_quests_shipped": 3,
-  "wall_s": 91,
-  "at": "2026-11-10T17:28:49.541Z"
+  "wall_s": 897,
+  "at": "2026-11-10T17:34:59.216Z"
  }
 }

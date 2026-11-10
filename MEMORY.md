@@ -12,10 +12,9 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
-- s16: merged Optimisation publish fix (fail-fast, swaps live_site only when Pages serves the build; Pages live = 448ceb61).
-  PRIORITY = Gaspard's natural roofs (EnvVFX dd7b): merge + publish with before/after shots as soon as noted ready.
-  Pending: Graphics + Story have UNCOMMITTED work in worktrees (told to commit). QA d022 = playtest <= 6 min.
-  playtest_pass_pct=0 for 448ceb61 only because service.sh hasn't run the playtest yet.
+- s17: merged QA 5d49e23 (playtest GPU Chrome low preset, ~100 s). Live 448ceb61: judged 51.4, quests 3, playtest 100, fps 60.
+  PRIORITY = Gaspard's natural roofs (EnvVFX dd7b): still NOTHING committed at s17 -> merge + publish with before/after shots when ready.
+  Graphics (mob rigs) + Story (Q4 fixes) left work UNCOMMITTED twice (sessions hit 45-min limit); told again s17.
 - Trunk 448ceb612bcec57f (s15, merged Gameplay uiscreens.js grid inventory/talents): gate 6/6 (158 s), judged 51.4
   (V 51, Anim 30, Combat 60.9, Story 53, UI 63). Story Q4 branch NOT merged: quest_bot 2/4 classes (bell-stay). Gameplay 11ba = Combat>66.
   s15 publish: Pages failed again (6th) but publish.sh swapped live_site to 448ceb61 anyway (bug -> Optimisation task); Pages serves 1665d3ca.
