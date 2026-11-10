@@ -63,12 +63,13 @@ export function install(game) {
 
   // ---------- dodge: i-frames on every dash
   offs.push(game.on('dash', () => {
+    if (!p.dashing) return;   // synthetic 'dash' events (item tests) grant no i-frames
     F.dodgeUntil = game.time + DODGE_IFRAMES; game.invulnUntil = Math.max(game.invulnUntil || 0, F.dodgeUntil); stats.dodges++;
     game.mobSystem?.burst?.(p.x, p.y, p.z + 1, 0xd8ecff, 8, 3);
   }));
   const dmgP = game.damagePlayer;
   game.damagePlayer = function (amount, source) {
-    if (F.dodgeUntil > this.time && amount > 0 && this.stats.hp > 0) {
+    if (F.dodgeUntil > this.time && this.invulnUntil > this.time && amount > 0 && this.stats.hp > 0) {
       stats.evaded++; p.dashCd = 0; say('Evaded'); sfx.play('pickup', 0.5, 1.6);
       this.emit('evade', { amount, source }); return 0;
     }
