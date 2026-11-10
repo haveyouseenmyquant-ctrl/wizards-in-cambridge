@@ -46,7 +46,7 @@ const browser = await puppeteer.launch(wicLaunch({
 }));
 
 // ---------------- the in-page bot (window.__qbot)
-function installBot(softS = 0) {
+function installBot(softS = 0, tileIds = []) {
   const g = window.__game, P = window.__p, W = window.__world, C = g.caster, Q = g.quests, DT = 0.05;
   const ev = { kills: 0, deaths: 0, casts: 0, steps: [], talks: 0 };
   ev.killLog = []; ev.boss = {}; g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; if (e.mob?.type?.id === 'bellwarden' && ev.boss.first != null) ev.boss.ttk = +(g.time - bot.t0 - ev.boss.first).toFixed(1); ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => ev.deaths++),
@@ -103,7 +103,7 @@ function installBot(softS = 0) {
       if (moved < 0.5 || !closer) {
         bot.replans++; P.keys.add('Space'); const best = G.best, k = G.step; setGoal(G.x, G.y, G.tol); bot.goal.best = best; bot.goal.step = k;
         if (bot.replans >= 3) { bot.escapeT = 1.5; bot.escapeYaw = Math.random() * 6.283; }
-        if (bot.replans > 10) bot.fail = `softlock: no progress toward ${G.x.toFixed(1)},${G.y.toFixed(1)} from ${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)} (${bot.why})`;
+        if (bot.replans > 10) bot.fail = `softlock: no progress toward ${G.x.toFixed(1)},${G.y.toFixed(1)} from ${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)} (${bot.why}) tiles=${[...(W.tiles?.keys?.() || [])].join("|")}`;
       } else bot.replans = 0;
     }
     return false;
@@ -178,14 +178,19 @@ function installBot(softS = 0) {
   };
   bot.chunk = function (gameS = 6, wallMs = 4000) {
     const t0 = performance.now(); let n = 0;
-    try { while (n * DT < gameS && performance.now() - t0 < wallMs && !bot.done && !bot.fail) { bot.step(DT); P.update(DT); g.update(DT); n++; } }
+    // the bot steps game time faster than tiles stream in: pause (no game time passes) until the collision tiles within
+    // 40 m are loaded, as a real-time player never outruns streaming (Bridge St -> Quayside crossed y=500 into t_3_6)
+    const tilesReady = () => { for (const [a, b] of [[0, 0], [40, 0], [-40, 0], [0, 40], [0, -40]]) {
+      const id = `t_${Math.floor((P.x + a + 1000) / 250)}_${Math.floor((P.y + b + 1000) / 250)}`; if (tileIds.includes(id) && !W.tiles?.has?.(id)) return false; } return true; };
+    try { while (n * DT < gameS && performance.now() - t0 < wallMs && !bot.done && !bot.fail) { if (!tilesReady()) break; bot.step(DT); P.update(DT); g.update(DT); n++; } }
     catch (e) { bot.fail = 'bot exception: ' + e.message; }
     P.keys.clear();
-    return { t: +(g.time - bot.t0).toFixed(1), done: bot.done, fail: bot.fail, state: Q.state, hp: Math.round(g.stats.hp), lvl: g.stats.level, why: bot.why, x: +P.x.toFixed(1), y: +P.y.toFixed(1) };
+    return { wait: n === 0, t: +(g.time - bot.t0).toFixed(1), done: bot.done, fail: bot.fail, state: Q.state, hp: Math.round(g.stats.hp), lvl: g.stats.level, why: bot.why, x: +P.x.toFixed(1), y: +P.y.toFixed(1) };
   };
   return true;
 }
 
+const TILE_IDS = JSON.parse(fs.readFileSync(path.join(SRC, 'manifest.json'), 'utf8')).tiles.map(t => t.id);
 const runs = [];
 let quests = [];
 async function runOne(r) {
@@ -202,10 +207,11 @@ async function runOne(r) {
     await page.evaluate(() => window.__player.teleport(-108.1, 93.97));
     await page.waitForFunction('!window.__player.pendingPlace && window.__player.settled(120)', { timeout: 300000, polling: 500 });
     quests = await page.evaluate(() => window.__game.quests.order);
-    await page.evaluate(installBot, SOFT_S);
+    await page.evaluate(installBot, SOFT_S, TILE_IDS);
     let st;
     for (let k = 0; ; k++) {
       st = await page.evaluate(() => window.__qbot.chunk(6, 4000));
+      if (st.wait) await new Promise(r => setTimeout(r, 250));   // tiles still streaming
       if (st.done || st.fail || errors.length) break;
       if (Date.now() - w0 > RUN_WALL_S * 1000) { st.fail = `harness: wall-clock cap ${RUN_WALL_S} s at game ${st.t} s`; break; }
       if (k % 10 === 9) log(cls, r, JSON.stringify(st));

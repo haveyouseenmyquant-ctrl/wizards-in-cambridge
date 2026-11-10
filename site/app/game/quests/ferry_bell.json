@@ -5,7 +5,7 @@
   "title": "The Ferry Bell",
   "summary": "The water under King's Parade came from somewhere. Up Bridge Street the Round Church stands in a ring of river-mist, and under Magdalene Bridge an old bell has gone quiet.",
   "npcs": {
-    "wat": { "name": "Wat Gedney", "role": "Ferryman of the old hythe", "x": -244, "y": 555.5, "face": 230,
+    "wat": { "name": "Wat Gedney", "role": "Ferryman of the old hythe", "x": -238, "y": 507, "face": 230,
              "robe": "#2f4f6a", "trim": "#e6d7a2", "skin": "#b9c7c2", "hair": "#3a3328", "hat": "boater" },
     "gadd": { "name": "Old Mother Gadd", "role": "Chip van, Peas Hill", "x": -121.9, "y": -26.5, "face": 270,
               "robe": "#7a4b5c", "trim": "#e8d9a0", "skin": "#e2b796", "hair": "#cfcac4", "hat": "scarf" },
