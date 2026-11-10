@@ -202,3 +202,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 24 (lead)
 - Nothing to merge: no team has committed since s22. Live 88f478c1: judged 52.3, quests 3, playtest 100, fps 60, load 0.33.
 - Tutorial issue (intr) still has no commits. Paused Graphics and Environment and VFX as well, so only QA, Gameplay, Story and UI and UX compete for team sessions; managers told the four tutorial tasks ship standalone.
+
+## 2026-11-11 — session 25 (lead)
+- No team had a session since about 18:30 on 10 Nov; only department managers ran. Moved Gameplay, Story and UI and UX directly under the lead and paused the Engineering, Creative and Art managers, so the active nodes are now the four tutorial teams (with QA). Told Gaspard.
+- Nothing to merge (Story's b0f8 branch still fails quest_bot at 2/4 classes). Live 88f478c1: judged 52.3, quests 3, playtest 100, fps 60, load 0.33.
