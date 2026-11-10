@@ -42,3 +42,6 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   mobs 12+3 bosses, quest_bot 4/4 (main_quests_shipped 1).
 - Old prototype snapshot moved aside (live_site.prototype): KPIs now score trunk until a real publish.
 - New tasks aimed at the weakest judge sections (Story presentation 10, Animation 23), quest 2, boss TTK, perf guardrail.
+
+## 2026-11-10 QA s2
+- scripts/wic_playtest.mjs main-path bot: quest_bot (prologue, 1 run/class) + route bot (Market Square encounters + Bellwarden, 2 runs/class), 60 s game-time soft-lock watchdog in both bots (WIC_SOFTLOCK_S; verified it fires at 3 s), console errors fail a run, harness runs excluded and logged. Trunk 38af3295: playtest_pass_pct 100 (12/12), 485 s wall. judged_game_quality 42.4 (V 38, Anim 23, Combat 54.9, Story 54, UI 43; was 39.9 on ea2b8370).
