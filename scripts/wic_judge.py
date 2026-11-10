@@ -8,6 +8,7 @@ frame labelled), and the judge (local `claude -p`, model claude-opus-5-5, Read t
 gets only: the general scoring rules and that section's anchors from RUBRIC.md, neutral descriptions of the
 recordings and the sheet. Combat feel is judged per class (sheet + event summary from gameplay_judge.summarise) and
 averaged. Each judgement is sampled --samples times and averaged. judged_game_quality = weighted mean of the sections.
+judge_meta.section_spread / quality_spread = max - min over samples (judge noise, about +-1 with 2 samples).
 Merged (never clobbering other keys) into data/benchmark/scores/<hash>_wic.json as judged_game_quality,
 judged_sections and judge_meta; skipped if already scored with the same rubric unless -f.
 """
@@ -144,13 +145,14 @@ def main():
         p = os.path.join(tmp, f"sheet_{i:02d}.jpg")
         sheet(frames, p)
         for s in range(samples):
-            tasks.append((sec, sub, PROMPT.format(path=p, scenes=scenes, extra=extra, section=sec, anchors=secs[sec])))
+            tasks.append((sec, sub, s, PROMPT.format(path=p, scenes=scenes, extra=extra, section=sec, anchors=secs[sec])))
     with ThreadPoolExecutor(6) as ex:
-        res = list(ex.map(lambda t: (t[0], t[1], ask(t[2], tmp)), tasks))
-    by = {}
-    for sec, sub, r in res:
+        res = list(ex.map(lambda t: (t[0], t[1], t[2], ask(t[3], tmp)), tasks))
+    by, per_sample = {}, {}   # per_sample[sec][sample][sub] = score: the spread between samples is the judge noise
+    for sec, sub, smp, r in res:
         if r:
             by.setdefault(sec, {}).setdefault(sub, []).append(r)
+            per_sample.setdefault(sec, {}).setdefault(smp, {})[sub] = r["score"]
     sections, reasons = {}, {}
     for sec in WEIGHTS:
         subs = by.get(sec, {})
@@ -160,18 +162,27 @@ def main():
         sections[sec] = round(sum(sum(r["score"] for r in v) / len(v) for v in subs.values()) / len(subs), 1)
         reasons[sec] = {k or "all": v[0]["reason"] for k, v in subs.items()}
     q = round(sum(WEIGHTS[s] * sections[s] for s in WEIGHTS), 1)
-    failed = sum(1 for _, _, r in res if not r)
+    # spread = max - min over samples of the section score (and of the weighted total), so judged thresholds can
+    # allow for noise; only samples where every sub-judgement of the section answered are compared
+    full = {sec: [sum(v.values()) / len(v) for v in per_sample.get(sec, {}).values() if len(v) == len(by.get(sec, {}))]
+            for sec in WEIGHTS}
+    spread = {sec: round(max(v) - min(v), 1) if len(v) > 1 else None for sec, v in full.items()}
+    tot = [sum(WEIGHTS[sec] * full[sec][i] for sec in WEIGHTS) for i in range(min(len(v) for v in full.values()))]
+    q_spread = round(max(tot) - min(tot), 1) if len(tot) > 1 else None
+    failed = sum(1 for *_, r in res if not r)
     # re-read and merge just before writing: other harness steps may have written keys meanwhile
     cur = json.load(open(out)) if os.path.exists(out) and os.path.getsize(out) else {}
     cur.update({"judged_game_quality": q, "judged_sections": sections,
                 "judge_meta": {"rubric_version": ver, "rubric_sha": rsha, "model": JUDGE_MODEL, "samples": samples,
-                               "calls": len(res), "failed_calls": failed, "frames": sum(len(v.get("frames", [])) for v in man["scenes"].values()),
+                               "calls": len(res), "failed_calls": failed,
+                               "section_spread": spread, "quality_spread": q_spread, "frames": sum(len(v.get("frames", [])) for v in man["scenes"].values()),
                                "recording_errors": man.get("errors", [])[:10], "reasons": reasons}})
     os.makedirs(SCORES, exist_ok=True)
     with open(out + ".tmp", "w") as f:
         json.dump(cur, f, indent=1)
     os.replace(out + ".tmp", out)
-    print(json.dumps({"hash": h, "judged_game_quality": q, "judged_sections": sections, "failed_calls": failed}))
+    print(json.dumps({"hash": h, "judged_game_quality": q, "judged_sections": sections, "section_spread": spread,
+                      "quality_spread": q_spread, "failed_calls": failed}))
 
 
 if __name__ == "__main__":

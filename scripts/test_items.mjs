@@ -2,6 +2,7 @@
 // Item effect tests (session 40): loads /?debug headless, runs window.__itemTest(id) for every item with a special
 // effect, checks the chests got placed on walkable ground, and prints one JSON line {equipment_effects, failed, ...}.
 //   node scripts/test_items.mjs [site_dir]
+import { wicLaunch } from './lib/wic_launch.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -25,17 +26,17 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(f));
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
-const browser = await puppeteer.launch({
+const browser = await puppeteer.launch(wicLaunch({
   executablePath: CHROME, headless: true, protocolTimeout: 0,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=1280,720'],
   defaultViewport: { width: 1280, height: 720 },
-});
+}));
 try {
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(String(e.message)));
   page.on('console', m => { if (m.type() === 'warning' && /items/.test(m.text())) errors.push(m.text()); });
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug`, { waitUntil: 'domcontentloaded', timeout: 300000 });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug${process.env.WIC_TEST_QUERY || ''}`, { waitUntil: 'domcontentloaded', timeout: 300000 });
   await page.waitForFunction('window.__walkReady === true && !!window.__game && !!window.__itemTest', { timeout: 300000 });
   const ids = await page.evaluate(() => window.__itemIds());
   const results = [];

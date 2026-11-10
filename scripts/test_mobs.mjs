@@ -3,6 +3,7 @@
 // then runs window.__mobTest for every mob type (spawn -> attacks player -> damaged -> dies -> 'kill' event).
 //   node scripts/test_mobs.mjs [site_dir]
 // Prints one JSON line {mob_types_ok, bosses_ok, results, ...}; exit code 1 on failure.
+import { wicLaunch } from './lib/wic_launch.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -25,11 +26,11 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(f));
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
-const browser = await puppeteer.launch({
+const browser = await puppeteer.launch(wicLaunch({
   executablePath: CHROME, headless: true, protocolTimeout: 0,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=960,540'],
   defaultViewport: { width: 960, height: 540 },
-});
+}));
 // session 42: the run hung for 20+ min with no output; a watchdog reports what finished and exits
 const stage = { at: 'load' };
 // session 44: all in-page waits are game time (window.__game.time); this is only a wall-clock safety cap
@@ -43,7 +44,7 @@ try {
   page.on('pageerror', e => errors.push(String(e)));
   const missing = [];
   page.on('response', r => { if (r.status() === 404) missing.push(new URL(r.url()).pathname); });
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug`, { waitUntil: 'domcontentloaded', timeout: 300000 });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug${process.env.WIC_TEST_QUERY || ''}`, { waitUntil: 'domcontentloaded', timeout: 300000 });
   await page.waitForFunction('window.__walkReady === true', { timeout: 300000 });
   await page.waitForFunction('window.__game && window.__game.mobSystem && window.__mobTest', { timeout: +(process.env.MOB_WAIT_MS || 120000) });
   await sleep(3000);   // let encounters near the spawn point stream in

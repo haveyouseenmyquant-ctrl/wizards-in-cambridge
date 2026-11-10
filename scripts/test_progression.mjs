@@ -7,6 +7,7 @@
 //   switch on at 2/3 pieces and off again · level, xp, talents, ranks, equipment and set bonuses survive a page reload.
 //   node scripts/test_progression.mjs [site_dir]
 // Last line: {"ok": bool, "checks": {...}, ...}; exit code 1 on failure.
+import { wicLaunch } from './lib/wic_launch.mjs';
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -28,16 +29,16 @@ const server = http.createServer((req, res) => {
   res.end(fs.readFileSync(f));
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
-const browser = await puppeteer.launch({
+const browser = await puppeteer.launch(wicLaunch({
   executablePath: CHROME, headless: true, protocolTimeout: 0,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=960,540'],
   defaultViewport: { width: 960, height: 540 },
-});
+}));
 const WATCHDOG_S = +(process.env.WC_TEST_WATCHDOG_S || 900);
 setTimeout(() => { console.log(JSON.stringify({ ok: false, error: `watchdog ${WATCHDOG_S} s` })); process.exit(1); }, WATCHDOG_S * 1000).unref();
 const errors = [];
 let out = { ok: false };
-const URL0 = () => `http://127.0.0.1:${server.address().port}/?debug&nopick`;
+const URL0 = () => `http://127.0.0.1:${server.address().port}/?debug&nopick${process.env.WIC_TEST_QUERY || ''}`;
 async function load(page) {
   await page.waitForFunction('window.__walkReady === true', { timeout: 300000 });
   await page.waitForFunction('window.__game && window.__game.caster && window.__game.items && window.__progression', { timeout: 120000 });
