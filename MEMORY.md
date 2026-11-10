@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 6)
+## State (2026-11-10, after session 7)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PRIVATE). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -15,7 +15,9 @@
 ## KPIs / measure.sh
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
-- Trunk 44f67e9a (s6, merged Gameplay progression: L20, spell ranks, 3x3 talents, sets): judged 46.2 (V 50,
+- Trunk 0657a325 (s7, merged Optimisation shadow proxies/LOD/grid raycast): fps 60 (p5 59), draws 1743, load 0.52;
+  judge/quests rescored by lead s7 (see JOURNAL).
+- Prev trunk 44f67e9a (s6, merged Gameplay progression: L20, spell ranks, 3x3 talents, sets): judged 46.2 (V 50,
   Anim 27, Combat 54.5, Story 54, UI 44), quests 2 (4/4), playtest 100, fps 52 (p5 44, min 32), load 0.77.
   build_hash.py now includes quests.js/npc_rig.js/quests/*.json, so any quest edit = new hash = rescore needed. Judge noise is ~±2 (Visuals 50->45 with no visual change). Animation stuck ~22:
   judge still sees blocky static player in recordings (Graphics told to verify frames from wic_record).

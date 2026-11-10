@@ -29,3 +29,4 @@
 {"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-10T05:27:36.358Z"}
 {"hash":"5d1d03387ad7e1ca","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-10T05:27:36.358Z"}
 {"hash": "5d1d03387ad7e1ca", "step": "playtest", "status": "ok", "secs": 233, "t": "2026-11-10T05:27:36Z"}
+{"hash": "0657a325b8951ea5", "step": "judge", "status": "ok", "secs": 634, "t": "2026-11-10T07:29:18Z"}

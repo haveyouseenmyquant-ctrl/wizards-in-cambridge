@@ -26,5 +26,48 @@
   "errors": 0,
   "first_errors": [],
   "at": "2026-11-10T07:01:26.714Z"
- }
+ },
+ "judged_game_quality": 44.3,
+ "judged_sections": {
+  "Visuals": 48.5,
+  "Animation": 22,
+  "Combat feel": 54.6,
+  "Story presentation": 50,
+  "UI polish": 44
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together well: recognisable architecture, brick and stone textures, real-time sun shadows, warm low-angle golden-hour lighting with some haze, and a convincing tree. But the buildings are low-poly boxes with flat facades, the windows are flat dark panels, the market stalls are blocky primitives, and the materials look plain and repetitive. The player wizard is a simple low-detail figure with a cone hat and no visible cloth or hair detail, and the combat frames are cluttered and blocky with little sign of ambient occlusion or rich lighting."
+   },
+   "Animation": {
+    "all": "The player is a blob-like wizard with a hat and robe. It looks almost the same in every walking frame, with no visible limbs or gait change, so it reads as a rigid figure sliding along. Combat frames show projectiles, beams and damage numbers, but no visible casting poses, hit reactions or enemy attack and death animations; the enemies appear to be static chibi figures. There is no secondary motion on robes or props and no environmental motion such as crowds or foliage."
+   },
+   "Combat feel": {
+    "hexweaver": "The visible feedback is solid: damage numbers, crits, a combo counter that chains hits, 'Staggered' and 'Vanquished' callouts, a boss health bar with phase markers and a 'Phase II' banner, and loot labels with rarity tags. The event log adds 6 spells, 31 kills, 807 sound voices and taken hits. Combat readability is weak, though. A large narration box covers the bottom third of every frame, hex_dart makes up two-thirds of all casts, spell effects are small, and the camera often faces walls or empty streets (frames 6-8, 10-11), so you rarely see enemies telegraphing attacks. Nothing shows hit-stop, crowd control, or mobility changing how the fight plays out, and the player was hit only once in 60 seconds, which suggests very little threat.",
+    "pyromancer": "The fight shows real combat systems at work: damage numbers with crits, chain counters, Staggered/Interrupted status labels, a boss with a phased health bar and a Phase II banner, an Enraged state, and loot pickups colored by rarity. The event log backs this up with 6 spells, varied enemies and 564 sound voices. What holds the score down is readability: a narration box covers the lower third in every frame, the camera often faces walls or empty streets (frames 9, 11 and 12), and the spell effects are simple flat shapes with no visible hit-stop or weight. Only one class appears, so class variety can't be judged.",
+    "stormcaller": "The frames show real hit feedback: crit damage numbers, Staggered/Interrupted/Vanquished callouts, chain counters, a boss health bar that shows Phase II, loot beams colored by rarity, and lightning-chain VFX. The event log also shows a varied kit of six spells across varied enemies. The biggest gaps are that a persistent narration box covers the lower third of every frame and that combat often looks sparse or empty (four frames have no enemies nearby). Spell effects are hard to read in the clutter, I can't see any enemy attack telegraphs or screen feedback, and the player was hit only twice, so the fight has little danger or depth.",
+    "warden": "The frames show working feedback: damage numbers, CRIT tags, chain counters, a Staggered state, rarity-coloured loot beams with item cards, and a boss with a segmented phase bar and a named attack telegraph ('Belfry Drop'). The event log adds a varied spell kit with crowd control, plenty of sound voices, and boss phase changes. The biggest gaps: a dialogue box covers the lower screen in every frame, a large translucent player blob blocks the action, spell effects are mostly vague blue translucent shapes without clear impact or hit-stop, the fights look sparse with few visible enemies, and only one class is shown, so differences between classes can't be judged."
+   },
+   "Story presentation": {
+    "all": "The story is well written and clearly original, set in a real place (Great St Mary's, Market Hill). It has a chapter title card, letterboxed dialogue with speaker names, roles and portraits, a quest tracker with distance, a world marker and a quest-complete reward card. But the speakers are never visible in the scene: there are no NPC bodies, no camera framing on characters and no animation, and the boss reveal is told only in narration text, not staged. A 'Loading...' label and overlapping HUD text sit on top of the cinematic frames, and there are no branching choices."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent theme: serif headings, dark translucent panels, class cards with ability icons, rarity-tagged item labels, a dialogue box with a portrait, chain/stagger feedback and a minimap. But layering is badly broken. The 'Quest Complete' banner and dialogue box sit over the inventory and talent screens, the class selection overlaps the HUD, and loot popups collide with the quest tracker. In combat a large narration box covers the bottom third of the screen, where the hotbar and resource bars are barely visible, so readability and hierarchy fall well short of the 60 anchor."
+   }
+  }
+ },
+ "main_quests_shipped": 2,
+ "quest_bot_pass_pct": 100
 }

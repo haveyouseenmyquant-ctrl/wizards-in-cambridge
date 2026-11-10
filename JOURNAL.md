@@ -66,3 +66,9 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-10 — session 6 (lead)
 - Merged Gameplay progression (fast-forward) -> 44f67e9a. progression 10/10, items 57/57, mobs 12+3, quest_bot 4/4.
 - Scored: judged 46.2 (best yet; Anim 22->27), quests 2, playtest 100, fps 52, load 0.77. OK'd Gameplay to add bossTTK to quest_bot.
+
+## 2026-11-10 — session 7 (lead)
+- Merged Optimisation s2 (shadow proxies, shadow-caster LOD, grid raycast) -> 0657a325. fps 60 (p5 59), draws 2599->1743, load 0.52.
+- Judged 0657a325: 45.4 this run, 44.3 averaged in measure.sh (V 48.5, Anim 22-24, Combat 55, Story 50-52, UI 44-45): unchanged within noise, as expected for a perf-only merge.
+  quest_bot 4/4 (main_quests_shipped 2). The main-path playtest on this hash is left to service.sh (~35 min).
+- Animation is still the weakest section after 3 builds -> note to Graphics to work from the judge's stated reasons.
