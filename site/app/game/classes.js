@@ -66,6 +66,7 @@ export const CLASSES = {
     ],
   },
   warden: {
+    bossMult: 1.3,    // gameplay s3: quest_bot Bellwarden TTK 39.9 s (cap 40) -> ~31 s
     name: 'Stone Warden', color: '#c9a66b', blurb: 'Earth and stone. Shields, stuns and roots; outlasts anything.',
     spells: [
       { id: 'pebble_shot', name: 'Pebble Shot', glyph: '●', kind: 'bolt', type: 'stone', mana: 4, cd: 0.5, dmg: 28, speed: 52, range: 50, splash: 0, grav: 4, color: 0xd8b880, sfx: 'pebble', look: 'pebble' },
@@ -88,6 +89,7 @@ export const CLASSES = {
     ],
   },
   hexweaver: {
+    bossMult: 0.85,   // gameplay s3: TTK 20.3 s, fastest class -> ~24 s, toward the 15-40 s band centre
     name: 'Hex Weaver', color: '#b070ff', blurb: 'Curses, bound wisps and life drain. Weakens foes, feeds on them.',
     spells: [
       { id: 'hex_dart', name: 'Hex Dart', glyph: '✧', kind: 'bolt', type: 'hex', mana: 5, cd: 0.4, dmg: 25, speed: 40, range: 50, splash: 0, drain: 0.3, color: 0xb070ff, sfx: 'dart', look: 'dart' },

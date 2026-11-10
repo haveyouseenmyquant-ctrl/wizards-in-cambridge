@@ -117,8 +117,10 @@ try {
 
     // 5. dodge i-frames: dash, an attack inside the window is evaded, then the player is vulnerable again
     g.invulnUntil = 0; g.shield = 0; g.stats.hp = g.stats.maxHp;
+    // gameplay s3: step the sim synchronously here. Under load (gate: right after test_classes) the 30 ms pump could run
+    // twice (0.4 s game) before until() polled again, so the 0.32 s window had closed by the time the hit landed
     P.dashCd = 0; P.wantDash = true;
-    await until(() => F.dodgeUntil > g.time, 1);
+    for (let i = 0; i < 20 && !(F.dodgeUntil > g.time); i++) { if (!(P.dashCd > 0)) P.wantDash = true; P.update(0.02); g.update(0.02); }
     const ev0 = S.evaded, dIn = g.damagePlayer(20, mob);
     c.dodgeIFrames = S.dodges > 0 && dIn === 0 && S.evaded > ev0;
     await step(0.5);

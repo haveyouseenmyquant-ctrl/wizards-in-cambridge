@@ -49,7 +49,7 @@ const browser = await puppeteer.launch(wicLaunch({
 function installBot(softS = 0) {
   const g = window.__game, P = window.__p, W = window.__world, C = g.caster, Q = g.quests, DT = 0.05;
   const ev = { kills: 0, deaths: 0, casts: 0, steps: [], talks: 0 };
-  ev.killLog = []; ev.boss = {}; g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => ev.deaths++),
+  ev.killLog = []; ev.boss = {}; g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; if (e.mob?.type?.id === 'bellwarden' && ev.boss.first != null) ev.boss.ttk = +(g.time - bot.t0 - ev.boss.first).toFixed(1); ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => ev.deaths++),
     g.on('questStep', e => ev.steps.push(`${e.quest}:${e.step}@${(g.time - bot.t0).toFixed(0)}`)),
     g.on('levelup', () => { for (let t = 0; t < 3; t++) if (C.picks[t] == null && g.stats.level >= C.talentLevels[t]) C.pickTalent(t, t % 2); })];
   function plan(sx, sy, sz, tx, ty, tol) {   // A* on a 1 m grid; walkable = world.standAt from the neighbour's feet height
@@ -228,6 +228,7 @@ finally { await browser.close(); server.close(); }
 const shipped = quests.filter(id => runs.filter(r => r.completed?.includes(id)).length >= Math.max(1, runs.length / 2)).length;
 const result = { main_quests_shipped: shipped, quest_bot_pass_pct: runs.length ? +(100 * runs.filter(r => r.pass).length / runs.length).toFixed(1) : 0,
   quests, runs: runs.sort((a, b) => a.run - b.run).map(r => ({ cls: r.cls, pass: r.pass, fail: r.fail, completed: r.completed, gameS: r.gameS, deaths: r.deaths })),
+  bossTTK: Object.fromEntries(runs.filter(r => r.boss?.ttk != null).map(r => [r.cls, r.boss.ttk])),
   wall_s: Math.round((Date.now() - T0) / 1000) };
 try {
   const py = fs.existsSync(path.join(ROOT, '.venv/bin/python')) ? path.join(ROOT, '.venv/bin/python') : 'python3';
