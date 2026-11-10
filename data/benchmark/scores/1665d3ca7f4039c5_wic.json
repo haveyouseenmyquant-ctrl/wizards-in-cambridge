@@ -121,5 +121,14 @@
   "at": "2026-11-10T12:43:25.761Z"
  },
  "alias_of": "b1d7eff5dbdcbad5",
- "alias_note": "live_site content unchanged; hash differs only because s12 added app/mainmerge.js to build_hash.py FILES"
+ "alias_note": "live_site content unchanged; hash differs only because s12 added app/mainmerge.js to build_hash.py FILES",
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "quest_bot": true
+ }
 }
