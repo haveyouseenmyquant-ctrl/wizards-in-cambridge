@@ -54,5 +54,33 @@
  "feel_checks_passed": 17,
  "feel_checks_total": 17,
  "main_quests_shipped": 3,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "fps_median": 60,
+ "load_seconds": 0.51,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 1.83,
+  "programs": [
+   65,
+   83
+  ],
+  "fps_p5": 59,
+  "fps_min": 47,
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 30,
+  "maxMobs": 36,
+  "dist": 200,
+  "laps": 0,
+  "draw_calls_median": 1824,
+  "tris_median": 8023366,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-10T17:16:55.596Z"
+ }
 }
