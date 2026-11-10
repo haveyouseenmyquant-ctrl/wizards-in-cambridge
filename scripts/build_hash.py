@@ -14,7 +14,7 @@ FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/s
          # wic optimisation s1: quality presets
          "app/quality.js",
          # wic story s2: quests, dialogue and NPCs (quest_bot and judge story scores must follow story changes)
-         "app/game/quests.js", "app/game/npc_rig.js", "app/game/quests/index.json", "app/game/quests/prologue.json", "app/game/quests/rung_down.json"]
+         "app/game/quests.js", "app/game/npc_rig.js", "app/game/quests/index.json", "app/game/quests/prologue.json", "app/game/quests/rung_down.json", "app/game/quests/lion_at_the_gate.json"]
 # session 75: --game hashes only what the game KPIs (test_mobs, test_items, playtest, gameplay clips) depend on: the game
 # layer, the player/collision code and the collision tiles (via collision/digest.json, written by publish.sh). A world-only
 # publish (facades, roofs, textures) then keeps its game scores; before, every publish reset them and the game KPIs read 0

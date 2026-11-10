@@ -219,9 +219,25 @@ The ten main quests move from the centre outwards, ring by ring. Quests 1 and 2 
 **Encounters.** Bell-Rope Bat Swarms, Chimney-Soot Sprites and Rooftop Gargoyles on the leads, with the whole of the market visible below.
 **Boss.** **The Chime-keeper of St Mary's**: the guardian of the Quarters, a figure of tangled bell-rope with a sally (the striped woollen grip on a bell-rope) for a heart. It attacks in a rhythm that follows the four phrases of the Quarters. Players who learn the tune can predict its strikes.
 **Reward.** XP, the **Ringer's Gloves** (an attack-speed item), and the Quarters ringing in full again.
-**Hand-off.** Absalom has noticed that the oldest bell in town, St Bene't's Saxon bell, has been ringing flat. "Go and see the Sister. Take a candle; she likes the light." That leads to Quest 3.
+**Hand-off.** Absalom sends the player to Old Mother Gadd on Peas Hill: the King's Parade gates are bolted and she has seen a great cat on the walls. That leads to Quest 3. (Order changed in Story s3 so the third quest reaches ring 2, the King's front.)
 
-### Quest 3: The Saxon Bell
+### Quest 3: The Lion at the Gate (shipped: quests/lion_at_the_gate.json)
+
+**Location.** King's Parade, Senate House Passage, the Senate House railings, and the King's College gatehouse, which is seen from the street as scenery only.
+**Objectives.**
+1. **Reach:** Walk King's Parade at nightfall. The Shuck is glimpsed at the far end of Senate House Passage.
+2. **Talk:** Speak to Old Mother Gadd at her chip van on Peas Hill about "the big cat on the Parade".
+3. **Kill:** Clear Clockwork Porters that Corvin has re-wound to patrol the street and turn people away.
+4. **Collect:** Collect three crest-stones knocked from the parapet. Each one is guarded by a Gatehouse Crest Griffin.
+5. **Kill (boss):** Defeat the Gatehouse Lion of King's at the gate.
+6. **Talk:** Debrief with Nell, who has shut her stall early.
+
+**Encounters.** Clockwork Porters, Gatehouse Crest Griffins, Rooftop Gargoyles, and whispering walls in Senate House Passage that call the player by name.
+**Boss.** **The Gatehouse Lion of King's**: a heraldic stone lion grown huge, which steps out of the gate's carved stonework to guard its hour-bell. It charges along the length of King's Parade, and when wounded it roars the Gatehouse bell's note.
+**Reward.** XP, the **Crest-Stone Ward** (an armour item), and the Gatehouse bell steadied.
+**Hand-off.** The Clockwork Porters were wound with a new key bearing a maker's mark from a Trinity Street workshop, so Pip follows the oil north. As shipped, Gadd also sends the player to Sister Agnes (Quest 4), and the Undertide water rising up the King's Parade gutters (Cam Wraiths, objective 3b) foreshadows the Backs.
+
+### Quest 4: The Saxon Bell
 
 **Location.** Bene't Street, St Bene't's Church and its Saxon tower, the Ink Hall beneath the street, and the edge of Corpus Christi's Old Court, which is seen from the lane as scenery only.
 **Objectives.**
@@ -236,23 +252,7 @@ The ten main quests move from the centre outwards, ring by ring. Quests 1 and 2 
 **Encounters.** Library Ink Imps, Chimney-Soot Sprites in the coal passages, and a Will-o'-the-Cam that has slipped down a drain. Corpus ghost lore runs through the area as ambience: a pale figure at an upper window, and a cold spot in the lane by the old court. It is never explained.
 **Boss.** **The Blotted Scribe** (new boss): every crossed-out entry in eight centuries of bell-books, risen as one ink-black figure. It throws curses written backwards and splits into Ink Imps when struck with fire.
 **Reward.** XP, the **Anchoress's Taper** (a light source that reveals hidden doors), and access to the Ink Hall as a hub with Marisol's sidequests.
-**Hand-off.** The restored pages show that Corvin's keys were cut for the gate locks on King's Parade, and Sister Agnes hears a lion roaring in the stones. That leads to Quest 4.
-
-### Quest 4: The Lion at the Gate
-
-**Location.** King's Parade, Senate House Passage, the Senate House railings, and the King's College gatehouse, which is seen from the street as scenery only.
-**Objectives.**
-1. **Reach:** Walk King's Parade at nightfall. The Shuck is glimpsed at the far end of Senate House Passage.
-2. **Talk:** Speak to Old Mother Gadd at her chip van on Peas Hill about "the big cat on the Parade".
-3. **Kill:** Clear Clockwork Porters that Corvin has re-wound to patrol the street and turn people away.
-4. **Collect:** Collect three crest-stones knocked from the parapet. Each one is guarded by a Gatehouse Crest Griffin.
-5. **Kill (boss):** Defeat the Gatehouse Lion of King's at the gate.
-6. **Talk:** Debrief with Nell, who has shut her stall early.
-
-**Encounters.** Clockwork Porters, Gatehouse Crest Griffins, Rooftop Gargoyles, and whispering walls in Senate House Passage that call the player by name.
-**Boss.** **The Gatehouse Lion of King's**: a heraldic stone lion grown huge, which steps out of the gate's carved stonework to guard its hour-bell. It charges along the length of King's Parade, and when wounded it roars the Gatehouse bell's note.
-**Reward.** XP, the **Crest-Stone Ward** (an armour item), and the Gatehouse bell steadied.
-**Hand-off.** The Clockwork Porters were wound with a new key bearing a maker's mark from a Trinity Street workshop, so Pip follows the oil north. That leads to Quest 5.
+**Hand-off.** The restored pages show that Corvin's keys were cut for the gate locks on King's Parade, and Sister Agnes hears a lion roaring in the stones. That leads to Quest 5.
 
 ### Quest 5: The Mainspring
 

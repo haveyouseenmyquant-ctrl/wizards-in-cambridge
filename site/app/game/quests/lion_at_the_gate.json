@@ -1,0 +1,85 @@
+{
+  "id": "lion_at_the_gate",
+  "main": true,
+  "chapter": "Chapter Two",
+  "title": "The Lion at the Gate",
+  "summary": "Night on King's Parade. The college gates are locked, the gutters run the wrong way, and something with a mane is pacing behind the stonework.",
+  "npcs": {
+    "gadd": { "name": "Old Mother Gadd", "role": "Chip van, Peas Hill", "x": -121.9, "y": -26.5, "face": 270,
+              "robe": "#7a4b5c", "trim": "#e8d9a0", "skin": "#e2b796", "hair": "#cfcac4", "hat": "scarf" },
+    "narrator": { "name": "", "role": "" }
+  },
+  "intro": [
+    { "who": "narrator", "line": "On Peas Hill a chip van glows like a lantern. Beyond it, along King's Parade, every college gate has been shut and bolted from the inside." }
+  ],
+  "steps": [
+    { "id": "meet_gadd", "type": "talk", "npc": "gadd",
+      "text": "Ask Old Mother Gadd about the trouble on King's Parade",
+      "dialogue": [
+        { "who": "gadd", "line": "You look done in, love. Have a chip. Absalom sent you? Course he did. Bells, bells, always bells with that man." },
+        { "who": "gadd", "line": "I've kept this van sixty years and I've never seen the Parade like it. Clockwork porters, wound up tight, turning folk away from their own front doors." },
+        { "who": "player", "line": "Corvin's work?" },
+        { "who": "gadd", "line": "His key, his oil. And there's a big cat on the Parade. Don't laugh. Stone-grey, size of a dray-horse, walking the top of the King's wall." },
+        { "who": "gadd", "line": "Go and stop those porters before somebody gets wound into the works. I'll keep the fat hot." }
+      ] },
+    { "id": "porters", "type": "kill", "spawn": [ "automaton", "automaton", "automaton" ], "at": { "x": -190, "y": -40 }, "count": 3,
+      "text": "Stop the Clockwork Porters patrolling King's Parade",
+      "intro": [
+        { "who": "narrator", "line": "Three porters in bowler hats of riveted brass march the cobbles in step, keys ticking in their backs. As one, they turn towards you." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The last porter winds down mid-stride. Its key is new-cut, and still warm." },
+        { "who": "narrator", "line": "Then the gutters of King's Parade start to run uphill, away from the river, carrying something pale with them." }
+      ] },
+    { "id": "wraiths", "type": "kill", "spawn": [ "river_wraith", "river_wraith", "river_wraith" ], "at": { "x": -193, "y": -70 }, "count": 3,
+      "text": "Drive back the Cam Wraiths rising from the gutters",
+      "intro": [
+        { "who": "narrator", "line": "Cam water heaves up through the drain grates and stands into hooded shapes. The Undertide has found its way under the Backs and up the Parade." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The wraiths slop back into the gutters. Where they rose, three carved stones lie on the setts: crest-stones, knocked from the parapet of the King's wall." },
+        { "who": "narrator", "line": "Each is warm and faintly ringing. Something wants them back." }
+      ] },
+    { "id": "crest_south", "type": "collect", "item": "Crest-stone of the rose", "place": { "x": -194, "y": -90, "r": 1.6, "name": "King's Parade, south end" },
+      "text": "Recover the first crest-stone at the south end of King's Parade",
+      "dialogue": [
+        { "who": "narrator", "line": "A carved rose, its petals worn smooth by five hundred years of weather. It hums one low note." }
+      ] },
+    { "id": "crest_middle", "type": "collect", "item": "Crest-stone of the portcullis", "place": { "x": -192, "y": -55, "r": 1.6, "name": "King's Parade, by the wall" },
+      "text": "Recover the second crest-stone below the King's wall",
+      "dialogue": [
+        { "who": "narrator", "line": "A portcullis in miniature, chains and all. As you lift it, a growl rolls along the wall-top above you, too deep to be a dog." }
+      ] },
+    { "id": "crest_north", "type": "collect", "item": "Crest-stone of the lily", "place": { "x": -205, "y": 30, "r": 1.6, "name": "Senate House Passage" },
+      "text": "Recover the third crest-stone by Senate House Passage",
+      "intro": [
+        { "who": "narrator", "line": "In Senate House Passage the walls whisper, in voices like old gravel. They are saying your name." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "Three stones: rose, portcullis, lily. Together they ring the note of the Gatehouse bell, and the gatehouse answers." },
+        { "who": "narrator", "line": "Back down the Parade, the carved lion above the King's gate is no longer there." }
+      ] },
+    { "id": "lion", "type": "kill", "mob": "gatehouse_lion", "count": 1, "at": { "x": -197, "y": -22 },
+      "text": "Defeat the Gatehouse Lion before the King's gate",
+      "intro": [
+        { "who": "narrator", "line": "It drops from the gatehouse in a slither of dust: a heraldic lion grown huge, crowned and shield-chested, guarding its hour-bell." },
+        { "who": "narrator", "line": "It roars, and the roar is the Gatehouse bell's note, struck far too hard." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The lion shrinks into its stone again. You set the three crest-stones into the gate's carving, and the Gatehouse bell settles to a steady, sleepy hum." },
+        { "who": "narrator", "line": "Behind the gate the college lamps come on, one by one." }
+      ] },
+    { "id": "report", "type": "talk", "npc": "gadd",
+      "text": "Tell Old Mother Gadd the Parade is safe",
+      "dialogue": [
+        { "who": "gadd", "line": "Heard it from here. Roared like a foghorn, then nothing. That's the Gatehouse bell steadied, that is. Three of twelve, love." },
+        { "who": "player", "line": "The porters were wound with a new key. Corvin's had keys cut for every lock on the Parade." },
+        { "who": "gadd", "line": "Then somebody cut them for him. And the water coming up the gutters, that's from the Backs. Something's opened a way under the river." },
+        { "who": "gadd", "line": "Here: a piece of the lion's shield. It took a hundred years of rain without a crack; it'll take a hit or two for you." },
+        { "who": "gadd", "line": "Now go and see the Sister in Bene't Street. Absalom says the Saxon bell's ringing flat, and she'll know whose key that is." }
+      ] }
+  ],
+  "checkpoint": { "x": -190, "y": -55, "name": "King's Parade", "look": [-197, -22] },
+  "rewards": { "xp": 600, "items": [ "quest_crest_ward" ], "title": "Warden of the Parade" },
+  "next": "See Sister Agnes at St Bene't's tower (coming soon)"
+}
