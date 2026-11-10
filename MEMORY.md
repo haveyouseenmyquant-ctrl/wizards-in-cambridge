@@ -1,22 +1,25 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 9)
+## State (2026-11-10, after session 10)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
   per hash; skips while a session is active). Published: Pages (GitHub Actions) live at SITE_URL
   https://haveyouseenmyquant-ctrl.github.io/wizards-in-cambridge/ ; build de19f70 = release world-20261110-0924, published
-  by a one-off task via scripts/publish.sh (game KPI + market-square scoring skipped). data/derived/live_site exists, so
+  by a one-off task; s10 published 9b1abea2 (release world-20261110-1012) via
+  `WC_SKIP_GAME_KPI=1 WC_SKIP_MS_BENCH=1 scripts/publish.sh` (~5 min; rm /tmp/world.tar.gz after). data/derived/live_site exists, so
   measure.sh scores the PUBLISHED build. Keep publishing each good trunk build with scripts/publish.sh. Visibility
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
-- Trunk fb1294bb (s9, merged EnvVFX interior-mapped windows + wall weathering): judged 45.2 (V 50, Anim 22,
-  Combat 55, Story 54, UI 43), fps 60, load 0.66, gate 6/6, quests 2; playtest pending service.sh.
-- Judge's top asks: player model reads as 'cloaked blob, no limbs' (Graphics told: new humanoid model + cast clips);
-  title card + caption cover combat frames (Story told to fade/hide in combat).
+- Trunk/live 9b1abea2 (s10, merged Graphics Quaternius wizard CC-BY): judged 50.0 (V 52, Anim 33.5, Combat 58.4,
+  Story 55.5, UI 49), gate 6/6, fps 60, load 0.53, quests 2; playtest pending service.sh.
+  Judge asks: enemy attack/death/hit clips + bigger enemies; menus overlaid by banners/dialogue, text-only inventory,
+  debug FPS/Quality/'Loading...' labels visible; stale tracker; NPCs never framed; stalls flat blocks.
+- fb1294bb (s9, merged EnvVFX interior-mapped windows + wall weathering): judged 45.2 (V 50, Anim 22,
+  Combat 55, Story 54, UI 43); playtest 91.7 (hexweaver softlock senate-house-hill -> Gameplay 9d0d).
 - Prev trunk 0657a325 (s7, merged Optimisation shadow proxies/LOD/grid raycast): fps 60 (p5 59), draws 1743, load 0.52;
   judged 44.3, quests 2, playtest 100 (service.sh). s8: merged QA gate; no other node had new commits.
 - Prev trunk 44f67e9a (s6, merged Gameplay progression: L20, spell ranks, 3x3 talents, sets): judged 46.2 (V 50,
@@ -34,10 +37,10 @@
 ## Organisation (6 nodes, all children of root)
 - qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring (+gate step per hash). No open task.
 - story: quests/dialogue, quest_bot (?q=low, 4 workers, ~150 s). s5 task 6b1b: quest 3 in ring 2.
-- gameplay: feel.js, progression (merged s6), boss TTK d623 (OK'd to add bossTTK to quest_bot), UI polish 02a9.
+- gameplay: feel.js, progression (merged s6), boss TTK d623 (OK'd to add bossTTK to quest_bot), UI polish 02a9, softlock 9d0d.
 - graphics: characters+animation only. 8228 mob glbs, e9f5 NPC glbs, 8765 Animation>40. Told judge still sees
   blocky player in recordings (check wizard.glb shows in wic_record frames).
-- environment-and-vfx (new s3): lighting/atmosphere/materials/spell VFX. 0eb3 Visuals>50 + fps>=50.
+- environment-and-vfx (new s3): lighting/atmosphere/materials/spell VFX. 0eb3 Visuals>50 (main now 52), 926d stalls/shop windows geometry Visuals>55.
 - optimisation: perf harness, presets, publish.sh. ef24 (Safari blocked: WebKit crashes on macOS 26.5; safaridriver
   approval a-20261110-023619-6c7d), 5145 perf guardrail.
 - Contract in every brief: results to <hash>_wic.json (merge keys), /tmp/wic_* locks, symlink heavy data from trunk,

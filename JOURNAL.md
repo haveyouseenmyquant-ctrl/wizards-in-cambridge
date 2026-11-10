@@ -95,3 +95,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   market-square scoring skipped); data/derived/live_site now exists, so measure.sh reads the published build.
 - Set SITE_URL to https://haveyouseenmyquant-ctrl.github.io/wizards-in-cambridge/ (HTTP 200). Next sessions: publish
   every gated trunk build per standing notes; score the live build (it lacks the skipped KPI runs).
+
+## 2026-11-10 — session 10 (lead)
+- service.sh scored fb1294bb: playtest 91.7 (hexweaver softlock at senate-house-hill) -> Gameplay task 9d0d.
+- Merged Graphics s3 (Quaternius Animated Wizard, CC-BY; fixed teal-emissive blob) -> 9b1abea2. Gate 6/6 (154 s).
+  Judged 50.0 (was 45.2): Visuals 52, Animation 33.5 (was 22), Combat 58.4, Story 55.5, UI 49. fps 60, load 0.53.
+- Published 9b1abea2 to Pages (release world-20261110-1012). Playtest on it left to service.sh.
+- New task EnvVFX 926d (stalls/shop windows as geometry, Visuals>55); judge-reason notes to Graphics, Gameplay (UI), Story.
