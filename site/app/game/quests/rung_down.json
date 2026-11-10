@@ -1,0 +1,77 @@
+{
+  "id": "rung_down",
+  "main": true,
+  "chapter": "Chapter One",
+  "title": "Rung Down",
+  "summary": "Since sunset the Cambridge Quarters have played three phrases of four. Somebody has pulled the pins out of the tune.",
+  "npcs": {
+    "absalom": { "name": "Absalom Crane", "role": "Tower captain, Great St Mary's", "x": -128, "y": 58, "face": 270,
+                 "robe": "#6b5a3e", "trim": "#c9b28a", "skin": "#d9b394", "hair": "#d8d4cc", "hat": "none" },
+    "narrator": { "name": "", "role": "" }
+  },
+  "intro": [
+    { "who": "narrator", "line": "Above the market the quarter chime begins: four notes, four more, four more... and then nothing, where the last phrase should be." }
+  ],
+  "steps": [
+    { "id": "meet_absalom", "type": "talk", "npc": "absalom",
+      "text": "Find Absalom Crane on the steps of Great St Mary's",
+      "dialogue": [
+        { "who": "absalom", "line": "You'll be Nell's Warden. You have the look: singed, and a bit surprised to be alive." },
+        { "who": "absalom", "line": "We are rung down, Warden. Rung right down. Hear that? Three phrases of the Quarters, and then a hole where the fourth should be." },
+        { "who": "player", "line": "Is that the Unwinder again?" },
+        { "who": "absalom", "line": "Corvin. Yes. I taught that boy to ring. Now he's pulled the tune-pins from my chime barrel and flung them across the parish." },
+        { "who": "absalom", "line": "First things first. Something has come down out of the louvres and is roosting in my churchyard. Clear it, would you?" }
+      ] },
+    { "id": "louvres", "type": "kill", "spawn": [ "bell_bats", "soot_sprite", "bell_bats" ], "at": { "x": -141, "y": 72 }, "count": 3,
+      "text": "Clear the creatures roosting by the tower",
+      "dialogue": [
+        { "who": "absalom", "line": "Bats made of bell-rope and soot. He's turned my own tower against me. There are four pins: one for each phrase." },
+        { "who": "absalom", "line": "The first phrase always carried towards the Senate House. Start there, and listen for brass humming in the wrong key." }
+      ] },
+    { "id": "pin_senate", "type": "collect", "item": "Tune-pin of the first phrase", "place": { "x": -197, "y": 74, "r": 1.6, "name": "Senate House railings" },
+      "text": "Find the first tune-pin by the Senate House railings",
+      "dialogue": [
+        { "who": "narrator", "line": "A brass pin as long as your hand lies against the railings, humming four falling notes." },
+        { "who": "narrator", "line": "Far up the street towards Trinity, something answers with the second phrase." }
+      ] },
+    { "id": "pin_trinity", "type": "collect", "item": "Tune-pin of the second phrase", "place": { "x": -196, "y": 158, "r": 1.6, "name": "Trinity Street" },
+      "text": "Follow the second phrase up Trinity Street",
+      "dialogue": [
+        { "who": "narrator", "line": "The second pin is wedged between two setts, warm as a coin held in a fist." },
+        { "who": "narrator", "line": "Behind you, from the stone frontages of King's Parade, the third phrase rings out. It sounds frightened." }
+      ] },
+    { "id": "pin_kings", "type": "collect", "item": "Tune-pin of the third phrase", "place": { "x": -189, "y": 2, "r": 1.6, "name": "King's Parade" },
+      "text": "Recover the third tune-pin on King's Parade",
+      "dialogue": [
+        { "who": "narrator", "line": "The third pin lies in the gutter of King's Parade, its notes slowed almost to a growl." },
+        { "who": "narrator", "line": "The last phrase is the lowest, and it comes from the narrow lane of Bene't Street, near the oldest tower in town." }
+      ] },
+    { "id": "pin_benet", "type": "collect", "item": "Tune-pin of the fourth phrase", "place": { "x": -137.8, "y": -100, "r": 1.6, "name": "Bene't Street" },
+      "text": "Find the fourth tune-pin in Bene't Street",
+      "dialogue": [
+        { "who": "narrator", "line": "Four pins, four phrases. Held together they almost play the whole tune." },
+        { "who": "narrator", "line": "Almost. From the foot of Great St Mary's tower comes the sound of a bell-rope being hauled by something that is not a ringer." }
+      ] },
+    { "id": "chimekeeper", "type": "kill", "mob": "chimekeeper", "count": 1, "at": { "x": -176, "y": 50 },
+      "text": "Defeat the Chime-keeper of St Mary's at the foot of the tower",
+      "intro": [
+        { "who": "narrator", "line": "The Chime-keeper of St Mary's steps out of the tower's shadow: a walking belfry, its clock hands spinning, striking in fours." },
+        { "who": "absalom", "line": "Count its strokes, Warden! One-two-three-four, then it draws breath. Hit it in the breath!" }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The Chime-keeper's hands stop at the quarter. It sets itself down at the tower foot, and is only stone again." },
+        { "who": "narrator", "line": "From high above, all four phrases of the Quarters ring out over Market Hill, complete for the first time since sunset." }
+      ] },
+    { "id": "report", "type": "talk", "npc": "absalom",
+      "text": "Report to Absalom Crane",
+      "dialogue": [
+        { "who": "absalom", "line": "Listen to that. Every phrase in its place. You've no idea how a man misses a tune until it's gone." },
+        { "who": "absalom", "line": "The Concord is twelve bells, Warden: one for each hour, from my tower out to the edge of the town. Together they hold the Undertide down." },
+        { "who": "player", "line": "And the thirteenth chime?" },
+        { "who": "absalom", "line": "That's no bell of ours. Each time Corvin silences one of the twelve, the thirteenth rings a little louder. When it can strike on its own, the river comes up through the streets." },
+        { "who": "absalom", "line": "Take these. Ringer's sallies, my own. And go and see the Sister in Bene't Street. The Saxon bell's been ringing flat, and that bell is older than all of us." }
+      ] }
+  ],
+  "rewards": { "xp": 450, "items": [ "quest_ringers_sally" ], "title": "Keeper of the Quarters" },
+  "next": "See the Sister at St Bene't's tower (coming soon)"
+}

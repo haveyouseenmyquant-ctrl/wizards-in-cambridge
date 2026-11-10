@@ -62,5 +62,5 @@
       ] }
   ],
   "rewards": { "xp": 250, "items": [ "quest_nells_posy" ], "title": "Warden of Market Hill" },
-  "next": "Find Absalom Crane at Great St Mary's (coming soon)"
+  "next": "Find Absalom Crane at Great St Mary's"
 }

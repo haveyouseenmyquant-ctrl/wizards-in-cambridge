@@ -17,6 +17,11 @@ ITEMS.quest_nells_posy = { name: "Nell's Posy Charm", slot: 'amulet', rarity: 'r
   fx(c) { c.on('kill', () => { c.game.heal(6); c.S.fx?.burst?.(c.S.pp(1.2), 0xf4b942, 10, 2, 0.6); }); },
   test(t) { const m = t.mob(3, 0); t.game.stats.hp = 50; t.game.emit('kill', { mob: m }); return [t.game.stats.hp >= 56, `hp ${t.game.stats.hp}`]; } };
 
+ITEMS.quest_ringers_sally = { name: "Ringer's Sallies", slot: 'ring', rarity: 'rare', quest: true, stats: { cdr: 0.06, power: 0.03 },
+  desc: 'Striped wool from a bell-rope grip. Every fourth cast rings the Quarters and restores 8 mana.',
+  fx(c) { let n = 0; c.on('cast', () => { if (++n % 4) return; const s = c.game.stats; s.mana = Math.min(s.maxMana, s.mana + 8); c.S.fx?.burst?.(c.S.pp(1.4), 0xe9c46a, 8, 2, 0.5); }); },
+  test(t) { const s = t.game.stats; s.mana = 10; for (let i = 0; i < 4; i++) t.game.emit('cast', {}); return [s.mana >= 18 || s.mana === s.maxMana, `mana ${s.mana}`]; } };
+
 const CSS = `
 #wic-q .q-track{position:absolute;right:16px;top:30vh;width:270px;padding:10px 12px;background:linear-gradient(90deg,rgba(14,12,10,0),rgba(14,12,10,.72) 18%);color:#f3e6c8;font:600 13px/1.35 system-ui,sans-serif;text-align:right;pointer-events:none;text-shadow:0 1px 2px #000}
 #wic-q .q-track .q-ch{font:700 10px/1 system-ui,sans-serif;letter-spacing:.22em;color:#d9b45a;text-transform:uppercase}
@@ -268,7 +273,8 @@ export async function install(game) {
     const s = sys()?.findSpot?.(tx, ty, 4); if (s) { tx = s.x; ty = s.y; tz = s.z; }
     // look a little to the left of the target so the third-person body does not hide it (the target sits right of centre)
     const L = Math.hypot(x - tx, y - ty) || 1, side = Math.min(1.4, L * 0.35), lx = x - (y - ty) / L * side, ly = y + (x - tx) / L * side;
-    P.teleport(tx, ty, tz ?? game.groundAt(tx, ty) ?? P.z, [lx, ly]);   // with z: no 'open ground 30 m away' search await settle(); placeNpcs(st.q || quests.prologue);
+    P.teleport(tx, ty, tz ?? game.groundAt(tx, ty) ?? P.z, [lx, ly]);   // with z: no 'open ground 30 m away' search
+    await settle(); placeNpcs(st.q || quests.prologue);
     for (const n of Object.values(npcs)) if (Math.hypot(n.x - x, n.y - y) < 0.5) n.g.rotation.y = Math.atan2(P.x - n.x, -(P.y - n.y));
   }
   async function stage(step) {
