@@ -52,3 +52,11 @@
 {"hash": "9b1abea2c2f9edea", "step": "playtest", "status": "ok", "secs": 222, "t": "2026-11-10T10:25:37Z"}
 {"hash": "9b1abea2c2f9edea", "step": "gate", "status": "ok", "secs": 163, "t": "2026-11-10T10:28:20Z"}
 {"hash": "d59023d6d0e4fd58", "step": "judge", "status": "ok", "secs": 643, "t": "2026-11-10T12:09:07Z"}
+{"hash":"d59023d6d0e4fd58","step":"playtest_run:quest:pyromancer","status":"ok","t":"2026-11-10T12:12:59.592Z"}
+{"hash":"d59023d6d0e4fd58","step":"playtest_run:quest:stormcaller","status":"ok","t":"2026-11-10T12:12:59.592Z"}
+{"hash":"d59023d6d0e4fd58","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-10T12:12:59.592Z"}
+{"hash":"d59023d6d0e4fd58","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-10T12:12:59.592Z"}
+{"hash": "d59023d6d0e4fd58", "step": "playtest", "status": "ok", "secs": 232, "t": "2026-11-10T12:12:59Z"}
+{"hash": "d59023d6d0e4fd58", "step": "quests", "status": "ok", "secs": 237, "t": "2026-11-10T12:16:56Z"}
+{"hash": "d59023d6d0e4fd58", "step": "perf", "status": "ok", "secs": 63, "t": "2026-11-10T12:17:59Z"}
+{"hash": "d59023d6d0e4fd58", "step": "gate", "status": "ok", "secs": 161, "t": "2026-11-10T12:20:40Z"}
