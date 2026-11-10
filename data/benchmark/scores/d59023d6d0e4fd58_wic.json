@@ -1,0 +1,51 @@
+{
+ "judged_game_quality": 49.2,
+ "judged_sections": {
+  "Visuals": 50.0,
+  "Animation": 31.5,
+  "Combat feel": 59.8,
+  "Story presentation": 50.0,
+  "UI polish": 53.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0.0,
+   "Animation": 3.0,
+   "Combat feel": 0.0,
+   "Story presentation": 0.0,
+   "UI polish": 2.0
+  },
+  "quality_spread": 0.9,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together and is easy to recognise: brick and stone facades have window detail, there's a Gothic church, bike racks, railings, market stalls, a tree, real-time shadows and warm low-sun lighting with some haze and bloom. The geometry is mostly boxy, though. Shop interiors are empty flat planes, the stall awnings are simple blocks, the materials are clean and repetitive with almost no wear or clutter, and there's little vegetation or ambient occlusion. The characters are small, stylised and low-detail, and the enemies are simple too, so overall it falls well short of the 60 anchor for density and character fidelity."
+   },
+   "Animation": {
+    "all": "The player figure is stiff and almost the same in every walking frame, with no visible stride or limb motion. In combat the attacks show up only as projectiles, beams and white ghostly effects, with no matching cast poses on the player, and the enemies look like chibi figures with no visible attack wind-ups or death animations. There is no visible secondary motion on robes or hats, and no environmental motion such as crowds or foliage."
+   },
+   "Combat feel": {
+    "hexweaver": "The visible feedback is solid: damage numbers with crit styling, chain counters, Staggered and Interrupted states, a boss that shows a phase banner and phase-marked health bar, loot beams with rarity labels, and a varied six-spell kit with cooldowns. What holds it back is that the boss dies about 9 s in and the player takes only 27 damage. Enemy telegraphs are barely visible, VFX are often washed out or muddled by overlapping UI, and nothing shows hit-stop, knockback or crowd control visibly changing fights. Roughly half the frames show no live combat.",
+    "pyromancer": "There is clear evidence of 60-level features: six cooldown-tracked spells, floating damage numbers with crits, a combo chain counter, 'Staggered' and 'Interrupted' callouts, a named boss with a phase bar and two phase changes, rarity-coded loot popups including a legendary, and dense hit and sound counts. Readability is the weak point: the frames show blobby, overlapping VFX, loot labels that crowd the view, and a large dark shape covering the screen in frame 4. About half the clip (t=22\u201350 s) has no enemies within 30 m. Only one class is shown, and nothing visible shows hit-stop, knockback, varied enemy formations or crowd control changing a fight.",
+    "stormcaller": "The stormcaller uses six distinct spells with readable effects: lightning arcs, ground static fields and a wind-dash ring. Hits show crit damage numbers, chain counters and Staggered/Interrupted status text, and windup states are tracked. A named boss with a phase bar ('Phase II') appears, loot drops have rarity colours and beams, and the event log shows healthy hit, kill and loot counts. The biggest gaps are that this sheet shows only one class, so it can't show that classes play differently, and no hit-stop or screen shake is visible. Effects and numbers often pile up into clutter, enemies are low-detail, and several frames show empty streets with no combat.",
+    "warden": "The basics are all visible: large damage numbers with CRIT tags, a combo-chain counter, Staggered/Interrupted status labels, a boss health bar with phases and an 'enraged' callout, and loot labels with rarity. The event log adds a varied spell kit, crowd control and many kills. The biggest problem is readability: the pale blue granite-skin bubble often covers the player and the action, and in frame 10 the camera clips into a wall. Hit flashes and knockback are barely visible, telegraphs only appear as text, and the player takes almost no damage, so the fight has little tension. Only one class is shown."
+   },
+   "Story presentation": {
+    "all": "The writing is evocative and original, and the premise is clear: a thirteenth chime on Market Hill, a cracked bell, the Unwinder. It's presented with letterboxing, dialogue boxes that carry portraits, speaker names and titles, a quest tracker with distance, a waypoint marker and a quest-complete banner with rewards. The staging is weak, though: the speakers are tiny or not visible in the frame, the portraits are simple icons, and the Bellwarden 'cinematic' never shows the boss. A stuck 'Loading...' label, the HUD bleeding through the letterbox and the tracker not updating as the quest moves on undercut it, and there are no branching choices or character animation."
+   },
+   "UI polish": {
+    "all": "The UI has a fairly consistent dark-panel, serif-header theme. It includes a styled class selection, health and mana bars, a spell bar with cooldown numbers, a boss bar, a minimap, a quest tracker, dialogue portraits and rarity-tagged item text. The biggest gap is layering: the quest-complete banner, dialogue box and toasts sit on top of and overlap the inventory, talent and HUD screens, so those menus are cluttered and partly unreadable. The inventory is a plain text list with no icons, the class panels overlap, and floating damage numbers and labels clutter the combat view."
+   }
+  }
+ }
+}

@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 10)
+## State (2026-11-10, after session 11)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -14,8 +14,9 @@
 ## KPIs / measure.sh
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
-- Trunk/live 9b1abea2 (s10, merged Graphics Quaternius wizard CC-BY): judged 50.0 (V 52, Anim 33.5, Combat 58.4,
-  Story 55.5, UI 49), gate 6/6, fps 60, load 0.53, quests 2; playtest pending service.sh.
+- Trunk b1d7eff5 (s11, merged Story Q3 'Lion at the Gate' + Gameplay uipolish/boss TTK): gate 6/6, quests 3,
+  judged 49.5 (V 51, Anim 31, Combat 59.1, Story 52, UI 53); published s11; playtest pending service.sh.
+- 9b1abea2 (s10, Graphics Quaternius wizard CC-BY): judged 50.0 (Anim 33.5), playtest 100 (softlock gone; 9d0d cancelled).
   Judge asks: enemy attack/death/hit clips + bigger enemies; menus overlaid by banners/dialogue, text-only inventory,
   debug FPS/Quality/'Loading...' labels visible; stale tracker; NPCs never framed; stalls flat blocks.
 - fb1294bb (s9, merged EnvVFX interior-mapped windows + wall weathering): judged 45.2 (V 50, Anim 22,
@@ -30,14 +31,15 @@
   QA task c0ca. No `timeout` command on this Mac.
 - scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").
 - skills/wic-rescore = how to score a build by hand (judge ~8 min, playtest ~35 min).
+- org cancel <task> works for tasks fixed elsewhere; org done only by the assignee.
 - Merging: JOURNAL.md conflicts -> keep both sides; site/app/game/index.js MODULES line conflicts -> union.
   Run game tests one at a time (parallel browsers time out; recorder breaks and perf drops if the playtest runs too). Merge gate = tools/wic_gate.sh site (~170 s GPU Chrome, last line JSON). test_feel dodgeIFrames flaked once in gate (Gameplay told).
   data/derived/wic_harness_log.jsonl is dirtied by service.sh: `git checkout` it before merging QA.
 
 ## Organisation (6 nodes, all children of root)
 - qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring (+gate step per hash). No open task.
-- story: quests/dialogue, quest_bot (?q=low, 4 workers, ~150 s). s5 task 6b1b: quest 3 in ring 2.
-- gameplay: feel.js, progression (merged s6), boss TTK d623 (OK'd to add bossTTK to quest_bot), UI polish 02a9, softlock 9d0d.
+- story: quests/dialogue, quest_bot (~25 s GPU). 6b1b (Q3) merged, story must close it; b0f8 = Q4 (quests>=4).
+- gameplay: feel.js, progression (merged s6), boss TTK d623 (OK'd to add bossTTK to quest_bot), UI polish 02a9 (told: hit-stop, less muddy VFX).
 - graphics: characters+animation only. 8228 mob glbs, e9f5 NPC glbs, 8765 Animation>40. Told judge still sees
   blocky player in recordings (check wizard.glb shows in wic_record frames).
 - environment-and-vfx (new s3): lighting/atmosphere/materials/spell VFX. 0eb3 Visuals>50 (main now 52), 926d stalls/shop windows geometry Visuals>55.

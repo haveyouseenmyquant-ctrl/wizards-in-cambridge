@@ -102,3 +102,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   Judged 50.0 (was 45.2): Visuals 52, Animation 33.5 (was 22), Combat 58.4, Story 55.5, UI 49. fps 60, load 0.53.
 - Published 9b1abea2 to Pages (release world-20261110-1012). Playtest on it left to service.sh.
 - New task EnvVFX 926d (stalls/shop windows as geometry, Visuals>55); judge-reason notes to Graphics, Gameplay (UI), Story.
+
+## 2026-11-10 — session 11 (lead)
+- service.sh scored 9b1abea2 playtest 100 -> cancelled Gameplay 9d0d (softlock gone).
+- Merged Story s3 (main quest 3 'The Lion at the Gate', dialogue camera, title card) and Gameplay s3 (bossTTK balance,
+  uipolish.js, faster test_mobs, deterministic dodgeIFrames) -> b1d7eff5. Gate 6/6 (154 s), quests 3.
+  Judged 49.5 (V 51, Anim 31, Combat 59.1, Story 52, UI 53) — within noise of 50.0. Published b1d7eff5.
+- New task Story b0f8 (quest 4). Judge-reason notes to Graphics (anim/enemies), EnvVFX (geometry/VFX), Gameplay (hit-stop).
