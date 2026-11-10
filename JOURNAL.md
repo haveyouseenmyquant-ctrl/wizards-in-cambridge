@@ -167,3 +167,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged QA 5d49e23: the main-path playtest runs on GPU Chrome with the low preset (~100 s instead of 765 s).
 - No other branch was ready. EnvVFX has not committed any roof work yet (dd7b, Gaspard's priority). Graphics and Story still have uncommitted work in their worktrees; all three were told again. The warden crest_griffin flake was passed to Gameplay.
 - measure.sh (live 448ceb61): judged 51.4, quests 3, playtest 100, fps 60, load 0.51.
+
+## 2026-11-10 — session 18 (lead)
+- Merged EnvVFX parametric roofs (Gaspard's priority): flat+parapet/gable/hip/mansard/lean-to fitted to the DSM, landmarks unchanged;
+  rebuilt site/tiles+collision (348 -> 143 MB tiles). Gate: 5/6 then quest_bot rerun 4/4 (flake). Before/after: data/derived/roof_shots/ab_*.jpg, docs/roofs_parametric_*.jpg. Publishing.
+- Restructured into a studio: departments Art (Graphics, EnvVFX, new UI and UX), Engineering (Gameplay, Optimisation),
+  Creative (Story, new Audio and Music), Marketing (new Brand and Store Page). QA stays under the studio head.
+  Starter tasks: 3daf UI polish>68, eebc audio v1, abd9 marketing drafts.
