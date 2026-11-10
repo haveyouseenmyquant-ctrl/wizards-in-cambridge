@@ -9,13 +9,24 @@ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { MeshoptDecoder } from '../../vendor/meshoptimizer/meshopt_decoder.module.js';
 
 const base = (n) => new URL(`../../models/mobs/${n}.glb`, import.meta.url).href;
-// type id -> glb + look: colour multiplies the KayKit atlas; emissive glow; opacity for the spectral ones
+// type id -> glb + look: colour multiplies the KayKit atlas (or recolours per source material, see `mats`); emissive glow; opacity for the spectral ones
 export const MOB_MODELS = {
   statue: { glb: 'statue', grey: true, color: 0xd8d0bc, rough: 0.95, metal: 0, emissive: 0x000000, ei: 0 },             // weathered Portland stone
   river_wraith: { glb: 'wraith', color: 0x7fe0d0, rough: 0.4, metal: 0, emissive: 0x1a8070, ei: 0.9, opacity: 0.82 },
   automaton: { glb: 'automaton', color: 0xd8a860, rough: 0.35, metal: 0.85, emissive: 0x000000, ei: 0 },     // brass
   ink_imp: { glb: 'imp', color: 0x5a5ab8, rough: 0.25, metal: 0.1, emissive: 0x201060, ei: 0.6 },              // wet ink
   punt_revenant: { glb: 'statue', grey: true, color: 0xb8ccd4, rough: 0.7, metal: 0, emissive: 0x0c2830, ei: 0.4 },     // river-drowned bones
+  // Quaternius Ultimate Monsters (CC0): untextured, one material per part, so `mats` recolours by source material name
+  // ('*' = any other); `alias` maps missing clip names onto existing ones; `size` scales the fitted height; `y0` puts the model's feet at that rig-local height (flyers: the
+  // procedural model's lowest part is a hanging tail/rope, so bottom-matching would sink them); `swarm`
+  // adds extra clones (own mixers, same clips, phase-offset) at the given offsets in fitted-model units.
+  gargoyle: { glb: 'gargoyle', rough: 0.95, metal: 0, emissive: 0x000000, ei: 0, alias: { walk: 'run' }, size: 0.6, y0: -1.0,   // flying demon in weathered stone
+    mats: { Demon_Main: { color: 0xd0cabc }, Black: { color: 0x7e7a72 }, Eye_White: { color: 0x9a6a40, emissive: 0xff7a10, ei: 1.4 }, Eye_Black: { color: 0x201008 } } },
+  wisp: { glb: 'wisp', rough: 0.3, metal: 0, emissive: 0x12a890, ei: 1.0, opacity: 0.85, alias: { walk: 'run' }, size: 0.5, y0: -0.45,       // marsh-light ghost
+    mats: { Ghost_Main: { color: 0x38d0b0 }, Eye_White: { color: 0xffffff, emissive: 0xe0fff8, ei: 2.5, opacity: 1 }, Eye_Black: { color: 0x0a3a40, emissive: 0x000000, ei: 0, opacity: 1 } } },
+  bell_bats: { glb: 'bat', rough: 0.8, metal: 0, emissive: 0x000000, ei: 0, alias: { idle: 'run', walk: 'run' }, size: 0.4, y0: -0.3,   // belfry bats
+    swarm: [[0.8, 0.3, -0.4], [-0.75, -0.2, -0.25]],
+    mats: { Main: { color: 0x75606a }, Belly: { color: 0xd0b080 }, Eyes: { color: 0xffc040, emissive: 0xffa020, ei: 2.5 }, '*': { color: 0x2a2224 } } },
 };
 const ONCE = ['death', 'hit', 'attack', 'attack2', 'spawn', 'taunt'];
 
@@ -51,32 +62,67 @@ export function install(game) {
     proc.traverse(o => { if (o.isMesh && !o.userData.outline && o.geometry) { o.geometry.computeBoundingBox(); pb.union(o.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(inv, o.matrixWorld))); } });
     const procH = pb.isEmpty() ? 1.8 : Math.max(0.6, pb.max.y - pb.min.y);
     proc.visible = false;
-    const model = SkeletonUtils.clone(A.scene), inner = new T.Group(); inner.name = 'glb'; inner.add(model);
-    const mat = new T.MeshStandardMaterial({ roughness: L.rough, metalness: L.metal, color: L.color, emissive: L.emissive, emissiveIntensity: L.ei,
-      transparent: !!L.opacity, opacity: L.opacity ?? 1, depthWrite: !L.opacity });
-    model.traverse(o => { if (o.isMesh) { if (!mat.map) mat.map = L.grey ? grey(o.material.map) : o.material.map; o.material = mat; o.castShadow = true; o.frustumCulled = false; } });
+    const inner = new T.Group(); inner.name = 'glb';
+    const made = new Map();   // material per look key, shared by the swarm clones
+    const look = (src) => {
+      if (!L.mats) {
+        if (!made.has('')) made.set('', new T.MeshStandardMaterial({ roughness: L.rough, metalness: L.metal, color: L.color, emissive: L.emissive, emissiveIntensity: L.ei,
+          transparent: !!L.opacity, opacity: L.opacity ?? 1, depthWrite: !L.opacity, map: L.grey ? grey(src.map) : src.map }));
+        return made.get('');
+      }
+      const key = L.mats[src.name] ? src.name : '*';
+      if (!made.has(key)) {
+        const S = { ...L, ...(L.mats[key] || {}) }, op = S.opacity != null && S.opacity < 1;
+        const m = new T.MeshStandardMaterial({ roughness: S.rough, metalness: S.metal, emissive: S.emissive, emissiveIntensity: S.ei,
+          transparent: op, opacity: op ? S.opacity : 1, depthWrite: !op });
+        if (S.color != null) m.color.setHex(S.color); else m.color.copy(src.color);
+        made.set(key, m);
+      }
+      return made.get(key);
+    };
+    const units = [];
+    for (let u = 0; u <= (L.swarm?.length || 0); u++) {
+      const model = SkeletonUtils.clone(A.scene);
+      model.traverse(o => { if (o.isMesh) { o.material = look(o.material); o.castShadow = true; o.frustumCulled = false; } });
+      const mixer = new T.AnimationMixer(model), acts = {};
+      for (const c of A.animations) acts[c.name] = mixer.clipAction(c);
+      for (const [k, v] of Object.entries(L.alias || {})) if (!acts[k] && acts[v]) acts[k] = acts[v];
+      for (const n of ONCE) if (acts[n]) { acts[n].setLoop(T.LoopOnce, 1); acts[n].clampWhenFinished = true; }
+      units.push({ model, mixer, acts });
+    }
+    const model = units[0].model; inner.add(model);
     model.updateMatrixWorld(true);
-    const box = new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1, k = procH * 1.05 / h;
-    inner.scale.setScalar(k); inner.position.y = (pb.isEmpty() ? 0 : pb.min.y) - box.min.y * k;
+    const box = new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1, k = procH * 1.05 * (L.size ?? 1) / h;
+    inner.scale.setScalar(k); inner.position.y = (L.y0 ?? (pb.isEmpty() ? 0 : pb.min.y)) - box.min.y * k;
+    units.slice(1).forEach((U, i) => { U.model.position.fromArray(L.swarm[i]).multiplyScalar(h); U.model.scale.setScalar(0.85 + 0.1 * i); inner.add(U.model); });
     R.add(inner);
-    mob.mats.push(mat); mob.baseEmissive?.push({ c: mat.emissive.clone(), i: mat.emissiveIntensity });
-    if (mob.matBase) mob.matBase.push([mat.transparent, mat.opacity]);
-    const mixer = new T.AnimationMixer(model), acts = {};
-    for (const c of A.animations) acts[c.name] = mixer.clipAction(c);
-    for (const n of ONCE) if (acts[n]) { acts[n].setLoop(T.LoopOnce, 1); acts[n].clampWhenFinished = true; }
-    mob.glb = { mixer, acts, cur: null, lock: 0, lastState: null, inner };
+    for (const mat of made.values()) {
+      mob.mats.push(mat); mob.baseEmissive?.push({ c: mat.emissive.clone(), i: mat.emissiveIntensity });
+      if (mob.matBase) mob.matBase.push([mat.transparent, mat.opacity]);
+    }
+    const { mixer, acts } = units[0];
+    mob.glb = { mixer, acts, units, cur: null, lock: 0, lastState: null, inner };
     mob.camBody = null;
+    if (L.mats) {   // Quaternius rigs give a huge loose skinned box, which made camClear fade them from metres away: measure precisely
+      mob.group.updateMatrixWorld(true);
+      const bb = new T.Box3().setFromObject(inner, true), c = bb.getCenter(new T.Vector3()), sz = bb.getSize(new T.Vector3());
+      mob.camBody = { oy: c.y - mob.group.position.y, r: Math.max(0.6, Math.min(sz.x, sz.z) * 0.5, sz.y * 0.4) };
+    }
     play(mob, mob.dead ? 'death' : 'idle', 0, 1);
     acts.idle && (acts.idle.time = Math.random() * acts.idle.getClip().duration);   // desync packs
     return true;
   };
 
   function play(mob, name, fade = 0.15, ts = 1) {
-    const G = mob.glb, a = G.acts[name]; if (!a) return;
-    if (G.cur === name && !ONCE.includes(name)) { a.timeScale = ts; return; }
-    const prev = G.cur && G.acts[G.cur];
-    a.reset(); a.timeScale = ts; a.enabled = true; a.setEffectiveWeight(1); a.play();
-    if (prev && prev !== a) prev.crossFadeTo(a, fade, false);
+    const G = mob.glb; if (!G.acts[name]) return;
+    G.units.forEach((U, i) => {
+      const a = U.acts[name], sw = i ? 1 + 0.07 * i : 1;   // swarm clones run slightly off-beat
+      if (G.cur === name && !ONCE.includes(name)) { a.timeScale = ts * sw; return; }
+      const prev = G.cur && U.acts[G.cur];
+      a.reset(); a.timeScale = ts * sw; a.enabled = true; a.setEffectiveWeight(1); a.play();
+      if (i && !ONCE.includes(name)) a.time = (0.37 * i * a.getClip().duration) % a.getClip().duration;
+      if (prev && prev !== a) prev.crossFadeTo(a, fade, false);
+    });
     G.cur = name;
   }
 
@@ -101,7 +147,7 @@ export function install(game) {
       else play(mob, 'idle', 0.25, 1);
     }
     G.lastState = st; G.px = mob.x; G.py = mob.y;
-    G.mixer.update(dt);
+    for (const U of G.units) U.mixer.update(dt);
   }
 
   const spawn0 = sys.spawn.bind(sys);

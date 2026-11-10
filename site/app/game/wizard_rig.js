@@ -20,6 +20,7 @@ const LOOK = {
 };
 const LOOPS = new Set(['idle', 'walk', 'run']);
 const CAST_RAISE = new Set(['nova', 'zone', 'shield', 'summon']);
+const BONES = ['Torso', 'Head', 'UpperArm.R', 'LowerArm.R', 'Fist.R', 'UpperArm.L', 'LowerArm.L', 'Fist.L'];
 
 export function install(game) {
   const T = game.THREE;
@@ -97,8 +98,13 @@ export function install(game) {
     const mixer = new T.AnimationMixer(model), acts = {};
     for (const clip of asset.animations) acts[clip.name] = mixer.clipAction(clip);
     for (const n of ['death', 'hit', 'cast', 'cast_raise', 'cast_long', 'jump', 'dash']) if (acts[n]) { acts[n].setLoop(T.LoopOnce, 1); acts[n].clampWhenFinished = true; }
+    // bones for the procedural upper-body layer (s4); rest quaternions are restored before each mixer update so the
+    // layer never accumulates on bones the current clip does not key
+    const bones = {};
+    for (const n of BONES) { const o = model.getObjectByName(n.replace(/\./g, '')) || model.getObjectByName(n); if (o) bones[n] = o; }   // GLTFLoader strips '.'
+    const rest = Object.values(bones).map(b => [b, b.quaternion.clone()]);
     game.root.add(root);
-    return { cls, root, mixer, acts, mat, focus, hat, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time };
+    return { cls, root, mixer, acts, mat, focus, hat, bones, rest, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time, castT: -9, castRaise: false, hitT: -9 };
   }
 
   function destroy() {
@@ -122,10 +128,51 @@ export function install(game) {
 
   const offs = [
     game.on('cast', e => { if (!R) return; const sp = game.caster?.spells?.find(s => s.id === e.spell);
-      const n = CAST_RAISE.has(sp?.kind) ? 'cast_raise' : 'cast'; R.acts[n].timeScale = 1.6; oneShot(n, 0.06); }),
+      R.castT = game.time; R.castRaise = CAST_RAISE.has(sp?.kind);
+      // standing: the full-body clip; moving: legs keep their gait and only the upper-body layer casts
+      if ((game.player?.speed || 0) < 0.25) { const n = R.castRaise ? 'cast_raise' : 'cast'; R.acts[n].timeScale = 1.6; oneShot(n, 0.06); } }),
     game.on('playerHit', e => { if (R && e.amount > 0 && !(R.oneShot || '').startsWith('cast')) oneShot('hit', 0.06); }),
     game.on('dash', () => { if (R) { R.acts.dash.timeScale = 1.5; oneShot('dash', 0.05); } }),
   ];
+
+  // Procedural upper-body layer: the clips read poorly from the third-person camera behind the player (the arms are
+  // hidden by the body), so a cast swings the staff up over the head and reaches the free hand at the target, and a hit
+  // throws the torso and head back with the arms flung out. Bones are aimed in world space, blended by an envelope.
+  const _a = new T.Vector3(), _b = new T.Vector3(), _d = new T.Vector3(), _q = new T.Quaternion(), _q2 = new T.Quaternion(), _I = new T.Quaternion();
+  const F = new T.Vector3(), Rt = new T.Vector3(), U = new T.Vector3();
+  function aimBone(bone, child, dir, w) {
+    if (!bone || !child || w <= 0.001) return;
+    bone.getWorldPosition(_a); child.getWorldPosition(_b); _d.subVectors(_b, _a).normalize();
+    _q2.setFromUnitVectors(_d, dir); _q.slerpQuaternions(_I, _q2, w);
+    bone.getWorldQuaternion(_q2); _q2.premultiply(_q);
+    bone.parent.getWorldQuaternion(_q).invert(); bone.quaternion.copy(_q.multiply(_q2)); bone.updateMatrixWorld(true);
+  }
+  function tiltBone(bone, axis, ang) {
+    if (!bone || Math.abs(ang) < 0.001) return;
+    _q.setFromAxisAngle(axis, ang); bone.getWorldQuaternion(_q2); _q2.premultiply(_q);
+    bone.parent.getWorldQuaternion(_q).invert(); bone.quaternion.copy(_q.multiply(_q2)); bone.updateMatrixWorld(true);
+  }
+  const env = (dt, up, hold, down) => dt < 0 ? 0 : dt < up ? dt / up : dt < hold ? 1 : dt < down ? 1 - (dt - hold) / (down - hold) : 0;
+  const dirv = (x, y, z) => _d.set(0, 0, 0).addScaledVector(Rt, x).addScaledVector(U, y).addScaledVector(F, z).normalize().clone();
+  function upperBody(t) {
+    const B = R.bones, wc = R.hold === 'cast' ? 1 : env(t - R.castT, 0.07, 0.38, 0.7), wh = R.hold === 'hit' ? 1 : env(t - R.hitT, 0.05, 0.16, 0.45);
+    if (wc <= 0 && wh <= 0) return;
+    R.root.updateMatrixWorld(true);
+    // character frame in world space: the root faces -Z locally, right is +X
+    F.set(0, 0, -1).applyQuaternion(R.root.quaternion); Rt.set(1, 0, 0).applyQuaternion(R.root.quaternion); U.set(0, 1, 0);
+    if (wc > 0) {
+      tiltBone(B.Torso, Rt, 0.18 * wc);                                   // lean back into the cast
+      aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.45, 1, 0.3), wc);   // staff arm up over the head
+      aimBone(B['LowerArm.R'], B['Fist.R'], dirv(0.15, 1, 0.45), wc);
+      if (R.castRaise) { aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.45, 1, 0.3), wc); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.15, 1, 0.45), wc); }
+      else { aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.55, 0.2, 1), wc); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.15, 0.25, 1), wc); }   // free hand reaches at the target
+    }
+    if (wh > 0) {
+      tiltBone(B.Torso, Rt, 0.42 * wh); tiltBone(B.Head, Rt, 0.3 * wh);   // flinch backwards
+      aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(1, -0.1, -0.35), wh * 0.85);
+      aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-1, -0.1, -0.35), wh * 0.85);
+    }
+  }
 
   function update(p, visible, W) {
     if (!asset) return false;
@@ -148,7 +195,9 @@ export function install(game) {
       else if (sp > 0.25) { play('walk'); R.acts.walk.timeScale = Math.max(0.6, Math.min(1.5, sp / 1.8)); }
       else play('idle', 0.25);
     }
+    for (const [b, q] of R.rest) b.quaternion.copy(q);
     R.mixer.update(dt);
+    if (!dead && !flying) upperBody(t);
     if (R.focus) { const ca = R.oneShot?.startsWith('cast') ? 1 : 0; R.focus.rotation.y += dt * 2.5;
       R.focus.scale.setScalar(R.focus.userData.s * (1 + 0.8 * ca) * (1 + Math.sin(t * 6) * 0.06)); }
     const hf = game.time - (R.hitT || -9) < 0.25 ? 1 : 0; R.mat.emissive.setRGB(0.5 * hf, 0.06 * hf, 0.04 * hf);   // red hit flash only
@@ -164,6 +213,7 @@ export function install(game) {
     try { if (!failed && update(p, vis, W) && W) { W.root.visible = false; } }
     catch (e) { console.warn('[wizard_rig]', e); failed = true; if (R) R.root.visible = false; if (W) W.root.visible = vis; }
   };
-  game.wizardRig = { get model() { return R; }, get ready() { return !!asset; }, play: n => oneShot(n) };
+  game.wizardRig = { get model() { return R; }, get ready() { return !!asset; }, play: n => oneShot(n),
+    pose: (k, raise = false, hold = false) => { if (!R) return; R.hold = hold ? k : null; if (k === 'hit') R.hitT = game.time; else if (k) { R.castT = game.time; R.castRaise = raise; } } };   // hold: screenshots
   game.add({ dispose() { Avatar.prototype.update = prev; for (const f of offs) f(); destroy(); for (const k in texCache) texCache[k].dispose(); } });
 }
