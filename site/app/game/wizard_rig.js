@@ -1,16 +1,16 @@
-// Rigged, animated player wizard (graphics s1). Loads site/models/player/wizard.glb (KayKit Adventurers "Mage" by
-// Kay Lousberg, CC0, trimmed by scripts/build_char_glb.mjs to the clips below) and draws it in place of the procedural
+// Rigged, animated player wizard (graphics s1, model swapped s3). Loads site/models/player/wizard.glb ("Animated Wizard"
+// by Quaternius, CC-BY 3.0 via poly.pizza, trimmed by scripts/build_char_glb.mjs to the clips below) and draws it in place of the procedural
 // wizard from wizard.js, which keeps running underneath (it still owns the broom and is the fallback if the model fails
 // to load). Clips: idle, walk, run, cast, cast_raise, cast_long, hit, death, jump, dash, block, sit; picked from the
 // player state each frame and cross-faded with an AnimationMixer driven by game.time.
-// Per-class look: the KayKit palette atlas is recoloured on a canvas (robe and trim hues), plus a glowing staff focus.
+// Per-class look: the texture is recoloured on a canvas (robe and trim hues), a procedural hat, a glowing staff focus.
 import { Avatar } from '../avatar.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { MeshoptDecoder } from '../../vendor/meshoptimizer/meshopt_decoder.module.js';
 
 const URL_GLB = new URL('../../models/player/wizard.glb', import.meta.url).href;
-const HEIGHT = 1.9;   // metres, hat included (matches the procedural wizard)
+const HEIGHT = 1.72;   // metres, head to boots (the pointed hat adds ~0.4 m above)
 // robe: hue (deg), saturation scale, lightness scale; trim likewise; focus colour
 const LOOK = {
   pyromancer: { robe: [4, 1.25, 1.05], trim: [38, 1.1, 1.15], focus: 0xff7a2a },
@@ -18,6 +18,7 @@ const LOOK = {
   warden: { robe: [42, 0.55, 0.95], trim: [32, 1.0, 1.1], focus: 0xffc860 },
   hexweaver: { robe: [272, 1.1, 0.8], trim: [150, 1.0, 1.1], focus: 0xc070ff },
 };
+const LOOPS = new Set(['idle', 'walk', 'run']);
 const CAST_RAISE = new Set(['nova', 'zone', 'shield', 'summon']);
 
 export function install(game) {
@@ -39,14 +40,15 @@ export function install(game) {
       if (dl < 0.08) continue;
       const s = dl / (1 - Math.abs(2 * l - 1));
       let h = mx === r ? ((gg - b) / dl) % 6 : mx === gg ? (b - r) / dl + 2 : (r - gg) / dl + 4; h = (h * 60 + 360) % 360;
-      const tgt = h >= 228 && h < 290 ? L.robe : h >= 300 && h < 350 ? L.trim : null;
+      // Quaternius wizard: blue robe (hue ~220) and gold trim (hue ~40); skin, leather and grey beard are left alone
+      const tgt = h >= 195 && h < 255 && s > 0.2 ? L.robe : h >= 32 && h < 58 && s > 0.3 && l < 0.6 ? L.trim : null;
       if (!tgt) continue;
       const S = Math.min(1, s * tgt[1]), Lt = Math.min(0.95, l * tgt[2]), C = (1 - Math.abs(2 * Lt - 1)) * S, H = tgt[0] / 60, X = C * (1 - Math.abs(H % 2 - 1)), m = Lt - C / 2;
       const [r1, g1, b1] = H < 1 ? [C, X, 0] : H < 2 ? [X, C, 0] : H < 3 ? [0, C, X] : H < 4 ? [0, X, C] : H < 5 ? [X, 0, C] : [C, 0, X];
       p[i] = (r1 + m) * 255; p[i + 1] = (g1 + m) * 255; p[i + 2] = (b1 + m) * 255;
     }
     g.putImageData(d, 0, 0);
-    const t = new T.CanvasTexture(c); t.flipY = base.flipY; t.colorSpace = base.colorSpace; t.magFilter = T.NearestFilter; t.generateMipmaps = false; t.minFilter = T.LinearFilter;
+    const t = new T.CanvasTexture(c); t.flipY = base.flipY; t.colorSpace = base.colorSpace; t.anisotropy = 4;
     return texCache[cls] = t;
   }
 
@@ -55,18 +57,35 @@ export function install(game) {
     const root = new T.Group(); root.name = 'wizard_rig';
     const model = SkeletonUtils.clone(asset.scene);
     const inner = new T.Group(); inner.add(model); root.add(inner);
-    inner.rotation.y = Math.PI;   // KayKit faces +Z, the player model faces -Z
-    let mat = null, staff = null;
+    inner.rotation.y = Math.PI;   // the model faces +Z, the player model faces -Z
+    let mat = null, staff = null, head = null;
     model.traverse(o => {
       if (o.isMesh) {
         o.castShadow = true; o.frustumCulled = false;
         if (!mat) { const base = o.material; mat = new T.MeshStandardMaterial({ map: classTexture(cls, base.map), roughness: 0.85, metalness: 0 }); }
         o.material = mat;
       }
-      if (o.name === '2H_Staff') staff = o;
+      if (o.name === 'Wizard_Staff') staff = o;
+      if (o.name === 'Head') head = o;
     });
     model.updateMatrixWorld(true); const box = new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1;
-    inner.scale.setScalar(HEIGHT / h); inner.position.y = -box.min.y * HEIGHT / h;
+    inner.scale.setScalar(HEIGHT / h); inner.position.y = -box.min.y * HEIGHT / h; root.updateMatrixWorld(true);
+    // pointed hat on the Head bone (the model is bare-headed): class robe colour, trim band, slightly bent tip
+    let hat = null;
+    if (head) {
+      const hc = new T.Color().setHSL(L.robe[0] / 360, 0.45, 0.2 * L.robe[2]), tc = new T.Color().setHSL(L.trim[0] / 360, 0.55, 0.45);
+      const hm = new T.MeshStandardMaterial({ color: hc, roughness: 0.9 }), tm = new T.MeshStandardMaterial({ color: tc, roughness: 0.6, metalness: 0.3 });
+      hat = new T.Group(); hat.name = 'wizard_hat';
+      const brim = new T.Mesh(new T.CylinderGeometry(0.34, 0.36, 0.03, 24), hm); hat.add(brim);
+      const band = new T.Mesh(new T.CylinderGeometry(0.175, 0.185, 0.06, 20), tm); band.position.y = 0.045; hat.add(band);
+      const c1 = new T.Mesh(new T.CylinderGeometry(0.1, 0.18, 0.26, 20), hm); c1.position.y = 0.14; hat.add(c1);
+      const c2 = new T.Mesh(new T.ConeGeometry(0.1, 0.26, 16), hm); c2.position.set(0, 0.36, -0.03); c2.rotation.x = -0.35; hat.add(c2);
+      hat.traverse(o => { if (o.isMesh) o.castShadow = true; });
+      const top = new T.Box3().setFromObject(model, true).max.y, hp = new T.Vector3(); head.getWorldPosition(hp);
+      const ws = new T.Vector3(), wq = new T.Quaternion(); head.getWorldScale(ws); head.getWorldQuaternion(wq);
+      hat.position.copy(head.worldToLocal(new T.Vector3(hp.x, top - 0.1, hp.z + 0.02)));
+      hat.quaternion.copy(wq.invert()); hat.scale.setScalar(1 / (ws.x || 1)); head.add(hat);
+    }
     // glowing focus at the staff head
     let focus = null;
     if (staff) {
@@ -79,18 +98,20 @@ export function install(game) {
     for (const clip of asset.animations) acts[clip.name] = mixer.clipAction(clip);
     for (const n of ['death', 'hit', 'cast', 'cast_raise', 'cast_long', 'jump', 'dash']) if (acts[n]) { acts[n].setLoop(T.LoopOnce, 1); acts[n].clampWhenFinished = true; }
     game.root.add(root);
-    return { cls, root, mixer, acts, mat, focus, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time };
+    return { cls, root, mixer, acts, mat, focus, hat, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time };
   }
 
   function destroy() {
     if (!R) return; game.root.remove(R.root); R.mixer.stopAllAction();
-    R.mat.dispose(); R.focus?.geometry.dispose(); R.focus?.material.dispose(); R = null;
+    R.mat.dispose(); R.hat?.traverse(o => { if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); } }); R.focus?.geometry.dispose(); R.focus?.material.dispose(); R = null;
   }
 
   function play(name, fade = 0.18) {
     if (!R.acts[name] || R.cur === name) return;
     const next = R.acts[name], prev = R.acts[R.cur];
     next.reset().setEffectiveWeight(1).fadeIn(fade).play();
+    // loops start at a random phase so the gait is not in lock-step with whatever started it (fixed-step recordings)
+    if (LOOPS.has(name)) next.time = Math.random() * next.getClip().duration;
     if (prev) prev.fadeOut(fade);
     R.cur = name;
   }
@@ -130,7 +151,7 @@ export function install(game) {
     R.mixer.update(dt);
     if (R.focus) { const ca = R.oneShot?.startsWith('cast') ? 1 : 0; R.focus.rotation.y += dt * 2.5;
       R.focus.scale.setScalar(R.focus.userData.s * (1 + 0.8 * ca) * (1 + Math.sin(t * 6) * 0.06)); }
-    R.mat.emissive.setRGB(game.time - (R.hitT || -9) < 0.25 ? 0.5 : 0, 0.03, 0.02);
+    const hf = game.time - (R.hitT || -9) < 0.25 ? 1 : 0; R.mat.emissive.setRGB(0.5 * hf, 0.06 * hf, 0.04 * hf);   // red hit flash only
     return true;
   }
   offs.push(game.on('playerHit', e => { if (R && e.amount > 0) R.hitT = game.time; }));

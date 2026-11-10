@@ -37,10 +37,13 @@ try {
         await new Promise(r => setTimeout(r, 300));
         if (clip) g.wizardRig.play(clip);
         await new Promise(r => setTimeout(r, wait));
-        const R = g.wizardRig.model; return { cls, s: R?.root.children[0].scale.x, y: R?.root.children[0].position.y, cur: R?.cur, visible: R?.root.visible, proc: g.wizard.model?.root.visible };
+        const R = g.wizardRig.model; const m = R?.mat, im = m?.map?.image;
+        if (!window.__dumped && im?.toDataURL) { window.__dumped = 1; console.log('[wizard_rig] dump', JSON.stringify({ color: m.color, em: m.emissive, w: im.width, vc: m.vertexColors }), im.toDataURL('image/png').slice(0, 60)); window.__tex = im.toDataURL('image/png'); }
+        return { cls, s: R?.root.children[0].scale.x, y: R?.root.children[0].position.y, cur: R?.cur, visible: R?.root.visible, proc: g.wizard.model?.root.visible };
       }, cls, clip, wait);
       info.push(r);
       await page.screenshot({ path: `${OUT}_${cls}_${tag}.jpg`, quality: 72 });
+      if (process.env.WIZ_DUMP) { const u = await page.evaluate(() => window.__tex); if (u) fs.writeFileSync(`${OUT}_tex_${cls}.png`, Buffer.from(u.split(',')[1], 'base64')); }
     }
   }
 } finally { console.log(JSON.stringify({ errors, info })); await browser.close(); server.close(); }

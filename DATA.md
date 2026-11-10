@@ -79,11 +79,12 @@ OSM footprint with the LiDAR DSM roof (data/lidar/dsm_1m.tif).
 Market stalls / street furniture (session 34, `scripts/zone_props.py`, `scripts/zone_props_furniture.py`; same terms, licence checked via the Commons API): "Cambridge Market stalls at lunchtime" (Jonosunde, CC BY-SA 4.0), geograph 5652394 "Looking over the market stalls in Cambridge" (Richard Humphrey), 1133717 "Empty market stalls", 703624 "Cambridge Market" and 972242 "A vital part of Cambridge" (Sebastian Ballard), all CC BY-SA 2.0. Used only to read the stall look (white canvas with red/blue/green/yellow stripes down the slope, scalloped hems, scaffold frames, striped counter cloths, red side sheets); no pixels from them are in the world.
 
 ## Characters (graphics node, 10 Nov 2026)
-- Player wizard `site/models/player/wizard.glb`: KayKit "Adventurers" Character Pack 1.0, `Mage.glb`, by Kay Lousberg
-  (www.kaylousberg.com), CC0 1.0, from github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0. Trimmed by
-  `scripts/build_char_glb.mjs` (12 clips renamed idle/walk/run/cast/cast_raise/cast_long/hit/death/jump/dash/block/sit,
-  spellbook and wand removed, meshopt-compressed). Per-class robe/trim colours are a runtime recolour of its palette
-  atlas (`site/app/game/wizard_rig.js`).
+- Player wizard `site/models/player/wizard.glb` (graphics s3, replaces the KayKit Mage): "Animated Wizard" by Quaternius
+  (quaternius.com), CC-BY 3.0 as listed at https://poly.pizza/m/kttbFvCl2C (glb
+  static.poly.pizza/7e77cc7a-eff9-4ebd-90a6-7728c265b092.glb). Trimmed by `scripts/build_char_glb.mjs` (12 clips renamed
+  idle/walk/run/cast(Spell1)/cast_raise(Spell2)/cast_long(Staff_Attack)/hit(RecieveHit)/death/jump(Idle_Weapon)/dash(Roll)/
+  block(Punch)/sit(Idle_Attacking), meshopt). Per-class robe/trim recolour of its texture and a procedural pointed hat
+  at runtime (`site/app/game/wizard_rig.js`). Credited in the in-game credits.
 - Mob models `site/models/mobs/{statue,wraith,automaton,imp}.glb`: KayKit "Skeletons" Character Pack 1.0
   (Skeleton_Warrior, _Mage, _Rogue, _Minion), Kay Lousberg, CC0 1.0, same trimming (idle/walk/run/attack/attack2/hit/
   death/spawn/taunt). Drawn in game by `site/app/game/mob_rig.js` for statue, river_wraith, automaton, ink_imp, punt_revenant.

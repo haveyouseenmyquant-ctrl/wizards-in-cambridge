@@ -6,7 +6,12 @@ D=/tmp/wic_dl; mkdir -p $D site/models/player site/models/mobs
 B=https://raw.githubusercontent.com/KayKit-Game-Assets
 [ -f $D/Mage.glb ] || curl -sSL -o $D/Mage.glb $B/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/gltf/Mage.glb
 for s in Mage Minion Rogue Warrior; do [ -f $D/Skeleton_$s.glb ] || curl -sSL -o $D/Skeleton_$s.glb $B/KayKit-Character-Pack-Skeletons-1.0/main/addons/kaykit_character_pack_skeletons/Characters/gltf/Skeleton_$s.glb; done
-node scripts/build_char_glb.mjs $D/Mage.glb site/models/player/wizard.glb '{"clips":{"idle":"Idle","walk":"Walking_A","run":"Running_A","cast":"Spellcast_Shoot","cast_raise":"Spellcast_Raise","cast_long":"Spellcast_Long","hit":"Hit_A","death":"Death_A","jump":"Jump_Full_Short","dash":"Dodge_Forward","block":"Blocking","sit":"Sit_Chair_Idle"},"drop":["Spellbook","Spellbook_open","1H_Wand"]}'
+# player wizard: Quaternius "Animated Wizard" (CC-BY 3.0, poly.pizza/m/kttbFvCl2C)
+[ -f $D/q_wizard.glb ] || curl -sSL -o $D/q_wizard.glb https://static.poly.pizza/7e77cc7a-eff9-4ebd-90a6-7728c265b092.glb
+Q=CharacterArmature
+node scripts/build_char_glb.mjs $D/q_wizard.glb site/models/player/wizard.glb "{\"clips\":{\"idle\":\"$Q|Idle\",\"walk\":\"$Q|Walk\",\"run\":\"$Q|Run\",\"cast\":\"$Q|Spell1\",\"cast_raise\":\"$Q|Spell2\",\"cast_long\":\"$Q|Staff_Attack\",\"hit\":\"$Q|RecieveHit\",\"death\":\"$Q|Death\",\"jump\":\"$Q|Idle_Weapon\",\"dash\":\"$Q|Roll\",\"block\":\"$Q|Punch\",\"sit\":\"$Q|Idle_Attacking\"}}"
+# (old KayKit Mage player, kept for reference)
+: node scripts/build_char_glb.mjs $D/Mage.glb /tmp/wic_dl/kaykit_wizard.glb '{"clips":{"idle":"Idle","walk":"Walking_A","run":"Running_A","cast":"Spellcast_Shoot","cast_raise":"Spellcast_Raise","cast_long":"Spellcast_Long","hit":"Hit_A","death":"Death_A","jump":"Jump_Full_Short","dash":"Dodge_Forward","block":"Blocking","sit":"Sit_Chair_Idle"},"drop":["Spellbook","Spellbook_open","1H_Wand"]}'
 mob() { node scripts/build_char_glb.mjs $D/$1.glb site/models/mobs/$2.glb "{\"clips\":{\"idle\":\"Idle_Combat\",\"walk\":\"Walking_D_Skeletons\",\"run\":\"Running_C\",\"attack\":\"$3\",\"attack2\":\"$4\",\"hit\":\"Hit_A\",\"death\":\"Death_C_Skeletons\",\"spawn\":\"Spawn_Ground_Skeletons\",\"taunt\":\"Taunt\"}}"; }
 mob Skeleton_Warrior statue 1H_Melee_Attack_Chop 2H_Melee_Attack_Spin
 mob Skeleton_Mage wraith Spellcast_Shoot Spellcast_Raise
