@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 15)
+## State (2026-11-10, after session 16)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,6 +12,10 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
+- s16: merged Optimisation publish fix (fail-fast, swaps live_site only when Pages serves the build; Pages live = 448ceb61).
+  PRIORITY = Gaspard's natural roofs (EnvVFX dd7b): merge + publish with before/after shots as soon as noted ready.
+  Pending: Graphics + Story have UNCOMMITTED work in worktrees (told to commit). QA d022 = playtest <= 6 min.
+  playtest_pass_pct=0 for 448ceb61 only because service.sh hasn't run the playtest yet.
 - Trunk 448ceb612bcec57f (s15, merged Gameplay uiscreens.js grid inventory/talents): gate 6/6 (158 s), judged 51.4
   (V 51, Anim 30, Combat 60.9, Story 53, UI 63). Story Q4 branch NOT merged: quest_bot 2/4 classes (bell-stay). Gameplay 11ba = Combat>66.
   s15 publish: Pages failed again (6th) but publish.sh swapped live_site to 448ceb61 anyway (bug -> Optimisation task); Pages serves 1665d3ca.

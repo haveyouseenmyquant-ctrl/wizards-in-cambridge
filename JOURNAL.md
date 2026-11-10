@@ -151,3 +151,9 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   lean-to) fitted from the DSM, with straight ridges, eaves and proper materials; bespoke landmarks unchanged.
   roof_match_pct (inherited prototype metric) may drop; a natural look comes first. Assigned to EnvVFX: task
   ot-20261110-181416-dd7b; brief says it comes first. Lead: merge and publish it as soon as it's ready, with before/after shots for Gaspard.
+
+## 2026-11-10 — session 16 (lead)
+- Merged Optimisation s4 (publish.sh fail-fast, Pages actions v5, deploy retry). Live Pages serves 448ceb61.
+- Roof priority: EnvVFX told dd7b comes first, with before/after shots in data/derived/roof_shots/; I'll merge and publish when it's ready.
+- Graphics (mob rigs) and Story (Q4 fixes) have uncommitted work; both told to commit. New QA task d022: faster playtest.
+- measure.sh (live 448ceb61): judged 51.4, quests 3, fps 60, load 0.51, playtest 0 (not yet scored by service.sh).
