@@ -12,9 +12,9 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
-- s20: merged Marketing (site/about), Creative audio v1, Art UI (uiframe.js); index.js MODULES union. Gate 7/7 on 473c678d,
-  published (Pages ok, about/ live). Not yet scored -> measure.sh 0 until service.sh runs; next session verify scores.
-  Tutorial tasks f917/514c/616a/a328 still open (issue intr already triaged s19).
+- s21: service.sh scored live 473c678d: judged 52.2 (V51 Anim33.5 Combat62 Story52 UI63), quests 3, playtest 100, fps 60.
+  Merged Marketing tick. No team commits since s20; tutorial tasks f917/514c/616a/a328 still open; Story Q4 not mergeable.
+- s20: merged Marketing (site/about), Creative audio v1, Art UI; gate 7/7 on 473c678d, published.
 - s19: s18 publish OK (Pages serves 448ceb61 WITH roofs; hash unchanged -> QA d7ba). Gaspard issue is-20261110-192341-intr (no tutorial,
   mobs attack at once) = TOP priority: tasks Gameplay f917 tutorial.js, Story 514c quests/tutorial.json, UI 616a tutorial_ui.js,
   QA a328 test_tutorial.mjs + &tutorial=0 in bots. Contract: window.WIC.tutorial, localStorage wic_tutorial_done.
