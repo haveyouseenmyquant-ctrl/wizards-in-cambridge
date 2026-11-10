@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 2)
+## State (2026-11-10, after session 3)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PRIVATE). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -14,30 +14,26 @@
 
 ## KPIs / measure.sh
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
-  data/benchmark/scores/<build_hash>_wic.json (keys judged_game_quality, main_quests_shipped, playtest_pass_pct,
-  fps_median, load_seconds) + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
-- Judge on old prototype build: 40.8 (Visuals 44, Animation 23, Combat 61.5, Story pres 10, UI 55.5; weights
-  .25/.20/.25/.15/.15). Trunk 38af3295 (s2 merge): main_quests_shipped 1, rest waits for service.sh.
-- scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok (judged_sections.Animation).
+  data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
+- Trunk 38af3295 (s3): judged 42.4 (Visuals 38, Animation 23, Combat 54.9, Story 54, UI 43; weights
+  .25/.20/.25/.15/.15), quests 1, playtest 100 (12 runs, scripts/wic_playtest.mjs), fps 60, load 0.65. Judge noise ~±1.
+- scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").
+- skills/wic-rescore = how to score a build by hand (judge ~8 min, playtest ~35 min).
 - Merging: JOURNAL.md conflicts -> keep both sides; site/app/game/index.js MODULES line conflicts -> union.
-  Run game tests one at a time (parallel browsers time out): test_classes/feel/items/mobs, quest_bot.
-- Inherited game already has: 4 classes, mob_types 12, bosses 3, equipment_effects 44, old route bot 100% pass.
+  Run game tests one at a time (parallel browsers time out). Once QA ships tools/wic_gate.sh, use it as merge gate.
+  data/derived/wic_harness_log.jsonl is dirtied by service.sh: `git checkout` it before merging QA.
 
-## Organisation (5 nodes, all children of root)
-- qa-and-playtesting: frozen rubric docs/RUBRIC.md + blind judge (wic_record.mjs, wic_judge.py), main-path bot,
-  new service.sh scoring each trunk hash. MOST URGENT: main KPI is 0 until this lands.
-- story: BIBLE.md, data-driven quests + dialogue, scripts/quest_bot.mjs (main_quests_shipped).
-- gameplay: combat feel (test_feel.mjs, 3rd-person combat camera), progression depth (test_progression.mjs).
-- graphics: animated player wizard (site/models/player/wizard.glb, scripts/glb_anims.mjs), animated mobs; also the
-  inherited realism ring work. May split into Environment/Characters sub-nodes.
-- optimisation: wic_perf.mjs (60 s walk+fight, GPU Chrome), presets, fps>=50, Safari smoke, publish.sh.
+## Organisation (6 nodes, all children of root)
+- qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring. Task ce60 merge gate + judge spread.
+- story: quests/dialogue, quest_bot. 3711 (presentation>30, now 54: told to close), 5d13 quest 2.
+- gameplay: feel.js, progression ff06, boss TTK d623, UI polish 02a9 (judge UI>55).
+- graphics: characters+animation only. 8228 mob glbs, e9f5 NPC glbs, 8765 Animation>40. Told judge still sees
+  blocky player in recordings (check wizard.glb shows in wic_record frames).
+- environment-and-vfx (new s3): lighting/atmosphere/materials/spell VFX. 0eb3 Visuals>50 + fps>=50.
+- optimisation: perf harness, presets, publish.sh. ef24 (Safari blocked: WebKit crashes on macOS 26.5; safaridriver
+  approval a-20261110-023619-6c7d), 5145 perf guardrail.
 - Contract in every brief: results to <hash>_wic.json (merge keys), /tmp/wic_* locks, symlink heavy data from trunk,
   modular files in site/app/game, leave an org note when a branch is ready to merge.
-
-## Open tasks (s2)
-QA 2a4a playtest bot. Story 3711 story presentation >30, 5d13 quest 2. Graphics 8228 mob glbs, e9f5 NPC models,
-8765 Animation >40. Gameplay ff06 progression, d623 boss TTK 15-40 s (bossTTK in quest_bot output).
-Optimisation ef24 (Safari half blocked: safaridriver approval a-20261110-023619-6c7d), 5145 perf guardrail.
 
 ## Lead each session
 1. `org status`, `org tasks`, read notes; merge ready node branches into main (resolve conflicts, run game tests).

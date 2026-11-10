@@ -45,3 +45,9 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 
 ## 2026-11-10 QA s2
 - scripts/wic_playtest.mjs main-path bot: quest_bot (prologue, 1 run/class) + route bot (Market Square encounters + Bellwarden, 2 runs/class), 60 s game-time soft-lock watchdog in both bots (WIC_SOFTLOCK_S; verified it fires at 3 s), console errors fail a run, harness runs excluded and logged. Trunk 38af3295: playtest_pass_pct 100 (12/12), 485 s wall. judged_game_quality 42.4 (V 38, Anim 23, Combat 54.9, Story 54, UI 43; was 39.9 on ea2b8370).
+
+## 2026-11-10 — session 3 (lead)
+- Merged QA (wic_playtest.mjs main-path bot, wic-rescore skill). Trunk 38af3295: judged 42.4, playtest 100, quests 1,
+  fps 60, load 0.65. Other nodes had no new commits.
+- Weakest judge sections: Animation 23, Visuals 38, UI 43. Added node Environment and VFX (Visuals), UI polish task
+  for Gameplay, merge-gate task for QA; notes to Graphics (judge still sees blocky player) and Story (close 3711).
