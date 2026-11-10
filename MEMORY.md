@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 8)
+## State (2026-11-10, after session 9)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PRIVATE). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -15,7 +15,11 @@
 ## KPIs / measure.sh
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
-- Trunk 0657a325 (s7, merged Optimisation shadow proxies/LOD/grid raycast): fps 60 (p5 59), draws 1743, load 0.52;
+- Trunk fb1294bb (s9, merged EnvVFX interior-mapped windows + wall weathering): judged 45.2 (V 50, Anim 22,
+  Combat 55, Story 54, UI 43), fps 60, load 0.66, gate 6/6, quests 2; playtest pending service.sh.
+- Judge's top asks: player model reads as 'cloaked blob, no limbs' (Graphics told: new humanoid model + cast clips);
+  title card + caption cover combat frames (Story told to fade/hide in combat).
+- Prev trunk 0657a325 (s7, merged Optimisation shadow proxies/LOD/grid raycast): fps 60 (p5 59), draws 1743, load 0.52;
   judged 44.3, quests 2, playtest 100 (service.sh). s8: merged QA gate; no other node had new commits.
 - Prev trunk 44f67e9a (s6, merged Gameplay progression: L20, spell ranks, 3x3 talents, sets): judged 46.2 (V 50,
   Anim 27, Combat 54.5, Story 54, UI 44), quests 2 (4/4), playtest 100, fps 52 (p5 44, min 32), load 0.77.

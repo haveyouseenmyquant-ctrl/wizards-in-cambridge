@@ -83,3 +83,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - service.sh scored 0657a325 playtest 100 -> committed. Merged QA gate (tools/wic_gate.sh, windowed GPU Chrome, 166 s).
   Gate on main: 5/6, test_feel dodgeIFrames flaked (2/2 standalone) -> note Gameplay; suggested retry-on-fail to QA.
 - No other node committed since s7; open tasks unchanged (d623, 02a9, 8765, 0eb3, 6b1b, ef24). Notes to Graphics on Animation 22.
+
+## 2026-11-10 — session 9 (lead)
+- Merged EnvVFX s2 (interior-mapped window glass, sky reflections, wall weathering) -> fb1294bb. Gate 6/6 (155 s GPU), quests 2.
+  Judged 45.2 (Visuals 50, Anim 22, UI 43); fps 60, load 0.66. Playtest left to service.sh.
+- Notes: Story fade title card/caption in combat; Graphics replace blob wizard model with a limbed humanoid + cast clips.
