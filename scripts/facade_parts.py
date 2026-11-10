@@ -290,6 +290,79 @@ def door(P, el, wall_col, trim_col, yb=SKIN):
     return op
 
 
+DISPLAY_COLS = ["#8c2a24", "#24406e", "#2f5a34", "#d8cdb0", "#3a3330", "#c08a2e", "#7d7f86", "#5e3858", "#e8e2d4",
+                "#b8442c", "#2c6a6a"]
+
+
+def window_display(P, a, b, sr, ztop, key):
+    """s3 EnvVFX (judge: "shop windows empty planes"): a stocked window display as real geometry in the glazing
+    reveal: a display board on the stallriser, a stepped riser and a glass shelf, goods by a per-window theme
+    (books, bottles/jars, dressed torso stands, gift boxes) and white price cards. All within GLASS..GLASS+0.16."""
+    rng = np.random.default_rng(int(hashlib.md5(key.encode()).hexdigest()[:8], 16))
+    if b - a < 0.6 or ztop - sr < 0.9:
+        return
+    y0, dy = GLASS + 0.004, 0.15
+    pm = "plain"
+    col = lambda: shade(rgb(DISPLAY_COLS[rng.integers(len(DISPLAY_COLS))]), rng.uniform(0.85, 1.1))  # noqa: E731
+    board = shade(rgb("#6b4a32"), rng.uniform(0.8, 1.2))
+    P.box(a, b, y0, y0 + dy, sr, sr + 0.03, board, bottom=False, mat="timber")                 # display board
+    theme = int(rng.integers(4))
+    zs = sr + 0.75
+    shelf = theme != 2 and ztop - zs > 0.35
+    if shelf:
+        P.box(a, b, y0, y0 + dy * 0.8, zs, zs + 0.015, rgb("#c9d4d4"), mat="trim")               # glass shelf
+    z = sr + 0.03
+    x = a + 0.06
+    while x < b - 0.12:
+        if theme == 0:   # books / stationery: upright, face-out on stands
+            w, h = rng.uniform(0.03, 0.06), rng.uniform(0.18, 0.3)
+            if rng.random() < 0.25:
+                w = rng.uniform(0.15, 0.2)   # face-out cover on a little easel
+                P.box(x, x + w, y0 + 0.02, y0 + 0.04, z, z + h * 1.1, col(), mat=pm)
+            else:
+                P.box(x, x + w, y0 + 0.01, y0 + dy - 0.02, z, z + h, col(), mat=pm)
+            x += w + (0.004 if rng.random() < 0.8 else 0.08)
+        elif theme == 1:  # bottles / jars on a stepped riser
+            w = rng.uniform(0.06, 0.09)
+            h = rng.uniform(0.15, 0.3)
+            c = col()
+            P.box(x, x + w, y0 + 0.04, y0 + 0.04 + w, z, z + h, c, mat=pm)
+            P.box(x + w * 0.3, x + w * 0.7, y0 + 0.04 + w * 0.3, y0 + 0.04 + w * 0.7, z + h, z + h + 0.05,
+                  shade(c, 0.6), mat=pm)                                                         # neck / lid
+            P.box(x + 0.005, x + w - 0.005, y0 + 0.04 + w, y0 + 0.042 + w, z + h * 0.3, z + h * 0.65,
+                  rgb("#ece6d6"), mat=pm)                                                        # label
+            x += w + rng.uniform(0.03, 0.08)
+        elif theme == 2:  # clothes: dressed torso stands
+            w = rng.uniform(0.34, 0.42)
+            if x + w > b - 0.06:
+                break
+            c = col()
+            cx = x + w / 2
+            k_ = min(1.0, (ztop - z - 0.05) / 1.72)
+            P.box(cx - 0.015, cx + 0.015, y0 + 0.06, y0 + 0.09, z, z + 0.85 * k_, rgb("#2a2a2a"), mat=pm)   # pole
+            P.box(x + 0.03, x + w - 0.03, y0 + 0.02, y0 + dy - 0.01, z + 0.85 * k_, z + 1.2 * k_, c, mat=pm)     # skirt/legs
+            P.box(x, x + w, y0 + 0.02, y0 + dy - 0.01, z + 1.2 * k_, z + 1.62 * k_, c if rng.random() < 0.3 else col(), mat=pm)
+            P.box(cx - 0.05, cx + 0.05, y0 + 0.05, y0 + 0.1, z + 1.62 * k_, z + 1.72 * k_, rgb("#d9c7b0"), mat=pm)  # neck
+            x += w + rng.uniform(0.12, 0.3)
+        else:             # gifts / homeware: stacked boxes
+            w = rng.uniform(0.12, 0.28)
+            h = 0.0
+            for k in range(int(rng.integers(1, 4))):
+                hh = rng.uniform(0.07, 0.16)
+                ww = w * (1 - 0.15 * k)
+                P.box(x + (w - ww) / 2, x + (w + ww) / 2, y0 + 0.01, y0 + dy - 0.02, z + h, z + h + hh, col(), mat=pm)
+                h += hh
+            x += w + rng.uniform(0.04, 0.12)
+        if rng.random() < 0.12:   # price card
+            P.box(x - 0.02, x + 0.06, y0 + dy - 0.012, y0 + dy - 0.008, z, z + 0.06, rgb("#f4f2ea"), mat=pm)
+    if shelf:                     # small goods on the shelf
+        x = a + 0.08
+        while x < b - 0.1:
+            w, h = rng.uniform(0.06, 0.16), rng.uniform(0.08, min(0.25, ztop - zs - 0.1))
+            P.box(x, x + w, y0 + 0.01, y0 + dy * 0.75, zs + 0.015, zs + 0.015 + h, col(), mat=pm)
+            x += w + rng.uniform(0.02, 0.1)
+
+
 def shopfront(P, el, wall_col, trim_col, yb=SKIN):
     x0, x1, z1 = el["x0"], el["x1"], el.get("z1", 3.3)
     fh = min(0.7, z1 * 0.22)
@@ -316,6 +389,7 @@ def shopfront(P, el, wall_col, trim_col, yb=SKIN):
             x = a + (b - a) * i / nm
             P.box(x - 0.03, x + 0.03, GLASS, GLASS + 0.06, sr, zf, fcol, top=False, bottom=False)
         P.box(a, b, GLASS, GLASS + 0.06, zf - 0.55, zf - 0.5, fcol)   # transom
+        window_display(P, a, b, sr, zf - 0.55, f"{x0:.2f}:{a:.2f}:{el.get('fascia_colour', '')}")
     if dx is not None:   # recessed door: deep frame, glazed leaf
         P.face_xz(box(dx - dw / 2, 0, dx + dw / 2, zf), GLASS - 0.01, shade(fcol, 0.7))
         P.face_xz(box(dx - dw / 2 + 0.12, 0.9, dx + dw / 2 - 0.12, zf - 0.7), GLASS, rgb(GLASS_COL))
