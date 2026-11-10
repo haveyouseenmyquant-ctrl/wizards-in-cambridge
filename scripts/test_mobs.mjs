@@ -28,11 +28,11 @@ const server = http.createServer((req, res) => {
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
 const browser = await puppeteer.launch(wicLaunch({
   executablePath: CHROME, headless: true, protocolTimeout: 0,
-  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=960,540'],
-  defaultViewport: { width: 960, height: 540 },
+  args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=480,270'],
+  defaultViewport: { width: 480, height: 270 },
 }));
 // session 42: the run hung for 20+ min with no output; a watchdog reports what finished and exits
-const stage = { at: 'load' };
+const stage = { at: 'load' }; const TS = Date.now(); setInterval(() => console.error('[stage]', ((Date.now() - TS) / 1000).toFixed(0), stage.at), 5000).unref();
 // session 44: all in-page waits are game time (window.__game.time); this is only a wall-clock safety cap
 const WATCHDOG_S = +(process.env.WC_TEST_WATCHDOG_S || 3600);
 setTimeout(() => { console.log(JSON.stringify({ mob_types_ok: 0, bosses_ok: 0, error: `watchdog ${WATCHDOG_S} s at ` + stage.at })); process.exit(1); }, WATCHDOG_S * 1000).unref();
@@ -44,11 +44,14 @@ try {
   page.on('pageerror', e => errors.push(String(e)));
   const missing = [];
   page.on('response', r => { if (r.status() === 404) missing.push(new URL(r.url()).pathname); });
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug${process.env.WIC_TEST_QUERY || ''}`, { waitUntil: 'domcontentloaded', timeout: 300000 });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug${process.env.WIC_TEST_QUERY ?? '&q=low'}`, { waitUntil: 'domcontentloaded', timeout: 300000 });
   await page.waitForFunction('window.__walkReady === true', { timeout: 300000 });
   await page.waitForFunction('window.__game && window.__game.mobSystem && window.__mobTest', { timeout: +(process.env.MOB_WAIT_MS || 120000) });
   await sleep(3000);   // let encounters near the spawn point stream in
   // encounter check: teleport to each encounter, wait for tiles, report whether its mobs spawned on walkable ground
+  // gameplay s3: the sim pump (below) also runs the encounter stage's game-time waits (was ~2 min wall at < 1 fps)
+  await page.evaluate(() => { const g = window.__game, P = window.__p;
+    window.__simPump = setInterval(() => { for (let i = 0; i < 8; i++) { P?.update?.(0.05); g.update(0.05); } }, 30); });
   stage.at = 'encounters';
   const encounters = await page.evaluate(async () => {
     const g = window.__game, sys = g.mobSystem, out = [];
@@ -75,6 +78,7 @@ try {
     const g = window.__game, sys = g.mobSystem;
     window.__player.teleport(-102.9, 70);
     { const g0 = g.time, t0 = performance.now(); while (g.time - g0 < 4 && performance.now() - t0 < 60000) await new Promise(r => setTimeout(r, 200)); }
+    clearInterval(window.__simPump);   // fps is measured without the pump
     const fps = async () => { let n = 0; const t0 = performance.now();
       await new Promise(r => { const f = () => { n++; if (performance.now() - t0 < 3000) requestAnimationFrame(f); else r(); }; requestAnimationFrame(f); });
       return +(n / ((performance.now() - t0) / 1000)).toFixed(1); };
