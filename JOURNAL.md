@@ -181,3 +181,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   QA a328 (test_tutorial.mjs in the gate; bots skip via ?tutorial=0). Department heads told it outranks other game work.
 - Nothing to merge: no department branch is ahead of main. s18 publish succeeded (live 448ceb61 includes the roofs).
 - measure.sh (live 448ceb61): judged 51.4, quests 3, playtest 100, fps 60, load 0.41.
+
+## 2026-11-10 — session 20 (lead)
+- Merged Marketing (drafts, press kit, site/about/), Creative (procedural audio v1, test_audio) and Art (UI title/class-select, HUD de-overlap, icons, About link). Only conflict: index.js MODULES (union).
+- Gate 7/7 ok on 473c678d (fps 60, 12 mob types, 58 effects, quest_bot 3 quests 100%). Published: Pages serves 473c678d, about/ live.
+- Tutorial issue (intr) tasks still open with Gameplay, Story, UI, QA. New build awaits service.sh scoring (measure.sh 0 until then).
