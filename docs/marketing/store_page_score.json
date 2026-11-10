@@ -1,0 +1,59 @@
+{
+ "score": 87,
+ "build": "a0728d2+0eba8fd9f614",
+ "date": "2026-11-10T18:51:16Z",
+ "url": "http://127.0.0.1:58699/about/",
+ "judge": "claude-opus-5-5",
+ "rubric_sha": "9a0b8c014426",
+ "criteria": {
+  "hook": 14,
+  "media": 16,
+  "clarity": 14,
+  "visual": 12,
+  "mobile": 7,
+  "trust": 10,
+  "cta": 9,
+  "press": 5
+ },
+ "max": {
+  "hook": 15,
+  "media": 20,
+  "clarity": 15,
+  "visual": 15,
+  "mobile": 10,
+  "trust": 10,
+  "cta": 10,
+  "press": 5
+ },
+ "notes": {
+  "hook": "Above the fold there is a big serif title, a 'Free browser action RPG \u00b7 In development' tag, a one-line pitch and a bright 'Play free in your browser' button over a real in-game street scene; the hero image is heavily darkened and the wizard is barely visible, so it hits less hard than it could.",
+  "media": "There are ten captioned in-game frames that show both exploration and combat (a boss fight, each class casting, a winged enemy), but the class-select and prologue frames are soft, crop off UI panels and text, and the boss frames are busy enough to read poorly.",
+  "clarity": "The copy is scannable and concrete: four classes with six named spells each, named enemy types, three bosses, loot tiers, three named quests, the real-map setting, an exploration mode and the price and platform, so a reader can say what they would do in the game.",
+  "visual": "Typography and colour are coherent, with a dark navy page, warm gold accents and a serif that suits the mood, and the hierarchy is clear; the gallery's cropped menu and story frames with overlapping UI fragments look messy next to the clean sections.",
+  "mobile": "Text is readable and the Play button is large and full-width, but on the phone the gallery crops the 16:9 shots into tall portraits, which cuts off HUD bars and the 'Thirteenth Chime' title text, and the fact table and credits list run almost to the screen edge.",
+  "trust": "The page says plainly that the game is free, runs in the browser and is in development with no release date; it has an 'Honest status' section, says there are no reviews, credits OpenStreetMap, the Environment Agency LiDAR and OS data with their licences, names the developer and says there is no tracking.",
+  "cta": "The Play action comes back in a strong closing section, and the footer and nav link to Play, Source and Press kit; the credits section is not in the nav.",
+  "press": "The press kit section has a full fact sheet (title, genre, developer, platform, price, status, source) and a download link that lists 17 full-size screenshots and a wordmark."
+ },
+ "screenshots": [
+  "desktop_01.png",
+  "desktop_02.png",
+  "desktop_03.png",
+  "desktop_04.png",
+  "desktop_05.png",
+  "desktop_06.png",
+  "desktop_fold.png",
+  "phone_01.png",
+  "phone_02.png",
+  "phone_03.png",
+  "phone_04.png",
+  "phone_05.png",
+  "phone_06.png",
+  "phone_07.png",
+  "phone_08.png",
+  "phone_09.png",
+  "phone_10.png",
+  "phone_11.png",
+  "phone_12.png"
+ ]
+}
