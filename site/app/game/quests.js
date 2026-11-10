@@ -94,6 +94,7 @@ export async function install(game) {
     // floating quest marker (gold diamond), shown when the NPC has something for the player
     const mk = new THREE.Mesh(new THREE.OctahedronGeometry(0.16), new THREE.MeshBasicMaterial({ color: 0xffc94a }));
     mk.scale.set(1, 1.6, 1); mk.position.y = 2.35 / (n.scale || 1); g.add(mk); g.userData.marker = mk;
+    game.npcRig?.attach(g, n);   // graphics: rigged animated model from site/models/npcs/<id>.glb replaces the figure above
     return g;
   }
   const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 30, 12, 1, true),
@@ -258,7 +259,7 @@ export async function install(game) {
   }));
 
   game.quests = { quests, order, save, get state() { return { quest: st.q?.id || null, step: st.step, phase: st.phase }; },
-    get dialogueOpen() { return !dlg.hidden; }, objective, interact, advance, npcs };
+    get dialogueOpen() { return !dlg.hidden; }, get speaker() { return dlg.hidden ? null : dq.lines[dq.i]?.who || null; }, objective, interact, advance, npcs };
 
   // ---------- QA story hook: stage the opening beats through the real systems, one screenshot per call
   async function settle() { const t0 = performance.now(); while ((P.pendingPlace || !window.__player?.settled?.(60)) && performance.now() - t0 < 8000) await new Promise(r => setTimeout(r, 200)); }
