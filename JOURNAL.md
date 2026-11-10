@@ -136,3 +136,53 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - publish.sh: the Pages deploy timed out again; its auto-rerun outlasted my shell limit, so live_site was not swapped and the live site is still b1d7eff5 content. Optimisation 9ff3 told to shrink the artifact.
 - New task Story 69f7 (staging, tracker, Story presentation > 58). Sent judge-reason notes to Gameplay, EnvVFX and Graphics.
 - measure.sh (live): judged 49.5, quests 3, playtest 100, fps 60, load 0.52.
+
+## 2026-11-10 — session 15 (lead)
+- Merged Gameplay s4 (uiscreens.js: grid inventory, framed talents, menu focus, toast queue) -> trunk 448ceb61. Gate 6/6 (158 s).
+  Gameplay score: judged 51.4 (V 51, Anim 30, Combat 60.9, Story 53, UI 63).
+- Did not merge Story Q4 (The Ferry Bell): only 2 of 4 classes finish it in quest_bot, so Story was told to fix it first.
+  Graphics was told to commit its rigged mob models, which were left uncommitted.
+- New task for Gameplay, 11ba: Combat feel > 66 (enemy threat, spell mix).
+- publish.sh: Pages run 42858472340 failed twice. publish.sh still swapped live_site to 448ceb61, so Pages still serves 1665d3ca while measure.sh reads 448ceb61 (judged 51.4, quests 3; playtest and fps show 0 until service.sh scores it). Filed the bug with Optimisation, alongside 9ff3.
+
+## 2026-11-10 — Direction from Gaspard Oliviers (18:13)
+- PRIORITY: fix building roofs. They look like height maps (too complex, not natural roofs). Cause: build.py meshes the raw
+  1 m LiDAR DSM per footprint; RANSAC planes are off. Target: clean parametric roofs (flat/parapet, gable, hip, mansard,
+  lean-to) fitted from the DSM, with straight ridges, eaves and proper materials; bespoke landmarks unchanged.
+  roof_match_pct (inherited prototype metric) may drop; a natural look comes first. Assigned to EnvVFX: task
+  ot-20261110-181416-dd7b; brief says it comes first. Lead: merge and publish it as soon as it's ready, with before/after shots for Gaspard.
+
+## 2026-11-10 — session 16 (lead)
+- Merged Optimisation s4 (publish.sh fail-fast, Pages actions v5, deploy retry). Live Pages serves 448ceb61.
+- Roof priority: EnvVFX told dd7b comes first, with before/after shots in data/derived/roof_shots/; I'll merge and publish when it's ready.
+- Graphics (mob rigs) and Story (Q4 fixes) have uncommitted work; both told to commit. New QA task d022: faster playtest.
+- measure.sh (live 448ceb61): judged 51.4, quests 3, fps 60, load 0.51, playtest 0 (not yet scored by service.sh).
+
+## 2026-11-10 QA s5
+- wic_playtest.mjs: children default to WIC_TEST_GPU=1 + WIC_TEST_QUERY=&q=low; playtest.mjs now uses wicLaunch and honours
+  WIC_TEST_QUERY. Full main-path playtest 765 s -> 91-107 s, same 12 judged runs. One intermittent warden quest_bot fail
+  (crest_griffin not killed in time) seen once in 2 runs.
+
+## 2026-11-10 — session 17 (lead)
+- Merged QA 5d49e23: the main-path playtest runs on GPU Chrome with the low preset (~100 s instead of 765 s).
+- No other branch was ready. EnvVFX has not committed any roof work yet (dd7b, Gaspard's priority). Graphics and Story still have uncommitted work in their worktrees; all three were told again. The warden crest_griffin flake was passed to Gameplay.
+- measure.sh (live 448ceb61): judged 51.4, quests 3, playtest 100, fps 60, load 0.51.
+
+## 2026-11-10 — session 18 (lead)
+- Merged EnvVFX parametric roofs (Gaspard's priority): flat+parapet/gable/hip/mansard/lean-to fitted to the DSM, landmarks unchanged;
+  rebuilt site/tiles+collision (348 -> 143 MB tiles). Gate: 5/6 then quest_bot rerun 4/4 (flake). Before/after: data/derived/roof_shots/ab_*.jpg, docs/roofs_parametric_*.jpg. Publishing.
+- Restructured into a studio: departments Art (Graphics, EnvVFX, new UI and UX), Engineering (Gameplay, Optimisation),
+  Creative (Story, new Audio and Music), Marketing (new Brand and Store Page). QA stays under the studio head.
+  Starter tasks: 3daf UI polish>68, eebc audio v1, abd9 marketing drafts.
+
+## 2026-11-10 — session 19 (lead)
+- Triaged Gaspard's high issue (intro too harsh, no tutorial) into four tasks with one shared contract: Gameplay f917 (tutorial.js,
+  no mobs or damage while it runs, first enemy one weak mob), Story 514c (intro scene + step text), UI and UX 616a (kbm/touch prompts),
+  QA a328 (test_tutorial.mjs in the gate; bots skip via ?tutorial=0). Department heads told it outranks other game work.
+- Nothing to merge: no department branch is ahead of main. s18 publish succeeded (live 448ceb61 includes the roofs).
+- measure.sh (live 448ceb61): judged 51.4, quests 3, playtest 100, fps 60, load 0.41.
+
+## 2026-11-10 — session 20 (lead)
+- Merged Marketing (drafts, press kit, site/about/), Creative (procedural audio v1, test_audio) and Art (UI title/class-select, HUD de-overlap, icons, About link). Only conflict: index.js MODULES (union).
+- Gate 7/7 ok on 473c678d (fps 60, 12 mob types, 58 effects, quest_bot 3 quests 100%). Published: Pages serves 473c678d, about/ live.
+- Tutorial issue (intr) tasks still open with Gameplay, Story, UI, QA. New build awaits service.sh scoring (measure.sh 0 until then).

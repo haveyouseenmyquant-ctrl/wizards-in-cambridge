@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deployment.outputs.page_url || steps.deployment2.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
       - name: Fetch world data
@@ -26,11 +26,20 @@ jobs:
           gh release download --repo "$GITHUB_REPOSITORY" --pattern world.tar.gz --dir /tmp
           tar -xzf /tmp/world.tar.gz -C site
           ls -la site
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
+      # s4 (optimisation): from 13:00Z on 10 Nov every deploy hung with an empty 'Current status' until the timeout, with
+      # the same artifact that deployed at 12:09Z. Use the current actions (v5, Node 24) and retry the deploy once in
+      # the same job (the artifact is reused, nothing is re-uploaded), each attempt capped at 8 min.
       - id: deployment
-        uses: actions/deploy-pages@v4
+        continue-on-error: true
+        uses: actions/deploy-pages@v5
         with:
-          timeout: 1800000
+          timeout: 480000
+      - id: deployment2
+        if: steps.deployment.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        with:
+          timeout: 480000

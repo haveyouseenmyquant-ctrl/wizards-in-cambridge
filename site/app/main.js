@@ -280,13 +280,14 @@ async function main() {
   const shadowProxies = sun.castShadow ? installShadowProxies(THREE, scene, sun) : () => {};   // and static groups cast as one merged mesh
   const mainMerge = installMainMerge(THREE, scene, sun.castShadow ? sun : null, QP.merge);   // Optimisation s3: static meshes drawn as merged batches
   status('Loading tiles…');
-  let last = performance.now(), streamT = 0, ready = false, hudT = 0;
+  let last = performance.now(), streamT = 0, ready = false, hudT = 0, audioSys = null;
   renderer.setAnimationLoop(now => {
     const dt = (now - last) / 1000; last = now;
     streamT -= dt;
     if (streamT <= 0) { tiles.update(player.x, player.y); streamT = 0.25; }
     player.update(dt);
     if (window.__game && !window.__explore) window.__game.update(dt);
+    audioSys?.update(dt);
     const fc = window.__cam;   // debug/screenshot hook: {pos:[x,y,z], at:[x,y,z], fov?} in the collision frame
     if (fc && fc.fov && camera.fov !== fc.fov) { camera.fov = fc.fov; camera.updateProjectionMatrix(); }
     if (fc) { camera.position.set(fc.pos[0], fc.pos[2], -fc.pos[1]); camera.lookAt(fc.at[0], fc.at[2], -fc.at[1]); }
@@ -327,6 +328,8 @@ async function main() {
         if (window.__explore) { window.__game?.dispose(); window.__game = null; exploreRig(); } else startGame();
         document.body.classList.toggle('explore', window.__explore);
       });
+      // audio (audio node s1): footsteps, ambience and bells in both modes; music in game mode only
+      import('./game/audio_world.js').then(m => { audioSys = m.install({ player, world, camera }); }).catch(e => console.warn('[audio]', e));
       console.log(`[walkable] ready ${(performance.now() / 1000).toFixed(2)}s`);
       status('');
       $('help').hidden = false;

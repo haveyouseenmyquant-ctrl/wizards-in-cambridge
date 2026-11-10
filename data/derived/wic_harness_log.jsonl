@@ -73,3 +73,17 @@
 {"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T12:43:25.763Z"}
 {"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T12:43:25.763Z"}
 {"hash": "b1d7eff5dbdcbad5", "step": "playtest", "status": "ok", "secs": 765, "t": "2026-11-10T12:43:25Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:quest:pyromancer","status":"ok","t":"2026-11-10T17:34:59.221Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:quest:stormcaller","status":"ok","t":"2026-11-10T17:34:59.221Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-10T17:34:59.221Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-10T17:34:59.221Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T17:34:59.222Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T17:34:59.222Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T17:34:59.222Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T17:34:59.222Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T17:34:59.222Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T17:34:59.222Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T17:34:59.222Z"}
+{"hash":"448ceb612bcec57f","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T17:34:59.222Z"}
+{"hash": "448ceb612bcec57f", "step": "playtest", "status": "ok", "secs": 898, "t": "2026-11-10T17:34:59Z"}
+{"hash": "448ceb612bcec57f", "step": "gate", "status": "ok", "secs": 151, "t": "2026-11-10T18:25:39Z"}

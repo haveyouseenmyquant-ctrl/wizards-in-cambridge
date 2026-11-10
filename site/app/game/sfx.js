@@ -1,19 +1,13 @@
 // Game sound effects (session 40): every sound is synthesised with WebAudio at play time; no audio files.
 // play(name) looks up a recipe: layered oscillator sweeps + filtered noise bursts with short envelopes.
-let ctx = null, master = null, noiseBuf = null;
-
+import { ctx as audioCtx, buses, live, count, noise as noiseBuffer } from './audio.js';
+// session 40 synth, audio node s1: shares the engine's context and plays into its sfx bus; each source start is counted
+// as 'sfx.<recipe>' (the in-browser audio test reads the counts).
+let master = null, noiseBuf = null, curName = '';
 function audio() {
-  if (ctx) return ctx;
-  const AC = window.AudioContext || window.webkitAudioContext;
-  if (!AC) return null;
-  ctx = new AC();
-  master = ctx.createGain(); master.gain.value = 0.35; master.connect(ctx.destination);
-  noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
-  const d = noiseBuf.getChannelData(0);
-  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-  const resume = () => ctx.state === 'suspended' && ctx.resume().catch(() => {});
-  addEventListener('pointerdown', resume); addEventListener('keydown', resume);
-  return ctx;
+  const c = audioCtx(); if (!c) return null;
+  master = buses.sfx; noiseBuf = noiseBuffer();
+  return c;
 }
 
 // osc layer: {w: wave, f0, f1, t: duration, g: gain, d: delay}
@@ -25,7 +19,7 @@ function tone(c, o, at, out = master, pr = 1) {
   g.gain.setValueAtTime(0.0001, t0);
   g.gain.exponentialRampToValueAtTime(o.g ?? 0.3, t0 + Math.min(0.02, o.t * 0.2));
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + o.t);
-  osc.connect(g); g.connect(out); osc.start(t0); osc.stop(t0 + o.t + 0.05);
+  osc.connect(g); g.connect(out); osc.start(t0); count('sfx.' + curName); osc.stop(t0 + o.t + 0.05);
 }
 // noise layer: {type: filter type, f0, f1, q, t, g, d}
 function noise(c, o, at, out = master, pr = 1) {
@@ -37,7 +31,7 @@ function noise(c, o, at, out = master, pr = 1) {
   g.gain.setValueAtTime(0.0001, t0);
   g.gain.exponentialRampToValueAtTime(o.g ?? 0.3, t0 + Math.min(0.03, o.t * 0.2));
   g.gain.exponentialRampToValueAtTime(0.0001, t0 + o.t);
-  src.connect(f); f.connect(g); g.connect(out); src.start(t0, Math.random() * 0.5); src.stop(t0 + o.t + 0.05);
+  src.connect(f); f.connect(g); g.connect(out); src.start(t0, Math.random() * 0.5); count('sfx.' + curName); src.stop(t0 + o.t + 0.05);
 }
 
 const R = {
@@ -109,16 +103,20 @@ export function setClock(fn) { clock = fn; lastAt = {}; winT = -1; }
 // Same-name repeats within 30 ms are merged (except hit_*), and at most ~10 sounds start per 60 ms window.
 export function play(name, vol = 1, pitch = 1) {
   const c = audio(); const r = R[name];
-  if (!c || !r || c.state !== 'running') return;
+  if (!c || !r || !live()) return;
   const now = c.currentTime, tn = clock ? clock() : now;
   if (tn < (lastAt[name] ?? -1)) lastAt = {};   // clock went backwards (new game)
   if (tn - (lastAt[name] ?? -1) < (name.startsWith('hit_') ? 0 : 0.03)) return;
   if (tn - winT > 0.06 || tn < winT) { winT = tn; winN = 0; }
-  if (++winN > 10) return;
+  if (++winN > 10 && !name.startsWith('mob_')) return;   // mob voices (attack / hit / death cues) are never dropped by the cap
   lastAt[name] = tn;
   const out = c.createGain(); out.gain.value = Math.min(2, vol); out.connect(master);
+  curName = name;
   for (const o of r.o || []) tone(c, o, now, out, pitch);
   for (const o of r.n || []) noise(c, o, now, out, pitch);
   setTimeout(() => out.disconnect(), 3000);
 }
 export function init() { audio(); }
+// add or replace a recipe (audio_game.js registers the mob voices: mob_<type>_attack|hit|death)
+export function register(name, recipe) { R[name] = recipe; }
+export const has = name => !!R[name];
