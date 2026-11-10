@@ -174,3 +174,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Restructured into a studio: departments Art (Graphics, EnvVFX, new UI and UX), Engineering (Gameplay, Optimisation),
   Creative (Story, new Audio and Music), Marketing (new Brand and Store Page). QA stays under the studio head.
   Starter tasks: 3daf UI polish>68, eebc audio v1, abd9 marketing drafts.
+
+## 2026-11-10 — session 19 (lead)
+- Triaged Gaspard's high issue (intro too harsh, no tutorial) into four tasks with one shared contract: Gameplay f917 (tutorial.js,
+  no mobs or damage while it runs, first enemy one weak mob), Story 514c (intro scene + step text), UI and UX 616a (kbm/touch prompts),
+  QA a328 (test_tutorial.mjs in the gate; bots skip via ?tutorial=0). Department heads told it outranks other game work.
+- Nothing to merge: no department branch is ahead of main. s18 publish succeeded (live 448ceb61 includes the roofs).
+- measure.sh (live 448ceb61): judged 51.4, quests 3, playtest 100, fps 60, load 0.41.
