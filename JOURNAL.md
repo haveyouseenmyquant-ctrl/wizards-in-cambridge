@@ -186,3 +186,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged Marketing (drafts, press kit, site/about/), Creative (procedural audio v1, test_audio) and Art (UI title/class-select, HUD de-overlap, icons, About link). Only conflict: index.js MODULES (union).
 - Gate 7/7 ok on 473c678d (fps 60, 12 mob types, 58 effects, quest_bot 3 quests 100%). Published: Pages serves 473c678d, about/ live.
 - Tutorial issue (intr) tasks still open with Gameplay, Story, UI, QA. New build awaits service.sh scoring (measure.sh 0 until then).
+
+## 2026-11-10 — session 21 (lead)
+- service.sh has scored the live build 473c678d: judged 52.2 (Visuals 51, Animation 33.5, Combat 62, Story 52, UI 63), quests 3, playtest 100, fps 60, load 0.46.
+- Merged Marketing's checklist tick. No other branch ready; the tutorial issue (intr) tasks are still open with Gameplay, Story, UI and QA.
