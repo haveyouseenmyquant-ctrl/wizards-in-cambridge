@@ -12,3 +12,9 @@ mob Skeleton_Warrior statue 1H_Melee_Attack_Chop 2H_Melee_Attack_Spin
 mob Skeleton_Mage wraith Spellcast_Shoot Spellcast_Raise
 mob Skeleton_Rogue automaton Unarmed_Melee_Attack_Punch_A Unarmed_Melee_Attack_Kick
 mob Skeleton_Minion imp Unarmed_Melee_Attack_Punch_B Throw
+# story NPCs (Adventurers pack): talk = Interact, wave = Cheer
+for s in Rogue Rogue_Hooded; do [ -f $D/$s.glb ] || curl -sSL -o $D/$s.glb $B/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/gltf/$s.glb; done
+mkdir -p site/models/npcs; C='"idle":"Idle","talk":"Interact","walk":"Walking_A","wave":"Cheer","hit":"Hit_A","death":"Death_A"'
+node scripts/build_char_glb.mjs $D/Rogue.glb site/models/npcs/nell.glb "{\"clips\":{$C},\"drop\":[\"Knife_Offhand\",\"1H_Crossbow\",\"2H_Crossbow\",\"Knife\",\"Throwable\",\"Rogue_Cape\"]}"
+node scripts/build_char_glb.mjs $D/Rogue_Hooded.glb site/models/npcs/pip.glb "{\"clips\":{$C},\"drop\":[\"Knife_Offhand\",\"1H_Crossbow\",\"2H_Crossbow\",\"Knife\",\"Throwable\"]}"
+node scripts/build_char_glb.mjs $D/Mage.glb site/models/npcs/absalom.glb "{\"clips\":{$C},\"drop\":[\"Spellbook\",\"Spellbook_open\",\"1H_Wand\",\"2H_Staff\",\"Mage_Hat\"]}"

@@ -86,7 +86,10 @@ Market stalls / street furniture (session 34, `scripts/zone_props.py`, `scripts/
   atlas (`site/app/game/wizard_rig.js`).
 - Mob models `site/models/mobs/{statue,wraith,automaton,imp}.glb`: KayKit "Skeletons" Character Pack 1.0
   (Skeleton_Warrior, _Mage, _Rogue, _Minion), Kay Lousberg, CC0 1.0, same trimming (idle/walk/run/attack/attack2/hit/
-  death/spawn/taunt).
+  death/spawn/taunt). Drawn in game by `site/app/game/mob_rig.js` for statue, river_wraith, automaton, ink_imp, punt_revenant.
+- Story NPC models `site/models/npcs/{nell,pip,absalom}.glb`: KayKit Adventurers 1.0 (`Rogue`, `Rogue_Hooded`, `Mage`
+  without hat/weapons), Kay Lousberg, CC0 1.0; clips idle/talk(Interact)/walk/wave(Cheer)/hit/death; recoloured at
+  runtime from the palettes in `site/app/game/quests/*.json` by `site/app/game/npc_rig.js`.
 
 ## Held-out benchmark (session 8)
 - 200 Mapillary photos (CC-BY-SA 4.0, contributors credited per photo in `data/benchmark/benchmark.json`),
