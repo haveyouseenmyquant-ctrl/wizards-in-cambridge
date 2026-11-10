@@ -68,6 +68,9 @@ function installClip(clipS) {
   // enemies around them and the ground telegraphs (first person at eye height mostly showed walls and the nearest mob)
   // session 78: boom 5.5 -> 4.8 m (judge: 'enemies are tiny'); the game-mode camera now rises over walls instead
   P.view = 3; P.pitch = -0.3; P.camMax = 4.8;
+  // graphics s3: click through the story's opening dialogue as a player would (it waits for input, so it covered the
+  // bottom third of every combat frame and hid the wizard and the mobs' wind-up / hit / death poses)
+  for (let n = 0; g.quests?.dialogueOpen && n < 40; n++) g.quests.advance();
   let stepping = false;
   P.update = dt => { if (stepping) pu(dt); };
   const t0 = g.time, now = () => +(g.time - t0).toFixed(2);
@@ -260,6 +263,7 @@ function installClip(clipS) {
       try { while (g.time - t0 < untilS - 1e-6) { step(DT); P.update(DT); g.update(DT); } }
       catch (e) { add('error', { msg: e.message }); }
       finally { stepping = window.__gameStep = false; P.keys.clear(); }
+      for (let n = 0; g.quests?.dialogueOpen && n < 40; n++) g.quests.advance();   // graphics s3: as above, before each frame
       // session 59: look at the fight for the captured frame (a player watches the nearest enemy; 5 of 12 frames
       // used to face a wall or an empty street). Only the view turns: no movement, the next step re-aims anyway.
       let fm = null, fd = 35;
