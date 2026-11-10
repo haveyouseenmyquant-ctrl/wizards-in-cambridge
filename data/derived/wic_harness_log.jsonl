@@ -103,3 +103,19 @@
 {"hash": "473c678dbbc15f81", "step": "playtest", "status": "ok", "secs": 82, "t": "2026-11-10T21:15:37Z"}
 {"hash": "473c678dbbc15f81", "step": "perf", "status": "ok", "secs": 63, "t": "2026-11-10T21:16:40Z"}
 {"hash": "473c678dbbc15f81", "step": "gate", "status": "ok", "secs": 155, "t": "2026-11-10T21:19:15Z"}
+{"hash": "88f478c1c8a8b0e7", "step": "judge", "status": "ok", "secs": 506, "t": "2026-11-10T22:37:43Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:quest:pyromancer","status":"ok","t":"2026-11-10T22:39:04.895Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:quest:stormcaller","status":"ok","t":"2026-11-10T22:39:04.896Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-10T22:39:04.896Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-10T22:39:04.896Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T22:39:04.896Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T22:39:04.896Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T22:39:04.896Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T22:39:04.896Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T22:39:04.896Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T22:39:04.897Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T22:39:04.897Z"}
+{"hash":"88f478c1c8a8b0e7","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T22:39:04.897Z"}
+{"hash": "88f478c1c8a8b0e7", "step": "playtest", "status": "ok", "secs": 82, "t": "2026-11-10T22:39:05Z"}
+{"hash": "88f478c1c8a8b0e7", "step": "perf", "status": "ok", "secs": 62, "t": "2026-11-10T22:40:07Z"}
+{"hash": "88f478c1c8a8b0e7", "step": "gate", "status": "ok", "secs": 161, "t": "2026-11-10T22:42:48Z"}
