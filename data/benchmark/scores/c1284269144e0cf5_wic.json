@@ -26,5 +26,54 @@
   "errors": 0,
   "first_errors": [],
   "at": "2026-11-10T13:46:37.656Z"
+ },
+ "judged_game_quality": 50.6,
+ "judged_sections": {
+  "Visuals": 53.5,
+  "Animation": 34.5,
+  "Combat feel": 61.0,
+  "Story presentation": 49.5,
+  "UI polish": 51.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 3.0,
+   "Animation": 3.0,
+   "Combat feel": 1.5,
+   "Story presentation": 1.0,
+   "UI polish": 2.0
+  },
+  "quality_spread": 0.4,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city looks coherent and recognisable. It has textured brick and stone facades, a Gothic church, market stalls, bikes, railings and trees, with real-time shadows, warm low sun and some bloom. Geometry is boxy and low-detail, with flat facades, empty shop interiors and plain, repetitive pavement materials. The stylised characters are small and simple, and combat effects are mostly washed-out glowing blobs. Ambient occlusion, clutter and density all fall well short of the 60 anchor's polish."
+   },
+   "Animation": {
+    "all": "The walking frames show small stylised wizards with a few slightly different leg poses, so there is probably a basic walk cycle. Little else is visible. Combat reads mostly through spell VFX (ground circles, beams, a 'Staggered' popup). There are no clear cast wind-ups, matching body motion or hit-reaction poses. Enemies look like pale, simple blobby figures with no clear attack or death animations, the city has no crowds and moves only through the odd tree, and there is no visible secondary motion on robes or hats."
+   },
+   "Combat feel": {
+    "hexweaver": "Plenty of feedback is visible: damage numbers, crit labels, chain counters, Interrupted/Staggered callouts, rune telegraphs on the ground, a boss with a Phase II banner and a segmented health bar, rarity-coloured loot toasts up to a legendary, and a busy six-spell kit with mobility. The biggest gaps are readability and challenge. Large translucent VFX and enemies close to the camera often hide the action (frames 1, 4, 9), and the player took only 15 damage, so the fight shows little threat. No hit-stop or screen feedback is visible, and the bellwarden boss died within about 10 s, so there's little sign of distinct boss mechanics.",
+    "pyromancer": "Combat clearly works and has plenty of feedback: six distinct spells, crit-tagged damage numbers, chain counters, Staggered/Interrupted callouts, a phased boss (Bellwarden) with a health bar and enrage state, a windup shown in the event log, and rarity-coloured loot beams and cards up to legendary. That fits the 60 anchor well. It falls short of 80 for three reasons: the busiest frames are cluttered, with blown-out white/black shapes and overlapping loot cards that hide the fight; there is no visible hit-stop, screen shake, crowd-control shapes or enemy formations; and from 22 s to about 50 s the clip has almost no fighting, only one class is shown, and ember_bolt makes up two thirds of all casts.",
+    "stormcaller": "There is a lot of visible feedback: damage numbers, crit callouts, chain counters, 'Staggered' labels, a three-phase boss with a named health bar and a 'Phase II' banner, lightning effects, and loot beams coloured by rarity with item cards. The event log adds a varied six-spell kit, mixed enemy types and plenty of sound. Some effects are hard to read, though: lightning and white blobs smear over the enemies, and enemies show up as small or washed-out shapes. Nothing visible shows hit-stop, knockback, enemy wind-up telegraphs, formations or crowd control changing the fight, and 4 of the 12 frames have no enemies at all, so combat looks sparse after the boss dies and only this one class is shown.",
+    "warden": "The frames show solid hit feedback: damage numbers, crits, a chain counter, and Staggered/Interrupted labels. There is also a named boss with a phase bar and telegraphed attacks (Belfry Drop, Peal of Shards), red ground telegraph lines, loot beams with rarity cards, and several warden spells including CC and a leap. The biggest gaps are readability and weight. A large translucent shield bubble covers the centre of the screen in most fights, and the VFX are blobby with unclear shapes. Pebble_shot makes up 64 of the 81 casts, and there is no visible hit-stop or screen-shake. Only one class is shown, so there is no evidence that classes play differently."
+   },
+   "Story presentation": {
+    "all": "There is real story framing. A styled prologue title card, dialogue boxes with speaker names and small portraits, a quest tracker, a yellow diamond waypoint, a quest-complete banner with rewards, and well-written original lines tied to a real place (Market Hill, Great St Mary's). The staging is weak, though. The NPCs are barely visible: Nell is an orange blob in the foreground and Pip is a tiny figure. The Bellwarden reveal shows only a camera clipped into a wall, and frame 5 is also clipped. A stray 'Loading...' label appears and the tracker never updates. There is no camera framing, no character animation and no branching choices."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent dark-panel, serif-heading look across the class selection, HUD, inventory and talents. The HUD is functional: health/mana bars, a numbered spell bar with readable cooldowns, a minimap, a boss bar, quest tracking and rarity-tagged loot popups. Polish is held back by layering problems: the big 'Quest Complete / The Thirteenth Chime' banner and the NPC dialogue sit over the inventory and talent screens, which are plain text lists with no item icons. Combat frames are cluttered, with loot cards, the quest tracker, floating text and VFX all competing, so the visual hierarchy is weak."
+   }
+  }
  }
 }
