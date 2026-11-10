@@ -54,6 +54,11 @@ fi
 # live hash on it even while a session keeps editing site/
 # session 56: wait (up to 30 min) for a running game_kpi/gameplay run so its snapshot isn't swapped out under it
 for _ in $(seq 180); do [ -d /tmp/wc_game_kpi.lock ] || [ -d /tmp/wc_gameplay_kpi.lock ] || break; sleep 10; done
+# QA: hold /tmp/wic_publish.lock while live_site is rewritten; service.sh skips scoring while it exists and drops
+# (logs 'stale') any step whose build hash changed under it, so a half-copied live_site never gets scored
+for _ in $(seq 60); do mkdir /tmp/wic_publish.lock 2>/dev/null && break; sleep 5; done
+trap 'rm -rf /tmp/wic_publish.lock' EXIT
 rm -rf data/derived/live_site.new && cp -c -R site data/derived/live_site.new && rm -rf data/derived/live_site && mv data/derived/live_site.new data/derived/live_site
+rm -rf /tmp/wic_publish.lock
 # session 58: the session is over once it publishes; let service.sh score the new live build
 rm -f data/derived/session_active

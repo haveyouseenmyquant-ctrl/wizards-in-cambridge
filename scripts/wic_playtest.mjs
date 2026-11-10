@@ -19,7 +19,8 @@ const SITE = path.resolve(process.argv[2] || path.join(ROOT, 'site'));
 const ROUTE_RUNS = +(process.argv[3] || 2), QUEST_ROUNDS = +(process.argv[4] || 1);
 const SOFT_S = 60, T0 = Date.now();
 const log = (...a) => console.error(`[wic_playtest ${((Date.now() - T0) / 1000).toFixed(0)}s]`, ...a);
-const hash = spawnSync(path.join(ROOT, '.venv/bin/python'), ['-I', path.join(ROOT, 'scripts/build_hash.py'), SITE], { encoding: 'utf8' }).stdout.trim();
+// WIC_BUILD_HASH (service.sh): score under the hash the caller re-checks after the run
+const hash = process.env.WIC_BUILD_HASH || spawnSync(path.join(ROOT, '.venv/bin/python'), ['-I', path.join(ROOT, 'scripts/build_hash.py'), SITE], { encoding: 'utf8' }).stdout.trim();
 if (!hash) { log('no build hash for', SITE); process.exit(1); }
 
 function child(script, args) {   // run a bot, stderr passed through, returns its last stdout JSON line (or null)
