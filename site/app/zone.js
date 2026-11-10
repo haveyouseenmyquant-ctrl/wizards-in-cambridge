@@ -150,28 +150,16 @@ const EMIT = `
     float depthF = 1.0 - 0.6 * hp.z / rs.z;
     float lit = step(0.78, rh);
     vec3 lamp = vec3(1.0, 0.70, 0.40);
-    // ground floor = shops, open and lit at dusk: shelves of goods on the back and side walls
-    if (zWP.y - zGnd < 3.6 && tm != tq.y) {
-      lit = 1.0;
-      vec2 sp = tm == tq.z ? hp.xy : vec2(hp.z, hp.y);
-      float sh = fract((sp.y - 0.25) / 0.48), shelfRow = floor((sp.y - 0.25) / 0.48);
-      vec2 gc = vec2(floor(sp.x / (0.14 + 0.1 * zh(vec2(shelfRow, rh)))), shelfRow);
-      float gh = zh(gc + rh * 31.0);
-      vec3 goods = 0.5 + 0.5 * cos(6.2832 * (gh + vec3(0.0, 0.33, 0.67)));
-      float isGood = step(sh, 0.35 + 0.5 * zh(gc + 3.3)) * step(0.06, sh) * step(0.0, shelfRow) * step(shelfRow, 3.0) * step(0.18, gh);
-      roomc = mix(roomc * 1.15, mix(vec3(0.45, 0.42, 0.38), goods, 0.55) * 0.8, isGood);
-      roomc *= sh < 0.06 && shelfRow >= 0.0 && shelfRow <= 4.0 ? 0.45 : 1.0;
-    }
     vec3 inside = roomc * depthF * mix(vec3(0.045), lamp * 0.55, lit);
-    if (tm == tq.y && rd.y > 0.0) inside += lit * lamp * 0.6 * exp(-2.0 * length(hp.xz - vec2(rs.x * 0.5, rs.z * 0.55)));
+    if (tm == tq.y && rd.y > 0.0) inside += lit * lamp * 0.45 * exp(-2.0 * length(hp.xz - vec2(rs.x * 0.5, rs.z * 0.55)));
     // furniture / shelving silhouette on a plane part-way into the room
     float fw = 1.0 + 1.6 * rh2, ft = fw / rd.z;
     vec2 fp = ro.xy + rd.xy * ft;
     if (ft < tm && fp.x > 0.0 && fp.x < rs.x && fp.y < 0.5 + 1.3 * zn(vec2(fp.x * 1.4, rh * 17.0))) {
       inside = mix(vec3(0.03, 0.025, 0.02), lamp * 0.16 * (0.6 + 0.4 * zn(fp * 6.0)), lit);
     }
-    float cur = step(0.55, rh2) * step(3.6, zWP.y - zGnd) * (1.0 - smoothstep(0.32, 0.36, abs(ro.x / rs.x - 0.5) + 0.04 * sin(ro.y * 9.0)));
-    inside = mix(inside, mix(vec3(0.05, 0.045, 0.04), vec3(0.62, 0.44, 0.30) * 0.9, lit) * (0.8 + 0.2 * sin(ro.x * 14.0)), (1.0 - cur) * step(0.55, rh2) * step(3.6, zWP.y - zGnd));
+    float cur = step(0.55, rh2) * (1.0 - smoothstep(0.32, 0.36, abs(ro.x / rs.x - 0.5) + 0.04 * sin(ro.y * 9.0)));
+    inside = mix(inside, mix(vec3(0.05, 0.045, 0.04), vec3(0.62, 0.44, 0.30) * 0.9, lit) * (0.8 + 0.2 * sin(ro.x * 14.0)), (1.0 - cur) * step(0.55, rh2));
     // reflection of the golden sky
     vec3 sky = mix(vec3(0.95, 0.66, 0.42), vec3(0.36, 0.50, 0.72), smoothstep(0.02, 0.6, zR.y));
     sky *= 1.0 + 0.6 * pow(saturate(dot(normalize(zR.xz + 1e-5), normalize(zSunD.xz + 1e-5))), 4.0) * (1.0 - smoothstep(0.0, 0.5, zR.y));
