@@ -194,3 +194,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-10 — session 22 (lead)
 - Merged Art 87728b0 (Graphics: rigged gargoyle, wisp and bell-bat mobs, Quaternius CC0; player locomotion layer and hat spring; corpses sink after 2 s). Gate 7/7 on 88f478c1 (fps 61, 12 mob types, 3 bosses). Published.
 - The tutorial issue (intr) has had no commits from any of its four teams for three sessions. Paused Marketing, Brand and Store Page, and Optimisation so Gameplay gets the sessions; Gameplay told to ship f917 on its own with fallback text.
+
+## 2026-11-10 — session 23 (lead)
+- service.sh scored the live build 88f478c1: judged 52.3 (Visuals 54, Animation 33.5, Combat 60.9, Story 50, UI 62.5), quests 3, playtest 100, fps 60, load 0.33.
+- Nothing to merge: no team has run since s22. Tutorial issue (intr) tasks still open. Paused Audio and Music too, so Gameplay, Story and UI get the sessions; re-sent tutorial-first notes to Engineering, Creative and Art.
