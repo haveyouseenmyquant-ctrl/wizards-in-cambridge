@@ -240,12 +240,15 @@ export function createVfx(game) {
 
   // fresnel glow cores
   const coreGeo = new THREE.SphereGeometry(1, 16, 12);
-  const coreMat = () => new THREE.ShaderMaterial({
+  const coreMat = (rim = false) => new THREE.ShaderMaterial({
     uniforms: { uColor: { value: new THREE.Color() }, uOp: { value: 1 }, ...nearU() },
     vertexShader: `varying vec3 vN; varying vec3 vV; varying float vD; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalMatrix * normal; vV = -mv.xyz; vD = -mv.z; gl_Position = projectionMatrix * mv; }`,
     fragmentShader: `uniform vec3 uColor; uniform float uOp; ${NEAR} varying vec3 vN; varying vec3 vV; varying float vD;
-      void main(){ float f = 1.0 - abs(dot(normalize(vN), normalize(vV))); vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.05, 0.75, f)) * (0.9 + 1.4 * f * f);
-        float a = uOp * smoothstep(uNear0, uNear1, vD); gl_FragColor = vec4(c * a, a); }`,
+      void main(){ float f = 1.0 - abs(dot(normalize(vN), normalize(vV)));
+        ${rim ? `vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.05, 0.75, f)) * (0.9 + 1.4 * f * f); float a = uOp * smoothstep(uNear0, uNear1, vD);`
+        // s84 (EnvVFX): cores are a white-hot centre fading to a soft coloured edge (the old fresnel rim drew a hard-edged disc); domes keep the rim
+        : `vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.0, 0.55, f)) * 1.35; float a = uOp * smoothstep(uNear0, uNear1, vD) * pow(1.0 - f, 1.4);`}
+        gl_FragColor = vec4(c * a, a); }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
   });
   const cores = pool(56, () => { const m = new THREE.Mesh(coreGeo, coreMat()); m.renderOrder = 12; return m; });
@@ -296,7 +299,7 @@ export function createVfx(game) {
   const spikes = pool(48, () => new THREE.Mesh(spikeGeos[0], new THREE.MeshLambertMaterial({ color: 0x8a7458, flatShading: true, transparent: true })));
   const crystalGeo = new THREE.OctahedronGeometry(0.22, 0); crystalGeo.scale(0.7, 1.6, 0.7);
   const crystals = pool(16, () => new THREE.Mesh(crystalGeo, new THREE.MeshBasicMaterial({ color: 0xffc860, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, fog: false })));
-  const domeMeshes = pool(4, () => { const m = new THREE.Mesh(coreGeo, coreMat()); m.renderOrder = 12; return m; });
+  const domeMeshes = pool(4, () => { const m = new THREE.Mesh(coreGeo, coreMat(true)); m.renderOrder = 12; return m; });
   // session 52: warden shield lattice (faceted rune shell, glowing edges) and slab plates orbiting it
   const latticeGeo = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1, 1));
   // session 54: pool emptied (no lattice is drawn): in the third-person gameplay clip its edges cut across the screen as
@@ -365,7 +368,33 @@ export function createVfx(game) {
     LO.spark.color2 = color; LO.spark.speed = 6 + 2 * (o.width ?? 1); burst(x1, y1, z1, 10, LO.spark);
     // session 80: storm bolts read heavier: a soft glow halo where the bolt lands and a white-hot pinpoint
     LO.glow.color2 = color; LO.glow.size = 0.8 + 0.6 * (o.width ?? 1); burst(x1, y1, z1, 1, LO.glow);
-    if ((o.width ?? 1) >= 0.9) { const c = core(x1, y1, z1, 0xeaf4ff, 0.12 + 0.06 * (o.width ?? 1), 0.1); if (c) c.material.uniforms.uOp.value = 0.85; }
+    if ((o.width ?? 1) >= 0.9) { const c = core(x1, y1, z1, 0xeaf4ff, 0.12 + 0.06 * (o.width ?? 1), 0.1); if (c) c.material.uniforms.uOp.value = 0.85;
+      // s84 (EnvVFX): white-blue rayed flash at the strike point, a shock ring and short crackling arcs around it
+      const f = takeFlash();
+      if (f) { f.material.color.setRGB(0.82, 0.9, 1); f.material.opacity = 0.9; f.material.rotation = rnd() * 6.28; f.position.set(x1, z1, -y1);
+        const s0 = 1.1 + 0.5 * (o.width ?? 1); f.scale.setScalar(s0 * 0.5); const fe = rec(f, 0.13, 'flash'); fe.s0 = s0; fe.o0f = 0.9; }
+      ring(x1, y1, z1 - 0.5, 0x9cc8ff, 0.15, 1.2 + 0.4 * (o.width ?? 1), 0.22, 0.75);
+      crackle(x1, y1, z1, color, LOW ? 1 : 3, 0.9 + 0.4 * (o.width ?? 1));
+    }
+  }
+  // short thin arcs jumping out from a strike point (no particles, only when the bolt pool has room)
+  function crackle(x, y, z, color, n, r) {
+    for (let k = 0; k < n; k++) {
+      if (freeCount(bolts) < 6) return;
+      const m = take(bolts); if (!m) return;
+      m.material.uniforms.uColor.value.set(color);
+      const a = rnd() * TAU, d = r * (0.6 + rnd() * 0.6), e = rec(m, 0.1 + rnd() * 0.08, 'bolt');
+      e.flicker = 1; e.restrike = [x, y, z, x + Math.cos(a) * d, y + Math.sin(a) * d, z + (rnd() - 0.6) * d, 0.35, 0.35, 0]; e.restruck = 0;
+      genBolt(m, e.restrike); boltGeom(m);
+    }
+  }
+  // s84 (EnvVFX): hex curse vortex: wisps spawned on a ring that spin inward and rise, with dark smoke in the eye
+  const SW = { tex: 'wisp', color: 0xb070ff, color2: 0x3a0c80, speed: 0.3, size: 0.55, life: 0.8, drag: 2, up: 1.4, spin: 7, jitter: 0, ring: 1, radial: -1.5 };
+  const SWS = { tex: 'smoke', color: 0x2a0c44, color2: 0x0a0410, grow: 2.2, speed: 0.5, size: 1, life: 1.2, alpha: 0.5, up: 0.9, jitter: 0.3, ring: 0 };
+  function swirl(x, y, z, c1 = 0xb070ff, c2 = 0x60ff90, r = 1) {
+    SW.ring = r; SW.radial = -r * 1.6; SW.color = c1; SW.color2 = 0x3a0c80; burst(x, y, z - 0.4, 10, SW);
+    SW.ring = r * 0.6; SW.radial = -r; SW.color = c2; SW.color2 = 0x0c4020; burst(x, y, z, 6, SW);
+    burst(x, y, z - 0.2, 3, SWS);
   }
   const LO = {   // preallocated lightning burst options
     spark: { tex: 'spark', color: 0xffffff, color2: 0xcfe8ff, speed: 6, size: 0.2, life: 0.35, drag: 3, grav: 7 },
@@ -504,15 +533,19 @@ export function createVfx(game) {
   // impact at a hit point: rayed flash, sparks thrown back towards the attacker and a few embers
   function impact(x, y, z, color = 0xffffff, strength = 1, dx = 0, dy = 0) {
     const f = takeFlash();
-    if (f) { tone(f.material.color.set(color), 1); f.material.opacity = 0.65; f.material.rotation = rnd() * 6.28;
-      f.position.set(x, z, -y); const s0 = 0.6 + 0.4 * strength; f.scale.setScalar(s0 * 0.5); const e = rec(f, 0.09 + 0.05 * strength, 'flash'); e.s0 = s0; }
+    if (f) { tone(f.material.color.set(color), 1); f.material.opacity = 0.85; f.material.rotation = rnd() * 6.28;
+      f.position.set(x, z, -y); const s0 = 0.8 + 0.55 * strength; f.scale.setScalar(s0 * 0.5); const e = rec(f, 0.12 + 0.05 * strength, 'flash'); e.s0 = s0; e.o0f = 0.85; }
+    // s84 (EnvVFX): a second, crisp white star counter-rotated inside the tinted one, so every hit reads as a sharp flash
+    const f2 = takeFlash();
+    if (f2) { f2.material.color.setRGB(0.95, 0.95, 0.92); f2.material.opacity = 0.8; f2.material.rotation = rnd() * 6.28;
+      f2.position.set(x, z, -y); const s1 = 0.45 + 0.25 * strength; f2.scale.setScalar(s1 * 0.5); const e2 = rec(f2, 0.08, 'flash'); e2.s0 = s1; e2.o0f = 0.8; }
     const L = Math.hypot(dx, dy) || 1, n = Math.round(6 + 6 * strength);
     burst(x, y, z, n, { tex: 'spark', color: 0xffffff, color2: color, speed: 6 + 3 * strength, size: 0.16, life: 0.3, drag: 5, grav: 9, jitter: 0.1, dx: dx / L, dy: dy / L, dz: 0.35, cone: 0.9 });
     burst(x, y, z, Math.round(3 * strength), { tex: 'ember', color, speed: 2.5, size: 0.2, life: 0.4, drag: 3, jitter: 0.2 });
     // session 70: a white-hot pinpoint core (fresnel, fades in 0.1 s) and, on solid hits, two spark streaks that arc and fall
     const c = core(x, y, z, color, 0.1 + 0.07 * strength, 0.1); if (c) c.material.uniforms.uOp.value = 0.9;
     if (strength >= 1.5) emberStreaks(x, y, z, 2, color, 4 + strength, dx / L, dy / L);
-    if (strength >= 2) ring(x, y, z - 0.6, color, 0.2, 1.4, 0.25);
+    if (strength >= 1) ring(x, y, z - 0.6, color, 0.15, 0.8 + 0.5 * strength, 0.22 + 0.04 * strength, 0.8);   // s84: shock ring on every solid hit (was strength >= 2)
     if (strength >= 1.2) light(x, y, z + 0.3, color, 0.35 * strength, 0.16, 7);   // session 54: a brief light pop on solid hits
   }
 
@@ -645,7 +678,7 @@ export function createVfx(game) {
     const h = { isMissile: true, visible: true, x, y, z, color, sparkT: 0 };
     h.core = core(x, y, z, o.coreColor ?? color, o.radius ?? 0.16);
     if (h.core) h.core.material.uniforms.uOp.value = 1;
-    h.halo = orb(x, y, z, color, o.halo ?? 0.9);
+    h.halo = orb(x, y, z, color, (o.halo ?? 0.9) * 0.6);   // s84: smaller flat halo (the judge read big halos as 'glowing blobs'); trails + shed particles carry the shape
     h.trail = trail(o.trailColor ?? color, o.width ?? 0.3, o.trailLife ?? 0.22);
     h.trail2 = o.width2 ? trail(o.trailColor2 ?? color, o.width2, o.trailLife2 ?? 0.35) : null;
     h.halo0 = h.halo ? h.halo.material.opacity : 0;
@@ -766,7 +799,7 @@ export function createVfx(game) {
     for (const g of [...rockGeos, ...spikeGeos, crystalGeo, coreGeo, planeGeo, latticeGeo]) g.dispose();
     for (const t of [glow, star, atlas, shockTex, ...Object.values(DECAL).map(d => d.tex)]) t.dispose();
   }
-  return { burst, orb, release, ring, disc, beam, lightning, spike, dome, impact, update, dispose, glow, star, SCREEN, root,
+  return { burst, orb, release, ring, disc, beam, lightning, crackle, swirl, spike, dome, impact, update, dispose, glow, star, SCREEN, root,
     decal, debris, shardWave, trail, trailPush, trailEnd, streak, core, missile, moveMissile, releaseMissile, tether, sigil, light, quality: QUALITY,
     fireball, flameColumn, flameWall, emberStreaks };
 }

@@ -12,6 +12,8 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 
 const BASE = new URL('./', location.href).href;
 // ?look=v2: sky dome, AgX tone mapping, plausible albedos (session 9). Off by default: it lowered photo_match on the
@@ -42,50 +44,79 @@ async function main() {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, QP.pixelRatio));   // per quality preset (quality.js)
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(SKY);
-  scene.fog = LOOK2 ? new THREE.Fog(SKY, 150, 560) : new THREE.Fog(SKY, 120, QP.fogFar);
-  // sky dome: pale hazy horizon to a soft blue zenith (Cambridge summer afternoon), follows the camera.
-  // session 55: on by default with drifting fair-weather cloud (fbm), its horizon equal to the fog/background colour so
-  // distant facades still fade into it; the sky stays mostly near-white like the street photos. ?sky=flat: the old flat colour.
-  const HZ = new THREE.Color(SKY);
+  // Environment & VFX s1: default look is a late-afternoon "golden hour" over Market Hill (the prologue is set at dusk):
+  // low warm sun from the WSW with long shadows, cool sky fill, a deep blue-to-amber sky with sunlit clouds, warm
+  // exponential haze for depth, AgX tone mapping, and (medium+) bloom + vignette. ?look=classic (or ?look=v2, ?sky=...)
+  // restores the earlier overcast looks.
+  const GOLDEN = !LOOK2 && !QS.has('sky') && QS.get('look') !== 'classic';
+  const SUN_DIR = GOLDEN ? new THREE.Vector3(-0.883, 0.342, 0.321).normalize()   // azimuth ~250 deg, elevation ~20 deg
+    : new THREE.Vector3(-0.181, 0.848, 0.498).normalize();   // mid-June 14:00 BST: azimuth ~200 deg (SSW), elevation ~58 deg
+  const HZ = new THREE.Color(GOLDEN ? 0xe9c7a4 : SKY);   // horizon = fog colour, so distant facades fade into the sky
+  scene.background = HZ.clone();
+  scene.fog = GOLDEN ? new THREE.FogExp2(HZ, QP.fogDensity ?? 0.0042) : LOOK2 ? new THREE.Fog(SKY, 150, 560) : new THREE.Fog(SKY, 120, QP.fogFar);
+  // sky dome, follows the camera. Golden: deep blue zenith to an amber horizon, a hot sun disc with a wide halo,
+  // drifting fbm cloud lit warm on the sun side and grey-violet away from it. Classic (session 55): mostly near-white.
   const skyDome = new THREE.Mesh(new THREE.SphereGeometry(580, 48, 24), new THREE.ShaderMaterial({
     side: THREE.BackSide, depthWrite: false, fog: false,
-    uniforms: { sun: { value: new THREE.Vector3(-0.181, 0.848, 0.498).normalize() }, hz: { value: new THREE.Vector3(HZ.r, HZ.g, HZ.b) },
-      t: { value: 0 }, look2: { value: LOOK2 ? 1 : 0 } },
+    uniforms: { sun: { value: SUN_DIR.clone() }, hz: { value: new THREE.Vector3(HZ.r, HZ.g, HZ.b) },
+      t: { value: 0 }, look2: { value: LOOK2 ? 1 : 0 }, golden: { value: GOLDEN ? 1 : 0 } },
     vertexShader: 'varying vec3 vd; void main(){ vd = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-    fragmentShader: `uniform vec3 sun; uniform vec3 hz; uniform float t; uniform float look2; varying vec3 vd;
+    fragmentShader: `uniform vec3 sun; uniform vec3 hz; uniform float t; uniform float look2; uniform float golden; varying vec3 vd;
       float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
       float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
         return mix(mix(hash(i), hash(i + vec2(1, 0)), f.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), f.x), f.y); }
       float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int k = 0; k < 5; k++) { v += a * noise(p); p = p * 2.03 + 17.1; a *= 0.5; } return v; }
       void main(){ float h = max(vd.y, 0.0);
-        if (look2 > 0.5) {
-          vec3 c = mix(vec3(0.80, 0.85, 0.89), vec3(0.42, 0.60, 0.82), pow(h, 0.55));
-          c += vec3(1.0, 0.95, 0.85) * 0.25 * pow(max(dot(vd, sun), 0.0), 12.0);
-          if (vd.y < 0.0) c = vec3(0.80, 0.85, 0.89);
-          gl_FragColor = vec4(c, 1.0); return; }
         float sd = max(dot(vd, sun), 0.0);
-        vec3 c = mix(hz, vec3(0.60, 0.73, 0.88), smoothstep(0.02, 0.75, h));
-        // clouds on a plane ~1.5 km up, drifting from the WSW
-        vec2 uv = vd.xz / (h + 0.12) * 1.4 + vec2(t * 0.004, t * 0.0015);
-        float n = fbm(uv);
-        float cov = smoothstep(0.40, 0.72, n + 0.06 * fbm(uv * 3.7));
-        float base = smoothstep(0.42, 0.85, fbm(uv + vec2(0.07, 0.05)));   // thicker cloud: grey underside
-        vec3 cc = mix(vec3(0.99, 0.985, 0.975), vec3(0.78, 0.80, 0.84), base * 0.75);
-        cc += vec3(1.0, 0.96, 0.88) * 0.18 * pow(sd, 6.0);   // silver lining toward the sun
-        c = mix(c, cc, cov * smoothstep(0.0, 0.18, h) * 0.95);
-        c += vec3(1.0, 0.95, 0.85) * (0.10 * pow(sd, 8.0) + 0.25 * pow(sd, 120.0));   // sun glow
-        c = mix(hz, c, smoothstep(0.0, 0.10, h));   // aerial perspective: fades to the fog colour at the horizon
-        if (vd.y < 0.0) c = hz;
-        gl_FragColor = vec4(c, 1.0); }`,
+        vec3 c;
+        if (golden > 0.5) {
+          vec3 zen = vec3(0.05, 0.14, 0.42), mid = vec3(0.25, 0.40, 0.68);
+          c = mix(hz, mid, smoothstep(0.0, 0.25, h));
+          c = mix(c, zen, smoothstep(0.2, 0.9, h));
+          c += vec3(1.0, 0.55, 0.22) * 0.55 * pow(sd, 6.0) * (1.0 - 0.6 * h);   // warm halo round the sun, low in the sky
+          vec2 uv = vd.xz / (h + 0.10) * 1.2 + vec2(t * 0.004, t * 0.0015);
+          float n = fbm(uv);
+          float cov = smoothstep(0.46, 0.78, n + 0.06 * fbm(uv * 3.7));
+          float thick = smoothstep(0.45, 0.9, fbm(uv + vec2(0.07, 0.05)));
+          vec3 lit = vec3(1.25, 0.82, 0.52), shade = vec3(0.46, 0.40, 0.50);
+          vec3 cc = mix(lit, shade, thick * 0.8) * (0.75 + 0.6 * pow(sd, 3.0));
+          cc += vec3(1.0, 0.6, 0.3) * 0.9 * pow(sd, 16.0) * (1.0 - thick);   // bright rims toward the sun
+          c = mix(c, cc, cov * smoothstep(0.0, 0.16, h) * 0.9);
+          c += vec3(1.0, 0.85, 0.6) * (0.35 * pow(sd, 60.0)) + vec3(4.0, 3.2, 2.2) * smoothstep(0.9994, 0.9998, sd);   // sun disc (blooms)
+          c = mix(hz, c, smoothstep(0.0, 0.06, h));
+          if (vd.y < 0.0) c = hz;
+        } else if (look2 > 0.5) {
+          c = mix(vec3(0.80, 0.85, 0.89), vec3(0.42, 0.60, 0.82), pow(h, 0.55));
+          c += vec3(1.0, 0.95, 0.85) * 0.25 * pow(sd, 12.0);
+          if (vd.y < 0.0) c = vec3(0.80, 0.85, 0.89);
+        } else {
+          c = mix(hz, vec3(0.60, 0.73, 0.88), smoothstep(0.02, 0.75, h));
+          // clouds on a plane ~1.5 km up, drifting from the WSW
+          vec2 uv = vd.xz / (h + 0.12) * 1.4 + vec2(t * 0.004, t * 0.0015);
+          float n = fbm(uv);
+          float cov = smoothstep(0.40, 0.72, n + 0.06 * fbm(uv * 3.7));
+          float base = smoothstep(0.42, 0.85, fbm(uv + vec2(0.07, 0.05)));   // thicker cloud: grey underside
+          vec3 cc = mix(vec3(0.99, 0.985, 0.975), vec3(0.78, 0.80, 0.84), base * 0.75);
+          cc += vec3(1.0, 0.96, 0.88) * 0.18 * pow(sd, 6.0);   // silver lining toward the sun
+          c = mix(c, cc, cov * smoothstep(0.0, 0.18, h) * 0.95);
+          c += vec3(1.0, 0.95, 0.85) * (0.10 * pow(sd, 8.0) + 0.25 * pow(sd, 120.0));   // sun glow
+          c = mix(hz, c, smoothstep(0.0, 0.10, h));   // aerial perspective: fades to the fog colour at the horizon
+          if (vd.y < 0.0) c = hz;
+        }
+        gl_FragColor = vec4(c, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`,
   }));
-  skyDome.renderOrder = -1; skyDome.frustumCulled = false; if (LOOK2 || SKYMODE !== 'flat') scene.add(skyDome);
+  skyDome.renderOrder = -1; skyDome.frustumCulled = false; if (GOLDEN || LOOK2 || SKYMODE !== 'flat') scene.add(skyDome);
   const camera = new THREE.PerspectiveCamera(70, 1, 0.2, LOOK2 ? 1200 : 600);
   if (LOOK2) { renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = 1.15; }
-  scene.add(LOOK2 ? new THREE.HemisphereLight(0xc4d8ee, 0x5f584c, 0.75) : new THREE.HemisphereLight(0xdfeaf5, 0x6b6450, (OVERCAST ? 2.3 : 1.6) * LK));
-  // Sun for Cambridge, mid-June 14:00 BST: azimuth ~200 deg (SSW), elevation ~58 deg. Frame: x east, y up, z south.
-  const SUN_DIR = new THREE.Vector3(-0.181, 0.848, 0.498).normalize();
-  const sun = new THREE.DirectionalLight(0xfff1dc, LOOK2 ? 2.6 : (OVERCAST ? 1.0 : 1.8) * LK);
+  if (GOLDEN) { renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = parseFloat(QS.get('exposure') || '1.1'); }
+  // fill: cool blue sky light against the warm sun (warm/cool contrast reads as depth); warm bounce from the ground
+  scene.add(GOLDEN ? new THREE.HemisphereLight(0x8eaad2, 0x75573a, 0.85)
+    : LOOK2 ? new THREE.HemisphereLight(0xc4d8ee, 0x5f584c, 0.75) : new THREE.HemisphereLight(0xdfeaf5, 0x6b6450, (OVERCAST ? 2.3 : 1.6) * LK));
+  // Frame: x east, y up, z south.
+  const sun = new THREE.DirectionalLight(GOLDEN ? 0xffb874 : 0xfff1dc, GOLDEN ? 2.7 : LOOK2 ? 2.6 : (OVERCAST ? 1.0 : 1.8) * LK);
   sun.position.copy(SUN_DIR); scene.add(sun); scene.add(sun.target);
   // Quality preset (quality.js; ?q=low|medium|high|ultra): Low has no shadows; otherwise a 1024-4096 shadow map, 240 m square
   const quality = QUALITY;
@@ -97,21 +128,39 @@ async function main() {
   }
 
   let composer = null;
-  if (POST !== 'off' && quality !== 'low') {
+  const BLOOM = GOLDEN && QP.bloom && QS.get('bloom') !== '0';
+  if ((POST !== 'off' || BLOOM) && quality !== 'low') {
+    // HDR (half-float, MSAA) target; tone mapping + sRGB happen once, in OutputPass.
     // AO reads the main pass's depth and reconstructs normals from it: no second scene pass, and alpha-tested
     // leaves and facade photos occlude only where they are drawn
-    const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4, depthTexture: new THREE.DepthTexture(1, 1) });
+    const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: QP.msaa ?? 4, depthTexture: new THREE.DepthTexture(1, 1) });
     composer = new EffectComposer(renderer, rt);
     composer.addPass(new RenderPass(scene, camera));
-    // RenderPass draws into readBuffer = renderTarget2 (a clone of rt with its own depth texture): GTAO + Output swap twice per frame
-    const ao = new GTAOPass(scene, camera, 1, 1, { depthTexture: composer.renderTarget2.depthTexture });
-    const aoRes = parseFloat(QS.get('aores') || '1'), aoN = parseInt(QS.get('aos') || '16');
-    ao.updateGtaoMaterial({ radius: parseFloat(QS.get('aor') || '2'), distanceExponent: 1, thickness: 1, scale: 1, samples: aoN });
-    ao.updatePdMaterial({ samples: aoN });
-    if (aoRes !== 1) { const ss = ao.setSize; ao.setSize = (w, h) => ss.call(ao, Math.round(w * aoRes), Math.round(h * aoRes)); }
-    ao.blendIntensity = parseFloat(QS.get('ao') || '1');
-    composer.addPass(ao);
+    if (POST === 'ao') {
+      // RenderPass draws into readBuffer = renderTarget2 (a clone of rt with its own depth texture): GTAO + Output swap twice per frame
+      const ao = new GTAOPass(scene, camera, 1, 1, { depthTexture: composer.renderTarget2.depthTexture });
+      const aoRes = parseFloat(QS.get('aores') || '1'), aoN = parseInt(QS.get('aos') || '16');
+      ao.updateGtaoMaterial({ radius: parseFloat(QS.get('aor') || '2'), distanceExponent: 1, thickness: 1, scale: 1, samples: aoN });
+      ao.updatePdMaterial({ samples: aoN });
+      if (aoRes !== 1) { const ss = ao.setSize; ao.setSize = (w, h) => ss.call(ao, Math.round(w * aoRes), Math.round(h * aoRes)); }
+      ao.blendIntensity = parseFloat(QS.get('ao') || '1');
+      composer.addPass(ao);
+    }
+    // bloom on the linear HDR image: only the sun disc and spell cores (> ~2.2) glow; sunlit walls stay below it (s1 judge: lower thresholds washed out combat frames)
+    if (BLOOM) composer.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), parseFloat(QS.get('bloom') || '0.35'), 0.5, 2.2));
     composer.addPass(new OutputPass());
+    if (GOLDEN) composer.addPass(new ShaderPass({   // display-space grade: soft vignette, slight warm/teal split
+      uniforms: { tDiffuse: { value: null } },
+      vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: `uniform sampler2D tDiffuse; varying vec2 vUv;
+        void main(){ vec4 c = texture2D(tDiffuse, vUv);
+          float l = dot(c.rgb, vec3(0.299, 0.587, 0.114));
+          c.rgb = mix(vec3(l), c.rgb, 1.18);   // win back some of AgX's desaturation
+          c.rgb = (c.rgb - 0.5) * 1.08 + 0.5;   // and a little contrast
+          c.rgb += mix(vec3(-0.012, 0.0, 0.02), vec3(0.025, 0.01, -0.02), smoothstep(0.15, 0.7, l));   // teal shadows, warm highlights
+          vec2 d = vUv - 0.5; c.rgb *= 1.0 - 0.45 * smoothstep(0.25, 0.85, dot(d, d) * 2.2);
+          gl_FragColor = vec4(clamp(c.rgb, 0.0, 1.0), c.a); }`,
+    }));
   }
 
   const resize = () => {

@@ -244,6 +244,7 @@ export function install(game) {
     vfx.burst(x, y, z, Math.ceil(n / 2), { tex: 'ember', color: c2, speed: 3.5, size: 0.14, life: 0.6, drag: 2, up: 1 });
     vfx.burst(x, y, z, Math.ceil(n / 4), { tex: 'smoke', color: 0x2a1040, color2: 0x100818, grow: 2, speed: 0.8, size: 0.9, life: 1, alpha: 0.45 });
     HEX_MOTE.speed = 1.6; HEX_MOTE.jitter = 0.4; vfx.burst(x, y, z, Math.ceil(n * 0.8), HEX_MOTE);   // s80: dark motes that curl up and linger
+    vfx.swirl(x, y, z, c1, c2, 0.5 + n * 0.06);   // s84: curse vortex spinning in over the hit
   }
   const HEX_MOTE = { tex: 'wisp', blend: 'alpha', color: 0x1c0a2c, color2: 0x07030c, speed: 1.6, size: 0.45, life: 1.2, drag: 2.5, up: 1.1, spin: 3, alpha: 0.8, jitter: 0.4 };
   const LOOK = {
@@ -262,6 +263,7 @@ export function install(game) {
                 if (Math.random() < 0.6) vfx.burst(x, y, z, 1, { tex: 'shard', color: 0xc8a878, speed: 1.5, size: 0.14, life: 0.4, grav: 10, spin: 9 }); },
               impact: (x, y, z) => { stoneHit(x, y, z, 9); vfx.burst(x, y, z, 6, { tex: 'shard', color: 0xa08860, speed: 4, size: 0.3, life: 0.6, grav: 14, spin: 7, up: 2 }); vfx.burst(x, y, z, 4, { ...DUST, speed: 2.5, size: 1.3, life: 1.1, up: 0.4, alpha: 0.5, grow: 2 });
                 vfx.impact(x, y, z, 0xffc870, 1.2); vfx.core(x, y, z, 0xffb050, 0.3, 0.12);   // session 52: amber crack flash
+                vfx.sigil(x, y, z + 0.5, 0xffc060, 0.8, 0.6);   // s84: amber ward rune over every stone hit
                 const g = nearGround(x, y, z); if (g != null) { vfx.decal('crack', x, y, g, 1.1, 3, 0xffffff, 0.8); vfx.ring(x, y, g, 0xd8b070, 0.2, 1.8, 0.3, 0.75);
                   for (let k = 0; k < 3; k++) { const a = Math.random() * 6.283; vfx.spike(x + Math.cos(a) * 0.5, y + Math.sin(a) * 0.5, g, 0.5 + Math.random() * 0.4, 0.55); } } } },
     dart: { missile: { crystal: 0xb070ff, crystalSize: 1.1, stretch: 3.2, coreColor: 0xf4e0ff, radius: 0.15, halo: 0.8, width: 0.4, width2: 0.14, trailColor2: 0x70ff90, trailLife: 0.28, trailLife2: 0.4 },
