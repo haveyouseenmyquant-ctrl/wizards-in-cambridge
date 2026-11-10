@@ -150,8 +150,9 @@ export function install(game) {
   }
   offs.push(game.on('ready', giveGear));
   offs.push(game.on('levelup', () => { rebuild(); sfx.play('levelup'); }));
-  setClass(game.save.cls && CLASSES[game.save.cls] ? game.save.cls : 'pyromancer');
-  if (!game.save.cls) { delete game.save.cls; game.persist(); }   // still let the HUD offer the class choice
+  const hadCls = !!(game.save.cls && CLASSES[game.save.cls]);
+  setClass(hadCls ? game.save.cls : 'pyromancer');
+  if (!hadCls) { delete game.save.cls; game.persist(); }   // still let the HUD offer the class choice (setClass stored the default)
 
   // ---------- aiming ----------
   const A = { x: 0, y: 0, z: 0, dx: 0, dy: 1, dz: 0, hx: 0, hy: 1 };   // origin + unit direction + horizontal facing
@@ -704,6 +705,7 @@ export function install(game) {
     }
     game.stats.mana -= sp.mana;
     sp.cdTotal = sp.cd * (1 - Math.min(0.6, game.stats.cdr || 0)); sp.readyAt = game.time + sp.cdTotal;
+    if (target === undefined) target = game.autoTarget?.(sp);   // soft lock-on (feel.js)
     aim(target);
     try { KIND[sp.kind](sp, target); } catch (e) { console.warn('[classes] spell', sp.id, e); }
     sfx.play(sp.sfx); thrust = 1;
