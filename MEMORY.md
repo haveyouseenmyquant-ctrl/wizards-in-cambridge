@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 3)
+## State (2026-11-10, after session 4)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PRIVATE). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -15,8 +15,11 @@
 ## KPIs / measure.sh
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
-- Trunk 38af3295 (s3): judged 42.4 (Visuals 38, Animation 23, Combat 54.9, Story 54, UI 43; weights
-  .25/.20/.25/.15/.15), quests 1, playtest 100 (12 runs, scripts/wic_playtest.mjs), fps 60, load 0.65. Judge noise ~±1.
+- Trunk b4c82868 (s4, merged Graphics rigs + EnvVFX golden hour/bloom): judged 45 (Visuals 50, Animation 22,
+  Combat 55.9, Story 52, UI 42), quests 1, playtest 100, fps 60, load 0.48. Judge noise ~±1. Animation stuck ~22:
+  judge still sees blocky static player in recordings (Graphics told to verify frames from wic_record).
+- test_classes.mjs times out on merged trunk under SwiftShader (each branch alone passes; GPU perf fine):
+  QA task c0ca. No `timeout` command on this Mac.
 - scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").
 - skills/wic-rescore = how to score a build by hand (judge ~8 min, playtest ~35 min).
 - Merging: JOURNAL.md conflicts -> keep both sides; site/app/game/index.js MODULES line conflicts -> union.

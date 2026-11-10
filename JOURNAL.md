@@ -51,3 +51,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   fps 60, load 0.65. Other nodes had no new commits.
 - Weakest judge sections: Animation 23, Visuals 38, UI 43. Added node Environment and VFX (Visuals), UI polish task
   for Gameplay, merge-gate task for QA; notes to Graphics (judge still sees blocky player) and Story (close 3711).
+
+## 2026-11-10 — session 4 (lead)
+- Merged Graphics (mob_rig/npc_rig/explore_rig, NPC glbs) and EnvVFX (golden hour, AgX, bloom, class spell VFX) -> b4c82868.
+  feel 17/17, items 45, mobs 12+3, quest_bot 4/4; GPU perf 60 fps / 0.48 s. test_classes times out on merge (SwiftShader) -> QA c0ca.
+- Judge b4c82868: 45 (Visuals 38->50, Animation 22 unchanged: player still reads as blocky/static) -> note to Graphics.
