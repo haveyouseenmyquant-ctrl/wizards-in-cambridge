@@ -26,5 +26,54 @@
   "errors": 0,
   "first_errors": [],
   "at": "2026-11-10T13:57:20.646Z"
+ },
+ "judged_game_quality": 49.3,
+ "judged_sections": {
+  "Visuals": 54.0,
+  "Animation": 30.0,
+  "Combat feel": 60.1,
+  "Story presentation": 48.5,
+  "UI polish": 50.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0.0,
+   "Animation": 0.0,
+   "Combat feel": 0.2,
+   "Story presentation": 3.0,
+   "UI polish": 0.0
+  },
+  "quality_spread": 0.5,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The art direction is consistent and the frames show recognisable city landmarks: a Gothic church, Georgian terraces, market stalls, bikes and railings. Lighting is warm, low-sun with real-time shadows, some atmospheric haze and bloom. The facades are mostly flat, with repeated window textures and a few blocky placeholder-like props (the dark box shop fronts and the plain first-person wall in frame 1). The wizard character is small and chunky with little detail, and in combat the VFX are washed-out, translucent blobs that bury the action, so the build stays below the 60 anchor."
+   },
+   "Animation": {
+    "all": "The player model's pose barely changes across the frames: the walking shots show the same upright stance from behind, and no limb movement or cast poses can be made out. Combat is shown almost entirely through projectiles, beams, impact flashes and 'Staggered'/'Interrupted' text, with no visible wind-ups, hit-reaction poses or death animations. Enemies look like simple ghost-like or rigid shapes, and there is no visible environmental motion such as crowds or foliage. The sheet also has fewer combat frames than described: it shows two frames each for four classes rather than a full 60 s hexweaver fight, so only two of them are hexweaver."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show solid hit feedback: damage numbers, crits, a chain counter, Staggered/Interrupted labels, a boss bar with Phase II and Vanquished banners, rarity-tagged loot labels, a red-and-green ground circle on the player and 76 casts across six spells. Only one class is shown, so I can't credit classes playing differently. Effects often blur together (big translucent blobs, overlapping popups, VFX hiding the enemies), there's no clear hit-stop or screen feedback, the enemy windups shown aren't readable as telegraphs, and the player took almost no pressure (3 hits, 20 damage), so the fight looks shallow.",
+    "pyromancer": "The frames show most of the 60-anchor features. There are damage numbers including crits, a chain counter, Staggered and Interrupted status labels, and a boss with a segmented health bar and two phase changes. The boss telegraphs attacks with a large green ground area, and loot appears as colored beams with rarity-tagged cards (common up to legendary). The biggest gaps: the spell effects are large translucent blobs and pillars that block the view and lack clear shapes, there is no visible hit-stop or knockback, and three of the twelve frames (6-8) show no enemies at all. Only the pyromancer appears, and 65 of its 94 casts were the basic ember bolt, so there is no evidence of different class playstyles or build depth.",
+    "stormcaller": "Combat has a lot of feedback: floating damage numbers, crit labels, Staggered/Interrupted callouts, a chain counter, a three-phase named boss with a 'Phase II' banner, and loot beams and tooltips colour-coded by rarity. The event log backs this up with 72 casts across 6 spells, 32 kills and heavy sound use. Readability is badly hurt, though: in frames 3, 4 and 6 huge flat white shapes cover enemies and much of the screen, and only one class is shown. Nearly half the clip (frames 5, 7 and 9-12) has no enemies near the player, so combat doesn't feel sustained or punchy.",
+    "warden": "Combat clearly works, with a lot of feedback. The frames show several distinct earth spells (stone spikes, shards, a light pillar), damage numbers including big crits, chain counters, Staggered and Interrupted status text, a three-phase boss with Phase II and enrage banners, and loot toasts with rarity colours. The weaknesses are readability and weight: the player is a translucent bubble that hides the action, frames are cluttered with overlapping UI text, enemy wind-ups are mostly not visible, and there is no clear sign of hit-stop or knockback. The player took only 24 damage, so the enemies posed little threat, and pebble_shot was 66 of the 91 casts."
+   },
+   "Story presentation": {
+    "all": "The writing is original and well toned, set in a real place (Market Hill, Great St Mary's). The presentation includes a prologue title card, named dialogue boxes with small portrait icons, a quest tracker with distance, a world waypoint marker and a quest-complete card with rewards. But there is no staging: speakers are mostly off-frame or tiny. Market stalls block the camera in several frames, so the Bellwarden boss reveal shows only a wall. 'Loading...' overlays and a quest tracker stuck on 'Speak to Nell Tapscott' (still showing at quest complete) undercut it, and there are no branching choices, cinematic framing or character animation."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent serif/dark-panel theme: health and mana bars, numbered spell bar with cooldown numbers and icons, a styled minimap, quest tracker, boss bar, and item cards with rarity labels, so the HUD reads as designed rather than default. The big problems are layering and clutter. A 'Quest Complete / The Thirteenth Chime' banner and an NPC dialogue box sit over the inventory and talent screens, making them hard to read. During combat, loot toasts, item cards, quest text, damage numbers and the banner pile up over the scene. The inventory is a plain text list with empty slots, and the talent screen is mostly hidden under these overlays."
+   }
+  }
  }
 }
