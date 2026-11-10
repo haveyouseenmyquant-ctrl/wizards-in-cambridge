@@ -57,6 +57,9 @@ const CSS = `
 body.q-cine #status,body.q-cine .gh-loot{visibility:hidden}
 #wic-q .q-dlg.mini .q-role,#wic-q .q-dlg.mini .q-next{display:none}
 @keyframes qPulse{from{opacity:.35}to{opacity:1}}
+#wic-q .q-fade{position:fixed;inset:0;background:#05070a;pointer-events:none;z-index:31;opacity:0;display:flex;align-items:center;justify-content:center;font:italic 22px/1.4 Georgia,serif;color:#e6d6b0;text-shadow:0 2px 10px #000}
+#wic-q .q-fade.on{animation:qFade 3.2s ease-in-out forwards}
+@keyframes qFade{0%{opacity:0}15%{opacity:1}65%{opacity:1}100%{opacity:0}}
 #wic-q .q-card{position:fixed;left:50%;top:26%;transform:translateX(-50%);text-align:center;color:#fff3d6;pointer-events:none;transition:opacity .8s;z-index:32;text-shadow:0 2px 12px #000,0 0 30px rgba(0,0,0,.8)}
 #wic-q .q-card small{display:block;font:700 13px/1 system-ui,sans-serif;letter-spacing:.4em;color:#d9b45a;text-transform:uppercase;margin-bottom:12px}
 #wic-q .q-card b{display:block;font:400 44px/1.1 Georgia,serif;letter-spacing:.04em}
@@ -93,6 +96,7 @@ export async function install(game) {
   const track = el('div', 'q-track', root); track.hidden = true;
   const dlg = el('div', 'q-dlg', root); dlg.hidden = true;
   const card = el('div', 'q-card', root); card.style.opacity = 0;
+  const fade = el('div', 'q-fade', root);
   const prompt = el('div', 'q-prompt', root); prompt.hidden = true;
   const offs = [];
   const listen = (t, ev, fn) => { t.addEventListener(ev, fn); offs.push(() => t.removeEventListener(ev, fn)); };
@@ -165,10 +169,17 @@ export async function install(game) {
   function completeStep() {
     const s = cur(); st.phase = 'outro'; shard.visible = false; sfx.play?.('pickup');
     say(s.type === 'talk' ? [] : (s.dialogue || []), () => {
+      if (s.travel) travel(s.travel);
       st.step++; save[st.q.id].step = st.step; game.persist();
       if (st.step >= st.q.steps.length) return finish();
       enterStep();
     });
+  }
+  function travel(t) {
+    fade.textContent = t.caption || ''; fade.classList.remove('on'); void fade.offsetWidth; fade.classList.add('on');
+    const sp = sys()?.findSpot?.(t.x, t.y, 3);
+    P.teleport(sp ? sp.x : t.x, sp ? sp.y : t.y, sp ? sp.z : t.z, t.look || null);
+    game.invulnUntil = Math.max(game.invulnUntil || 0, game.time + 4);
   }
   function finish() {
     const q = st.q, r = q.rewards || {};

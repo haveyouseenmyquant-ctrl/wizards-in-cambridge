@@ -12,7 +12,7 @@ const CENTRE = { x: -105, y: 60 }, DENSE_R = 260, HELP_R = 18, PATROL_SPAWN_R = 
 // and clearing one calls a reinforcement wave (WAVE_N mobs of the pack's kinds) that arrives from a side street a few
 // seconds later and charges in; bosses ring for adds (BOSS_ADDS) on each phase change and every ADD_EVERY_S in combat.
 const CORE_R = 110, CORE_RESPAWN_S = 25, WAVE_DELAY_S = 4, WAVE_N = 3, WAVE_PLAYER_R = 45, ADD_EVERY_S = 13, ADD_MAX = 3, WAVE_GAP_S = 60;   // at most one reinforcement wave a minute, so a fight can end
-const BOSS_ADDS = { bellwarden: ['bell_bats', 'gargoyle'], chimekeeper: ['bell_bats', 'wisp'], gatehouse_lion: ['gargoyle', 'ink_imp'] };
+const BOSS_ADDS = { bellwarden: ['bell_bats', 'gargoyle'], chimekeeper: ['bell_bats', 'wisp'], gatehouse_lion: ['gargoyle', 'ink_imp'], quant_king: ['river_wraith', 'punt_revenant'] };
 // runtime-only street packs filling the long gaps on the Market Square -> Peas Hill -> King's Parade walk
 const EXTRA_ENCOUNTERS = [
   { id: 'rt-market-passage', name: 'Market Passage', x: -110, y: 14, r: 6, mobs: ['ink_imp', 'soot_sprite', 'gargoyle', 'ink_imp'], runtime: true },
@@ -126,6 +126,9 @@ const BASE = {
   ember: glow(0xffa040, 0xff5010, 2.2),
   shroud: std({ color: 0x2f6e72, emissive: 0x0f3c44, emissiveIntensity: 0.8, roughness: 0.4, transparent: true, opacity: 0.7, depthWrite: false, side: THREE.DoubleSide }),
   smoke: std({ color: 0x55524d, roughness: 1, transparent: true, opacity: 0.55, depthWrite: false }),
+  wetwood: std({ color: 0x47382a, roughness: 0.45, bumpMap: TEX.grain, bumpScale: 1.8, envMap: TEX.env, envMapIntensity: 0.35 }),   // river-soaked punt poles
+  weed: std({ color: 0x3f6230, roughness: 0.55, bumpMap: TEX.grain, bumpScale: 1.5 }),
+  drown: glow(0xa8fff2, 0x40d0c0, 2.4),   // drowned-teal eyes / heart
 };
 // session 48: fresnel rim light (emissive, type-coloured) injected into the standard shader; one shared program
 const hash01 = (str) => { let h = 2166136261; for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 16777619); return ((h >>> 0) % 10007) / 10007; };
@@ -897,6 +900,69 @@ const MODELS = {
     p.tail = pivot(p.torso, 0, 0.4, -1.5); add(p.tail, K.tail, hide);
     return { group: g, parts: p };
   },
+  quant_king(m) {   // boss: a giant drowned ferryman built of every punt-pole ('quant') lost in the Cam — a rope-bound cage of wet poles,
+                    // weed-hung, a battered boater pierced by a crown of pole-tips, teal drowned eyes, an iron ferry bell at the chest
+    const K = kit('quant_king', () => {
+      const weed = (x, y, z, L, s = 0) => tube([[x, y, z], [x + 0.06 * Math.sin(s), y - L * 0.35, z + 0.05], [x - 0.05, y - L * 0.7, z + 0.04 * Math.cos(s)], [x + 0.03, y - L, z]], 0.055, 0.008, 8, 4);
+      // ribcage: 4 quadrants of 4 bowed poles (separate meshes so they can splay apart on death); some poles overshoot the shoulders
+      const quad = (q) => merge([-0.6, -0.3, 0, 0.3, 0.6].map((d, k) => {
+        const a = q * PI / 2 + PI / 4 + d * PI / 4, s = Math.sin(a), c = Math.cos(a), top = 1.6 + ((q * 4 + k) * 7 % 5) * 0.12 + (k % 2 ? 0.35 : 0);
+        const P = (r, y) => [s * r, y, c * r * 0.8];
+        return [tube([P(0.26, -0.15), P(0.56, 0.45), P(0.62, 0.85), P(0.46, 1.4), P(0.4 + (top - 1.6) * 0.3, top)], 0.085, 0.07, 10, 6), cone(0.07, 0.18, P(0.4 + (top - 1.6) * 0.3, top + 0.07), [0, 0, 0], 5)];
+      }));
+      const crownPoles = Array.from({ length: 9 }, (_, i) => { const a = i / 9 * TAU, h = 0.55 + ((i * 5) % 4) * 0.12, r = 0.36, x = Math.sin(a) * r, z = Math.cos(a) * r;
+        return [cyl(0.045, 0.05, h, [x * 1.1, 0.3 + h / 2, z * 1.1], [z * 0.25, 0, -x * 0.25], 6), cone(0.045, 0.14, [x * (1.1 + 0.25 * (0.3 + h)), 0.37 + h, z * (1.1 + 0.25 * (0.3 + h))], [z * 0.25, 0, -x * 0.25], 6)]; });
+      const legPoles = [[-0.06, 0.04], [0.07, 0.05], [0, -0.07]].map(([dx, dz]) => tube([[dx, 0.1, dz], [dx * 1.4, -0.75, dz + 0.1], [dx * 1.8, -1.48, dz]], 0.085, 0.07, 6, 6));
+      return {
+        ribs: [0, 1, 2, 3].map(quad),
+        bands: merge(tor(0.3, 0.05, [0, -0.05, 0], [PI / 2, 0, 0], 5, 20), xf(tor(0.62, 0.05, [0, 0, 0], [PI / 2, 0, 0], 5, 28), [0, 0.8, 0], [0, 0, 0], [1, 1, 0.8]),
+          xf(tor(0.46, 0.05, [0, 0, 0], [PI / 2, 0, 0], 5, 24), [0, 1.42, 0], [0, 0, 0], [1, 1, 0.8])),
+        bodyWeed: merge([0, 1, 2, 3, 4, 5, 6].map(i => { const a = i / 7 * TAU + 0.3; return weed(Math.sin(a) * 0.62, 0.8, Math.cos(a) * 0.5, 0.6 + (i % 3) * 0.25, i); })),
+        core: merge(lumpy(sph(0.46, [0, 0.8, -0.05], [1, 1.55, 0.8], 14, 10), 0.08, 4)),
+        heart: sph(0.2, [0, 0, 0], [1, 1.2, 0.8], 12, 8),
+        yoke: merge(cyl(0.08, 0.08, 1.9, [0, 1.45, 0], [0, 0, PI / 2], 7), cone(0.07, 0.16, [1.02, 1.45, 0], [0, 0, -PI / 2], 6), cone(0.07, 0.16, [-1.02, 1.45, 0], [0, 0, PI / 2], 6)),
+        leg: merge(legPoles, tor(0.13, 0.04, [0, -0.3, 0.03], [PI / 2, 0, 0], 4, 14), tor(0.15, 0.04, [0, -1.15, 0.05], [PI / 2, 0, 0], 4, 14),
+          [-0.12, 0, 0.12].map(x => cyl(0.05, 0.035, 0.5, [x * 1.3, -1.48, 0.18], [PI / 2 - 0.1, x * 1.5, 0], 6))),
+        arm: merge(tube([[0, 0, 0], [0.06, -0.75, 0.08], [0.02, -1.5, 0.3]], 0.1, 0.075, 8, 6), tube([[0.09, 0.02, -0.05], [0.15, -0.75, 0.0], [0.08, -1.45, 0.24]], 0.07, 0.06, 8, 5), sph(0.16, [0, 0, 0], 1, 8, 6),
+          [-0.05, 0, 0.05, 0.09].map((d, i) => tube([[d, -1.5, 0.3], [d * 2, -1.72, 0.38], [d * 2.2, -1.9 + (i % 2) * 0.06, 0.3]], 0.035, 0.015, 4, 4))),
+        armRope: merge(tor(0.13, 0.04, [0.04, -0.75, 0.06], [PI / 2, 0, 0], 4, 12), tor(0.1, 0.035, [0.04, -1.3, 0.24], [PI / 2 - 0.3, 0, 0], 4, 12)),
+        armWeed: merge(weed(0.1, -0.5, 0.05, 0.9, 1), weed(-0.04, -0.8, 0.12, 1.1, 2), weed(0.08, -1.2, 0.25, 0.8, 3)),
+        face: merge(lumpy([sph(0.26, [0, 0, 0], [0.8, 1.15, 0.9], 12, 9), sph(0.15, [0, -0.25, 0.08], [0.9, 0.8, 0.9], 10, 6)], 0.03, 7)),
+        eyes: merge(sph(0.06, [0.09, 0.03, 0.2], [1.2, 0.7, 0.8], 8, 6), sph(0.06, [-0.09, 0.03, 0.2], [1.2, 0.7, 0.8], 8, 6)),
+        beard: merge([-0.12, -0.06, 0, 0.06, 0.12].map((x, i) => weed(x, -0.3, 0.12, 0.5 + (i % 2) * 0.3, i))),
+        boater: merge(drape(lathe([[0, 0.24], [0.82, 0.22], [0.84, 0.25], [0.45, 0.29], [0.42, 0.56], [0.38, 0.6], [0, 0.6]], 24), 5, 0.08, y => y < 0.3 ? 1 : 0.2)),
+        band: cyl(0.435, 0.425, 0.1, [0, 0.36, 0], [0, 0, 0], 24, true),
+        crown: merge(crownPoles),
+        bellRope: tube([[-0.25, 0.25, -0.2], [-0.12, 0.12, 0.05], [0, 0, 0], [0.12, 0.12, 0.05], [0.25, 0.25, -0.2]], 0.03, 0.03, 8, 4),
+        bell: merge(bellGeo(0.32, 0.48, 18), sph(0.08, [0, -0.46, 0], 1, 8, 6)),
+        pole: merge(cyl(0.09, 0.09, 5.6, [0, 1.4, 0], [0, 0, 0], 8), cone(0.09, 0.3, [0, 4.35, 0], [0, 0, 0], 8)),
+        shoe: merge(cyl(0.11, 0.05, 0.45, [0, -1.5, 0], [0, 0, 0], 8), tor(0.11, 0.03, [0, -1.25, 0], [PI / 2, 0, 0], 4, 12)),
+        poleWeed: merge(weed(0.08, 3.4, 0, 1.2, 1), weed(-0.08, 3.1, 0.05, 0.9, 2), weed(0, 2.4, -0.08, 0.7, 3)),
+      };
+    });
+    const g = new THREE.Group(), p = {}, wood = m('wetwood'), weed = m('weed'), rope = m('rope'), iron = m('iron');
+    p.weed = weed;
+    p.body = pivot(g, 0, 0, 0);
+    for (const s of [-1, 1]) { const l = p[s < 0 ? 'legL' : 'legR'] = pivot(p.body, s * 0.34, 1.5, 0); add(l, K.leg, wood, 0, 0, 0, s < 0); }
+    p.torso = pivot(p.body, 0, 1.5, 0);
+    p.ribs = K.ribs.map((geo, q) => { const r = pivot(p.torso, 0, 0, 0); r.userData.a = q * PI / 2 + PI / 4; add(r, geo, wood); return r; });
+    add(p.torso, K.bands, rope); add(p.torso, K.bodyWeed, weed); add(p.torso, K.yoke, wood);
+    const mat = m('weed'); mat.color.multiplyScalar(0.55); add(p.torso, K.core, mat);
+    p.heart = add(p.torso, K.heart, m('drown'), 0, 1.12, 0.32);
+    p.bell = pivot(p.torso, 0, 0.92, 0.7); add(p.bell, K.bellRope, rope); p.bellMesh = add(p.bell, K.bell, iron);
+    p.head = pivot(p.torso, 0, 1.75, 0.3);
+    add(p.head, K.face, m('soot')); p.eye = add(p.head, K.eyes, m('drown')); add(p.head, K.beard, weed);
+    p.hat = pivot(p.head, 0, 0.02, -0.02); p.hat.rotation.z = 0.12; p.hat.rotation.x = -0.08;
+    const straw = m('straw'); straw.color.multiplyScalar(0.72);
+    add(p.hat, K.boater, straw); add(p.hat, K.band, m('heraldRed')); add(p.hat, K.crown, wood);
+    for (const s of [-1, 1]) {
+      const a = p[s < 0 ? 'armL' : 'armR'] = pivot(p.torso, s * 0.92, 1.45, 0);
+      add(a, K.arm, wood, 0, 0, 0, s < 0); add(a, K.armRope, rope, 0, 0, 0, s < 0); add(a, K.armWeed, weed, 0, 0, 0, s < 0);
+    }
+    p.pole = pivot(p.armR, 0.04, -1.55, 0.32);
+    add(p.pole, K.pole, wood); add(p.pole, K.shoe, iron); add(p.pole, K.poleWeed, weed);
+    return { group: g, parts: p };
+  },
 };
 
 // ---------- attack definitions
@@ -999,6 +1065,19 @@ export const MOB_TYPES = [
                 A({ id: 'rush', name: 'Gilded Rush', kind: 'charge', range: 16, minRange: 3, len: 16, w: 2.6, windup: 0.9, cd: 5, dmg: 28, speed: 20 }),
                 A({ id: 'gilt', name: 'Shower of Gilt', kind: 'nova', range: 16, n: 14, windup: 1.0, cd: 6, dmg: 11, speed: 13, color: 0xffd040 }),
                 A({ id: 'portcullis', name: 'Portcullis Fall', kind: 'cascade', range: 20, n: 6, r: 2.2, windup: 1.2, cd: 7, dmg: 20 })] }),
+  D({ id: 'quant_king', death: 'crumble', scale: 1.2, name: 'The Quant-King of Magdalene Bridge', boss: true, hp: 1050, speed: 3.0, radius: 1.5, xp: 470, aggro: 17, leash: 34,
+      color: 0x40d0c0, knockResist: 1, deathDur: 2.2, deathColor: 0x2a6a80,
+      loot: [{ rarity: 'rare', chance: 1 }, { rarity: 'rare', chance: 0.6 }, { rarity: 'epic', chance: 0.5 }, { rarity: 'legendary', chance: 0.18 }],
+      phases: [   // I: the ferryman poles (sweep, vault, undertow); II: the flood rises (eyes, heart, bell and weed blaze teal; weir rush, silt, falling poles)
+        { at: 1.0, attacks: ['sweep', 'vault', 'undertow'] },
+        { at: 0.5, attacks: ['sweep', 'rush', 'silt', 'poles'], speed: 1.35, windup: 0.8, cd: 0.7, enrage: true },
+      ],
+      attacks: [A({ id: 'sweep', name: 'Quant Sweep', kind: 'line', range: 5, len: 6.5, w: 3.6, windup: 0.9, cd: 2.6, dmg: 20 }),
+                A({ id: 'vault', name: 'Pole Vault Crash', kind: 'leap', range: 15, minRange: 5, r: 3.6, windup: 1.2, cd: 6.5, dmg: 26, recover: 1 }),
+                A({ id: 'undertow', name: 'Undertow Ring', kind: 'ring', range: 6, r: 6.5, windup: 1.3, cd: 6, dmg: 17, recover: 0.8 }),
+                A({ id: 'rush', name: 'Weir Rush', kind: 'charge', range: 16, minRange: 3, len: 16, w: 2.6, windup: 0.9, cd: 5, dmg: 27, speed: 19 }),
+                A({ id: 'silt', name: 'Spray of Silt', kind: 'nova', range: 16, n: 14, windup: 1.0, cd: 6, dmg: 11, speed: 12, color: 0x40d0c0 }),
+                A({ id: 'poles', name: 'Falling Poles', kind: 'cascade', range: 20, n: 6, r: 2.2, windup: 1.2, cd: 7, dmg: 20 })] }),
 ];
 const TYPE = Object.fromEntries(MOB_TYPES.map(t => [t.id, t]));
 
@@ -2070,6 +2149,38 @@ class MobSystem {
         P.eye.material.emissive.setHex(gilt ? 0xff3000 : 0xff8a00);
         break;
       }
+      case 'quant_king': {
+        const flood = mob.phase > 0, k = mob.attack?.kind, hitK = mob.hr, step = moving ? Math.sin(t * mob.type.speed * (flood ? 2.6 : 2)) : 0;
+        P.legL.rotation.x = step * 0.4; P.legR.rotation.x = -step * 0.4;
+        P.body.position.y = moving ? Math.abs(step) * 0.1 : 0; P.body.rotation.set(0, 0, 0);
+        P.torso.rotation.set(0.32 - 0.25 * hitK + Math.sin(t * 0.8) * 0.03, 0, Math.sin(t * 0.6) * 0.04 + step * 0.04);   // hunched forward
+        P.head.rotation.set(-0.2 + Math.sin(t * 0.7) * 0.06, Math.sin(t * 0.4) * 0.25, hitK * 0.3);
+        P.armL.rotation.set(-step * 0.25 + Math.sin(t * 1.1) * 0.05, 0, -0.08); P.armR.rotation.set(-0.35 + step * 0.15, 0, 0.1);
+        P.pole.rotation.set(0.3, 0, -0.08);   // planted like a staff, leaning ahead
+        P.bell.rotation.x = Math.sin(t * (flood ? 4 : 1.6)) * (flood ? 0.35 : 0.15) + step * 0.1; P.bell.rotation.z = Math.sin(t * 1.3) * 0.08;
+        for (const r of P.ribs) r.rotation.set(0, 0, 0);
+        if (st === 'windup') {
+          if (k === 'line') { P.torso.rotation.y = 0.9 * wf; P.armR.rotation.set(-0.6 - 0.9 * wf, 0, 0.1 + 1.0 * wf); P.pole.rotation.set(0.3 + 1.0 * wf, 0, 0.4 * wf); }
+          else if (k === 'leap') { P.body.position.y = -0.4 * wf; P.armR.rotation.x = -0.35 - 0.8 * wf; P.armL.rotation.x = -1.6 * wf; P.pole.rotation.x = 0.3 - 0.5 * wf; }
+          else if (k === 'ring') { P.armL.rotation.z = -1.9 * wf; P.armR.rotation.set(-2.0 * wf, 0, 0.3); P.pole.rotation.x = 0.3 + 1.4 * wf; P.bell.rotation.x = Math.sin(t * 22) * 0.5 * wf; }
+          else if (k === 'charge') { P.torso.rotation.x = 0.32 + 0.35 * wf; P.armR.rotation.x = -0.35 - 1.0 * wf; P.pole.rotation.x = 0.3 + 1.25 * wf; P.body.position.y = -0.2 * wf; }
+          else if (k === 'nova') { P.torso.rotation.y = wf * TAU; P.armL.rotation.z = -1.4 * wf; P.armR.rotation.z = 1.4 * wf; P.torso.rotation.x = 0.32 - 0.3 * wf; }
+          else if (k === 'cascade') { P.torso.rotation.x = 0.32 - 0.5 * wf; P.armL.rotation.x = -2.6 * wf; P.armR.rotation.x = -0.35 - 2.2 * wf; P.head.rotation.x = -0.6 * wf; }
+        } else if (st === 'active') {
+          P.torso.rotation.x = 0.6; P.armR.rotation.x = -1.4; P.pole.rotation.x = 1.5;
+          if (k === 'leap') { P.legL.rotation.x = -0.7; P.legR.rotation.x = 0.5; P.armL.rotation.x = -2.2; }
+        } else if (st === 'recover') { if (k === 'line') { P.torso.rotation.y = -0.5; P.armR.rotation.z = -0.4; } }
+        if (st === 'stagger') { P.torso.rotation.x = -0.25; P.head.rotation.z = Math.sin(t * 25) * 0.15; for (const r of P.ribs) { const a = r.userData.a, j = Math.sin(t * 30 + a) * 0.05; r.rotation.set(j * Math.cos(a), 0, -j * Math.sin(a)); } }
+        if (st !== 'windup' && mob.flashT <= 0) {   // phase II: the flood rises — eyes, heart, bell and weed blaze drowned-teal
+          const pulse = 0.5 + 0.5 * Math.sin(t * (flood ? 7 : 2));
+          P.eye.material.emissiveIntensity = flood ? 4 + 1.5 * pulse : 2.2 + 0.3 * pulse;
+          P.heart.material.emissiveIntensity = flood ? 3 + 1.5 * pulse : 0.9 + 0.4 * pulse;
+          P.weed.emissive.setHex(0x40d0c0); P.weed.emissiveIntensity = flood ? 0.45 + 0.35 * pulse : 0.04;
+          P.bellMesh.material.emissive.setHex(0x40d0c0); P.bellMesh.material.emissiveIntensity = flood ? 0.5 + 0.4 * pulse : 0;
+        }
+        P.heart.scale.setScalar(flood ? 1.1 + 0.1 * Math.sin(t * 7) : 1);
+        break;
+      }
     }
   }
 
@@ -2120,6 +2231,14 @@ class MobSystem {
       P.torso.rotation.x = -0.6 * up * (1 - down); P.jaw.rotation.x = 0.9;
       P.body.rotation.z = down * 1.45; P.body.position.y = down * 0.6;
       for (const l of P.legs) l.rotation.x = 0.4 * down; P.tail.rotation.x = -0.2 * down;
+    } else if (mob.type.id === 'quant_king') {   // staggers, topples backwards into the river, the pole-cage splays apart and sinks
+      const up = Math.min(1, f * 2.5), down = Math.max(0, (f - 0.3) / 0.7);
+      P.torso.rotation.x = 0.32 - 0.6 * up; P.head.rotation.x = -0.5 * up;
+      P.body.rotation.x = -down * down * 1.4; P.body.position.y = -down * 0.9;
+      P.armL.rotation.set(-2.2 * up, 0, -0.6 * down); P.armR.rotation.set(-1.2 * up, 0, 0.9 * down); P.pole.rotation.set(0.3 + 1.2 * down, 0, 0.6 * down);
+      for (const r of P.ribs) { const a = r.userData.a, s = 0.75 * down; r.rotation.set(s * Math.cos(a), 0, -s * Math.sin(a)); }
+      P.hat.position.y = 0.02 + 0.8 * up; P.hat.rotation.set(-0.08 - 1.4 * down, 0, 0.12 + 0.8 * up);
+      P.legL.rotation.x = 0.5 * down; P.legR.rotation.x = 0.2 * down;
     }
   }
 

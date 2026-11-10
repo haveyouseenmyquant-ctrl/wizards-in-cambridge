@@ -5,14 +5,23 @@
   "title": "The Ferry Bell",
   "summary": "The water under King's Parade came from somewhere. Up Bridge Street the Round Church stands in a ring of river-mist, and under Magdalene Bridge an old bell has gone quiet.",
   "npcs": {
-    "wat": { "name": "Wat Gedney", "role": "Ferryman of the old hythe", "x": -248, "y": 560, "face": 230,
+    "wat": { "name": "Wat Gedney", "role": "Ferryman of the old hythe", "x": -244, "y": 555.5, "face": 230,
              "robe": "#2f4f6a", "trim": "#e6d7a2", "skin": "#b9c7c2", "hair": "#3a3328", "hat": "boater" },
+    "gadd": { "name": "Old Mother Gadd", "role": "Chip van, Peas Hill", "x": -121.9, "y": -26.5, "face": 270,
+              "robe": "#7a4b5c", "trim": "#e8d9a0", "skin": "#e2b796", "hair": "#cfcac4", "hat": "scarf" },
     "narrator": { "name": "", "role": "" }
   },
   "intro": [
     { "who": "narrator", "line": "North of the Market, past Sidney Street, a cold mist is rolling uphill from the river. It does not thin as it climbs. It gathers, in a perfect ring, around the Round Church." }
   ],
   "steps": [
+    { "id": "lift", "type": "talk", "npc": "gadd",
+      "text": "Ask Old Mother Gadd for a lift up Bridge Street",
+      "dialogue": [
+        { "who": "gadd", "line": "Bridge Street, is it? In this mist? You'll walk into the river before you find the church. Hop in the van, love." },
+        { "who": "gadd", "line": "Mind the fryer. And if anything wet tries to get in, hit it." }
+      ],
+      "travel": { "x": -128, "y": 390, "z": 8.98, "look": [-125, 410], "caption": "The chip van rattles north past the Market, up Sidney Street, into the mist." } },
     { "id": "round_church", "type": "reach", "place": { "x": -125, "y": 400, "r": 4, "name": "The Round Church, Bridge Street" },
       "text": "Follow the mist up Bridge Street to the Round Church",
       "dialogue": [
@@ -38,7 +47,7 @@
       "dialogue": [
         { "who": "narrator", "line": "Black iron, river-cold, stamped with a little boat. It still smells of the weir." }
       ] },
-    { "id": "stay_two", "type": "collect", "item": "Ferry bell-stay", "place": { "x": -230, "y": 505, "r": 1.6, "name": "Bridge Street, towards the river" },
+    { "id": "stay_two", "type": "collect", "item": "Ferry bell-stay", "place": { "x": -230, "y": 499, "r": 1.6, "name": "Bridge Street, towards the river" },
       "text": "Pick up the second bell-stay nearer the river",
       "dialogue": [
         { "who": "narrator", "line": "The second stay. From under Magdalene Bridge somebody is whistling, badly, a tune that might once have been a hymn." }
@@ -80,7 +89,7 @@
         { "who": "wat", "line": "When you want the Backs, come and find me. Under the old bell, that's where the drowned go." }
       ] }
   ],
-  "checkpoint": { "x": -230, "y": 505, "name": "Bridge Street", "look": [-290, 570] },
+  "checkpoint": { "x": -230, "y": 499, "name": "Bridge Street", "look": [-290, 570] },
   "rewards": { "xp": 700, "items": [ "quest_ferrymans_coin" ], "title": "Friend of the Hythe" },
   "next": "Find Wat Gedney when you are ready for the Backs (coming soon)"
 }

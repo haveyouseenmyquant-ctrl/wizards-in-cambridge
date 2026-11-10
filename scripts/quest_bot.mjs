@@ -52,7 +52,7 @@ function installBot(softS = 0) {
   ev.killLog = []; ev.boss = {}; g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; if (e.mob?.type?.id === 'bellwarden' && ev.boss.first != null) ev.boss.ttk = +(g.time - bot.t0 - ev.boss.first).toFixed(1); ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => ev.deaths++),
     g.on('questStep', e => ev.steps.push(`${e.quest}:${e.step}@${(g.time - bot.t0).toFixed(0)}`)),
     g.on('levelup', () => { for (let t = 0; t < 3; t++) if (C.picks[t] == null && g.stats.level >= C.talentLevels[t]) C.pickTalent(t, t % 2); })];
-  function plan(sx, sy, sz, tx, ty, tol) {   // A* on a 1 m grid; walkable = world.standAt from the neighbour's feet height
+  function plan(sx, sy, sz, tx, ty, tol, fine = true) {   // A* on a 1 m grid; walkable = world.standAt from the neighbour's feet height
     const pad = 30, x0 = Math.floor(Math.min(sx, tx) - pad), y0 = Math.floor(Math.min(sy, ty) - pad);
     const nx = Math.ceil(Math.max(sx, tx) + pad) - x0, ny = Math.ceil(Math.max(sy, ty) + pad) - y0, N = nx * ny;
     const zf = new Float32Array(N).fill(NaN), gs = new Float32Array(N).fill(Infinity), from = new Int32Array(N).fill(-1), closed = new Uint8Array(N);
@@ -73,7 +73,8 @@ function installBot(softS = 0) {
         const z = W.standAt(wx + a, wy + b, zf[i]); if (z == null) continue;
         if (i !== s) {
           if (a && b && (W.standAt(wx + a, wy, zf[i]) == null || W.standAt(wx, wy + b, zf[i]) == null)) continue;
-          if (W.standAt(wx + a / 2, wy + b / 2, zf[i]) == null) continue;
+          // thin fences and railings: sample the step at quarter points, not only the middle
+          if (W.standAt(wx + a / 2, wy + b / 2, zf[i]) == null || fine && W.standAt(wx + a / 4, wy + b / 4, zf[i]) == null || W.standAt(wx + a * 0.75, wy + b * 0.75, zf[i]) == null) continue;
         }
         const ng = gs[i] + (a && b ? 1.414 : 1); if (ng >= gs[j]) continue;
         gs[j] = ng; from[j] = i; zf[j] = z; push(ng + Math.hypot(tx - qx - x0, ty - qy - y0), j);
@@ -83,12 +84,13 @@ function installBot(softS = 0) {
     return { pts: pts.reverse(), miss: bestD };
   }
   const bot = window.__qbot = { ev, t0: g.time, maxT: 1400, goal: null, path: null, wp: 0, stuckT: 0, lastPos: null, replans: 0, escapeT: 0,
-    fail: null, done: false, why: '', lastDmg: new Map(), dispose() { for (const f of offs) f(); } };
+    fail: null, done: false, why: '', lastDmg: new Map(), ignore: new Set(), dispose() { for (const f of offs) f(); } };
   const key = code => window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code === 'KeyE' ? 'e' : code, bubbles: true }));
-  function setGoal(x, y, tol) { const r = plan(P.x, P.y, P.z, x, y, tol); bot.goal = { x, y, tol, miss: r.miss, best: null }; bot.path = r.pts; bot.wp = 0; }
+  function setGoal(x, y, tol) { const r = plan(P.x, P.y, P.z, x, y, tol, !(bot.replans % 4 >= 2));   // fine fence checks, coarse on alternate retries
+    bot.goal = { x, y, tol, miss: r.miss, best: null }; bot.path = r.pts; bot.wp = 0; }
   function steer(dt) {   // hold W + Shift toward the next waypoint; true once within tol of the goal
     const G = bot.goal; if (Math.hypot(G.x - P.x, G.y - P.y) <= G.tol) { bot.path = null; return true; }
-    if (bot.escapeT > 0) { bot.escapeT -= dt; P.yaw = bot.escapeYaw; P.keys.add('KeyW'); P.keys.add('Space'); if (bot.escapeT <= 0) setGoal(G.x, G.y, G.tol); return false; }
+    if (bot.escapeT > 0) { bot.escapeT -= dt; P.yaw = bot.escapeYaw; P.keys.add('KeyW'); P.keys.add('Space'); if (bot.escapeT <= 0) { const k = G.step, b = G.best; setGoal(G.x, G.y, G.tol); bot.goal.step = k; bot.goal.best = b; } return false; }
     if (!bot.path || !bot.path.length) setGoal(G.x, G.y, G.tol);
     let q = bot.path[bot.wp] || G;
     while (bot.wp < bot.path.length - 1 && Math.hypot(q.x - P.x, q.y - P.y) < 0.9) q = bot.path[++bot.wp];
@@ -99,7 +101,7 @@ function installBot(softS = 0) {
       const moved = bot.lastPos ? Math.hypot(P.x - bot.lastPos.x, P.y - bot.lastPos.y) : 9; bot.lastPos = { x: P.x, y: P.y };
       const dG = Math.hypot(G.x - P.x, G.y - P.y), closer = G.best == null || dG < G.best - 0.5; if (closer) G.best = dG;
       if (moved < 0.5 || !closer) {
-        bot.replans++; P.keys.add('Space'); const best = G.best; setGoal(G.x, G.y, G.tol); bot.goal.best = best;
+        bot.replans++; P.keys.add('Space'); const best = G.best, k = G.step; setGoal(G.x, G.y, G.tol); bot.goal.best = best; bot.goal.step = k;
         if (bot.replans >= 3) { bot.escapeT = 1.5; bot.escapeYaw = Math.random() * 6.283; }
         if (bot.replans > 10) bot.fail = `softlock: no progress toward ${G.x.toFixed(1)},${G.y.toFixed(1)} from ${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)} (${bot.why})`;
       } else bot.replans = 0;
@@ -142,13 +144,15 @@ function installBot(softS = 0) {
     const hostile = m => !['idle', 'patrol', 'return', 'dead'].includes(m.state);
     let tgt = null, bd = Infinity;
     for (const m of g.mobs) {
-      if (m.dead || m.removed) continue;
+      if (m.dead || m.removed || bot.ignore.has(m) && !o.mobs?.includes(m)) continue;
       const d = Math.hypot(m.x - P.x, m.y - P.y), mine = o.mobs?.includes(m);
       if ((mine && d < 60) || (hostile(m) && d < 14)) { if (d < bd) { bd = d; tgt = m; } }
     }
     if (tgt) {
       const L = bot.lastDmg.get(tgt) || { hp: tgt.hp, t: g.time, t0: g.time };
       if (tgt.hp < L.hp) { L.hp = tgt.hp; L.t = g.time; } bot.lastDmg.set(tgt, L);
+      // a passer-by we cannot hurt (a swarm over a roof): walk on, as a player would; objective mobs are never dropped
+      if (!o.mobs?.includes(tgt) && g.time - L.t > 25) { bot.ignore.add(tgt); bot.goal = null; bot.path = null; return; }
       if (g.time - L.t0 > (tgt.boss ? 400 : 150)) { bot.fail = `stuck mob: ${tgt.type.id} not killed in time (${bot.why})`; return; }
       P.yaw = Math.atan2(-(tgt.x - P.x), tgt.y - P.y);
       const cast = castAt(tgt), want = tgt.boss ? 9 : 7;
