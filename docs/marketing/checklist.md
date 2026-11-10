@@ -27,8 +27,8 @@ than 5 s). Tick an item only after you have run its check.
 - [x] Play button appears at least twice and points at the game  check: `test $(grep -c 'class="btn play" href="../"' site/about/index.html) -ge 2`
 - [x] Landing page has no analytics or tracking scripts  check: `! grep -qiE "gtag|googletagmanager|analytics\.js|plausible|umami|matomo|<script" site/about/index.html`
 - [x] Landing page images total under 3 MB  check: `test $(du -sk site/about | cut -f1) -lt 3072`
-- [ ] Game menu links to the landing page  check: `grep -q 'href="about/"' site/index.html`
-- [ ] Landing page is live on GitHub Pages  check: `curl -sf -m 4 "$(cat SITE_URL)about/" | grep -q "Wizards in Cambridge"`
+- [x] Game menu links to the landing page  check: `grep -q 'href="about/"' site/index.html`
+- [x] Landing page is live on GitHub Pages  check: `curl -sf -m 4 "$(cat SITE_URL)about/" | grep -q "Wizards in Cambridge"`
 
 ## Credits and licences
 - [x] Landing page credits OSM (ODbL), EA LiDAR and OS OpenData (OGL v3)  check: `grep -q "OpenStreetMap" site/about/index.html && grep -q "ODbL" site/about/index.html && grep -q "OGL v3" site/about/index.html`
