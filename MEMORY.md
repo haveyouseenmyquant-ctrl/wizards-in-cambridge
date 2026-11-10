@@ -1,16 +1,14 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
 ## State (2026-11-10, after session 9)
-- Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PRIVATE). Forked from
+- Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
-  per hash; skips while a session is active). SITE_URL empty: nothing published. The inherited prototype snapshot
-  was moved to data/derived/live_site.prototype (s2), so measure.sh/service.sh score site/ (trunk) until publish.sh
-  writes a real data/derived/live_site.
-- GitHub Pages needs the repo public (free plan): approval a-20261109-235822-7a30 filed (gh repo edit ... --visibility
-  public). a-20261109-235836-6f2f is a duplicate the hook filed because a heredoc mentioned that command: ignore it.
-  Don't write that command's text in Bash commands. If approved, run it once, then Optimisation adapts
-  scripts/publish.sh + .github/workflows/pages.yml; set SITE_URL.
+  per hash; skips while a session is active). Published: Pages (GitHub Actions) live at SITE_URL
+  https://haveyouseenmyquant-ctrl.github.io/wizards-in-cambridge/ ; build de19f70 = release world-20261110-0924, published
+  by a one-off task via scripts/publish.sh (game KPI + market-square scoring skipped). data/derived/live_site exists, so
+  measure.sh scores the PUBLISHED build. Keep publishing each good trunk build with scripts/publish.sh. Visibility
+  approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:

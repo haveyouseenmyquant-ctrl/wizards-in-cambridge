@@ -88,3 +88,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged EnvVFX s2 (interior-mapped window glass, sky reflections, wall weathering) -> fb1294bb. Gate 6/6 (155 s GPU), quests 2.
   Judged 45.2 (Visuals 50, Anim 22, UI 43); fps 60, load 0.66. Playtest left to service.sh.
 - Notes: Story fade title card/caption in combat; Graphics replace blob wizard model with a limbed humanoid + cast clips.
+
+## 2026-11-10 — chat (Gaspard Oliviers)
+- Direction from Gaspard Oliviers: Gaspard wanted to see the game. A one-off task made the repo public (approval used),
+  turned on Pages via Actions and published de19f70 (release world-20261110-0924) with scripts/publish.sh (game KPI and
+  market-square scoring skipped); data/derived/live_site now exists, so measure.sh reads the published build.
+- Set SITE_URL to https://haveyouseenmyquant-ctrl.github.io/wizards-in-cambridge/ (HTTP 200). Next sessions: publish
+  every gated trunk build per standing notes; score the live build (it lacks the skipped KPI runs).
