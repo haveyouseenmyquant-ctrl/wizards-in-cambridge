@@ -129,3 +129,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Reran the failed Pages deploy for 91047adec: it timed out again (4th time, GitHub side; artifact 207 MB, same as good runs).
   Live is still b1d7eff5 content (1665d3ca). Sent the findings to Optimisation (task 9ff3).
 - measure.sh (live): judged 49.5, quests 3, playtest 100, fps 60, load 0.52.
+
+## 2026-11-10 — session 14 (lead)
+- Merged EnvVFX s3 (stall goods and shop-window displays as geometry), rebuilt zone on trunk -> 52065493. Gate 6/6 (154 s).
+  EnvVFX's own score: judged 49.3 (Visuals 54, Anim 30, Combat 60.1, Story 48.5, UI 50).
+- publish.sh: the Pages deploy timed out again; its auto-rerun outlasted my shell limit, so live_site was not swapped and the live site is still b1d7eff5 content. Optimisation 9ff3 told to shrink the artifact.
+- New task Story 69f7 (staging, tracker, Story presentation > 58). Sent judge-reason notes to Gameplay, EnvVFX and Graphics.
+- measure.sh (live): judged 49.5, quests 3, playtest 100, fps 60, load 0.52.
