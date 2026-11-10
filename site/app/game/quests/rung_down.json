@@ -69,9 +69,10 @@
         { "who": "absalom", "line": "The Concord is twelve bells, Warden: one for each hour, from my tower out to the edge of the town. Together they hold the Undertide down." },
         { "who": "player", "line": "And the thirteenth chime?" },
         { "who": "absalom", "line": "That's no bell of ours. Each time Corvin silences one of the twelve, the thirteenth rings a little louder. When it can strike on its own, the river comes up through the streets." },
-        { "who": "absalom", "line": "Take these. Ringer's sallies, my own. And go and see the Sister in Bene't Street. The Saxon bell's been ringing flat, and that bell is older than all of us." }
+        { "who": "absalom", "line": "Take these. Ringer's sallies, my own. Now, King's Parade: every college gate is bolted, and Old Mother Gadd swears there's a great cat on the walls. Find her van on Peas Hill." }
       ] }
   ],
+  "checkpoint": { "x": -128, "y": 52, "name": "Great St Mary's", "look": [-176, 50] },
   "rewards": { "xp": 450, "items": [ "quest_ringers_sally" ], "title": "Keeper of the Quarters" },
-  "next": "See the Sister at St Bene't's tower (coming soon)"
+  "next": "Find Old Mother Gadd's chip van on Peas Hill"
 }

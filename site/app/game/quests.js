@@ -22,6 +22,11 @@ ITEMS.quest_ringers_sally = { name: "Ringer's Sallies", slot: 'ring', rarity: 'r
   fx(c) { let n = 0; c.on('cast', () => { if (++n % 4) return; const s = c.game.stats; s.mana = Math.min(s.maxMana, s.mana + 8); c.S.fx?.burst?.(c.S.pp(1.4), 0xe9c46a, 8, 2, 0.5); }); },
   test(t) { const s = t.game.stats; s.mana = 10; for (let i = 0; i < 4; i++) t.game.emit('cast', {}); return [s.mana >= 18 || s.mana === s.maxMana, `mana ${s.mana}`]; } };
 
+ITEMS.quest_crest_ward = { name: 'Crest-Stone Ward', slot: 'robe', rarity: 'epic', quest: true, stats: { armor: 8, maxHp: 20 },
+  desc: "A shard of the King's gate lion's shield. Every third hit taken raises a 15-point stone shield (6 s cooldown).",
+  fx(c) { let n = 0, ready = 0; c.on('playerHit', () => { if (++n % 3 || c.S.t < ready) return; ready = c.S.t + 6; const g = c.game; g.shield = Math.min(45, (g.shield || 0) + 15); c.S.fx?.burst?.(c.S.pp(1), 0xcfc6b0, 20, 2, 0.6); }); },
+  test(t) { t.game.shield = 0; for (let i = 0; i < 3; i++) t.game.emit('playerHit', { amount: 2 }); return [t.game.shield >= 15, `shield ${t.game.shield}`]; } };
+
 const CSS = `
 #wic-q .q-track{position:absolute;right:16px;top:30vh;width:270px;padding:10px 12px;background:linear-gradient(90deg,rgba(14,12,10,0),rgba(14,12,10,.72) 18%);color:#f3e6c8;font:600 13px/1.35 system-ui,sans-serif;text-align:right;pointer-events:none;text-shadow:0 1px 2px #000}
 #wic-q .q-track .q-ch{font:700 10px/1 system-ui,sans-serif;letter-spacing:.22em;color:#d9b45a;text-transform:uppercase}
@@ -40,6 +45,11 @@ const CSS = `
 #wic-q .q-dlg .q-line{font:400 18px/1.4 Georgia,serif}
 #wic-q .q-dlg.narr .q-line{font-style:italic;color:#e6dcc4;text-align:center;width:100%}
 #wic-q .q-dlg .q-next{position:absolute;right:12px;bottom:8px;font:600 11px/1 system-ui,sans-serif;color:#b9a77f;animation:qPulse 1s infinite alternate}
+#wic-q .q-dlg.mini{left:auto;right:16px;top:calc(30vh + 92px);bottom:auto;transform:none;width:min(300px,46vw);min-height:0;padding:7px 10px;gap:8px;pointer-events:none;opacity:.9;box-shadow:none}
+#wic-q .q-dlg.mini svg{width:36px;height:36px}
+#wic-q .q-dlg.mini .q-line{font-size:13px;line-height:1.3}
+#wic-q .q-dlg.mini .q-who{font-size:10px;margin-bottom:3px}
+#wic-q .q-dlg.mini .q-role,#wic-q .q-dlg.mini .q-next{display:none}
 @keyframes qPulse{from{opacity:.35}to{opacity:1}}
 #wic-q .q-card{position:fixed;left:50%;top:26%;transform:translateX(-50%);text-align:center;color:#fff3d6;pointer-events:none;transition:opacity .8s;z-index:32;text-shadow:0 2px 12px #000,0 0 30px rgba(0,0,0,.8)}
 #wic-q .q-card small{display:block;font:700 13px/1 system-ui,sans-serif;letter-spacing:.4em;color:#d9b45a;text-transform:uppercase;margin-bottom:12px}
@@ -128,7 +138,7 @@ export async function install(game) {
   function begin(id, fresh) {
     const q = quests[id]; st.q = q; save[id] ||= { step: 0 }; st.step = save[id].step; game.persist();
     placeNpcs(q);
-    if (fresh && st.step === 0) { showCard(q.chapter, q.title, q.summary, 5); say(q.intro || [], () => enterStep()); }
+    if (fresh && st.step === 0) { showCard(q.chapter, q.title, q.summary, 3.2); say(q.intro || [], () => enterStep()); }
     else enterStep();
   }
   function enterStep() {
@@ -169,12 +179,12 @@ export async function install(game) {
   const dq = { lines: [], i: 0, done: null };
   function say(lines, done) {
     if (!lines.length) { done?.(); return; }
-    dq.lines = lines; dq.i = 0; dq.done = done; show();
+    dq.lines = lines; dq.i = 0; dq.done = done; dq.at0 = game.time; dq.npc = lines.map(L => npcs[L.who]).find(Boolean) || null; show();
   }
   function show() {
     dq.at = game.time; const L = dq.lines[dq.i], q = st.q, n = L.who === 'player' ? null : (npcs[L.who] || q?.npcs?.[L.who] || {});
     const narr = L.who === 'narrator';
-    dlg.className = 'q-dlg' + (narr ? ' narr' : ''); dlg.hidden = false; bars.classList.add('on');
+    dlg.className = 'q-dlg' + (narr ? ' narr' : '') + (st.combat ? ' mini' : ''); dlg.hidden = false; bars.classList.toggle('on', !st.combat);
     if (narr) dlg.innerHTML = `<div class="q-line">${L.line}</div><div class="q-next">E ▸</div>`;
     else {
       const cls = game.caster?.classes?.[game.caster.cls], pl = { id: 'pl', robe: cls?.color || '#556', trim: '#e9c46a', skin: '#d8b090', hair: '#2a2018', hat: 'tall' };
@@ -188,6 +198,29 @@ export async function install(game) {
     if (++dq.i < dq.lines.length) { show(); return true; }
     dlg.hidden = true; bars.classList.remove('on'); const d = dq.done; dq.done = null; d?.(); return true;
   }
+  // dialogue camera: an over-the-shoulder two-shot on the NPC in the conversation, eased in. Runs right after the
+  // player's own third-person camera (main.js places the camera after game.update), so closing the box hands it back.
+  const camV = new THREE.Vector3(), camT = new THREE.Vector3();
+  function frameSpeaker() {
+    const n = dq.npc, cam = game.camera; if (!n?.g || !cam) return;
+    const dx = n.x - P.x, dy = n.y - P.y, L = Math.hypot(dx, dy); if (L < 0.8 || L > 8) return;
+    const ux = dx / L, uy = dy / L, sc = n.scale || 1, back = 1.5, side = 0.75, ez = P.z + 1.8;
+    const hz = n.z + 1.62 * sc, k = Math.min(1, (game.time - dq.at0) / 0.45), e = k * k * (3 - 2 * k);
+    // over either shoulder, whichever has a clear line from the NPC's face (stall canopies, walls); else pulled in
+    let best = null;
+    for (const sd of [side, -side]) {
+      const cx = P.x - ux * back + uy * sd, cy = P.y - uy * back - ux * sd, ddx = cx - n.x, ddy = cy - n.y, ddz = ez - hz, D = Math.hypot(ddx, ddy, ddz);
+      const hit = P.camOcclude ? P.camOcclude(n.x, hz, -n.y, ddx / D, ddz / D, -ddy / D, D) : Infinity, f = Math.min(1, (hit - 0.3) / D);
+      if (!best || f > best.f) best = { f, x: n.x + ddx * f, y: n.y + ddy * f, z: hz + ddz * f };
+      if (f >= 1) break;
+    }
+    if (!best || best.f * Math.hypot(back, side) < 0.6 && best.f < 0.5) return;
+    camT.set(best.x, best.z, -best.y);
+    camV.copy(cam.position).lerp(camT, e); cam.position.copy(camV);
+    cam.lookAt(n.x, hz - 0.15, -n.y);
+  }
+  const cam3 = P.applyCamera3;
+  if (cam3) { P.applyCamera3 = function (cam, dt) { cam3.call(this, cam, dt); if (!dlg.hidden && !st.combat && !window.__cam) frameSpeaker(); }; offs.push(() => { P.applyCamera3 = cam3; }); }
   function showCard(small, big, sub, secs) { card.innerHTML = `<small>${small}</small><b>${big}</b>${sub ? `<i>${sub}</i>` : ''}`; card.style.opacity = 1; st.cardT = secs; }
 
   // ---------- interaction
@@ -216,7 +249,7 @@ export async function install(game) {
     return o;
   }
   function updateTracker(o) {
-    if (!st.q) { const last = order.filter(id => save[id]?.done).pop(); track.hidden = !last; if (last) track.innerHTML = `<div class="q-ch">Next</div><div class="q-ob">${quests[last].next || ''}</div>`; return; }
+    if (!st.q) { const last = order.filter(id => save[id]?.done).pop(); track.hidden = !last; if (last) track.innerHTML = `<div class="q-ch">Quest complete</div><div class="q-ti">${quests[last].title}</div><div class="q-ob">${quests[last].next || ''}</div>`; return; }
     track.hidden = false;
     let txt = o?.text || '';
     if (o?.type === 'kill' && cur().count > 1) txt += ` (${cur().count - o.left}/${cur().count})`;
@@ -231,6 +264,12 @@ export async function install(game) {
   const sysObj = game.add({ update(dt) {
     if (st.cardT > 0 && (st.cardT -= dt) <= 0) card.style.opacity = 0;
     if (!st.q && st.phase === 'idle' && game.save.cls && !game.paused && !P.pendingPlace) { const id = firstOpen(); if (id) begin(id, true); else st.phase = 'done'; }
+    // combat: a hostile mob close by. Story text then shrinks into the quest column, the letterbox and title card get
+    // out of the way, and narration advances by itself so it never covers the fight
+    const combat = game.mobs.some(m => !m.dead && !m.removed && !['idle', 'patrol', 'return', 'dead'].includes(m.state) && Math.hypot(m.x - P.x, m.y - P.y) < 22);
+    if (combat !== !!st.combat) { st.combat = combat; if (!dlg.hidden) { dlg.classList.toggle('mini', combat); bars.classList.toggle('on', !combat); } }
+    if (combat && st.cardT > 0) { st.cardT = 0; card.style.opacity = 0; }
+    if (combat && !dlg.hidden && st.phase !== 'talking' && game.time - dq.at > 3.5) advance();
     if (!st.q) { updateTracker(null); prompt.hidden = true; beam.visible = false; return; }
     placeNpcs(st.q);
     // nobody gets hit mid-sentence, for up to 8 s a line (a player or bot that ignores the box is not left invulnerable)
@@ -258,6 +297,14 @@ export async function install(game) {
     prompt.hidden = !n; if (n) prompt.innerHTML = `<kbd>E</kbd>Talk to ${n.name}`;
     updateTracker(o);
   }, dispose() { for (const f of offs) f(); root.remove(); game.root.remove(world); if (window.__wicStory === stage) delete window.__wicStory; } });
+  // quest checkpoints: falling mid-quest puts you back at the quest's checkpoint instead of the Market Hill spawn
+  const riseBtn = () => document.querySelector('.gh-death .gh-btn');
+  offs.push(game.on('playerDeath', () => { const c = st.q?.checkpoint, b = riseBtn(); if (b) b.textContent = `Rise again (at ${c ? c.name : 'Market Hill'})`; }));
+  offs.push(game.on('respawn', () => {
+    const c = st.q?.checkpoint; if (!c) return;
+    const s = sys()?.findSpot?.(c.x, c.y, 4); if (!s) return;
+    P.teleport(s.x, s.y, s.z, c.look || [c.x, c.y + 10]);
+  }));
   offs.push(game.on('kill', e => {
     const s = cur(); if (!s || s.type !== 'kill' || st.phase !== 'active') return;
     if (s.spawn ? st.tracked.has(e.mob) : e.mob?.type?.id === s.mob) st.kills++;
@@ -279,7 +326,7 @@ export async function install(game) {
   }
   async function stage(step) {
     const q = quests.prologue, at = i => { save.prologue = { step: i }; st.q = q; st.step = i; st.phase = 'active'; };
-    const line = (L, i) => { dq.lines = L; dq.i = i; dq.done = null; show(); return L[i].line; };
+    const line = (L, i) => { dq.lines = L; dq.i = i; dq.done = null; dq.at0 = game.time - 1; dq.npc = L.map(l => npcs[l.who]).find(Boolean) || null; show(); return L[i].line; };
     dlg.hidden = true; bars.classList.remove('on');
     const S = sys();
     if (step === 0) { stage.view = P.view; P.view = 3; if (S) S.encountersEnabled = false; }
@@ -288,15 +335,16 @@ export async function install(game) {
       case 0: at(0); placeNpcs(q); showCard(q.chapter, q.title, q.summary, 8); return `${q.chapter}: ${q.title}`;
       case 1: { at(0); const n = npcs.nell || q.npcs.nell; await goNear(n.x, n.y, 3.2, 200); card.style.opacity = 0; return line(q.steps[0].dialogue, 0); }
       case 2: return line(q.steps[0].dialogue, 3);
-      case 3: { at(1); enterStep(); const p = q.steps[1].place; await goNear(p.x, p.y, 7, 110); return 'Quest tracker: ' + q.steps[1].text; }
+      case 3: { at(1); enterStep(); const p = q.steps[1].place; await goNear(p.x, p.y, 7, 30); return 'Quest tracker: ' + q.steps[1].text; }
       case 4: { const p = q.steps[1].place; await goNear(p.x, p.y, 1.8, 110); return line(q.steps[1].dialogue, 0); }
-      case 5: { at(3); shard.visible = false; const n = npcs.pip || q.npcs.pip; await goNear(n.x, n.y, 2.6, 90); return line(q.steps[3].dialogue, 1); }
+      case 5: { at(3); shard.visible = false; const n = npcs.pip || q.npcs.pip; await goNear(n.x, n.y, 2.6, 50); return line(q.steps[3].dialogue, 1); }
       case 6: { at(4); const b = q.steps[4].at; await goNear(b.x, b.y, 12, 100);
         if (!game.mobs.some(m => !m.dead && m.type?.id === 'bellwarden')) { const m = S?.spawn('bellwarden', b.x, b.y, null); if (m) m.questMob = true; }
         return line(q.steps[4].intro, 0); }
       case 7: { const n = npcs.nell || q.npcs.nell; at(5); await goNear(n.x, n.y, 3.2, 200); line(q.steps[5].dialogue, 2);
-        showCard('Quest complete', q.title, `Title earned: ${q.rewards.title} · +${q.rewards.xp} XP · ${ITEMS[q.rewards.items[0]].name}`, 10); return `Quest complete: ${q.title}`; }
-      default: card.style.opacity = 0; if (S) S.encountersEnabled = true; if (stage.view) P.view = stage.view; return null;
+        showCard('Quest complete', q.title, `Title earned: ${q.rewards.title} · +${q.rewards.xp} XP · ${ITEMS[q.rewards.items[0]].name}`, 10);
+        save.prologue = { step: q.steps.length, done: true }; st.q = null; st.phase = 'staged'; return `Quest complete: ${q.title}`; }
+      default: card.style.opacity = 0; if (S) S.encountersEnabled = true; if (stage.view) P.view = stage.view; if (st.phase === 'staged') { st.phase = 'idle'; } return null;
     }
   }
   window.__wicStory = stage;
