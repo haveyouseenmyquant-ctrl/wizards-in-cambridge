@@ -44,9 +44,9 @@ judge() {
   rm -rf /tmp/wic_rec; node scripts/wic_record.mjs "$S" /tmp/wic_rec || return 1
   $PY -I scripts/wic_judge.py /tmp/wic_rec --site "$S" --hash "$H" -f
 }
-playtest() {
-  if [ -f scripts/wic_playtest.mjs ]; then node scripts/wic_playtest.mjs "$S" > /tmp/wic_pt.json || return 1
-  else node scripts/playtest.mjs "$S" 3 > /tmp/wic_pt.json || return 1; fi
+playtest() {   # wic_playtest.mjs merges its own keys; exit 2 = game failures (still a measurement)
+  if [ -f scripts/wic_playtest.mjs ]; then node scripts/wic_playtest.mjs "$S"; return; fi
+  node scripts/playtest.mjs "$S" 3 > /tmp/wic_pt.json || return 1
   tail -n1 /tmp/wic_pt.json | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(json.dumps({"playtest_pass_pct": d["playtest_pass_pct"], "per_class": d.get("per_class", d.get("classes"))}))' | merge
 }
 quests() { node scripts/quest_bot.mjs "$S" | tail -n1 | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(json.dumps({"main_quests_shipped": d["main_quests_shipped"]}))' | merge; }

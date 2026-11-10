@@ -20,6 +20,7 @@ const puppeteer = createRequire(path.join(ROOT, 'tools/'))('puppeteer-core');
 const SRC = path.resolve(process.argv[2] || path.join(ROOT, 'site'));
 const RUNS = +(process.argv[3] || 4);
 const WORKERS = Math.max(1, +(process.env.WIC_QUESTBOT_WORKERS || 2));
+const SOFT_S = +(process.env.WIC_SOFTLOCK_S || 0);   // QA main-path bot: soft-lock after this much game time without progress (0 = off)
 const RUN_WALL_S = +(process.env.WIC_QUESTBOT_RUN_WALL_S || 1500);
 const CLASSES = ['pyromancer', 'stormcaller', 'warden', 'hexweaver'];
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -44,7 +45,7 @@ const browser = await puppeteer.launch({
 });
 
 // ---------------- the in-page bot (window.__qbot)
-function installBot() {
+function installBot(softS = 0) {
   const g = window.__game, P = window.__p, W = window.__world, C = g.caster, Q = g.quests, DT = 0.05;
   const ev = { kills: 0, deaths: 0, casts: 0, steps: [], talks: 0 };
   ev.killLog = []; ev.boss = {}; g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => ev.deaths++),
@@ -117,8 +118,17 @@ function installBot() {
     }
     return false;
   }
+  // QA watchdog (softS > 0): progress = a kill, damage to a mob, a new quest step, or getting 1 m closer to the objective
+  // than ever before on that step; none of these for softS s of game time is a soft-lock
+  const wd = { t: g.time, key: null, best: Infinity }, prog = () => { wd.t = g.time; };
+  offs.push(g.on('kill', prog), g.on('hit', e => { if (e.target && e.target !== P && e.target.type) prog(); }));
   bot.step = function (dt) {
     if (bot.done || bot.fail) return;
+    if (softS > 0) {
+      const o = Q.objective(), k = o ? `${o.quest}:${o.step}` : 'none', d = o?.x != null ? Math.hypot(o.x - P.x, o.y - P.y) : 0;
+      if (wd.key !== k) { wd.key = k; wd.best = d; prog(); } else if (d < wd.best - 1) { wd.best = d; prog(); }
+      if (g.time - wd.t > softS) { bot.fail = `softlock: no progress for ${softS} s game time (${k}, at ${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)}, ${bot.why})`.slice(0, 300); return; }
+    }
     if (g.time - bot.t0 > bot.maxT) { bot.fail = `timeout at ${JSON.stringify(Q.state)}`; return; }
     P.keys.clear();
     if (Q.order.every(id => Q.save[id]?.done)) { bot.done = true; return; }
@@ -187,7 +197,7 @@ async function runOne(r) {
     await page.evaluate(() => window.__player.teleport(-108.1, 93.97));
     await page.waitForFunction('!window.__player.pendingPlace && window.__player.settled(120)', { timeout: 300000, polling: 500 });
     quests = await page.evaluate(() => window.__game.quests.order);
-    await page.evaluate(installBot);
+    await page.evaluate(installBot, SOFT_S);
     let st;
     for (let k = 0; ; k++) {
       st = await page.evaluate(() => window.__qbot.chunk(6, 4000));

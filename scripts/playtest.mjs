@@ -24,6 +24,7 @@ const RUN_WALL_S = +(process.env.WC_PLAYTEST_RUN_WALL_S || 3600);   // wall-cloc
 const ONLY = process.env.WC_PLAYTEST_CLASSES ? process.env.WC_PLAYTEST_CLASSES.split(',') : null;   // debug: subset of classes
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary' };
+const SOFT_S = +(process.env.WIC_SOFTLOCK_S || 0);   // QA main-path bot: fail when nothing progresses for this much game time (0 = off)
 const ROUTE = ['market-north', 'market-south', 'peas-hill', 'kings-parade', 'senate-house-hill', 'boss-market'];
 const T0 = Date.now();
 const log = (...a) => console.error(`[playtest ${((Date.now() - T0) / 1000).toFixed(0)}s]`, ...a);
@@ -55,7 +56,7 @@ async function ensureBrowser() {
 }
 
 // ---------------- the in-page bot (installed as window.__bot)
-function installBot(route, runIdx) {
+function installBot(route, runIdx, softS = 0) {
   const ROUTE_BOSS = 'bellwarden';
   const g = window.__game, P = window.__p, W = window.__world, sys = g.mobSystem, C = g.caster, items = g.items;
   const DT = 0.05;
@@ -72,6 +73,11 @@ function installBot(route, runIdx) {
     else if (cur === e.id) ev.equips++;
   }));
   offs.push(g.on('cast', () => ev.casts++));
+  // QA watchdog (softS > 0): progress = a kill, a pickup, damage to a mob, a new route leg, or getting 1 m closer to the
+  // current leg's encounter than ever before on that leg; none of these for softS s of game time is a soft-lock
+  const wd = { t: g.time, key: null, best: Infinity };
+  const prog = () => { wd.t = g.time; };
+  offs.push(g.on('kill', prog), g.on('pickup', prog), g.on('hit', e => { if (e.target && e.target !== P && e.target.type) prog(); }));
   // boss time-to-kill: from the first damage the boss takes to its death
   // session 44: only the route's boss (the Bellwarden) counts; other bosses met on the way used to pollute the TTK
   offs.push(g.on('hit', e => { if (e.target?.type?.id === ROUTE_BOSS && bot.bossStart == null) bot.bossStart = g.time; }));
@@ -242,6 +248,11 @@ function installBot(route, runIdx) {
     if (bot.done || bot.fail) return;
     if (g.time - bot.t0 > bot.maxT) { bot.fail = 'timeout: route not finished'; return; }
     P.keys.clear();
+    if (softS > 0) {
+      const e0 = ENC[route[bot.leg]], d = e0 ? Math.hypot(e0.x - P.x, e0.y - P.y) : 0;
+      if (wd.key !== bot.leg) { wd.key = bot.leg; wd.best = d; prog(); } else if (d < wd.best - 1) { wd.best = d; prog(); }
+      if (g.time - wd.t > softS) { bot.fail = `softlock: no progress for ${softS} s game time (leg ${bot.leg} ${route[bot.leg]}, at ${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)}, ${bot.why || ''})`.slice(0, 300); return; }
+    }
     // session 76: breadcrumb trail of spots the player really stood on (for retrace), 1 m apart, not while retracing
     if (!bot.retrace && g.stats.hp > 0) { const L = bot.trail[bot.trail.length - 1]; if (!L || Math.hypot(L.x - P.x, L.y - P.y) > 1) { bot.trail.push({ x: P.x, y: P.y }); if (bot.trail.length > 600) bot.trail.splice(0, 100); } }
     if (bot.leg !== bot.legSeen) { bot.legSeen = bot.leg; bot.legT = 0; bot.retraceN = 0; } bot.legT += dt;
@@ -394,7 +405,7 @@ try {
       // wait for the tiles along the route to stream in around the start
       await page.evaluate(() => window.__player.teleport(-108.1, 93.97));
       await page.waitForFunction('!window.__player.pendingPlace && window.__player.settled(160)', { timeout: 300000, polling: 500 });
-      await page.evaluate(installBot, ROUTE, r);
+      await page.evaluate(installBot, ROUTE, r, SOFT_S);
       // session 44: the run limit is game time (bot.maxT, checked in bot.step); chunks are stepped until the bot is
       // done/failed, with only a wall-clock safety cap so a heavily loaded machine cannot turn into 'not finished'
       let st;
@@ -446,6 +457,7 @@ const result = {
   boss_ttk_spread_pct: all ? +(100 * Math.max(...meds.map(m => Math.abs(m - all))) / all).toFixed(1) : null,
   runs_total: runs.length, page_errors: pageErrorsTotal, wall_s: +((Date.now() - T0) / 1000).toFixed(0),
   ...out,
+  run_log: runs.map(x => ({ cls: x.cls, run: x.run, pass: x.pass, fail: x.fail || null })),
 };
 console.log(JSON.stringify(result));
 process.exit(runs.length && runs.every(x => x.pass) ? 0 : 1);
