@@ -377,7 +377,7 @@ export async function install(game) {
         st.focus = { x: p.x, y: p.y, hz: z + 1.2 }; dq.at0 = game.time - 1; return 'Quest tracker: ' + q.steps[1].text; }
       case 4: { const p = q.steps[1].place, z = game.groundAt(p.x, p.y) ?? P.z; await goNear(p.x, p.y, 2.2, 110, z + 0.7);
         const r = line(q.steps[1].dialogue, 0); st.focus = { x: p.x, y: p.y, hz: z + 0.7 }; return r; }
-      case 5: { at(3); shard.visible = false; const n = npcs.pip || q.npcs.pip; await goNear(n.x, n.y, 2.6, 50); return line(q.steps[3].dialogue, 1); }
+      case 5: { at(3); shard.visible = false; const n = npcs.pip || q.npcs.pip; await goNear(n.x, n.y, 3, 50, (n.z ?? P.z) + 1.0); return line(q.steps[3].dialogue, 1); }
       case 6: { at(4); const b = q.steps[4].at; await goNear(b.x, b.y, 12, 100);
         if (!game.mobs.some(m => !m.dead && m.type?.id === 'bellwarden')) { const m = S?.spawn('bellwarden', b.x, b.y, null); if (m) m.questMob = true; }
         st.reveal = { id: 'bellwarden', t0: game.time - 1.6, dur: 1e9 }; return line(q.steps[4].intro, 0); }

@@ -188,6 +188,8 @@ He now goes from tower to tower with his old mender's case and a set of keys cop
 
 The ten main quests move from the centre outwards, ring by ring. Quests 1 and 2 cover Market Square and Great St Mary's. Quests 3 to 5 cover ring 1, the streets around the market. Quests 6 to 9 cover ring 2, the college fronts, the river and the green spaces. Quest 10 brings everything back to the centre. Each quest calms one or more hour-bells. By the finale, eight bells are steady, two were lost before the game began, and the last two are fought over.
 
+**Shipping order (s4, 10 Nov 2026).** The lead asked for quest 4 in ring 2/3, so The Ferry Bell (outlined as Quest 7 below) shipped fourth as `quests/ferry_bell.json`: Gadd's hand-off now sends the player after the gutter-water to Bridge Street. The Saxon Bell, The Mainspring and The Conduit Runs Dry follow as quests 5 to 7.
+
 ### Quest 1: The Thirteenth Chime (Prologue)
 
 **Location.** Market Square (Market Hill), at dusk. **Canon (code), implemented exactly as written.**
@@ -287,7 +289,7 @@ The ten main quests move from the centre outwards, ring by ring. Quests 1 and 2 
 **Reward.** XP, the **Conduit Flask** (a healing item that refills at running water), and the Conduit bell steadied.
 **Hand-off.** The Lantern Mother speaks: "Thank you for the water, little light. I'll come up the river instead." That leads to Quest 7.
 
-### Quest 7: The Ferry Bell
+### Quest 7: The Ferry Bell (shipped fourth: quests/ferry_bell.json)
 
 **Location.** Bridge Street, the Round Church, Magdalene Bridge and the old hythe. St John's College gate appears on the way as scenery only.
 **Objectives.**
