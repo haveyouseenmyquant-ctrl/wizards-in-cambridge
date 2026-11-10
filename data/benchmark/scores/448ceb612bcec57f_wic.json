@@ -53,8 +53,8 @@
  "equipment_effects": 58,
  "feel_checks_passed": 17,
  "feel_checks_total": 17,
- "main_quests_shipped": 3,
- "quest_bot_pass_pct": 100,
+ "main_quests_shipped": 0,
+ "quest_bot_pass_pct": 25,
  "fps_median": 60,
  "load_seconds": 0.41,
  "perf_detail": {

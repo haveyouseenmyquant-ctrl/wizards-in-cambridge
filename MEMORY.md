@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 16)
+## State (2026-11-10, after session 18)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,6 +12,9 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
+- s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
+  after a roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb` and copy ONLY tiles/ + collision/ into site/ (not manifest).
+  Gate quest_bot flaked 75% once, rerun 100% (hexweaver boss TTK 222 s). Published s18 (log /tmp/wic_publish_s18.log).
 - s17: merged QA 5d49e23 (playtest GPU Chrome low preset, ~100 s). Live 448ceb61: judged 51.4, quests 3, playtest 100, fps 60.
   PRIORITY = Gaspard's natural roofs (EnvVFX dd7b): still NOTHING committed at s17 -> merge + publish with before/after shots when ready.
   Graphics (mob rigs) + Story (Q4 fixes) left work UNCOMMITTED twice (sessions hit 45-min limit); told again s17.
@@ -41,19 +44,16 @@
   Run game tests one at a time (parallel browsers time out; recorder breaks and perf drops if the playtest runs too). Merge gate = tools/wic_gate.sh site (~170 s GPU Chrome, last line JSON). test_feel dodgeIFrames flaked once in gate (Gameplay told).
   data/derived/wic_harness_log.jsonl is dirtied by service.sh: `git checkout` it before merging QA.
 
-## Organisation (6 nodes, all children of root)
-- qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring (+gate step per hash). 6266 publish lock merged s13.
-- story: quests/dialogue, quest_bot (~25 s GPU). b0f8 = Q4 (quests>=4); 69f7 staging/tracker (Story pres > 58).
-- gameplay: feel.js, progression (merged s6), boss TTK d623 (OK'd to add bossTTK to quest_bot), UI polish 02a9 (told: hit-stop, less muddy VFX).
-- graphics: characters+animation only. 8228 mob glbs, e9f5 NPC glbs, 8765 Animation>40. Told judge still sees
-  blocky player in recordings (check wizard.glb shows in wic_record frames).
-- environment-and-vfx (new s3): lighting/atmosphere/materials/spell VFX. 0eb3 Visuals>50 (main now 52), 926d stalls/shop windows geometry Visuals>55.
-- optimisation: perf harness, presets, publish.sh. ef24 (Safari blocked: WebKit crashes on macOS 26.5; safaridriver
-  approval a-20261110-023619-6c7d approved but Gaspard must run safaridriver --enable; told s12), paused; mainmerge merged s12.
-- Contract in every brief: results to <hash>_wic.json (merge keys), /tmp/wic_* locks, symlink heavy data from trunk,
-  modular files in site/app/game, leave an org note when a branch is ready to merge.
+## Organisation (studio since s18, 13 nodes; Gaspard 10 Nov direction)
+- Root = studio head. Departments (managers only review/merge/assign; teams merge into dept branch, dept into main):
+  Art -> graphics (chars+anim; 8765 Animation>40; rig work UNCOMMITTED 2 sessions), environment-and-vfx (926d stalls Visuals>55), ui-and-ux (new; 3daf UI polish>68).
+  Engineering -> gameplay (11ba Combat>66, quest_bot flakes), optimisation (ef24 Safari blocked on Gaspard's safaridriver --enable).
+  Creative -> story (b0f8 Q4 Ferry Bell, 2 unmerged commits, quest_bot 2/4; 69f7 staging), audio-and-music (new; eebc audio v1).
+  Marketing -> brand-and-store-page (new; abd9 drafts + press kit). Keep marketing <= 1/5 of sessions; Trailers/Community later only if earned.
+  qa-and-playtesting stays directly under root (one-team Quality dept = overhead). Retire teams that don't produce.
+- Contract in every brief: results to <hash>_wic.json, /tmp/wic_* locks, symlink heavy data, modular site/app/game files, gate before ready, commit before 45-min limit.
 
 ## Lead each session
-1. `org status`, `org tasks`, read notes; merge ready node branches into main (resolve conflicts, run game tests).
+1. `org status`, `org tasks`, read notes; merge ready DEPARTMENT branches (and QA) into main (resolve conflicts, run game tests).
 2. Check approval outcome; ./measure.sh; push main.
 3. Re-brief / add tasks where KPIs stall; retire nodes that don't earn tokens. Keep this file < 6000 chars.
