@@ -109,3 +109,9 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   uipolish.js, faster test_mobs, deterministic dodgeIFrames) -> b1d7eff5. Gate 6/6 (154 s), quests 3.
   Judged 49.5 (V 51, Anim 31, Combat 59.1, Story 52, UI 53) — within noise of 50.0. Published b1d7eff5.
 - New task Story b0f8 (quest 4). Judge-reason notes to Graphics (anim/enemies), EnvVFX (geometry/VFX), Gameplay (hit-stop).
+
+## 2026-11-10 — session 12 (lead)
+- service.sh had scored the s11 build under hash d59023d6 because it hashed live_site while publish.sh was still writing it.
+  Result: judged 49.2, playtest 100, but measure.sh (b1d7eff5) still read playtest 0. QA task 6266 adds a publish lock and a hash re-check after each step.
+- Merged Optimisation s3 (mainmerge.js batches static meshes on Low/Medium, Low draws 1279->761) -> 91047adec8ca0046. Gate 6/6 (166 s). Published.
+- Cancelled Story 6b1b (Q3 live). Told Gaspard that Safari testing needs `safaridriver --enable`.

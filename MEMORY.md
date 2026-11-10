@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 11)
+## State (2026-11-10, after session 12)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -14,8 +14,11 @@
 ## KPIs / measure.sh
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
-- Trunk b1d7eff5 (s11, merged Story Q3 'Lion at the Gate' + Gameplay uipolish/boss TTK): gate 6/6, quests 3,
-  judged 49.5 (V 51, Anim 31, Combat 59.1, Story 52, UI 53); published s11; playtest pending service.sh.
+- Trunk 91047adec8ca0046 (s12, merged Optimisation mainmerge.js: Low/Medium static mesh batching, draws 1279->761 on Low):
+  gate 6/6 (166 s), published s12; judge/playtest pending service.sh.
+- b1d7eff5 (s11, merged Story Q3 'Lion at the Gate' + Gameplay uipolish/boss TTK): gate 6/6, quests 3,
+  judged 49.5 (V 51, Anim 31, Combat 59.1, Story 52, UI 53); service.sh scored it under bogus hash d59023d6 (hashed live_site mid-publish):
+  judged 49.2, playtest 100. QA task 6266 = publish lock + per-step hash re-check. Touch data/derived/session_active before publishing.
 - 9b1abea2 (s10, Graphics Quaternius wizard CC-BY): judged 50.0 (Anim 33.5), playtest 100 (softlock gone; 9d0d cancelled).
   Judge asks: enemy attack/death/hit clips + bigger enemies; menus overlaid by banners/dialogue, text-only inventory,
   debug FPS/Quality/'Loading...' labels visible; stale tracker; NPCs never framed; stalls flat blocks.
@@ -37,14 +40,14 @@
   data/derived/wic_harness_log.jsonl is dirtied by service.sh: `git checkout` it before merging QA.
 
 ## Organisation (6 nodes, all children of root)
-- qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring (+gate step per hash). No open task.
-- story: quests/dialogue, quest_bot (~25 s GPU). 6b1b (Q3) merged, story must close it; b0f8 = Q4 (quests>=4).
+- qa-and-playtesting: rubric/judge, wic_playtest.mjs, service.sh scoring (+gate step per hash). 6266 publish-race fix.
+- story: quests/dialogue, quest_bot (~25 s GPU). 6b1b cancelled (Q3 live); b0f8 = Q4 (quests>=4).
 - gameplay: feel.js, progression (merged s6), boss TTK d623 (OK'd to add bossTTK to quest_bot), UI polish 02a9 (told: hit-stop, less muddy VFX).
 - graphics: characters+animation only. 8228 mob glbs, e9f5 NPC glbs, 8765 Animation>40. Told judge still sees
   blocky player in recordings (check wizard.glb shows in wic_record frames).
 - environment-and-vfx (new s3): lighting/atmosphere/materials/spell VFX. 0eb3 Visuals>50 (main now 52), 926d stalls/shop windows geometry Visuals>55.
 - optimisation: perf harness, presets, publish.sh. ef24 (Safari blocked: WebKit crashes on macOS 26.5; safaridriver
-  approval a-20261110-023619-6c7d), 5145 perf guardrail.
+  approval a-20261110-023619-6c7d approved but Gaspard must run safaridriver --enable; told s12), paused; mainmerge merged s12.
 - Contract in every brief: results to <hash>_wic.json (merge keys), /tmp/wic_* locks, symlink heavy data from trunk,
   modular files in site/app/game, leave an org note when a branch is ready to merge.
 

@@ -60,3 +60,16 @@
 {"hash": "d59023d6d0e4fd58", "step": "quests", "status": "ok", "secs": 237, "t": "2026-11-10T12:16:56Z"}
 {"hash": "d59023d6d0e4fd58", "step": "perf", "status": "ok", "secs": 63, "t": "2026-11-10T12:17:59Z"}
 {"hash": "d59023d6d0e4fd58", "step": "gate", "status": "ok", "secs": 161, "t": "2026-11-10T12:20:40Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:quest:pyromancer","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:quest:stormcaller","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash":"b1d7eff5dbdcbad5","step":"playtest_run:route:warden","status":"ok","t":"2026-11-10T12:43:25.763Z"}
+{"hash": "b1d7eff5dbdcbad5", "step": "playtest", "status": "ok", "secs": 765, "t": "2026-11-10T12:43:25Z"}
