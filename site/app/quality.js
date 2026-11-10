@@ -8,11 +8,12 @@ const KEY = 'wic_quality';
 export const PRESET_NAMES = ['low', 'medium', 'high', 'ultra'];
 // pixelRatio: cap on devicePixelRatio; shadow: shadow-map size (0 = off); facR: radius (m) of detailed city facades;
 // grass: blade field preset (null = off); treeCards: leaf-card density; vfx: particle count scale; ao: GTAO post pass;
+// merge: draw static tile/zone meshes as merged batches (mainmerge.js; ?mainmerge=1/0 overrides)
 // shadowLod: casters with bounding radius / distance below this stop casting (shadowlod.js; 0 = all cast);
 // bloom: HDR bloom + vignette pass (golden look); msaa: samples of the HDR target; fogDensity: exp2 haze (default 0.0042).
 export const PRESETS = {
-  low:    { pixelRatio: 1,    shadow: 0,    facR: 60,  treeCards: 0.55, vfx: 0.5, ao: false, fogFar: 320, bloom: false, fogDensity: 0.0048 },
-  medium: { pixelRatio: 1.25, shadow: 1024, shadowLod: 0.04, facR: 120, treeCards: 0.8,  vfx: 0.75, ao: false, fogFar: 380, bloom: true, msaa: 2 },
+  low:    { pixelRatio: 1,    shadow: 0,  merge: true,   facR: 60,  treeCards: 0.55, vfx: 0.5, ao: false, fogFar: 320, bloom: false, fogDensity: 0.0048 },
+  medium: { pixelRatio: 1.25, shadow: 1024, merge: true, shadowLod: 0.04, facR: 120, treeCards: 0.8,  vfx: 0.75, ao: false, fogFar: 380, bloom: true, msaa: 2 },
   high:   { pixelRatio: 1.5,  shadow: 2048, shadowLod: 0.025, facR: 200, treeCards: 1,    vfx: 1,   ao: false, fogFar: 420, bloom: true, msaa: 4 },
   ultra:  { pixelRatio: 2,    shadow: 4096, shadowLod: 0.012, facR: 260, treeCards: 1.3,  vfx: 1,   ao: true,  fogFar: 480, bloom: true, msaa: 4, fogDensity: 0.0036 },
 };
