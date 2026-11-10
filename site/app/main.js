@@ -256,10 +256,12 @@ async function main() {
       const startGame = () => import('./game/index.js').then(m => m.startGame({ scene, camera, player, world }))
         .then(g => { window.__game = g; }).catch(e => console.warn('[game] not started', e));
       if (!window.__explore) startGame();
+      const exploreRig = () => import('./game/explore_rig.js').then(m => m.install({ scene })).catch(e => console.warn('[explore_rig]', e));   // graphics: rigged wizard in ?explore
+      if (window.__explore) exploreRig();
       addEventListener('keydown', e => {
         if (e.code !== 'KeyG' || e.target instanceof HTMLInputElement) return;
         window.__explore = !window.__explore;
-        if (window.__explore) { window.__game?.dispose(); window.__game = null; } else startGame();
+        if (window.__explore) { window.__game?.dispose(); window.__game = null; exploreRig(); } else startGame();
         document.body.classList.toggle('explore', window.__explore);
       });
       console.log(`[walkable] ready ${(performance.now() / 1000).toFixed(2)}s`);
