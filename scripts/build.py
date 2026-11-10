@@ -583,6 +583,58 @@ def roof_field(bd, lo):
     return zf
 
 
+PARAM_ROOFS = os.environ.get("WC_PARAM_ROOFS", "1") == "1"   # EnvVFX s4: parametric roofs (scripts/roofs.py)
+ROOF_STYLES = []   # (oid, style) per non-landmark building
+ROOF_DEBUG = []
+
+
+def param_roof(bm, bd):
+    """Walls + parametric roof (scripts/roofs.py) for a non-landmark building. False -> caller builds the old way."""
+    import roofs
+    from shapely.affinity import translate
+    g, cut, z0, z1 = bd["g"], bd["cut"], bd["base"], bd["top"]
+    tone = bd["tone"]
+    wall = np.clip(np.array([0.78, 0.72, 0.60]) + tone, 0, 1)
+    zp = max(bd["dmed"] + PASS_H, (bd["zcut"] or -1e9) + 2.6)
+    neigh = bd.get("neigh")
+    neigh = translate(neigh, -E0, -N0) if neigh is not None else None
+    if cut is not None and z1 - zp <= 1.0:
+        return False
+    built, style = False, None
+    for p in polys_of(g):
+        P = translate(p, -E0, -N0)
+        f = None
+        if bd.get("roofR") is not None:
+            try:
+                f = roofs.fit(P, bd["roofR"], bd["roofM"], bd["roofO"], bd["dmed"], zp + 0.5 if cut is not None else -1e9)
+            except Exception:
+                f = None
+        if f is None:
+            f = dict(kind="flat", e=z1 - 0.5)
+        rc = roofs.colour(f, bd["oid"], tone)
+        try:
+            if cut is None:
+                roofs.build(bm, P, z0, f, wall, rc, neigh)
+            else:
+                roofs.build(bm, P, zp, f, wall, rc, neigh, bottom=True)
+        except Exception as ex:
+            log("param roof failed", bd["oid"], ex)
+            return False
+        style = style or f["kind"]
+        if os.environ.get("WC_ROOF_DEBUG"):
+            c = P.centroid
+            ROOF_DEBUG.append(dict(oid=bd["oid"], kind=f["kind"], cx=round(c.x, 1), cy=round(c.y, 1), e=round(f["e"], 2),
+                                   z0=round(z0, 2), dmed=round(bd["dmed"], 2), top=round(z1, 2), cut=cut is not None,
+                                   W=round(f.get("W", 0), 2), L=round(f.get("L", 0), 2), area=round(P.area, 1), tags=bd["t"]))
+        built = True
+    if cut is not None:
+        for p in polys_of(g.difference(cut)):
+            add_prism(bm, p, z0, zp, wall, wall, top=False)
+    if built:
+        ROOF_STYLES.append((bd["oid"], style, bd.get("roofR") is not None))
+    return built
+
+
 def add_prism_local(m, g, z0, z1, color, roof_color):
     """add_prism for a (Multi)Polygon in the local frame."""
     from shapely.affinity import translate
@@ -902,6 +954,12 @@ def main():
         np.save("/tmp/plane_stats.npy", np.array(PLANE_STATS)); sys.exit(0)
     log("building heights done", sum(b["cut"] is not None for b in bdata), "with passages")
 
+    if PARAM_ROOFS:   # touching footprints: no roof overhang into a neighbour (terraces)
+        gs = [bd["g"] for bd in bdata]
+        btree = STRtree(gs)
+        for i, bd in enumerate(bdata):
+            nb = [gs[j] for j in btree.query(bd["g"].buffer(0.4), predicate="intersects") if j != i and not bdata[j]["is_roof"]]
+            bd["neigh"] = unary_union(nb) if nb else None
     lm_extra, lm_entries = build_landmarks(bdata, ways, nodes, DTM, DSM, tf, dtm_at)
 
     # ---- spawn: Market Square (Market Hill), nearest walkable way point
@@ -978,35 +1036,39 @@ def main():
                 if not (bx0 <= bd["cx"] < bx1 and by0 <= bd["cy"] < by1):
                     continue
                 bm = Mesh()
-                tone = bd["tone"]
-                wall = np.clip(np.array([0.78, 0.72, 0.60]) + tone, 0, 1)
-                roof = np.clip(np.array([0.45, 0.40, 0.38]) + tone, 0, 1)
-                g, cut, z0, z1 = bd["g"], bd["cut"], bd["base"], bd["top"]
-                zp = max(bd["dmed"] + PASS_H, (bd["zcut"] or -1e9) + 2.6)
-                zf = None if bd.get("lm") else roof_field(bd, max(bd["dmed"] + 1.0, zp + 0.5 if cut is not None else -1e9))
-                if zf is not None and bd.get("pitched"):
-                    roof = np.clip(np.array([0.50, 0.33, 0.28]) + tone, 0, 1)   # pitched: tiled-roof red
-                if zf is not None:
-                    n_pitched += 1
-                if bd["is_roof"]:   # session 31: roof with no walls (see add_canopy), no collision
-                    gab = bd["oid"] in MARKET_STALL_ROOFS
-                    ze = bd["dmed"] + CANOPY_EAVE if gab else z1 - CANOPY_T / 2
-                    add_canopy(bm, g, ze, gab, np.array([0.88, 0.87, 0.83]) if gab else roof)
-                elif cut is None:
-                    for p in polys_of(g):
-                        if zf is None or not add_lidar_roof(bm, p, z0, zf, wall, roof):
-                            add_prism(bm, p, z0, z1, wall, roof)
+                if PARAM_ROOFS and not bd.get("lm") and not bd["is_roof"] and param_roof(bm, bd):
+                    zf, z1 = None, bd["top"]
                 else:
-                    low = g.difference(cut)
-                    if z1 - zp > 1.0:
-                        for p in polys_of(low):
-                            add_prism(bm, p, z0, zp, wall, roof, top=False)
+                    bm = Mesh()
+                    tone = bd["tone"]
+                    wall = np.clip(np.array([0.78, 0.72, 0.60]) + tone, 0, 1)
+                    roof = np.clip(np.array([0.45, 0.40, 0.38]) + tone, 0, 1)
+                    g, cut, z0, z1 = bd["g"], bd["cut"], bd["base"], bd["top"]
+                    zp = max(bd["dmed"] + PASS_H, (bd["zcut"] or -1e9) + 2.6)
+                    zf = None if bd.get("lm") else roof_field(bd, max(bd["dmed"] + 1.0, zp + 0.5 if cut is not None else -1e9))
+                    if zf is not None and bd.get("pitched"):
+                        roof = np.clip(np.array([0.50, 0.33, 0.28]) + tone, 0, 1)   # pitched: tiled-roof red
+                    if zf is not None:
+                        n_pitched += 1
+                    if bd["is_roof"]:   # session 31: roof with no walls (see add_canopy), no collision
+                        gab = bd["oid"] in MARKET_STALL_ROOFS
+                        ze = bd["dmed"] + CANOPY_EAVE if gab else z1 - CANOPY_T / 2
+                        add_canopy(bm, g, ze, gab, np.array([0.88, 0.87, 0.83]) if gab else roof)
+                    elif cut is None:
                         for p in polys_of(g):
-                            if zf is None or not add_lidar_roof(bm, p, zp, zf, wall, roof, bottom=True):
-                                add_prism(bm, p, zp, z1, wall, roof, bottom=True)
+                            if zf is None or not add_lidar_roof(bm, p, z0, zf, wall, roof):
+                                add_prism(bm, p, z0, z1, wall, roof)
                     else:
-                        for p in polys_of(low):
-                            add_prism(bm, p, z0, z1, wall, roof)
+                        low = g.difference(cut)
+                        if z1 - zp > 1.0:
+                            for p in polys_of(low):
+                                add_prism(bm, p, z0, zp, wall, roof, top=False)
+                            for p in polys_of(g):
+                                if zf is None or not add_lidar_roof(bm, p, zp, zf, wall, roof, bottom=True):
+                                    add_prism(bm, p, zp, z1, wall, roof, bottom=True)
+                        else:
+                            for p in polys_of(low):
+                                add_prism(bm, p, z0, z1, wall, roof)
                 arr = bm.arrays()
                 if arr is None:
                     continue
@@ -1054,6 +1116,20 @@ def main():
            "landmarks": lm_entries}
     json.dump(man, open(os.path.join(OUT, "manifest.json"), "w"), separators=(",", ":"))
     log(n_pitched, "buildings with LiDAR roof shapes")
+    if PARAM_ROOFS:
+        import roofs
+        nl = sum(1 for bd in bdata if not bd.get("lm") and not bd["is_roof"])
+        cnt = {}
+        for _, st, _ in ROOF_STYLES:
+            cnt[st] = cnt.get(st, 0) + 1
+        json.dump({"parametric_share": round(len(ROOF_STYLES) / max(nl, 1), 4), "buildings": nl,
+                   "parametric": len(ROOF_STYLES), "with_lidar_fit": sum(1 for r in ROOF_STYLES if r[2]),
+                   "counts": cnt, "landmarks_untouched": sum(1 for bd in bdata if bd.get("lm")),
+                   "styles": {o: st for o, st, _ in ROOF_STYLES}},
+                  open(os.path.join(ROOT, "data/derived/roof_styles.json"), "w"), indent=1)
+        log("parametric roofs", cnt)
+        if ROOF_DEBUG:
+            json.dump(ROOF_DEBUG, open("/tmp/roof_debug.json", "w"))
     log(f"done: {len(tiles)} tiles, {len(man_b)} buildings, spawn {spawn}, {time.time() - t0:.0f}s")
 
 

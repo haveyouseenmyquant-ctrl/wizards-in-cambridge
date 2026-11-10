@@ -1790,6 +1790,7 @@ class MobSystem {
     mob.attack = a; mob.windupEff = a.windup * (ph?.windup ?? 1);
     mob.state = 'windup'; mob.stateT = mob.windupEff; mob.hitPlayer = false;
     mob.attackCd[a.name] = a.cd * (ph?.cd ?? 1);
+    g.emit('mobAttack', { mob, attack: a });   // audio: wind-up voice
     const dx = g.px - mob.x, dy = g.py - mob.y;
     const yaw = Math.atan2(dx, -dy); mob.yaw = yaw;
     mob.aim = { x: g.px, y: g.py, z: g.pz, yaw, dir: { x: dx / (Math.hypot(dx, dy) || 1), y: dy / (Math.hypot(dx, dy) || 1) } };

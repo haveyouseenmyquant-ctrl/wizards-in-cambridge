@@ -17,6 +17,14 @@ mob Skeleton_Warrior statue 1H_Melee_Attack_Chop 2H_Melee_Attack_Spin
 mob Skeleton_Mage wraith Spellcast_Shoot Spellcast_Raise
 mob Skeleton_Rogue automaton Unarmed_Melee_Attack_Punch_A Unarmed_Melee_Attack_Kick
 mob Skeleton_Minion imp Unarmed_Melee_Attack_Punch_B Throw
+# flying mobs: Quaternius Ultimate Monsters (CC0, poly.pizza/m/Mo2ky6vkf8 Demon, /m/Iip30bDHmu Ghost, /m/hNO9XvjlKa Bat);
+# a source clip can only be used once, so walk (and the bat's idle) are aliased in mob_rig.js
+qm() { [ -f $D/q_$1.glb ] || curl -sSL -o $D/q_$1.glb https://static.poly.pizza/$2.glb; }
+qm demon c2e39eb4-4b8e-4d31-b014-d637bf4e15c6; qm ghost 810f60a2-6e45-4c4e-a0d5-da91cd7288bd; qm bat 4ae13ae9-c257-41ed-86b5-1b4760924ebc
+F="\"idle\":\"$Q|Flying_Idle\",\"run\":\"$Q|Fast_Flying\",\"attack\":\"$Q|Punch\",\"attack2\":\"$Q|Headbutt\",\"hit\":\"$Q|HitReact\",\"death\":\"$Q|Death\",\"taunt\":\"$Q|No\""
+node scripts/build_char_glb.mjs $D/q_demon.glb site/models/mobs/gargoyle.glb "{\"clips\":{$F}}"
+node scripts/build_char_glb.mjs $D/q_ghost.glb site/models/mobs/wisp.glb "{\"clips\":{$F}}"
+B=BatArmature; node scripts/build_char_glb.mjs $D/q_bat.glb site/models/mobs/bat.glb "{\"clips\":{\"run\":\"$B|Bat_Flying\",\"attack\":\"$B|Bat_Attack\",\"attack2\":\"$B|Bat_Attack2\",\"hit\":\"$B|Bat_Hit\",\"death\":\"$B|Bat_Death\"}}"
 # story NPCs (Adventurers pack): talk = Interact, wave = Cheer
 for s in Rogue Rogue_Hooded; do [ -f $D/$s.glb ] || curl -sSL -o $D/$s.glb $B/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/gltf/$s.glb; done
 mkdir -p site/models/npcs; C='"idle":"Idle","talk":"Interact","walk":"Walking_A","wave":"Cheer","hit":"Hit_A","death":"Death_A"'

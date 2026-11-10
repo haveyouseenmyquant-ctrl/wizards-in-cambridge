@@ -1,0 +1,137 @@
+{
+ "judged_game_quality": 51.4,
+ "judged_sections": {
+  "Visuals": 51,
+  "Animation": 30,
+  "Combat feel": 60.9,
+  "Story presentation": 53,
+  "UI polish": 63
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 2,
+   "Animation": 0,
+   "Combat feel": 0.2,
+   "Story presentation": 2,
+   "UI polish": 2
+  },
+  "quality_spread": 0,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together and is recognisable. It has textured brick and stone facades, a Gothic church, market stalls, bikes, railings, trees, warm low-sun lighting with real-time shadows and some atmospheric haze. But the geometry is mostly boxy with little fine detail, shop interiors are flat coloured blocks, some walls look stretched or tiled flat, and the streets are sparse and empty. Characters and enemies are small, simple and chibi-like with little visible detail, and the combat VFX are basic glowing primitives, so this falls well short of the dense detail and character fidelity that the 60-80 anchors describe."
+   },
+   "Animation": {
+    "all": "The player appears in almost the same upright pose in every frame, whether walking or fighting, with no visible stride, cast wind-up or hit reaction. Attacks show up only as beams, orbs and numbers, and enemies are small, hard to make out and show no clear attack or death poses. There are no signs of secondary motion like robes or hair, and the streets have no crowds or moving foliage."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show visible combat feedback: damage numbers, crit callouts, Staggered/Interrupted state labels, chain counters, rune circles on the ground, and a multi-phase named boss (Bellwarden, Phase II banner). Loot is plentiful and colour-coded by rarity in the item labels and popups. The weak points are clarity and danger. VFX are often washed-out green and blue blobs and light pillars that hide enemies. There's no visible hit-stop or screen feedback, and enemy wind-ups aren't telegraphed. The player took only 4 hits in 60 s and the boss died in about 13 s, so the fights look trivial and spam-heavy (66 of the 98 casts were hex_dart). Only one class is shown, so I can't judge how the classes differ.",
+    "pyromancer": "The frames show solid hit feedback: large damage numbers and crit labels, 'Staggered' and 'Vanquished' callouts, a chain counter, a boss with a segmented health bar and a 'Phase II' banner, rarity-coloured loot beams, ground telegraph circles, and six spells on cooldown, with 604 sound voices triggered. The biggest gaps are that most casts are the same basic bolt (71 of 102), spell VFX are small and hard to read at this camera distance, there's no visible hit-stop or screen shake, and the busy market-stall clutter often hides the action. Only one class is shown, so whether the classes play differently can't be judged.",
+    "stormcaller": "Combat is lively and well supported by feedback. The frames show crit damage numbers, chain counters, Staggered/Interrupted/Vanquished callouts, a phased boss bar for the Bellwarden, a red ground telegraph, and loot beams with rarity-coloured labels; the log shows six spells, hit-stagger and 695 sound voices. Spell VFX are small and hard to read in the stills, with little sign of hit-stop, screen shake or visible knockback. The fight is also very easy (2 hits taken), which hurts the sense of challenge, and only one class is shown, so class differences can't be confirmed.",
+    "warden": "The frames show a full combat feedback set. There are damage numbers, chain counters, Interrupted and Staggered callouts, golden quake rune circles, rock spikes, light beams marking loot by rarity, and a boss bar for the Bellwarden with three phases plus Phase II and enrage banners. Six abilities fire with varied crowd control and the fight produces plenty of kills and loot, which puts it at the 60 anchor. It falls short of 80 because the stone spikes and translucent white shield blobs are low-detail and often hide the action, there's no visible hit-stop, screen feedback or enemy telegraphs, and the player took only one hit for 0 damage, so enemies barely threaten."
+   },
+   "Story presentation": {
+    "all": "The writing is strong and specific to its setting. There is a 'Thirteenth Chime' title card, named speakers (Nell Tapscott, Pip Hobbe) with small portrait icons, a quest tracker, a world waypoint marker, a minimap, and a quest-complete card with rewards, and the scenes are tied to a real Market Hill and Great St Mary's. The staging is weak: the speakers are mostly absent from the frame or shown only as tiny figures. The camera never frames the conversation, and in frames 4, 5 and 7 it is blocked or clipped by geometry, so the Bellwarden reveal is never actually shown. There are no branching choices and no visible character animation or cinematics."
+   },
+   "UI polish": {
+    "all": "The interface has one consistent dark-and-gold serif theme across class select, inventory, talents and the HUD. It has clear resource bars, numbered skill slots with cooldowns, a minimap, a boss bar with phases, rarity-coloured loot callouts and a structured talent tree. It falls short of 80 for several reasons. Spell icons are tiny and generic, and the talent icons are placeholder circles. Combat gets cluttered, with the quest tracker, toasts, damage numbers and a large loot banner overlapping the action and boss text. The quest-complete overlay crowds the spawn frame, and the class-selection cards cover the HUD that sits faintly behind them."
+   }
+  }
+ },
+ "mob_types": 12,
+ "bosses_ok": 3,
+ "equipment_effects": 58,
+ "feel_checks_passed": 17,
+ "feel_checks_total": 17,
+ "main_quests_shipped": 3,
+ "quest_bot_pass_pct": 100,
+ "fps_median": 60,
+ "load_seconds": 0.41,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 1.66,
+  "programs": [
+   65,
+   82
+  ],
+  "fps_p5": 59,
+  "fps_min": 45,
+  "fight_pct": 100,
+  "casts": 190,
+  "kills": 21,
+  "maxMobs": 36,
+  "dist": 200,
+  "laps": 1,
+  "draw_calls_median": 1721,
+  "tris_median": 7368279,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-10T17:56:28.496Z"
+ },
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 10.4,
+  "main_quests_shipped": 3,
+  "wall_s": 897,
+  "at": "2026-11-10T17:34:59.216Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "quest_bot": true
+ }
+}

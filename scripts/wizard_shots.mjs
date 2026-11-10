@@ -30,16 +30,18 @@ try {
     if (g.mobSystem) { g.mobSystem.encountersEnabled = false; for (const m of [...g.mobs]) g.mobSystem.remove(m); }
     window.__player.teleport(-100, 62); await new Promise(r => setTimeout(r, 2500));
     P.view = 3; P.yaw = 2.6; P.pitch = -0.15; P.camD = null; P.camP = null; });
-  for (const cls of ['pyromancer', 'stormcaller', 'warden', 'hexweaver']) {
-    for (const [tag, clip, wait] of [['idle', null, 1200], ['cast', 'cast', 350], ['hit', 'hit', 200]]) {
+  for (const cls of (process.env.WIZ_CLS || 'pyromancer,stormcaller,warden,hexweaver').split(',')) {
+    for (const [tag, clip, wait] of [['idle', null, 1200], ['cast', 'cast', 350], ['castlayer', 'L:cast', 250], ['raise', 'L:raise', 250], ['hit', 'hit', 200]]) {
       const r = await page.evaluate(async (cls, clip, wait) => { const g = window.__game;
         if (g.caster.cls !== cls) { g.save.cls = cls; g.caster.setClass(cls); }
         await new Promise(r => setTimeout(r, 300));
-        if (clip) g.wizardRig.play(clip);
+        if (clip?.startsWith('L:')) { g.wizardRig.play('idle'); g.wizardRig.pose('cast', clip === 'L:raise', true); }
+        else if (clip === 'hit') { g.wizardRig.play(clip); g.wizardRig.pose('hit', false, true); }
+        else { g.wizardRig.pose(null); if (clip) g.wizardRig.play(clip); }
         await new Promise(r => setTimeout(r, wait));
         const R = g.wizardRig.model; const m = R?.mat, im = m?.map?.image;
         if (!window.__dumped && im?.toDataURL) { window.__dumped = 1; console.log('[wizard_rig] dump', JSON.stringify({ color: m.color, em: m.emissive, w: im.width, vc: m.vertexColors }), im.toDataURL('image/png').slice(0, 60)); window.__tex = im.toDataURL('image/png'); }
-        return { cls, s: R?.root.children[0].scale.x, y: R?.root.children[0].position.y, cur: R?.cur, visible: R?.root.visible, proc: g.wizard.model?.root.visible };
+        const ua = R?.bones["UpperArm.R"];  return { q: ua && ua.quaternion.toArray().map(v => v.toFixed(2)).join(","), wp: ua && (() => { const V = g.THREE.Vector3, a = new V(), b = new V(), c = new V(), f = new V(0, 0, -1).applyQuaternion(R.root.quaternion); R.root.updateMatrixWorld(true); ua.getWorldPosition(a); R.bones["LowerArm.R"].getWorldPosition(b); R.bones["Fist.R"].getWorldPosition(c); const u = b.clone().sub(a).normalize(), l = c.clone().sub(b).normalize(); return [u.y, u.dot(f), l.y, l.dot(f), R.root.rotation.y, g.player?.yaw].map(x => (+x).toFixed(2)).join(","); })(), dt: g.time - R?.castT, t: g.time, cls, s: R?.root.children[0].scale.x, y: R?.root.children[0].position.y, cur: R?.cur, visible: R?.root.visible, proc: g.wizard.model?.root.visible };
       }, cls, clip, wait);
       info.push(r);
       await page.screenshot({ path: `${OUT}_${cls}_${tag}.jpg`, quality: 72 });

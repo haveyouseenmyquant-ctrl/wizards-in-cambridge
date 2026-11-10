@@ -5,7 +5,7 @@ JSON summary as the last stdout line: {"ok", "site", "hash", "secs", "tests": {n
                                           result to data/derived/wic_gate_log.jsonl; WIC_GATE_ONLY=a,b runs a subset;
                                           WIC_TEST_GPU=1 (default) GPU Chrome, 0 headless SwiftShader;
                                           WIC_TEST_QUERY extra URL query for the tests, e.g. &q=low)
-Tests: test_classes, test_feel, test_items, test_mobs, test_progression (if present), quest_bot (4 runs, 2 workers).
+Tests: test_classes, test_feel, test_items, test_mobs, test_progression (if present), test_audio, quest_bot (4 runs, 2 workers).
 A test passes when it exits 0 and its JSON output does not say ok:false. A failed test is rerun once
 (WIC_GATE_RETRIES, default 1); a pass on the rerun counts as ok but is marked flaky:true (first failure kept in
 first_fail) and listed in the top-level "flaky". Exit 0 if every test passed, else 1."""
@@ -17,9 +17,9 @@ site = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / 'site').resolve()
 per_test = int(os.environ.get('WIC_GATE_TEST_S', 300))
 only = [t for t in os.environ.get('WIC_GATE_ONLY', '').split(',') if t]
 TESTS = [('test_classes', []), ('test_feel', []), ('test_items', []), ('test_mobs', []), ('test_progression', []),
-         ('quest_bot', ['4'])]
+         ('test_audio', []), ('quest_bot', ['4'])]
 KEYS = ('ok', 'error', 'load_s', 'fps', 'equipment_effects', 'total', 'failed', 'mob_types_ok', 'bosses_ok',
-        'main_quests_shipped', 'quest_bot_pass_pct', 'errors')
+        'main_quests_shipped', 'quest_bot_pass_pct', 'audio_coverage_pct', 'errors')
 
 def parse(out):
     out = out.strip()
