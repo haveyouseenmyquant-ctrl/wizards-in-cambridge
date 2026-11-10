@@ -157,7 +157,7 @@ async function main() {
     $('landmarks').hidden = true;
   });
 
-  if (/debug/.test(location.search)) Object.assign(window, { __scene: scene, __THREE: THREE, __world: world, __p: player });
+  if (/debug/.test(location.search)) Object.assign(window, { __renderer: renderer, __scene: scene, __THREE: THREE, __world: world, __p: player });
   // scripted-test hooks
   window.__player = {
     get position() { return { x: player.x, y: player.y, z: player.z }; },
