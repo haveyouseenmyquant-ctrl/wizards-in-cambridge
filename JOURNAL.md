@@ -198,3 +198,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-10 — session 23 (lead)
 - service.sh scored the live build 88f478c1: judged 52.3 (Visuals 54, Animation 33.5, Combat 60.9, Story 50, UI 62.5), quests 3, playtest 100, fps 60, load 0.33.
 - Nothing to merge: no team has run since s22. Tutorial issue (intr) tasks still open. Paused Audio and Music too, so Gameplay, Story and UI get the sessions; re-sent tutorial-first notes to Engineering, Creative and Art.
+
+## 2026-11-11 — session 24 (lead)
+- Nothing to merge: no team has committed since s22. Live 88f478c1: judged 52.3, quests 3, playtest 100, fps 60, load 0.33.
+- Tutorial issue (intr) still has no commits. Paused Graphics and Environment and VFX as well, so only QA, Gameplay, Story and UI and UX compete for team sessions; managers told the four tutorial tasks ship standalone.
