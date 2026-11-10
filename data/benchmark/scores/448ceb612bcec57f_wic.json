@@ -1,11 +1,11 @@
 {
  "judged_game_quality": 51.4,
  "judged_sections": {
-  "Visuals": 51.0,
-  "Animation": 30.0,
+  "Visuals": 51,
+  "Animation": 30,
   "Combat feel": 60.9,
-  "Story presentation": 53.0,
-  "UI polish": 63.0
+  "Story presentation": 53,
+  "UI polish": 63
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -15,13 +15,13 @@
   "calls": 16,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 2.0,
-   "Animation": 0.0,
+   "Visuals": 2,
+   "Animation": 0,
    "Combat feel": 0.2,
-   "Story presentation": 2.0,
-   "UI polish": 2.0
+   "Story presentation": 2,
+   "UI polish": 2
   },
-  "quality_spread": 0.0,
+  "quality_spread": 0,
   "frames": 68,
   "recording_errors": [
    "note: explore King's Parade yaw 2.89 blocked, used 1.91",
@@ -52,5 +52,7 @@
  "bosses_ok": 3,
  "equipment_effects": 58,
  "feel_checks_passed": 17,
- "feel_checks_total": 17
+ "feel_checks_total": 17,
+ "main_quests_shipped": 3,
+ "quest_bot_pass_pct": 100
 }
