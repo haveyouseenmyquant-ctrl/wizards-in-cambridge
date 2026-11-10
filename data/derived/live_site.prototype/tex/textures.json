@@ -1,0 +1,76 @@
+{
+ "brick": {
+  "asset": "yellow_bricks",
+  "size_m": 2.0,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "licence": "CC0",
+  "url": "https://polyhaven.com/a/yellow_bricks"
+ },
+ "ashlar": {
+  "asset": "white_sandstone_blocks_02",
+  "size_m": 2.0,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "licence": "CC0",
+  "url": "https://polyhaven.com/a/white_sandstone_blocks_02"
+ },
+ "roof": {
+  "asset": "grey_roof_tiles",
+  "size_m": 3.0,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "licence": "CC0",
+  "url": "https://polyhaven.com/a/grey_roof_tiles"
+ },
+ "road": {
+  "asset": "asphalt_02",
+  "size_m": 3.000000238418579,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "licence": "CC0",
+  "url": "https://polyhaven.com/a/asphalt_02"
+ },
+ "pave": {
+  "asset": "pavement_02",
+  "size_m": 2.119999647140503,
+  "authors": [
+   "Dario Barresi",
+   "Charlotte Baglioni"
+  ],
+  "licence": "CC0",
+  "url": "https://polyhaven.com/a/pavement_02"
+ },
+ "grass": {
+  "asset": "sparse_grass",
+  "size_m": 2.0,
+  "authors": [
+   "Amal Kumar"
+  ],
+  "licence": "CC0",
+  "url": "https://polyhaven.com/a/sparse_grass"
+ },
+ "court": {
+  "asset": "cobblestone_floor_08",
+  "size_m": 2.0,
+  "authors": [
+   "Rob Tuytel"
+  ],
+  "licence": "CC0",
+  "url": "https://polyhaven.com/a/cobblestone_floor_08"
+ },
+ "earth": {
+  "asset": "gravel_floor",
+  "size_m": 2.25,
+  "authors": [
+   "Jenelle van Heerden",
+   "Matterfield"
+  ],
+  "licence": "CC0",
+  "url": "https://polyhaven.com/a/gravel_floor"
+ }
+}

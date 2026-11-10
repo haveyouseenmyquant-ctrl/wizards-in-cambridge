@@ -1,0 +1,44 @@
+{
+ "judged_game_quality": 40.1,
+ "judged_sections": {
+  "Visuals": 42.0,
+  "Animation": 20.0,
+  "Combat feel": 60.4,
+  "Story presentation": 14.0,
+  "UI polish": 56.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "frames": 62,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78",
+   "game: a new game did not open the class selection screen"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together: brick and stone facade textures, recognisable landmark buildings like the gothic church, bikes, railings, decent trees, market stalls and some basic shadowing, so it clears the 40 anchor. It looks like an early prototype, though. Geometry is low-detail and boxy, materials are flat and repetitive, the lighting is uniform with little ambient occlusion and no atmospheric depth, and the characters are very primitive (a blocky pedestrian figure and cone-shaped wizards). Combat VFX like the glows and fire bursts sit on the scene as simple additive sprites rather than blending into it."
+   },
+   "Animation": {
+    "all": "The walking character holds an identical stiff upright pose in all four exploration frames, with legs together and no arm swing or stride, which points to a rigid figure sliding along. In combat the robed wizards look like static cone shapes, attacks show up only as particle and projectile effects with no matching body motion, and the enemies (bell golem, floating orbs) read as rigid objects. Apart from effects and a wobbling tree, nothing in the world visibly moves: no crowds and no secondary motion."
+   },
+   "Combat feel": {
+    "hexweaver": "The combat reads well. There are big crit damage numbers, a boss with a phase-marked health bar and a stagger state, red ground telegraphs, loot tooltips colour-coded by rarity, a 'Vanquished' banner, and six spells with cooldowns, lots of hits and kills, and dense sound. The VFX are mostly generic glowing orbs and big translucent spheres that cover the view, and hex_dart makes up 60 of the 79 casts, so the fight looks repetitive. Several frames have no enemies at all. There is no visible hit-stop, knockback or crowd control changing fights, and only one class is shown, so differences between classes can't be judged.",
+    "pyromancer": "The pyromancer has several distinct spells with readable effects: fire bolts, ground fire trails, a projectile with a red ground telegraph, and fireburst glows. Hits come with crit-labelled damage numbers and sound, and the Bellwarden boss has a phase bar, 'Phase II' and 'enraged' banners and a 'Vanquished' moment, while loot beams and labels show rarity colours. The big gaps: 71 of 91 casts were the ember bolt, the frames show no visible hit-stop, knockback or crowd control, enemies are often hard to make out in the clutter, and only one class is shown, so differences between classes can't be judged.",
+    "stormcaller": "Combat is readable and has solid feedback: large damage numbers and crit callouts, a named boss with a three-phase health bar plus 'enraged' and 'Vanquished' banners, varied enemy types, six distinct stormcaller abilities with cooldowns, mobility casts, and loot beams with colour-coded rarity tags. The biggest gaps are that most frames have no enemies in them, and the VFX are mostly flat glows that lack weight, with no visible hit-stop, knockback or screen feedback. Spark_lance makes up 62 of the 85 casts, which makes the fight look repetitive, and the screens get crowded with loot labels.",
+    "warden": "There is solid evidence of feedback: damage numbers and crits, a 'Phase II' banner on a named boss with a phase health bar, loot beams with rarity labels and tooltips, telegraph circles on the ground, a shield bubble, a monolith pillar, and six spells on cooldown. That lands it a little above the 60 anchor. Pebble_shot is 70 of the 91 casts, so the fight is mostly one repeated attack. Effects often turn into a muddy blob of translucent spheres and particles that hides the player and enemies, and the frames show no hit-stop, knockback or crowd control that clearly changes the fight. Only one class is shown, so differences between classes can't be judged."
+   },
+   "Story presentation": {
+    "all": "The only story content on screen is a toast that says \"You walk the path of the Pyromancer\" and some flavour item names (Fresher Hat, Matriculation Robe) that hint at a university-city wizard premise. There is no dialogue, no named characters to talk to, no quest objective or tracker, and no staging. In the second frame a creature attacks right at spawn with no narrative framing."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent dark-panel style with a serif display font across class selection, HUD, inventory and talents. It includes icon spell bars with cooldown numbers, a boss bar, a minimap, rarity-tagged loot toasts and stylised damage and crit numbers, all of which point toward the 60 anchor. Holding it back: the inventory and talent screens are text-only lists with tiny type and no item icons. The class selection overlaps the HUD that shows through it, and combat frames are cluttered, with stacked loot labels, popups and banners overlapping the action and boss title."
+   }
+  }
+ }
+}

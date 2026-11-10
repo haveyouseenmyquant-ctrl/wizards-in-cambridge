@@ -35,3 +35,10 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   cards, VFX particles, fog, GTAO on Ultra. Build 8579b103 High: fps 60, p5 59, load 0.54 s. Low 1298 calls / 2.4 M tris.
 - safari_ok = 0: every Playwright WebKit build (2388, 2389, 2391 from 1.66-alpha-2026-11-09) crashes its WebContent
   process at launch on macOS 26.5.2 (even data: URLs); safaridriver needs `--enable` (admin). Not a site problem.
+
+## 2026-11-10 — session 2 (lead)
+- Merged all 5 node branches (QA rubric/judge/service.sh, Optimisation perf harness+presets, Gameplay feel.js,
+  Graphics rigged wizard, Story quests+prologue). Tests on merged trunk 38af3295: classes ok, feel 17/17, items 45,
+  mobs 12+3 bosses, quest_bot 4/4 (main_quests_shipped 1).
+- Old prototype snapshot moved aside (live_site.prototype): KPIs now score trunk until a real publish.
+- New tasks aimed at the weakest judge sections (Story presentation 10, Animation 23), quest 2, boss TTK, perf guardrail.

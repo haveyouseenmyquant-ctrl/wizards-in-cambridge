@@ -1,0 +1,285 @@
+{
+ "tiles": {
+  "t_0_0": {
+   "glb": "cityfac/t_0_0.glb",
+   "tris": 3130
+  },
+  "t_0_1": {
+   "glb": "cityfac/t_0_1.glb",
+   "tris": 17496
+  },
+  "t_0_2": {
+   "glb": "cityfac/t_0_2.glb",
+   "tris": 34812
+  },
+  "t_0_3": {
+   "glb": "cityfac/t_0_3.glb",
+   "tris": 18465
+  },
+  "t_0_4": {
+   "glb": "cityfac/t_0_4.glb",
+   "tris": 40326
+  },
+  "t_0_6": {
+   "glb": "cityfac/t_0_6.glb",
+   "tris": 14618
+  },
+  "t_0_7": {
+   "glb": "cityfac/t_0_7.glb",
+   "tris": 2986
+  },
+  "t_1_0": {
+   "glb": "cityfac/t_1_0.glb",
+   "tris": 1802
+  },
+  "t_1_1": {
+   "glb": "cityfac/t_1_1.glb",
+   "tris": 30584
+  },
+  "t_1_2": {
+   "glb": "cityfac/t_1_2.glb",
+   "tris": 46566
+  },
+  "t_1_3": {
+   "glb": "cityfac/t_1_3.glb",
+   "tris": 17322
+  },
+  "t_1_4": {
+   "glb": "cityfac/t_1_4.glb",
+   "tris": 25006
+  },
+  "t_1_5": {
+   "glb": "cityfac/t_1_5.glb",
+   "tris": 1369
+  },
+  "t_1_6": {
+   "glb": "cityfac/t_1_6.glb",
+   "tris": 55502
+  },
+  "t_1_7": {
+   "glb": "cityfac/t_1_7.glb",
+   "tris": 36986
+  },
+  "t_2_0": {
+   "glb": "cityfac/t_2_0.glb",
+   "tris": 172
+  },
+  "t_2_1": {
+   "glb": "cityfac/t_2_1.glb",
+   "tris": 28582
+  },
+  "t_2_2": {
+   "glb": "cityfac/t_2_2.glb",
+   "tris": 89300
+  },
+  "t_2_3": {
+   "glb": "cityfac/t_2_3.glb",
+   "tris": 52488
+  },
+  "t_2_4": {
+   "glb": "cityfac/t_2_4.glb",
+   "tris": 155407
+  },
+  "t_2_5": {
+   "glb": "cityfac/t_2_5.glb",
+   "tris": 72448
+  },
+  "t_2_6": {
+   "glb": "cityfac/t_2_6.glb",
+   "tris": 111326
+  },
+  "t_2_7": {
+   "glb": "cityfac/t_2_7.glb",
+   "tris": 57004
+  },
+  "t_3_0": {
+   "glb": "cityfac/t_3_0.glb",
+   "tris": 4012
+  },
+  "t_3_1": {
+   "glb": "cityfac/t_3_1.glb",
+   "tris": 13523
+  },
+  "t_3_2": {
+   "glb": "cityfac/t_3_2.glb",
+   "tris": 153324
+  },
+  "t_3_3": {
+   "glb": "cityfac/t_3_3.glb",
+   "tris": 174356
+  },
+  "t_3_4": {
+   "glb": "cityfac/t_3_4.glb",
+   "tris": 115652
+  },
+  "t_3_5": {
+   "glb": "cityfac/t_3_5.glb",
+   "tris": 154949
+  },
+  "t_3_6": {
+   "glb": "cityfac/t_3_6.glb",
+   "tris": 133697
+  },
+  "t_3_7": {
+   "glb": "cityfac/t_3_7.glb",
+   "tris": 10462
+  },
+  "t_4_0": {
+   "glb": "cityfac/t_4_0.glb",
+   "tris": 29738
+  },
+  "t_4_1": {
+   "glb": "cityfac/t_4_1.glb",
+   "tris": 91256
+  },
+  "t_4_2": {
+   "glb": "cityfac/t_4_2.glb",
+   "tris": 134666
+  },
+  "t_4_3": {
+   "glb": "cityfac/t_4_3.glb",
+   "tris": 126333
+  },
+  "t_4_4": {
+   "glb": "cityfac/t_4_4.glb",
+   "tris": 162748
+  },
+  "t_4_5": {
+   "glb": "cityfac/t_4_5.glb",
+   "tris": 126553
+  },
+  "t_4_6": {
+   "glb": "cityfac/t_4_6.glb",
+   "tris": 30570
+  },
+  "t_4_7": {
+   "glb": "cityfac/t_4_7.glb",
+   "tris": 802
+  },
+  "t_5_0": {
+   "glb": "cityfac/t_5_0.glb",
+   "tris": 18818
+  },
+  "t_5_1": {
+   "glb": "cityfac/t_5_1.glb",
+   "tris": 32241
+  },
+  "t_5_2": {
+   "glb": "cityfac/t_5_2.glb",
+   "tris": 38616
+  },
+  "t_5_3": {
+   "glb": "cityfac/t_5_3.glb",
+   "tris": 78443
+  },
+  "t_5_4": {
+   "glb": "cityfac/t_5_4.glb",
+   "tris": 44197
+  },
+  "t_5_5": {
+   "glb": "cityfac/t_5_5.glb",
+   "tris": 87650
+  },
+  "t_5_6": {
+   "glb": "cityfac/t_5_6.glb",
+   "tris": 6696
+  },
+  "t_5_7": {
+   "glb": "cityfac/t_5_7.glb",
+   "tris": 1941
+  },
+  "t_6_0": {
+   "glb": "cityfac/t_6_0.glb",
+   "tris": 10230
+  },
+  "t_6_1": {
+   "glb": "cityfac/t_6_1.glb",
+   "tris": 47704
+  },
+  "t_6_2": {
+   "glb": "cityfac/t_6_2.glb",
+   "tris": 31516
+  },
+  "t_6_3": {
+   "glb": "cityfac/t_6_3.glb",
+   "tris": 70367
+  },
+  "t_6_4": {
+   "glb": "cityfac/t_6_4.glb",
+   "tris": 122627
+  },
+  "t_6_5": {
+   "glb": "cityfac/t_6_5.glb",
+   "tris": 79837
+  },
+  "t_6_6": {
+   "glb": "cityfac/t_6_6.glb",
+   "tris": 18846
+  },
+  "t_6_7": {
+   "glb": "cityfac/t_6_7.glb",
+   "tris": 27143
+  },
+  "t_7_0": {
+   "glb": "cityfac/t_7_0.glb",
+   "tris": 4270
+  },
+  "t_7_1": {
+   "glb": "cityfac/t_7_1.glb",
+   "tris": 20326
+  },
+  "t_7_2": {
+   "glb": "cityfac/t_7_2.glb",
+   "tris": 23544
+  },
+  "t_7_3": {
+   "glb": "cityfac/t_7_3.glb",
+   "tris": 43922
+  },
+  "t_7_4": {
+   "glb": "cityfac/t_7_4.glb",
+   "tris": 40738
+  },
+  "t_7_5": {
+   "glb": "cityfac/t_7_5.glb",
+   "tris": 44376
+  },
+  "t_7_6": {
+   "glb": "cityfac/t_7_6.glb",
+   "tris": 11517
+  },
+  "t_7_7": {
+   "glb": "cityfac/t_7_7.glb",
+   "tris": 9094
+  }
+ },
+ "stats": {
+  "walls": 6859,
+  "buildings": 1844,
+  "styled": 6291,
+  "annotations": 388,
+  "walls_annotated": 388,
+  "buildings_annotated": 231,
+  "annotations_unmatched": [],
+  "ring1_walls": 870,
+  "ring1_bespoke_walls": 80,
+  "ring1_nonbespoke_facade_geometry_match_pct": 53.01,
+  "ring1_walls_annotated": 384,
+  "ring1_facade_geometry_match_pct": 53.67,
+  "ring1_all_walls": 2000,
+  "ring1_all_walls_facade_geometry_match_pct": 28.68,
+  "city_walls": 3639,
+  "city_walls_annotated": 384,
+  "city_facade_geometry_match_pct": 12.52,
+  "city_all_walls_facade_geometry_match_pct": 7.96,
+  "kings_parade_walls": 18,
+  "kings_parade_walls_annotated": 15,
+  "kings_parade_facade_geometry_match_pct": 86.43,
+  "colour_hints": 824,
+  "colour_override_buildings": 76,
+  "duplicates_dropped": 86,
+  "tris": 3290997,
+  "facade_area_m2": 565335,
+  "bytes": 121029652
+ }
+}

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>Walkable Cambridge</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="app/style.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div id="status">Loading…</div>
+<div id="help" hidden>Click to look around · WASD to walk · Space jump · B broom · H for all controls</div>
+<div id="mode"></div>
+<canvas id="minimap" width="180" height="180"></canvas>
+<nav id="menu">
+  <button data-open="landmarks">Landmarks</button>
+  <button data-open="controls">Help</button>
+  <button data-open="credits">Credits</button>
+</nav>
+
+<section id="landmarks" class="overlay" hidden>
+  <button class="close" aria-label="Close">×</button>
+  <h2>Landmarks</h2>
+  <ul id="landmark-list"></ul>
+</section>
+
+<section id="controls" class="overlay" hidden>
+  <button class="close" aria-label="Close">×</button>
+  <h2>Controls</h2>
+  <table class="keys">
+    <tr><th colspan="2">On foot</th></tr>
+    <tr><td>W A S D / arrows</td><td>walk (← → turn)</td></tr>
+    <tr><td>Mouse</td><td>look (click the view first; Esc releases)</td></tr>
+    <tr><td>Shift</td><td>run</td></tr>
+    <tr><td>Space</td><td>jump</td></tr>
+    <tr><td>C / Ctrl</td><td>crouch; while running: slide</td></tr>
+    <tr><td>Q / double-tap a direction</td><td>dash</td></tr>
+    <tr><td>Walk into a ledge</td><td>climb up (up to 1.5 m)</td></tr>
+    <tr><td>V</td><td>first / third person</td></tr>
+    <tr><th colspan="2">Broom</th></tr>
+    <tr><td>B</td><td>mount / dismount (dismounting in the air means falling)</td></tr>
+    <tr><td>W / S, mouse</td><td>fly forward / back, steer and climb with the mouse</td></tr>
+    <tr><td>Space / C</td><td>up / down</td></tr>
+    <tr><td>Shift</td><td>boost</td></tr>
+    <tr><th colspan="2">Other</th></tr>
+    <tr><td>H or ?</td><td>this help</td></tr>
+    <tr><td>Gamepad</td><td>sticks move/look, A jump/up, B crouch/down, X dash, Y broom, LB run, RB view</td></tr>
+    <tr><td>Phone</td><td>left stick to move, drag to look, buttons on the right</td></tr>
+  </table>
+</section>
+
+<section id="credits" class="overlay" hidden>
+  <button class="close" aria-label="Close">×</button>
+  <h2>Credits</h2>
+  <p>A walkable model of Cambridge city centre built only from open data.</p>
+  <ul>
+    <li>© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a> (ODbL)</li>
+    <li>© Environment Agency copyright and/or database right 2022. All rights reserved; 2023 for the tree canopy. (LiDAR, <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">OGL v3</a>)</li>
+    <li>Contains OS data © Crown copyright and database right 2026 (<a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" target="_blank" rel="noopener">OGL v3</a>)</li>
+    <li>Surface textures: <a href="https://polyhaven.com/" target="_blank" rel="noopener">Poly Haven</a> (CC0)</li>
+    <li>Building facades near Great St Mary's: rectified from street-level photos on <a href="https://www.mapillary.com/" target="_blank" rel="noopener">Mapillary</a> (CC-BY-SA 4.0). The facade atlases are adaptations shared under the same licence; photo ids and contributors are listed in <a href="facades/credits.json" target="_blank" rel="noopener">facades/credits.json</a></li>
+    <li><a href="https://threejs.org/" target="_blank" rel="noopener">three.js</a> (MIT), <a href="https://github.com/zeux/meshoptimizer" target="_blank" rel="noopener">meshoptimizer</a> (MIT)</li>
+  </ul>
+</section>
+
+<div id="touch-buttons" hidden>
+  <button data-key="Space">Jump</button><button data-key="run">Run</button><button data-key="KeyQ">Dash</button>
+  <button data-key="KeyC">Crouch</button><button data-key="KeyB">Broom</button><button data-key="KeyV">View</button>
+</div>
+<div id="joystick" hidden><div id="knob"></div></div>
+<script type="module" src="app/main.js"></script>
+</body>
+</html>

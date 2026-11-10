@@ -1,0 +1,513 @@
+{
+ "glb": "zone/market_square.glb",
+ "centre": [
+  -96.8,
+  57.0
+ ],
+ "radius": 140,
+ "hide": [
+  "way/134521042",
+  "way/26344576",
+  "way/95406730",
+  "way/151179441",
+  "way/26344507",
+  "way/26269190",
+  "way/137017447",
+  "way/164708972",
+  "way/164848633",
+  "way/135762298",
+  "way/92878394",
+  "way/5094870",
+  "way/135595981",
+  "way/400160678",
+  "way/400160679",
+  "way/400160680",
+  "way/400160681",
+  "way/400160682",
+  "way/400160683",
+  "way/400160684",
+  "way/400160685",
+  "way/400160677",
+  "way/400160686"
+ ],
+ "stats": {
+  "walls_annotated": 48,
+  "walls_total": 153,
+  "walls_built": 59,
+  "walls_unannotated": [
+   "way/137017428:10",
+   "way/137017428:11",
+   "way/164853890:6",
+   "way/164853890:7",
+   "way/1080560696:2",
+   "way/1099847937:5",
+   "way/1099847940:1",
+   "way/1099847940:2",
+   "way/1099847940:3",
+   "way/1099847940:4",
+   "way/1222243455:2"
+  ],
+  "walls_skipped": [
+   {
+    "id": "way/5094872:7",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:8",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:9",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:10",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:12",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:16",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:17",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:21",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:23",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:24",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:25",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/5094872:26",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/5094872"
+   },
+   {
+    "id": "way/13864058:26",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864058"
+   },
+   {
+    "id": "way/13864058:27",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864058"
+   },
+   {
+    "id": "way/13864058:28",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864058"
+   },
+   {
+    "id": "way/13864148:1",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:2",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:4",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:5",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:6",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:7",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:8",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:9",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:10",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:11",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:12",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/13864148:13",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/13864148"
+   },
+   {
+    "id": "way/26344507:0",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:1",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:2",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:3",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:4",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:5",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:9",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:10",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:11",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:12",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:13",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:14",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:15",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344507:16",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344507"
+   },
+   {
+    "id": "way/26344576:0",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:1",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:2",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:3",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:4",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:5",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:6",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:7",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:8",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/26344576:9",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/26344576"
+   },
+   {
+    "id": "way/95406730:3",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/95406730"
+   },
+   {
+    "id": "way/95406730:4",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/95406730"
+   },
+   {
+    "id": "way/95406730:5",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/95406730"
+   },
+   {
+    "id": "way/137017428:0",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847936:5"
+   },
+   {
+    "id": "way/137017428:1",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847936:6"
+   },
+   {
+    "id": "way/137017428:2",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847938:0"
+   },
+   {
+    "id": "way/137017428:3",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847937:0"
+   },
+   {
+    "id": "way/137017428:4",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847937:1"
+   },
+   {
+    "id": "way/137017428:9",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847937:5"
+   },
+   {
+    "id": "way/137017430:1",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847939:5"
+   },
+   {
+    "id": "way/137017430:2",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847939:6"
+   },
+   {
+    "id": "way/137017430:3",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847940:0"
+   },
+   {
+    "id": "way/137017430:5",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847940:1"
+   },
+   {
+    "id": "way/137017430:6",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847940:2"
+   },
+   {
+    "id": "way/137017430:7",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847940:3"
+   },
+   {
+    "id": "way/137017430:8",
+    "reason": "duplicate footprint",
+    "built_as": "way/1099847940:4"
+   },
+   {
+    "id": "way/137017433:0",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017433"
+   },
+   {
+    "id": "way/137017433:1",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017433"
+   },
+   {
+    "id": "way/137017433:2",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017433"
+   },
+   {
+    "id": "way/137017433:4",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017433"
+   },
+   {
+    "id": "way/137017433:21",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017433"
+   },
+   {
+    "id": "way/137017433:22",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017433"
+   },
+   {
+    "id": "way/137017435:2",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017435"
+   },
+   {
+    "id": "way/137017435:3",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017435"
+   },
+   {
+    "id": "way/137017435:4",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017435"
+   },
+   {
+    "id": "way/137017435:5",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017435"
+   },
+   {
+    "id": "way/137017435:7",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017435"
+   },
+   {
+    "id": "way/137017435:8",
+    "reason": "bespoke",
+    "built_as": "bespoke model way/137017435"
+   },
+   {
+    "id": "way/400160677:0",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160677:1",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160677:3",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160678:0",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160678:3",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160679:0",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160679:1",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160680:0",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160680:5",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160681:1",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160682:5",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160683:1",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160684:1",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160685:1",
+    "reason": "stall/trailer"
+   },
+   {
+    "id": "way/400160686:1",
+    "reason": "stall/trailer"
+   }
+  ],
+  "tris": 785975,
+  "facade_tris": 37254,
+  "prop_tris": 748721,
+  "facade_area_m2": 5393.5,
+  "modelled_detail_area_m2": 2326.0
+ }
+}

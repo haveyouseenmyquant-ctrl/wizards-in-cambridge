@@ -1,6 +1,7 @@
 #!/bin/bash
 # Wizards in Cambridge KPIs: prints one JSON object, reading only cached per-build results (fast).
-# Current build = the published snapshot data/derived/live_site if present (written by publish.sh), else site/.
+# Current build = the published snapshot data/derived/live_site if present (written by publish.sh), else site/ (trunk).
+# The inherited prototype snapshot was moved to live_site.prototype (s2): nothing of this repo is published yet.
 # Contract for the scoring scripts (owned by the teams, run by publish.sh / service.sh):
 #   data/benchmark/scores/<BUILD_HASH>_wic.json   any of the KPI keys below, measured on that exact build
 #   data/derived/browser_kpi.json                 {"hash", "result": {"fps_median", "load_seconds"}} (prototype harness)

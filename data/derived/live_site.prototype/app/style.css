@@ -1,0 +1,97 @@
+html, body { margin: 0; height: 100%; overflow: hidden; background: #bcd3e6; font: 14px/1.4 system-ui, -apple-system, sans-serif; color: #222; }
+#view { position: fixed; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+#status { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 8px 14px; background: rgba(0,0,0,.55); color: #fff; border-radius: 6px; pointer-events: none; }
+#status:empty { display: none; }
+#help { position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%); padding: 4px 10px; background: rgba(0,0,0,.45); color: #fff; border-radius: 4px; font-size: 12px; pointer-events: none; white-space: nowrap; }
+#minimap { position: fixed; right: 12px; bottom: 12px; width: 180px; height: 180px; border-radius: 50%; border: 2px solid rgba(255,255,255,.85); box-shadow: 0 1px 6px rgba(0,0,0,.35); pointer-events: none; }
+#menu { position: fixed; top: 10px; right: 10px; display: flex; gap: 6px; }
+button { font: inherit; padding: 6px 10px; border: 0; border-radius: 5px; background: rgba(255,255,255,.88); cursor: pointer; }
+button:disabled { opacity: .45; cursor: default; }
+.overlay { position: fixed; top: 52px; right: 10px; width: min(360px, calc(100vw - 20px)); max-height: calc(100vh - 260px); overflow: auto; padding: 10px 14px; background: rgba(255,255,255,.95); border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,.3); box-sizing: border-box; }
+.overlay[hidden], [hidden] { display: none !important; }
+.overlay h2 { margin: 0 0 8px; font-size: 16px; }
+.overlay .close { position: absolute; top: 6px; right: 6px; background: none; font-size: 18px; padding: 0 6px; }
+.overlay ul { padding-left: 18px; margin: 0; }
+#landmark-list { list-style: none; padding: 0; }
+#landmark-list button { width: 100%; text-align: left; margin: 2px 0; background: #eef1f4; }
+.muted { color: #777; }
+#joystick { position: fixed; left: 24px; bottom: 24px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,.25); border: 2px solid rgba(255,255,255,.6); touch-action: none; }
+#knob { position: absolute; left: 35px; top: 35px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.75); }
+@media (pointer: coarse) { #help { display: none; } #minimap { width: 120px; height: 120px; } }
+#mode { position: fixed; top: 10px; left: 10px; padding: 4px 10px; background: rgba(0,0,0,.45); color: #fff; border-radius: 4px; font-size: 12px; pointer-events: none; }
+#mode.flying { background: rgba(120,70,20,.7); }
+.keys { border-collapse: collapse; font-size: 13px; }
+.keys td, .keys th { padding: 2px 6px; vertical-align: top; text-align: left; }
+.keys th { padding-top: 8px; }
+.keys td:first-child { white-space: nowrap; font-weight: 600; }
+#touch-buttons { position: fixed; right: 12px; bottom: 150px; display: grid; grid-template-columns: repeat(3, 58px); gap: 8px; touch-action: none; }
+#touch-buttons button { height: 48px; padding: 0; font-size: 12px; background: rgba(255,255,255,.55); user-select: none; -webkit-user-select: none; }
+#touch-buttons button.on { background: rgba(255,210,120,.85); }
+
+/* game hud */
+#game-hud { position: fixed; inset: 0; pointer-events: none; z-index: 20; font: 13px/1.3 system-ui, sans-serif; color: #fff; }
+body.explore #game-hud { display: none !important; }
+.gh-crosshair { position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,.75); box-shadow: 0 0 2px #000; }
+.gh-crosshair::after { content: ''; position: absolute; left: 5px; top: 5px; width: 2px; height: 2px; background: #fff; border-radius: 50%; }
+.gh-vignette { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse at center, transparent 45%, rgba(170,0,0,.75) 100%); }
+.gh-flash { position: absolute; inset: 0; opacity: 0; background: rgba(255,30,30,.28); transition: opacity .18s; }
+.gh-flash.on { opacity: 1; transition: none; } .gh-flash.on-shield { opacity: .6; background: rgba(255,220,140,.25); transition: none; }
+.gh-bars { position: absolute; left: 50%; bottom: 92px; transform: translateX(-50%); width: 380px; display: flex; flex-direction: column; gap: 3px; }
+.gh-bar { position: relative; height: 14px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.25); border-radius: 3px; overflow: hidden; }
+.gh-bar.gh-xp { height: 7px; } .gh-bar.gh-xp .gh-txt { display: none; }
+.gh-fill { height: 100%; width: 100%; transition: width .1s linear; }
+.gh-hp .gh-fill { background: linear-gradient(#e34848, #8e1717); } .gh-mana .gh-fill { background: linear-gradient(#4f8cff, #1c3d9a); }
+.gh-xp .gh-fill { background: linear-gradient(#f2d36b, #b38a1c); }
+.gh-shield { position: absolute; left: 0; top: 0; height: 100%; background: rgba(255,230,160,.55); }
+.gh-txt { position: absolute; inset: 0; text-align: center; font-size: 10px; line-height: 14px; text-shadow: 0 0 2px #000; }
+.gh-spells { position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); display: flex; gap: 6px; }
+.gh-slot { position: relative; width: 48px; height: 48px; border-radius: 6px; background: rgba(10,10,20,.7); border: 1px solid rgba(255,255,255,.3); overflow: hidden; }
+.gh-slot.ult { border-color: #f2d36b; box-shadow: 0 0 6px rgba(242,211,107,.5); }
+.gh-slot.nomana .gh-glyph { opacity: .35; }
+.gh-slot.pulse { animation: gh-pulse .25s; }
+@keyframes gh-pulse { 0% { transform: scale(1.15); background: rgba(255,255,255,.35); } 100% { transform: scale(1); } }
+.gh-glyph { position: absolute; inset: 0; text-align: center; line-height: 48px; font-size: 26px; text-shadow: 0 0 8px currentColor; }
+.gh-sweep { --cd: 0deg; position: absolute; inset: 0; background: conic-gradient(rgba(0,0,0,.7) var(--cd), transparent 0); }
+.gh-cdt { position: absolute; inset: 0; text-align: center; line-height: 48px; font-weight: 700; font-size: 15px; text-shadow: 0 0 3px #000; }
+.gh-key { position: absolute; left: 3px; top: 1px; font-size: 10px; opacity: .85; text-shadow: 0 0 2px #000; }
+.gh-cls { position: absolute; left: 50%; bottom: 140px; transform: translateX(-50%); font-weight: 700; text-shadow: 0 0 3px #000; }
+.gh-toasts { position: absolute; left: 50%; top: 18%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.gh-toast { padding: 4px 12px; background: rgba(0,0,0,.6); border-radius: 4px; font-size: 15px; transition: opacity .5s; }
+.gh-toast.out { opacity: 0; }
+.gh-nums { position: absolute; inset: 0; overflow: hidden; }
+.gh-num { position: absolute; left: 0; top: 0; font-weight: 800; font-size: 16px; text-shadow: 0 0 3px #000, 0 0 1px #000; white-space: nowrap; will-change: transform; }
+.gh-num.crit { font-size: 26px; color: #ffe14a !important; }
+.gh-overlay { position: absolute; inset: 0; pointer-events: auto; background: rgba(5,5,15,.78); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; }
+.gh-overlay[hidden] { display: none; }
+.gh-overlay h1 { margin: 0; font: 600 30px Georgia, serif; }
+.gh-death h1 { color: #e34848; }
+.gh-btn { pointer-events: auto; font: 600 16px system-ui; padding: 8px 22px; border-radius: 6px; border: 1px solid #fff6; background: #2a1a1a; color: #fff; cursor: pointer; }
+.gh-cards { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; max-width: 1100px; }
+.gh-card { width: 240px; text-align: left; padding: 12px; border-radius: 8px; border: 1px solid #fff4; background: rgba(30,30,45,.9); color: #ddd; cursor: pointer; font: 13px system-ui; }
+.gh-card:hover { border-color: #fff; background: rgba(50,50,70,.95); }
+.gh-card h2 { margin: 0 0 6px; font: 600 20px Georgia, serif; } .gh-card ul { margin: 6px 0 0; padding-left: 0; list-style: none; } .gh-card li b { display: inline-block; width: 20px; }
+.gh-tier { display: flex; gap: 10px; align-items: stretch; }
+.gh-tier-lv { width: 48px; align-self: center; font-weight: 700; opacity: .8; }
+.gh-talent { width: 260px; padding: 8px 10px; border-radius: 6px; border: 1px solid #fff4; background: rgba(30,30,45,.9); color: #ddd; cursor: pointer; text-align: left; font: 13px system-ui; display: flex; flex-direction: column; gap: 3px; }
+.gh-talent.on { border-color: #f2d36b; background: rgba(80,65,20,.9); color: #fff; }
+.gh-talent.locked { opacity: .4; cursor: default; }
+.gh-hint { opacity: .6; }
+/* session 56: game mode declutter (hud.js adds body.game-on; exploration mode keeps the plain UI) */
+.gh-menu-btn { display: none; }
+body.game-on .gh-menu-btn { display: inline-block; padding: 4px 9px; font-size: 15px; line-height: 1; background: rgba(12,12,20,.55); color: #f1e6cc; border: 1px solid rgba(241,230,204,.35); }
+body.game-on #menu { flex-direction: column; align-items: flex-end; gap: 4px; }
+body.game-on #menu > button[data-open] { display: none; }
+body.game-on #menu.open > button[data-open] { display: inline-block; background: rgba(12,12,20,.75); color: #f1e6cc; font-size: 12px; }
+body.game-on #mode { display: none; }
+#help { transition: opacity 1.2s; }
+body.game-hint-off #help { opacity: 0; }
+/* session 58: action-RPG layout. HP, mana and XP sit in a compact block left of the spell bar (the minimap owns the
+   bottom right), the class tag just above the spell bar: the centre of the screen (the wizard and the fight) stays
+   clear. Narrow screens keep the old stack above the spell bar. */
+@media (min-width: 860px) {
+  .gh-bars { left: calc(50% - 175px); bottom: 36px; width: 230px; transform: translateX(-100%); gap: 4px; }
+  .gh-bar.gh-hp, .gh-bar.gh-mana { height: 18px; border-radius: 9px; border-color: rgba(241,230,204,.4); box-shadow: 0 0 0 2px rgba(0,0,0,.45), 0 2px 8px rgba(0,0,0,.5); }
+  .gh-bar.gh-xp { height: 5px; border-radius: 3px; border-color: rgba(241,230,204,.25); }
+  .gh-hp .gh-txt, .gh-mana .gh-txt { font: 700 11px/18px system-ui, sans-serif; letter-spacing: .03em; }
+  .gh-cls { bottom: 92px; font: 600 12px Georgia, serif; letter-spacing: .06em; color: #f1e6cc !important; opacity: .85; }
+}
