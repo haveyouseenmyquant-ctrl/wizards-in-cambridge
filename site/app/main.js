@@ -4,7 +4,7 @@ import { CollisionWorld } from './collision.js';
 import { TileManager } from './tiles.js';
 import { Player } from './player.js';
 import { Avatar } from './avatar.js';
-import { loadZone, zoneCut, zoneMatCut } from './zone.js';
+import { loadZone, zoneCut, zoneMatCut, zoneSun, zoneGnd } from './zone.js';
 import { GrassField } from './grass.js';
 import { Q as QP, QUALITY, initQualityMenu } from './quality.js';
 import { Minimap, renderTileMap, initLandmarks, mergeLandmarks, initOverlays } from './ui.js';
@@ -31,6 +31,7 @@ const OVERCAST = SKYMODE === 'overcast';
 const LK = parseFloat(new URLSearchParams(location.search).get('light') || '0.45');   // scales sun + sky light; 0.45 won the session-21 A/B (photo_match <=520 m 25.79 -> 26.80)
 // ?post=ao: ground-truth ambient occlusion (GTAOPass, normals from depth) on a 4x MSAA half-float target, then OutputPass (sRGB).
 // ?ao=<intensity> (default 1), ?aor=<radius m> (default 2), ?aores=<AO buffer scale>, ?aos=<AO and denoise samples>.
+let gndT = 99;
 const QS = new URLSearchParams(location.search);
 const POST = QS.get('post') || (QP.ao ? 'ao' : 'off');   // Ultra preset: GTAO on unless ?post=off
 const $ = id => document.getElementById(id);
@@ -120,7 +121,7 @@ async function main() {
     : LOOK2 ? new THREE.HemisphereLight(0xc4d8ee, 0x5f584c, 0.75) : new THREE.HemisphereLight(0xdfeaf5, 0x6b6450, (OVERCAST ? 2.3 : 1.6) * LK));
   // Frame: x east, y up, z south.
   const sun = new THREE.DirectionalLight(GOLDEN ? 0xffb874 : 0xfff1dc, GOLDEN ? 2.7 : LOOK2 ? 2.6 : (OVERCAST ? 1.0 : 1.8) * LK);
-  sun.position.copy(SUN_DIR); scene.add(sun); scene.add(sun.target);
+  sun.position.copy(SUN_DIR); scene.add(sun); scene.add(sun.target); zoneSun.value.copy(SUN_DIR).normalize();
   // Quality preset (quality.js; ?q=low|medium|high|ultra): Low has no shadows; otherwise a 1024-4096 shadow map, 240 m square
   const quality = QUALITY;
   if (QP.shadow) {
@@ -293,6 +294,13 @@ async function main() {
     // s62: game-mode third-person roof cutaway over the market stalls (no cut in exploration mode / first person)
     if (player.view === 3 && !fc && window.__game && !window.__explore) zoneCut.value.set(player.x, player.z + 1.9, -player.y, 8);
     else zoneCut.value.w = 0;
+    // wall-base grime follows the street level: track the feet only while walking on ground near the last level (not
+    // on the broom, roofs or ledges more than 2.5 m above/below it)
+    if (zoneGnd.value < -1e3 || fc) zoneGnd.value = player.z;   // first frame / scripted screenshot cameras
+    else if (player.grounded && !player.flying) {
+      gndT = Math.abs(player.z - zoneGnd.value) < 2.5 ? 0 : gndT + dt;
+      if (gndT === 0 || gndT > 3) zoneGnd.value = player.z;   // a new level held for 3 s (after teleports, long ramps) wins
+    }
     avatar.update(player, dt, player.view === 3 && !fc && !(player.camD < 0.8));   // s60: hide the avatar when the boom is squeezed into it
     if (sun.castShadow) {   // shadow box follows the camera, snapped to shadow texels to avoid shimmering
       const q = 240 / QP.shadow, cx = Math.round(camera.position.x / q) * q, cz = Math.round(camera.position.z / q) * q;
