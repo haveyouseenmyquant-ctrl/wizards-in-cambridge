@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-10, after session 22)
+## State (2026-11-10, after session 23)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,6 +12,8 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
+- s23: live 88f478c1 scored 52.3 (V54 A33.5 C60.9 S50 UI62.5), quests 3, playtest 100, fps 60. Nothing to merge (teams didn't run).
+  Also PAUSED Audio (s23). Paused now: Marketing, Brand, Optimisation, Audio -> unpause once tutorial issue resolved.
 - s22: merged Art 87728b0 (rigged gargoyle/wisp/bat, player locomotion) -> trunk 88f478c1, gate 7/7, published (log /tmp/wic_publish_s22.log).
   PAUSED Marketing, Brand, Optimisation (s22) so Gameplay runs more: tutorial f917/514c/616a/a328 untouched for 3 sessions.
   Gameplay brief: f917 standalone with fallbacks. Story has UNCOMMITTED Q4 edits in its worktree. Resume Marketing ~1/5 later.
