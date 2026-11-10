@@ -111,12 +111,12 @@ async function main() {
   skyDome.renderOrder = -1; skyDome.frustumCulled = false; if (GOLDEN || LOOK2 || SKYMODE !== 'flat') scene.add(skyDome);
   const camera = new THREE.PerspectiveCamera(70, 1, 0.2, LOOK2 ? 1200 : 600);
   if (LOOK2) { renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = 1.15; }
-  if (GOLDEN) { renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = parseFloat(QS.get('exposure') || '1.05'); }
+  if (GOLDEN) { renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = parseFloat(QS.get('exposure') || '1.1'); }
   // fill: cool blue sky light against the warm sun (warm/cool contrast reads as depth); warm bounce from the ground
   scene.add(GOLDEN ? new THREE.HemisphereLight(0x8eaad2, 0x75573a, 0.85)
     : LOOK2 ? new THREE.HemisphereLight(0xc4d8ee, 0x5f584c, 0.75) : new THREE.HemisphereLight(0xdfeaf5, 0x6b6450, (OVERCAST ? 2.3 : 1.6) * LK));
   // Frame: x east, y up, z south.
-  const sun = new THREE.DirectionalLight(GOLDEN ? 0xffb874 : 0xfff1dc, GOLDEN ? 3.0 : LOOK2 ? 2.6 : (OVERCAST ? 1.0 : 1.8) * LK);
+  const sun = new THREE.DirectionalLight(GOLDEN ? 0xffb874 : 0xfff1dc, GOLDEN ? 2.7 : LOOK2 ? 2.6 : (OVERCAST ? 1.0 : 1.8) * LK);
   sun.position.copy(SUN_DIR); scene.add(sun); scene.add(sun.target);
   // Quality preset (quality.js; ?q=low|medium|high|ultra): Low has no shadows; otherwise a 1024-4096 shadow map, 240 m square
   const quality = QUALITY;
@@ -146,8 +146,8 @@ async function main() {
       ao.blendIntensity = parseFloat(QS.get('ao') || '1');
       composer.addPass(ao);
     }
-    // bloom on the linear HDR image: only the sun disc, sunlit cloud rims and spell cores (> ~1.0) glow
-    if (BLOOM) composer.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), parseFloat(QS.get('bloom') || '0.4'), 0.55, 1.15));
+    // bloom on the linear HDR image: only the sun disc and spell cores (> ~2.2) glow; sunlit walls stay below it (s1 judge: lower thresholds washed out combat frames)
+    if (BLOOM) composer.addPass(new UnrealBloomPass(new THREE.Vector2(256, 256), parseFloat(QS.get('bloom') || '0.35'), 0.5, 2.2));
     composer.addPass(new OutputPass());
     if (GOLDEN) composer.addPass(new ShaderPass({   // display-space grade: soft vignette, slight warm/teal split
       uniforms: { tDiffuse: { value: null } },
