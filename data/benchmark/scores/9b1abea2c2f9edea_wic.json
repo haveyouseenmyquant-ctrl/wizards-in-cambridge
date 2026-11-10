@@ -37,13 +37,13 @@
     "all": "The walking frames show a small chibi wizard from behind with some leg separation and a held staff, which suggests a basic walk cycle. In combat, attacks show up almost entirely as projectiles, beams, glows and 'Staggered' text. No cast poses, wind-ups or hit reactions on the player or enemies can be read, and the enemies are tiny, indistinct shapes. The biggest gaps are the lack of visible enemy attack or death animations and of secondary motion, plus a static city with no crowds or moving foliage."
    },
    "Combat feel": {
-    "hexweaver": "The visible features meet the 60 anchor: six spells with cooldowns, floating damage and crit numbers, a chain counter, Interrupted/Staggered labels, a Bellwarden boss with a segmented health bar and 'Phase II' banner, and loot drops labelled by rarity. Readability is weak: frames 1, 5 and 7 are cluttered with overlapping glowing VFX, loot labels and quest text, and the enemies are small and hard to pick out. The player took only one hit (9 damage), frames 9–12 contain no enemies, the boss died about 10 s in, and only one class is shown, so there is no visible evidence of hit-stop, real threat or meaningful enemy pressure.",
+    "hexweaver": "The visible features meet the 60 anchor: six spells with cooldowns, floating damage and crit numbers, a chain counter, Interrupted/Staggered labels, a Bellwarden boss with a segmented health bar and 'Phase II' banner, and loot drops labelled by rarity. Readability is weak: frames 1, 5 and 7 are cluttered with overlapping glowing VFX, loot labels and quest text, and the enemies are small and hard to pick out. The player took only one hit (9 damage), frames 9\u201312 contain no enemies, the boss died about 10 s in, and only one class is shown, so there is no visible evidence of hit-stop, real threat or meaningful enemy pressure.",
     "pyromancer": "The frames show a working combat loop. There are several distinct fire spells on cooldown, crit-flagged damage numbers, combo chain counters, Staggered/Interrupted status text, a boss with phase bars and an enraged callout, and loot labels with rarity tags. That puts it at about the 60 anchor, helped by 627 sound voices, 135 hits and 41 kills in 60 s. Holding it back: the VFX are often an unreadable cluster of flat particles and loot labels (frame 10), enemies are small and hard to pick out, there's no visible hit-stop, screen feedback or clear enemy telegraphs, and many frames show no combat at all (4, 5, 7, 12), so the fights feel weak on pacing and weight.",
-    "stormcaller": "There's real combat feedback: crit damage numbers, a chain counter, Staggered labels, a boss bar with a Phase II banner, rarity-tagged loot beams and toasts, a red telegraph circle in frame 12, and lots of sound and casting. But 7 of the 12 frames show no enemies, the camera repeatedly clips into walls (frames 8–10), and the spell effects are barely visible and hard to read. There's no visible hit-stop, knockback or crowd control, and the boss dies in about 9 seconds with no distinct mechanics.",
+    "stormcaller": "There's real combat feedback: crit damage numbers, a chain counter, Staggered labels, a boss bar with a Phase II banner, rarity-tagged loot beams and toasts, a red telegraph circle in frame 12, and lots of sound and casting. But 7 of the 12 frames show no enemies, the camera repeatedly clips into walls (frames 8\u201310), and the spell effects are barely visible and hard to read. There's no visible hit-stop, knockback or crowd control, and the boss dies in about 9 seconds with no distinct mechanics.",
     "warden": "The frames show working, readable combat feedback: large damage numbers and crit callouts, Staggered and Interrupted status labels, chain counters, a boss health bar with a Phase II banner, and loot beams and toasts colour-coded by rarity. The event log backs this up with six distinct spells, crowd control, mobility (boulder_leap) and 511 sound voices. The biggest gaps are readability and weight: a large pale-blue blob often hides the player and the target, frame 11 is almost entirely covered by a purple wash, and spells don't have clear, punchy shapes. pebble_shot accounts for 61 of the 83 casts, and the player took only 18 damage, so the fight shows little threat or variety of enemy behaviour."
    },
    "Story presentation": {
-    "all": "The writing is strong and specific. Named speakers have portraits and subtitles, the quest is set in a real place (Market Hill, Great St Mary's), and there are letterbox bars, a title card, a waypoint marker and a quest-complete reward banner, all with a consistent, original tone. Staging is weak, though: no character is framed on camera, the NPCs are tiny figures in the distance, and the 'Bellwarden' set piece is told only in narration and never shown. A 'Loading...' overlay stays on screen in frames 2–8, the tracker still reads 'Speak to Nell' after the quest is complete, the UI elements overlap, and there are no branching choices."
+    "all": "The writing is strong and specific. Named speakers have portraits and subtitles, the quest is set in a real place (Market Hill, Great St Mary's), and there are letterbox bars, a title card, a waypoint marker and a quest-complete reward banner, all with a consistent, original tone. Staging is weak, though: no character is framed on camera, the NPCs are tiny figures in the distance, and the 'Bellwarden' set piece is told only in narration and never shown. A 'Loading...' overlay stays on screen in frames 2\u20138, the tracker still reads 'Speak to Nell' after the quest is complete, the UI elements overlap, and there are no branching choices."
    },
    "UI polish": {
     "all": "The UI has a consistent dark-panel and serif style. The HUD is functional: health and mana bars, a numbered spell bar with readable cooldowns, a minimap, a quest tracker, a boss bar, chain counters and rarity-tagged loot popups. The menus have serious layering problems. The 'Quest Complete / The Thirteenth Chime' banner and the NPC dialogue box draw over the inventory and talent screens, which makes the talent screen largely unreadable. The inventory is a plain text list with no icons or tooltips, the class selection cards are dim and text-only, and debug elements such as the FPS counter, 'Quality: High' label and 'Loading...' text are left visible, with large damage numbers cluttering combat."
@@ -77,5 +77,56 @@
   "errors": 0,
   "first_errors": [],
   "at": "2026-11-10T10:12:24.103Z"
+ },
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 1,
+   "passed": 1,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 1,
+   "passed": 1,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 1,
+   "passed": 1,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 1,
+   "passed": 1,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 4,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": null,
+  "main_quests_shipped": 2,
+  "wall_s": 222,
+  "at": "2026-11-10T10:25:37.742Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "quest_bot": true
  }
 }

@@ -45,3 +45,9 @@
 {"hash":"fb1294bbbf776dd9","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-10T09:29:14.685Z"}
 {"hash": "fb1294bbbf776dd9", "step": "playtest", "status": "game_fail", "secs": 835, "t": "2026-11-10T09:29:14Z"}
 {"hash": "fb1294bbbf776dd9", "step": "gate", "status": "ok", "secs": 159, "t": "2026-11-10T09:31:53Z"}
+{"hash":"9b1abea2c2f9edea","step":"playtest_run:quest:pyromancer","status":"ok","t":"2026-11-10T10:25:37.744Z"}
+{"hash":"9b1abea2c2f9edea","step":"playtest_run:quest:stormcaller","status":"ok","t":"2026-11-10T10:25:37.744Z"}
+{"hash":"9b1abea2c2f9edea","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-10T10:25:37.744Z"}
+{"hash":"9b1abea2c2f9edea","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-10T10:25:37.744Z"}
+{"hash": "9b1abea2c2f9edea", "step": "playtest", "status": "ok", "secs": 222, "t": "2026-11-10T10:25:37Z"}
+{"hash": "9b1abea2c2f9edea", "step": "gate", "status": "ok", "secs": 163, "t": "2026-11-10T10:28:20Z"}
