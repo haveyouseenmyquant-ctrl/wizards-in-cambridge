@@ -115,3 +115,5 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   Result: judged 49.2, playtest 100, but measure.sh (b1d7eff5) still read playtest 0. QA task 6266 adds a publish lock and a hash re-check after each step.
 - Merged Optimisation s3 (mainmerge.js batches static meshes on Low/Medium, Low draws 1279->761) -> 91047adec8ca0046. Gate 6/6 (166 s). Published.
 - Cancelled Story 6b1b (Q3 live). Told Gaspard that Safari testing needs `safaridriver --enable`.
+- The Pages deploy for 91047adec failed 3 times (deploy-pages timeout, GitHub side), so the site still serves b1d7eff5. Added 1665d3ca_wic.json as an alias, because the hash of live_site changed only through build_hash FILES.
+  Optimisation re-activated with task 9ff3 to make the deploy reliable. measure.sh: judged 49.5, quests 3, playtest 100, fps 60, load 0.52.

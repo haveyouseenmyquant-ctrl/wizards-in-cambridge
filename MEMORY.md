@@ -15,10 +15,11 @@
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
 - Trunk 91047adec8ca0046 (s12, merged Optimisation mainmerge.js: Low/Medium static mesh batching, draws 1279->761 on Low):
-  gate 6/6 (166 s), published s12; judge/playtest pending service.sh.
+  gate 6/6 (166 s). NOT live: Pages deploy-pages timed out 3x (GitHub side) -> Optimisation 9ff3. Live = b1d7eff5
+  content; scores aliased to 1665d3ca_wic.json (hash changed only via build_hash FILES). After 9ff3, live_site = 91047adec.
 - b1d7eff5 (s11, merged Story Q3 'Lion at the Gate' + Gameplay uipolish/boss TTK): gate 6/6, quests 3,
   judged 49.5 (V 51, Anim 31, Combat 59.1, Story 52, UI 53); service.sh scored it under bogus hash d59023d6 (hashed live_site mid-publish):
-  judged 49.2, playtest 100. QA task 6266 = publish lock + per-step hash re-check. Touch data/derived/session_active before publishing.
+  judged 49.2; real b1d7eff5 playtest 100 landed later. QA task 6266 = publish lock + per-step hash re-check. Touch data/derived/session_active before publishing.
 - 9b1abea2 (s10, Graphics Quaternius wizard CC-BY): judged 50.0 (Anim 33.5), playtest 100 (softlock gone; 9d0d cancelled).
   Judge asks: enemy attack/death/hit clips + bigger enemies; menus overlaid by banners/dialogue, text-only inventory,
   debug FPS/Quality/'Loading...' labels visible; stale tracker; NPCs never framed; stalls flat blocks.
