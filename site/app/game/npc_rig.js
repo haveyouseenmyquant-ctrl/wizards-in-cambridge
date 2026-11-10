@@ -6,8 +6,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { MeshoptDecoder } from '../../vendor/meshoptimizer/meshopt_decoder.module.js';
 
-const MODEL = { nell: 'nell', pip: 'pip', absalom: 'absalom' };
-const HEIGHT = { nell: 1.68, pip: 1.75, absalom: 1.9 };   // metres before the NPC's own scale (Pip is 0.62)
+const MODEL = { nell: 'nell', pip: 'pip', absalom: 'absalom', wat: 'absalom' };   // story s4: Wat Gedney reuses the lanky rig, recoloured
+const HEIGHT = { nell: 1.68, pip: 1.75, absalom: 1.9, wat: 1.9 };   // metres before the NPC's own scale (Pip is 0.62)
 
 export function install(game) {
   const T = game.THREE, loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder), assets = {}, live = [];

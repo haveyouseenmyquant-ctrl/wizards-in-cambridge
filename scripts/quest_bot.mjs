@@ -82,7 +82,7 @@ function installBot(softS = 0) {
     const pts = []; for (let i = best; i >= 0; i = from[i]) pts.push({ x: i % nx + x0, y: ((i / nx) | 0) + y0 });
     return { pts: pts.reverse(), miss: bestD };
   }
-  const bot = window.__qbot = { ev, t0: g.time, maxT: 900, goal: null, path: null, wp: 0, stuckT: 0, lastPos: null, replans: 0, escapeT: 0,
+  const bot = window.__qbot = { ev, t0: g.time, maxT: 1400, goal: null, path: null, wp: 0, stuckT: 0, lastPos: null, replans: 0, escapeT: 0,
     fail: null, done: false, why: '', lastDmg: new Map(), dispose() { for (const f of offs) f(); } };
   const key = code => window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code === 'KeyE' ? 'e' : code, bubbles: true }));
   function setGoal(x, y, tol) { const r = plan(P.x, P.y, P.z, x, y, tol); bot.goal = { x, y, tol, miss: r.miss, best: null }; bot.path = r.pts; bot.wp = 0; }
