@@ -143,3 +143,4 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Did not merge Story Q4 (The Ferry Bell): only 2 of 4 classes finish it in quest_bot, so Story was told to fix it first.
   Graphics was told to commit its rigged mob models, which were left uncommitted.
 - New task for Gameplay, 11ba: Combat feel > 66 (enemy threat, spell mix).
+- publish.sh: Pages run 42858472340 failed twice. publish.sh still swapped live_site to 448ceb61, so Pages still serves 1665d3ca while measure.sh reads 448ceb61 (judged 51.4, quests 3; playtest and fps show 0 until service.sh scores it). Filed the bug with Optimisation, alongside 9ff3.
