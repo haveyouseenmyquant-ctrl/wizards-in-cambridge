@@ -19,8 +19,6 @@
 - s22: merged Art 87728b0 (rigged gargoyle/wisp/bat, player locomotion) -> trunk 88f478c1, gate 7/7, published (log /tmp/wic_publish_s22.log).
   PAUSED Marketing, Brand, Optimisation (s22) so Gameplay runs more: tutorial f917/514c/616a/a328 untouched for 3 sessions.
   Gameplay brief: f917 standalone with fallbacks. Story has UNCOMMITTED Q4 edits in its worktree. Resume Marketing ~1/5 later.
-- s21: service.sh scored live 473c678d: judged 52.2 (V51 Anim33.5 Combat62 Story52 UI63), quests 3, playtest 100, fps 60.
-  Merged Marketing tick. No team commits since s20; tutorial tasks f917/514c/616a/a328 still open; Story Q4 not mergeable.
 - s19: s18 publish OK (Pages serves 448ceb61 WITH roofs; hash unchanged -> QA d7ba). Gaspard issue is-20261110-192341-intr (no tutorial,
   mobs attack at once) = TOP priority: tasks Gameplay f917 tutorial.js, Story 514c quests/tutorial.json, UI 616a tutorial_ui.js,
   QA a328 test_tutorial.mjs + &tutorial=0 in bots. Contract: window.WIC.tutorial, localStorage wic_tutorial_done.
