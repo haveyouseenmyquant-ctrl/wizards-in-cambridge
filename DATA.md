@@ -92,6 +92,12 @@ Market stalls / street furniture (session 34, `scripts/zone_props.py`, `scripts/
   without hat/weapons), Kay Lousberg, CC0 1.0; clips idle/talk(Interact)/walk/wave(Cheer)/hit/death; recoloured at
   runtime from the palettes in `site/app/game/quests/*.json` by `site/app/game/npc_rig.js`.
 
+## Audio (audio node, 10 Nov 2026)
+All sound and music is synthesised in the browser with WebAudio (oscillators and filtered noise); no audio files, samples
+or third-party recordings are used (0 bytes of audio assets). The score and all sound designs are original. The Great St
+Mary's chime is the "Cambridge Quarters" (composed for Great St Mary's in 1793, public domain), played on synthesised bells.
+Code: site/app/game/audio.js, audio_world.js, audio_music.js, audio_game.js, sfx.js; checklist: docs/audio_checklist.md.
+
 ## Held-out benchmark (session 8)
 - 200 Mapillary photos (CC-BY-SA 4.0, contributors credited per photo in `data/benchmark/benchmark.json`),
   picked once on 2026-11-07 by `scripts/make_benchmark.py` from 6,884 candidates in the study area. Frozen. These
