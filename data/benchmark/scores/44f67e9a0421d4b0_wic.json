@@ -4,5 +4,72 @@
  "equipment_effects": 57,
  "feel_checks_passed": 17,
  "feel_checks_total": 17,
- "playtest_pass_pct": 100
+ "playtest_pass_pct": 100,
+ "main_quests_shipped": 2,
+ "quest_bot_pass_pct": 100,
+ "fps_median": 52,
+ "load_seconds": 0.77,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 2.64,
+  "fps_p5": 44,
+  "fps_min": 32,
+  "fight_pct": 97,
+  "casts": 169,
+  "kills": 24,
+  "maxMobs": 36,
+  "dist": 191,
+  "laps": 1,
+  "draw_calls_median": 1,
+  "tris_median": 1,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-10T06:35:51.993Z"
+ },
+ "judged_game_quality": 46.2,
+ "judged_sections": {
+  "Visuals": 50.0,
+  "Animation": 27.0,
+  "Combat feel": 54.5,
+  "Story presentation": 54.0,
+  "UI polish": 44.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together and reads as a real place. Buildings have brick and stone textures, there are real-time shadows, warm sky lighting with some atmospheric haze, and props like market stalls, bikes, railings and trees. The biggest gaps are the simple, blocky geometry with flat window planes and little clutter or wear, the chunky low-detail player and enemy models with no cloth or hair detail, and fight frames that are crowded and washed out by bloom and UI."
+   },
+   "Animation": {
+    "all": "The sheet doesn't fully match the brief: exploration frames show a HUD and minimap, and the combat rows show four classes, not just the hexweaver. Animation is weak throughout. In all four walking frames the player is a limbless blob in a pointed hat, held in the same upright pose from behind, with no visible stride, lean or robe movement. In combat, casts show up only as glowing effects, 'Staggered' text and damage numbers, with no matching body motion; enemies are chunky figures with no readable wind-up, hit or death poses, and there is no environmental motion such as crowds, foliage sway or cloth."
+   },
+   "Combat feel": {
+    "hexweaver": "Hit feedback is clearly visible: big floating damage and CRIT numbers, a chain counter, Staggered/Interrupted labels, a boss health bar with a 'Phase II' banner, and loot cards colour-coded by rarity (common through epic, with legendaries in the log). However, a dialogue box covers the bottom third of the screen for the whole fight, and the spell effects are soft glowing blobs, so it is hard to tell which spell or enemy attack is which. The fight is also one-sided: 64 of 96 casts are the same hex_dart, the player took only 5 hits, and nothing shows enemies telegraphing attacks, hit-stop, or a second class to compare.",
+    "pyromancer": "There is a working combat loop with feedback you can see. Damage numbers, crit and chain counters, Interrupted/Staggered/Vanquished labels, a boss with a health bar split into phases and a Phase II banner, loot beams with rarity-coloured labels, and the log records six distinct pyromancer spells. Readability is the weak point: a large narration box sits over the lower third of every frame, the boss fight is a blur of overlapping numbers and VFX, and enemies are small and hard to pick out. Frames 6, 7, 9 and 10 have no enemies nearby, and nothing visible shows hit-stop, strong knockback, wind-up telegraphs or how the other classes differ.",
+    "stormcaller": "The frames show working combat with readable feedback. There are damage numbers, crit callouts, chain counters, stagger and interrupt labels, a boss bar with phase transitions, loot with rarity labels and plenty of sound. Only one class appears, and spark_lance makes up most of the casts (44 of 71), so it repeats a lot. A persistent narration box covers the bottom third of the screen. Frames 7\u201311 show about 25 s with no fighting, and there is no visible hit-stop, knockback, telegraph shapes or crowd control that changes the fight.",
+    "warden": "The fight shows strong hit feedback: large crit damage numbers, chain counters, 'Staggered' and 'Interrupted' status text, a boss health bar split into phases with 'Phase II', loot beams in different rarity colours with item tooltips, and a varied spell kit in the log (leap, root, stomp, monolith). Readability is poor, though. A narration box stays on screen for the whole clip and covers the bottom third of every frame, the placeholder-like player model blocks the view, spell effects have no clear shapes, and there is no visible enemy telegraphing, crowd-control effect or hit-stop. The second half of the clip is mostly empty wandering. Only one class was recorded, so class differences can't be judged."
+   },
+   "Story presentation": {
+    "all": "The writing is good and the dialogue box is well made. Letterbox bars, portraits, named speakers with roles (Nell Tapscott, Pip Hobbe), a quest tracker, a yellow waypoint marker and a quest-complete card with rewards all tie an original premise to a real place: Market Hill and Great St Mary's. But the speakers never appear in the world: the camera stays behind the player, and the Bellwarden 'reveal' is only narration over an empty market. There are no branching choices or character animation, a 'Loading...' label stays on screen in every frame, the tracker still says 'Speak to Nell' after the quest is complete, and the headers overlap each other."
+   },
+   "UI polish": {
+    "all": "The menus share a dark-panel style with serif headers, the class selection is clear with spell lists, and the inventory shows rarity tags. But UI elements pile up badly: the quest-complete banner, the dialogue box and the item pickup toasts all sit on top of the inventory and talent screens, and the narration box covers the bottom of the combat view and hides the spell bar. The inventory is a plain text list with no icons, a 'Loading...' label is left on screen, and combat is crowded with large damage numbers and stacked notices, so it falls short of the uncluttered, polished hierarchy the higher anchors ask for."
+   }
+  }
+ }
 }
