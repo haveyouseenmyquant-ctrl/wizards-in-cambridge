@@ -5,7 +5,7 @@ import sys
 import urllib.error
 import urllib.request
 
-FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/shadowlod.js", "app/shadowproxy.js", "app/tiles.js", "app/materials.js", "app/trees.js", "app/objects.js", "app/facades.js", "app/zone.js", "zone/zone.json", "cityfac/index.json",
+FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/shadowlod.js", "app/shadowproxy.js", "app/mainmerge.js", "app/tiles.js", "app/materials.js", "app/trees.js", "app/objects.js", "app/facades.js", "app/zone.js", "zone/zone.json", "cityfac/index.json",
          "tex/textures.json",
          # session 42: the game layer, so game KPI caches (<hash>_game.json, _gameplay.json) follow game changes
          "app/game/classes.js", "app/game/core.js", "app/game/encounters.json", "app/game/hud.js", "app/game/index.js", "app/game/itemdefs.js", "app/game/items.js", "app/game/mobs.js", "app/game/sfx.js", "app/game/vfx.js",
@@ -19,7 +19,7 @@ FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/s
 # layer, the player/collision code and the collision tiles (via collision/digest.json, written by publish.sh). A world-only
 # publish (facades, roofs, textures) then keeps its game scores; before, every publish reset them and the game KPIs read 0
 # for the ~30 min the route bot needs, so most hourly readings after a session showed 0.
-GAME_FILES = ["index.html", "app/main.js", "app/rayaccel.js", "app/shadowlod.js", "app/shadowproxy.js", "app/player.js", "app/collision.js", "app/avatar.js", "collision/digest.json",
+GAME_FILES = ["index.html", "app/main.js", "app/rayaccel.js", "app/shadowlod.js", "app/shadowproxy.js", "app/mainmerge.js", "app/player.js", "app/collision.js", "app/avatar.js", "collision/digest.json",
               "app/game/classes.js", "app/game/core.js", "app/game/encounters.json", "app/game/hud.js", "app/game/index.js", "app/game/itemdefs.js",
               "app/game/items.js", "app/game/mobs.js", "app/game/sfx.js", "app/game/vfx.js", "app/game/wizard.js"]
 args = [a for a in sys.argv[1:] if a != "--game"]
