@@ -7,37 +7,37 @@
  "playtest_pass_pct": 100,
  "main_quests_shipped": 2,
  "quest_bot_pass_pct": 100,
- "fps_median": 52,
- "load_seconds": 0.77,
+ "fps_median": 60,
+ "load_seconds": 0.69,
  "perf_detail": {
   "seconds": 60,
   "viewport": "1280x720",
   "query": "",
   "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
   "preset": "high",
-  "game_ready_s": 2.64,
-  "fps_p5": 44,
-  "fps_min": 32,
-  "fight_pct": 97,
-  "casts": 169,
-  "kills": 24,
+  "game_ready_s": 2.32,
+  "fps_p5": 48,
+  "fps_min": 35,
+  "fight_pct": 100,
+  "casts": 177,
+  "kills": 25,
   "maxMobs": 36,
-  "dist": 191,
+  "dist": 190,
   "laps": 1,
   "draw_calls_median": 1,
   "tris_median": 1,
-  "tiles": 17,
+  "tiles": 18,
   "errors": 0,
   "first_errors": [],
-  "at": "2026-11-10T06:35:51.993Z"
+  "at": "2026-11-10T06:48:03.163Z"
  },
  "judged_game_quality": 46.2,
  "judged_sections": {
-  "Visuals": 50.0,
-  "Animation": 27.0,
+  "Visuals": 50,
+  "Animation": 27,
   "Combat feel": 54.5,
-  "Story presentation": 54.0,
-  "UI polish": 44.0
+  "Story presentation": 54,
+  "UI polish": 44
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -61,7 +61,7 @@
    "Combat feel": {
     "hexweaver": "Hit feedback is clearly visible: big floating damage and CRIT numbers, a chain counter, Staggered/Interrupted labels, a boss health bar with a 'Phase II' banner, and loot cards colour-coded by rarity (common through epic, with legendaries in the log). However, a dialogue box covers the bottom third of the screen for the whole fight, and the spell effects are soft glowing blobs, so it is hard to tell which spell or enemy attack is which. The fight is also one-sided: 64 of 96 casts are the same hex_dart, the player took only 5 hits, and nothing shows enemies telegraphing attacks, hit-stop, or a second class to compare.",
     "pyromancer": "There is a working combat loop with feedback you can see. Damage numbers, crit and chain counters, Interrupted/Staggered/Vanquished labels, a boss with a health bar split into phases and a Phase II banner, loot beams with rarity-coloured labels, and the log records six distinct pyromancer spells. Readability is the weak point: a large narration box sits over the lower third of every frame, the boss fight is a blur of overlapping numbers and VFX, and enemies are small and hard to pick out. Frames 6, 7, 9 and 10 have no enemies nearby, and nothing visible shows hit-stop, strong knockback, wind-up telegraphs or how the other classes differ.",
-    "stormcaller": "The frames show working combat with readable feedback. There are damage numbers, crit callouts, chain counters, stagger and interrupt labels, a boss bar with phase transitions, loot with rarity labels and plenty of sound. Only one class appears, and spark_lance makes up most of the casts (44 of 71), so it repeats a lot. A persistent narration box covers the bottom third of the screen. Frames 7\u201311 show about 25 s with no fighting, and there is no visible hit-stop, knockback, telegraph shapes or crowd control that changes the fight.",
+    "stormcaller": "The frames show working combat with readable feedback. There are damage numbers, crit callouts, chain counters, stagger and interrupt labels, a boss bar with phase transitions, loot with rarity labels and plenty of sound. Only one class appears, and spark_lance makes up most of the casts (44 of 71), so it repeats a lot. A persistent narration box covers the bottom third of the screen. Frames 7–11 show about 25 s with no fighting, and there is no visible hit-stop, knockback, telegraph shapes or crowd control that changes the fight.",
     "warden": "The fight shows strong hit feedback: large crit damage numbers, chain counters, 'Staggered' and 'Interrupted' status text, a boss health bar split into phases with 'Phase II', loot beams in different rarity colours with item tooltips, and a varied spell kit in the log (leap, root, stomp, monolith). Readability is poor, though. A narration box stays on screen for the whole clip and covers the bottom third of every frame, the placeholder-like player model blocks the view, spell effects have no clear shapes, and there is no visible enemy telegraphing, crowd-control effect or hit-stop. The second half of the clip is mostly empty wandering. Only one class was recorded, so class differences can't be judged."
    },
    "Story presentation": {

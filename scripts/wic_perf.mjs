@@ -27,7 +27,9 @@ const opt = (name, def) => { const i = argv.indexOf(name); return i < 0 ? def : 
 const flag = name => { const i = argv.indexOf(name); return i >= 0 && !!argv.splice(i, 1); };
 const SECONDS = Number(opt('--seconds', 60));
 const QUERY = opt('--query', '');
-const NO_WRITE = flag('--no-write');
+const UNCAPPED = flag('--uncapped');   // no vsync / frame-rate limit: shows headroom above 60; never writes
+const PROFILE = Number(opt('--profile', 0));   // CPU-profile N seconds mid-run and print the top self-time functions
+const NO_WRITE = flag('--no-write') || UNCAPPED || PROFILE > 0;
 const SRC = argv[0] || path.join(ROOT, 'site');
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const W = 1280, H = 720, LOAD_TIMEOUT = 60000;
@@ -91,7 +93,7 @@ async function main() {
     executablePath: CHROME, headless: false,
     args: ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist', '--disable-background-timer-throttling',
       '--disable-renderer-backgrounding', '--disable-backgrounding-occluded-windows', `--window-size=${W},${H + 90}`, '--no-first-run',
-      '--autoplay-policy=no-user-gesture-required'],
+      '--autoplay-policy=no-user-gesture-required', ...(UNCAPPED ? ['--disable-gpu-vsync', '--disable-frame-rate-limit'] : [])],
     defaultViewport: { width: W, height: H, deviceScaleFactor: 1 },
   });
   const errors = [], T0 = Date.now();
@@ -115,16 +117,43 @@ async function main() {
     await page.evaluate(installDriver);
     await page.mouse.click(W / 2, H / 2).catch(() => {});
     await page.keyboard.down('KeyW');
-    await page.evaluate(() => { const f = window.__frames = []; const tick = t => { f.push(t); requestAnimationFrame(tick); }; requestAnimationFrame(tick); });
+    // per-frame renderer.info totals across all composer passes: read + reset once per rAF (autoReset would only keep the last pass)
+    await page.evaluate(() => {
+      const f = window.__frames = [], r = window.__renderer, inf = window.__rinfo = [];
+      if (r) r.info.autoReset = false;
+      const tick = t => { f.push(t); if (r) { inf.push([r.info.render.calls, r.info.render.triangles]); r.info.reset(); } requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    });
+    let prof = null;
+    if (PROFILE) prof = (async () => {
+      await sleep(Math.max(0, (SECONDS - PROFILE) / 2) * 1000);
+      const cdp = await page.createCDPSession();
+      await cdp.send('Profiler.enable'); await cdp.send('Profiler.setSamplingInterval', { interval: 200 }); await cdp.send('Profiler.start');
+      await sleep(PROFILE * 1000);
+      const { profile } = await cdp.send('Profiler.stop');
+      const dt = {}, tot = { all: 0 };
+      const td = profile.timeDeltas; const idx = new Map(profile.nodes.map(n => [n.id, n]));
+      profile.samples.forEach((id, i) => { const n = idx.get(id); const cf = n.callFrame; const k = `${cf.functionName || '(anon)'} ${cf.url.split('/').slice(-2).join('/')}:${cf.lineNumber + 1}`; dt[k] = (dt[k] || 0) + (td[i] || 0); tot.all += td[i] || 0; });
+      const top = Object.entries(dt).sort((a, b) => b[1] - a[1]).slice(0, 30);
+      for (const [k, v] of top) log(`${(100 * v / tot.all).toFixed(1).padStart(5)}%  ${k}`);
+    })().catch(e => log('profile failed', e.message));
     const t0 = Date.now(), info = [];
+    const progs0 = await page.evaluate('window.__renderer?.info.programs?.length ?? null');
     let fightTicks = 0, ticks = 0;
     while (Date.now() - t0 < SECONDS * 1000) {
       const s = await page.evaluate('window.__perfStep()');
       ticks++; if (s.near) fightTicks++;
-      if (ticks % 20 === 0) info.push(await page.evaluate('window.__renderer ? {calls: window.__renderer.info.render.calls, tris: window.__renderer.info.render.triangles} : null'));
       await sleep(100);
     }
     await page.keyboard.up('KeyW');
+    await prof;
+    detail.programs = [progs0, await page.evaluate('window.__renderer?.info.programs?.length ?? null')];   // shader programs at start/end of the run
+    if (PROFILE) log('census', JSON.stringify(await page.evaluate(() => {   // visible draw-producing objects per top-level scene child
+      const out = {}, cam = window.__scene; if (!cam) return null;
+      for (const c of window.__scene.children) { let n = 0, inst = 0; c.traverseVisible(o => { if (o.isMesh || o.isPoints || o.isLine) { n++; if (o.isInstancedMesh) inst++; } }); if (n) { const k = (c.name || c.type) + (inst ? `(${inst}i)` : ''); out[k] = (out[k] || 0) + n; } }
+      return Object.fromEntries(Object.entries(out).sort((a, b) => b[1] - a[1]).slice(0, 25));
+    })));
+    for (const [calls, tris] of await page.evaluate('window.__rinfo || []')) info.push({ calls, tris });
     const f = await page.evaluate('window.__frames');
     const per = {};
     for (const t of f) { const k = Math.floor((t - f[0]) / 1000); per[k] = (per[k] || 0) + 1; }

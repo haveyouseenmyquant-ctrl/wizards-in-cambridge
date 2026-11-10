@@ -14,6 +14,9 @@ import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { raycastNearest } from './rayaccel.js';
+import { installShadowLod } from './shadowlod.js';
+import { installShadowProxies } from './shadowproxy.js';
 
 const BASE = new URL('./', location.href).href;
 // ?look=v2: sky dome, AgX tone mapping, plausible albedos (session 9). Off by default: it lowered photo_match on the
@@ -250,11 +253,12 @@ async function main() {
   // session 51: third-person camera occlusion against visual-only meshes near the player (zone facades and market
   // stall canopies have no collision). Candidate list refreshed every 0.5 s by bounding sphere; one ray per frame.
   {
-    const ray = new THREE.Raycaster(), hits = [], sph = new THREE.Sphere(), o = new THREE.Vector3(), dv = new THREE.Vector3();
-    let near = [], nearT = 0;
+    // Optimisation s2: zone looked up once (not a whole-scene search per ray) and rays use rayaccel.js's triangle grid
+    const sph = new THREE.Sphere(), o = new THREE.Vector3(), dv = new THREE.Vector3();
+    let near = [], nearT = 0, zone = null;
     player.camOcclude = (x, y, z, dx, dy, dz, far) => {
-      const zone = scene.getObjectByName?.('zone');
-      if (!zone) return Infinity;
+      if (!zone || !zone.parent) { if ((nearT -= 1) > 0) return Infinity; zone = scene.getObjectByName('zone'); nearT = 0; }
+      if (!zone) { nearT = 30; return Infinity; }
       o.set(x, y, z);
       if ((nearT -= 1) <= 0) {
         nearT = 30; near = [];
@@ -267,12 +271,11 @@ async function main() {
         });
       }
       if (!near.length) return Infinity;
-      ray.set(o, dv.set(dx, dy, dz).normalize()); ray.near = 0.1; ray.far = far;
-      hits.length = 0;
-      ray.intersectObjects(near, false, hits);
-      return hits.length ? hits[0].distance : Infinity;
+      return raycastNearest(near, o, dv.set(dx, dy, dz).normalize(), 0.1, far);
     };
   }
+  const shadowLod = sun.castShadow ? installShadowLod(THREE, scene, camera, QP.shadowLod) : () => {};   // Optimisation s2: small far casters off
+  const shadowProxies = sun.castShadow ? installShadowProxies(THREE, scene, sun) : () => {};   // and static groups cast as one merged mesh
   status('Loading tiles…');
   let last = performance.now(), streamT = 0, ready = false, hudT = 0;
   renderer.setAnimationLoop(now => {
@@ -296,6 +299,7 @@ async function main() {
       sun.target.position.set(cx, 0, cz); sun.position.set(cx, 0, cz).addScaledVector(SUN_DIR, 300); sun.target.updateMatrixWorld();
     }
     skyDome.position.copy(camera.position); skyDome.material.uniforms.t.value = performance.now() / 1000;
+    shadowProxies(dt); shadowLod(dt);
     if (composer) composer.render(dt); else renderer.render(scene, camera);
     if (!ready && !player.pendingPlace && tiles.readyAt(player.x, player.y)) {
       ready = true; window.__walkReadyAt = performance.now(); window.__walkReady = true;
