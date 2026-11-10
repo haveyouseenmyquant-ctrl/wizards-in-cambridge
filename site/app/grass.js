@@ -6,9 +6,10 @@
 // Presets: low = off, medium R 12 m, high (default) R 20 m, ultra R 30 m and denser. ?grass=0 off, ?grassr=<m>.
 import * as THREE from 'three';
 import { uTime } from './trees.js';
+import { QUALITY } from './quality.js';
 
 const Q = new URLSearchParams(location.search);
-const QUAL = Q.get('quality') || (matchMedia('(pointer: coarse)').matches ? 'low' : 'high');
+const QUAL = QUALITY;   // quality.js preset
 const PRESET = { low: null, medium: { R: 12, D: 40 }, high: { R: 18, D: 60 }, ultra: { R: 28, D: 80 } }[QUAL] || { R: 18, D: 60 };
 const CH = 4, NEAR = 4, GRASS = 3;
 

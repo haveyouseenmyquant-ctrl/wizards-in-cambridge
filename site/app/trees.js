@@ -7,12 +7,12 @@
 // Hedges (barrier=hedge, trees/<tile>.hedge.bin [x0,y0,z0,x1,y1,z1,h,w]) use the same leaf cards on a box core.
 // ?foliage=0: cores only (no cards). ?wind=0: no sway.
 import * as THREE from 'three';
+import { Q as Q_PRESET } from './quality.js';
 
 const Q = new URLSearchParams(location.search);
 const FOLIAGE = Q.get('foliage') !== '0';
 const WIND = Q.get('wind') !== '0';
-const QUAL = Q.get('quality') || (matchMedia('(pointer: coarse)').matches ? 'low' : 'high');
-const CARD_K = QUAL === 'low' ? 0.55 : QUAL === 'ultra' ? 1.3 : 1;   // leaf-card density per preset
+const CARD_K = Q_PRESET.treeCards;   // leaf-card density per preset
 export const uTime = { value: 0 };
 
 function mulberry(a) {

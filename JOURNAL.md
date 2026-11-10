@@ -8,3 +8,15 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - measure.sh rewritten for the 5 org KPIs (reads per-build caches; 0 when unmeasured). Baseline: fps 60, load 3.09 s
   (inherited live snapshot, measured on that exact hash), others 0.
 - Organisation created: Story, Graphics, Gameplay, Optimisation, QA. Plan in MEMORY.md.
+
+## 2026-11-10 Optimisation s1
+- New harness scripts/wic_perf.mjs: GPU Chrome (ANGLE Metal, Apple M4), 1280x720, default preset, load to __walkReady,
+  then 60 s scripted walk over Market Hill (spawn -> market-north -> market-south -> back) fighting the encounters as
+  Pyromancer (100 % of ticks with a mob in range, ~190 casts, ~25 kills, up to 36 live mobs). Writes fps_median,
+  load_seconds, perf_detail to <hash>_wic.json and data/derived/browser_kpi.json.
+- Baseline (57c98a87): fps_median 60 (vsync cap), p5 56, load 0.48 s, 2279 draw calls, 4.5 M tris.
+- Quality presets: site/app/quality.js (Low/Medium/High/Ultra; ?q= per load, menu button cycles + saves localStorage
+  'wic_quality'; default High on desktop, Low on touch). Drives pixel-ratio cap, shadow map size, facade radius, tree
+  cards, VFX particles, fog, GTAO on Ultra. Build 8579b103 High: fps 60, p5 59, load 0.54 s. Low 1298 calls / 2.4 M tris.
+- safari_ok = 0: every Playwright WebKit build (2388, 2389, 2391 from 1.66-alpha-2026-11-09) crashes its WebContent
+  process at launch on macOS 26.5.2 (even data: URLs); safaridriver needs `--enable` (admin). Not a site problem.

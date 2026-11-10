@@ -12,8 +12,8 @@
 export function createVfx(game) {
   const THREE = game.THREE, root = new THREE.Group(); root.name = 'vfx'; game.root.add(root);
   const col = new THREE.Color(), col2 = new THREE.Color();
-  const QUALITY = (() => { try { return new URLSearchParams(location.search).get('quality') || (matchMedia('(pointer: coarse)').matches ? 'low' : 'high'); } catch { return 'high'; } })();
-  const LOW = QUALITY === 'low', QN = LOW ? 0.5 : 1;
+  const QUALITY = (() => { try { return window.__quality?.name || new URLSearchParams(location.search).get('quality') || (matchMedia('(pointer: coarse)').matches ? 'low' : 'high'); } catch { return 'high'; } })();
+  const LOW = QUALITY === 'low', QN = window.__quality?.vfx ?? (LOW ? 0.5 : 1);
   const rnd = Math.random, TAU = Math.PI * 2;
   const canvas = (w, h = w) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return [c, c.getContext('2d')]; };
   const camPos = new THREE.Vector3();

@@ -33,3 +33,4 @@ await page.keyboard.down('w'); await page.waitForTimeout(5000); await page.keybo
 await page.screenshot({ path: SHOT });
 console.log(JSON.stringify({ webkit_ready: ready, load_seconds: load, errors: errs.length, first_errors: errs.slice(0, 5) }));
 await browser.close(); server?.close();
+process.exit(ready && !errs.length ? 0 : 1);   // wic: the task check relies on the exit code

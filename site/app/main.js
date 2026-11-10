@@ -6,6 +6,7 @@ import { Player } from './player.js';
 import { Avatar } from './avatar.js';
 import { loadZone, zoneCut, zoneMatCut } from './zone.js';
 import { GrassField } from './grass.js';
+import { Q as QP, QUALITY, initQualityMenu } from './quality.js';
 import { Minimap, renderTileMap, initLandmarks, mergeLandmarks, initOverlays } from './ui.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -26,7 +27,7 @@ const LK = parseFloat(new URLSearchParams(location.search).get('light') || '0.45
 // ?post=ao: ground-truth ambient occlusion (GTAOPass, normals from depth) on a 4x MSAA half-float target, then OutputPass (sRGB).
 // ?ao=<intensity> (default 1), ?aor=<radius m> (default 2), ?aores=<AO buffer scale>, ?aos=<AO and denoise samples>.
 const QS = new URLSearchParams(location.search);
-const POST = QS.get('post') || 'off';
+const POST = QS.get('post') || (QP.ao ? 'ao' : 'off');   // Ultra preset: GTAO on unless ?post=off
 const $ = id => document.getElementById(id);
 const status = msg => { $('status').textContent = msg; };
 
@@ -39,10 +40,10 @@ async function getJSON(path, optional = false) {
 async function main() {
   const canvas = $('view');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, QP.pixelRatio));   // per quality preset (quality.js)
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(SKY);
-  scene.fog = LOOK2 ? new THREE.Fog(SKY, 150, 560) : new THREE.Fog(SKY, 120, 420);
+  scene.fog = LOOK2 ? new THREE.Fog(SKY, 150, 560) : new THREE.Fog(SKY, 120, QP.fogFar);
   // sky dome: pale hazy horizon to a soft blue zenith (Cambridge summer afternoon), follows the camera.
   // session 55: on by default with drifting fair-weather cloud (fbm), its horizon equal to the fog/background colour so
   // distant facades still fade into it; the sky stays mostly near-white like the street photos. ?sky=flat: the old flat colour.
@@ -86,11 +87,11 @@ async function main() {
   const SUN_DIR = new THREE.Vector3(-0.181, 0.848, 0.498).normalize();
   const sun = new THREE.DirectionalLight(0xfff1dc, LOOK2 ? 2.6 : (OVERCAST ? 1.0 : 1.8) * LK);
   sun.position.copy(SUN_DIR); scene.add(sun); scene.add(sun.target);
-  // Quality: ?quality=low (default on touch devices) has no shadows; otherwise a 2048 shadow map, 240 m square
-  const quality = new URLSearchParams(location.search).get('quality') || (matchMedia('(pointer: coarse)').matches ? 'low' : 'high');
-  if (quality !== 'low') {
+  // Quality preset (quality.js; ?q=low|medium|high|ultra): Low has no shadows; otherwise a 1024-4096 shadow map, 240 m square
+  const quality = QUALITY;
+  if (QP.shadow) {
     renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    sun.castShadow = true; sun.shadow.mapSize.set(QP.shadow, QP.shadow);
     Object.assign(sun.shadow.camera, { left: -120, right: 120, top: 120, bottom: -120, near: 1, far: 600 });
     sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.4;
   }
@@ -123,7 +124,7 @@ async function main() {
   };
   addEventListener('resize', resize); resize();
 
-  initOverlays();
+  initOverlays(); initQualityMenu();
   status('Loading manifest…');
   const manifest = await getJSON('manifest.json');
   const world = new CollisionWorld();
@@ -242,7 +243,7 @@ async function main() {
     else zoneCut.value.w = 0;
     avatar.update(player, dt, player.view === 3 && !fc && !(player.camD < 0.8));   // s60: hide the avatar when the boom is squeezed into it
     if (sun.castShadow) {   // shadow box follows the camera, snapped to shadow texels to avoid shimmering
-      const q = 240 / 2048, cx = Math.round(camera.position.x / q) * q, cz = Math.round(camera.position.z / q) * q;
+      const q = 240 / QP.shadow, cx = Math.round(camera.position.x / q) * q, cz = Math.round(camera.position.z / q) * q;
       sun.target.position.set(cx, 0, cz); sun.position.set(cx, 0, cz).addScaledVector(SUN_DIR, 300); sun.target.updateMatrixWorld();
     }
     skyDome.position.copy(camera.position); skyDome.material.uniforms.t.value = performance.now() / 1000;
