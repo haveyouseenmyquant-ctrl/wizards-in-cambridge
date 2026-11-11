@@ -71,6 +71,26 @@ export function install(game) {
     });
     model.updateMatrixWorld(true); const box = new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1;
     inner.scale.setScalar(HEIGHT / h); inner.position.y = -box.min.y * HEIGHT / h; root.updateMatrixWorld(true);
+    // robe hem secondary motion (s7): the rig has no cloth bones, so the body material bends the skirt in the vertex
+    // shader. robeSpring() drives a damped spring from the root's velocity and turn rate; vertices below the hips are
+    // pushed (world space, weighted towards the hem) so the hem trails the motion, swings with the weight shift,
+    // twists behind turns, flares with speed and overshoots when the wizard stops. The staff keeps a plain material.
+    const robe = { off: new T.Vector4(0, 0, 0, 0), ctr: new T.Vector4(0, 0, 0, 0), x: 0, z: 0, vx: 0, vz: 0, tw: 0, vtw: 0, fl: 0, px: null, pz: 0, pyaw: 0 };
+    const body = model.getObjectByName('Wizard001') || model.getObjectByName('Wizard.001');
+    if (body?.isSkinnedMesh) {
+      const rm = mat.clone(); body.material = rm; robe.mat = rm;
+      rm.customProgramCacheKey = () => 'wiz_robe_v1';
+      rm.onBeforeCompile = sh => {
+        sh.uniforms.uRobe = { value: robe.off }; sh.uniforms.uRobe2 = { value: robe.ctr };
+        sh.vertexShader = 'uniform vec4 uRobe; uniform vec4 uRobe2;\n' + sh.vertexShader.replace('#include project_vertex', `
+          vec4 rwp = modelMatrix * vec4(transformed, 1.0); float rh = rwp.y - uRobe.w;
+          float rw = smoothstep(${(0.56 * HEIGHT).toFixed(3)}, ${(0.1 * HEIGHT).toFixed(3)}, rh); rw *= rw * (0.35 + 0.65 * smoothstep(0.0, ${(0.1 * HEIGHT).toFixed(3)}, rh));
+          vec2 rel = rwp.xz - uRobe2.xy; float ta = uRobe2.w * rw, tc = cos(ta), ts = sin(ta);
+          rel = vec2(tc * rel.x - ts * rel.y, ts * rel.x + tc * rel.y) * (1.0 + uRobe2.z * rw);
+          rwp.xz = uRobe2.xy + rel + uRobe.xz * rw; rwp.y += uRobe.y * rw * rw;
+          vec4 mvPosition = viewMatrix * rwp; gl_Position = projectionMatrix * mvPosition;`);
+      };
+    }
     // pointed hat on the Head bone (the model is bare-headed): class robe colour, trim band, slightly bent tip
     let hat = null;
     if (head) {
@@ -114,7 +134,7 @@ export function install(game) {
     for (const n of ['Foot.L', 'Foot.R']) { const o = model.getObjectByName(n.replace(/\./g, '')) || model.getObjectByName(n); if (o) bones[n] = o; }
     const rest = Object.values(bones).filter(b => !/^Foot/.test(b.name)).map(b => [b, b.quaternion.clone()]);
     game.root.add(root);
-    return { cls, root, mixer, acts, mat, focus, hat, bones, rest, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time, castT: -9, castRaise: false, hitT: -9, lw: 0, roll: 0, lastSp: 0, ready: 0, charge: 0, hand };
+    return { cls, root, mixer, acts, mat, focus, hat, bones, rest, robe, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time, castT: -9, castRaise: false, hitT: -9, lw: 0, roll: 0, lastSp: 0, ready: 0, charge: 0, hand };
   }
 
   function destroy() {
@@ -240,6 +260,26 @@ export function install(game) {
     H.sway.rotation.set(H.x, 0, H.z); H.tip.rotation.x = H.tip0 + 1.8 * H.x; H.tip.rotation.z = 1.8 * H.z;
   }
 
+  function robeSpring(dt, sp, flying) {
+    const Rb = R.robe; if (!Rb.mat || dt <= 0) return;
+    const P = R.root.position, yaw = R.root.rotation.y;
+    if (Rb.px === null) { Rb.px = P.x; Rb.pz = P.z; Rb.pyaw = yaw; }
+    let vx = (P.x - Rb.px) / dt, vz = (P.z - Rb.pz) / dt, om = Math.atan2(Math.sin(yaw - Rb.pyaw), Math.cos(yaw - Rb.pyaw)) / dt;
+    Rb.px = P.x; Rb.pz = P.z; Rb.pyaw = yaw;
+    const vm = Math.hypot(vx, vz); if (vm > 12) { vx *= 12 / vm; vz *= 12 / vm; }   // teleports / respawns
+    om = Math.max(-8, Math.min(8, om));
+    Rt.set(1, 0, 0).applyQuaternion(R.root.quaternion);
+    const sway = 0.05 * R.lw * R.roll * (R.cur === 'run' ? 1.5 : 1), lag = flying ? 0.02 : 0.03;
+    const tx = -vx * lag + Rt.x * sway, tz = -vz * lag + Rt.z * sway;
+    Rb.vx += (60 * (tx - Rb.x) - 7 * Rb.vx) * dt; Rb.x += Rb.vx * dt;
+    Rb.vz += (60 * (tz - Rb.z) - 7 * Rb.vz) * dt; Rb.z += Rb.vz * dt;
+    const m = Math.hypot(Rb.x, Rb.z); if (m > 0.22) { Rb.x *= 0.22 / m; Rb.z *= 0.22 / m; }
+    Rb.vtw += (45 * (-0.09 * om - Rb.tw) - 6 * Rb.vtw) * dt; Rb.tw = Math.max(-0.5, Math.min(0.5, Rb.tw + Rb.vtw * dt));   // hem twists behind a turn
+    const fl = Math.min(0.16, 0.012 * sp + 0.03 * Math.abs(om) + 0.1 * (R.charge || 0)); Rb.fl += (fl - Rb.fl) * Math.min(1, dt * 6);
+    Rb.off.set(Rb.x, 0.25 * Math.hypot(Rb.x, Rb.z) + 0.3 * Rb.fl, Rb.z, P.y);
+    Rb.ctr.set(P.x, P.z, Rb.fl, Rb.tw);
+  }
+
   function update(p, visible, W) {
     if (!asset) return false;
     const cls = game.caster?.cls || 'stormcaller';
@@ -267,9 +307,10 @@ export function install(game) {
     if (!dead && !flying) { locomotion(dt, sp); upperBody(t, dt); }
     if (R.hand) { const c = R.charge || 0; R.hand.visible = c > 0.02; R.hand.scale.setScalar(R.hand.userData.s * (0.35 + 1.1 * c) * (1 + Math.sin(t * 13) * 0.08)); R.hand.material.opacity = Math.min(1, 0.3 + c); }
     hatSpring(dt, flying ? 0 : sp);
+    robeSpring(dt, flying ? 0 : sp, flying);
     if (R.focus) { const ca = R.oneShot?.startsWith('cast') ? 1 : 0; R.focus.rotation.y += dt * 2.5;
       R.focus.scale.setScalar(R.focus.userData.s * (1 + 0.8 * ca) * (1 + Math.sin(t * 6) * 0.06)); }
-    const hf = game.time - (R.hitT || -9) < 0.25 ? 1 : 0; R.mat.emissive.setRGB(0.5 * hf, 0.06 * hf, 0.04 * hf);   // red hit flash only
+    const hf = game.time - (R.hitT || -9) < 0.25 ? 1 : 0; R.mat.emissive.setRGB(0.5 * hf, 0.06 * hf, 0.04 * hf); R.robe.mat?.emissive.copy(R.mat.emissive);   // red hit flash only
     return true;
   }
   offs.push(game.on('playerHit', e => { if (R && e.amount > 0) R.hitT = game.time; }));

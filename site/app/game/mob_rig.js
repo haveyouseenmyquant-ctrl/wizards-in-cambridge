@@ -104,7 +104,7 @@ export function install(game) {
       if (mob.matBase) mob.matBase.push([mat.transparent, mat.opacity]);
     }
     const { mixer, acts } = units[0];
-    mob.glb = { mixer, acts, units, cur: null, lock: 0, lastState: null, inner };
+    mob.glb = { mixer, acts, units, cur: null, lock: 0, lastState: null, inner, em: [...made.values()].filter(m => m.emissive).map(m => [m, m.emissive.clone()]) };
     mob.camBody = mob.ccBody = null;
     if (!wb.isEmpty() && !L.mats) {
       const c = wb.getCenter(new T.Vector3()), sz = wb.getSize(new T.Vector3()), oy = c.y - mob.group.position.y;
@@ -122,6 +122,7 @@ export function install(game) {
     return true;
   };
 
+  const WHITE = new T.Color(1, 1, 1);
   function play(mob, name, fade = 0.15, ts = 1) {
     const G = mob.glb; if (!G.acts[name]) return;
     G.units.forEach((U, i) => {
@@ -145,7 +146,22 @@ export function install(game) {
     G.kick = Math.max(0, (G.kick || 0) - dt / 0.5);
     const kk = G.kick * G.kick * (3 - 2 * G.kick) * (mob.dead ? 0 : 1) * (1 - 0.6 * (mob.type.knockResist ?? 0));
     G.inner.rotation.x = -0.45 * kk; G.inner.rotation.z = 0.12 * kk * Math.sin(mob.id * 2.1 + G.kick * 9);
-    if (mob.dead) { if (G.cur !== 'death') play(mob, 'death', 0.1, 1.2); }
+    if (mob.dead) {
+      // s7: readable death - anticipation (0.25 s: rears back and stretches on the hit clip, white flash), then the death
+      // clip collapses with a forward pitch and a squash as the body lands
+      const t = G.deathT = (G.deathT ?? -dt) + dt, k0 = G.k0 ??= G.inner.scale.x, A = 0.25;
+      if (t < A) {
+        if (G.cur !== 'hit' || t < dt * 1.5) { G.cur = null; play(mob, G.acts.hit ? 'hit' : 'death', 0.05, G.acts.hit ? 0.9 : 0.4); }
+        const u = Math.sin(Math.min(1, t / A) * Math.PI / 2);
+        G.inner.rotation.x = -0.4 * u; G.inner.scale.set(k0 * (1 - 0.06 * u), k0 * (1 + 0.1 * u), k0 * (1 - 0.06 * u));
+      } else {
+        if (G.cur !== 'death') play(mob, 'death', 0.08, 1.1);
+        const c = Math.min(1, (t - A) / 0.5), e = c * c * (3 - 2 * c), land = Math.max(0, 1 - Math.abs(t - A - 0.55) / 0.15);
+        G.inner.rotation.x = -0.4 * (1 - e) + 0.25 * e; G.inner.scale.set(k0 * (1 + 0.08 * land), k0 * (1 - 0.12 * land), k0 * (1 + 0.08 * land));
+      }
+      const fl = Math.max(0, 1 - t / 0.35);
+      for (const [m, c] of G.em) m.emissive.copy(c).lerp(WHITE, 0.7 * fl);
+    }
     else if (st !== G.lastState && st === 'windup') {
       // strike lands (about 55% into the clip) as the wind-up ends and the attack goes active
       const n = mob.type.attacks.indexOf(a) % 2 && G.acts.attack2 ? 'attack2' : 'attack';
