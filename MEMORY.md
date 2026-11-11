@@ -22,12 +22,8 @@
 - s37: merged QA s7 (184f: build_hash adds tutorial_ui.js + auto-includes unlisted modules; wic_perf_robust in service.sh). Live build
   re-hashes 9c5df3a4 -> 645eac53 (same files); copied its judge 51.7 (V48.5 A29 C58.5 S66 UI61.5) into 645eac53_wic.json. Issue 7fe1 resolved.
   Story task 4ef8 = main quest 5 (ring 1). Lowest sections: Animation 29, Visuals 48.5.
-- s36: merged Gameplay eb97f29 (9e85 stall-wall cam) + Story dab59f2 (dialogue staging) directly; gate 8/8 9c5df3a4; published live 9c5df3a4 (judge pending).
 - s35: nothing to merge (Gameplay last ran 01:06; managers took the sessions). FLATTENED again: gameplay, optimisation,
   graphics, ui-and-ux, story -> under root; Engineering/Art/Creative PAUSED. Merge team branches directly. Told Gaspard.
-- s34: nothing to merge. 429d69f1 judged 51.1 (V49.5 A32 C59.6 S52 UI64.5); fps pending. Issue 7fe1 -> QA task 184f (relinked; b77e cancelled).
-  Judge theme: player tiny/hidden in combat -> noted Engineering (closer camera) + Art (secondary motion, VFX blowout, UI overlaps).
-  Structure restored: story -> Creative, graphics + ui-and-ux -> Art; Art + Creative resumed (Audio, EnvVFX, Marketing still paused).
 - s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
   after a roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb` and copy ONLY tiles/ + collision/ into site/ (not manifest).
   Gate quest_bot flaked 75% once, rerun 100% (hexweaver boss TTK 222 s). Published s18 (log /tmp/wic_publish_s18.log).
