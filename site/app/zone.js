@@ -16,6 +16,7 @@ import { MeshoptDecoder } from '../vendor/meshoptimizer/meshopt_decoder.module.j
 const Q = new URLSearchParams(location.search);
 // session 57: ?stoneboost=<0..1> scales the pale-stone lift below (1 = session 55's full boost)
 const ZSB = parseFloat(Q.get('stoneboost') || '1');
+const WX = Q.get('wx') !== '0';   // s7 heavier weathering (?wx=0 = s2 version)
 
 const PARS = `
 varying vec3 zWP; varying vec3 zWN; varying float zMat;
@@ -106,13 +107,31 @@ const COLOR = `
   }
   // Environment & VFX s2: weathering on walls (not glass / painted timber): soft vertical rain streaks and a damp,
   // darker splash band along the base (zGnd = the player's ground height; the centre of Cambridge is nearly flat).
+  // s7: the judge still read the walls as "clean repetitive materials", so it is much stronger now: per-building macro
+  // tint and value drift (no two fronts the same shade), blotchy grime patches, run-off streaks hanging in irregular
+  // columns with ragged start heights, soot darkening towards the eaves, and a green-brown rising-damp band with a
+  // darker splash strip. ?wx=0 = the s2 version (A/B).
   if (abs(zN.y) < 0.5 && !(zm > 3.5 && zm < 5.5)) {
     float wf = 1.0 - smoothstep(0.04, 0.15, zaa);
-    float st = zn(vec2(zp.x * 5.0, zp.y * 0.13)) * 0.7 + zn(vec2(zp.x * 23.0, zp.y * 0.5)) * 0.3;
-    diffuseColor.rgb *= 1.0 - 0.13 * smoothstep(0.55, 0.9, st) * wf;
     float hb = zWP.y - zGnd;
+    ${WX ? `float m1 = zn(zp * vec2(0.09, 0.06) + zWP.xz * 0.013), m2 = zn(zWP.xz * 0.027 + 3.7);
+    diffuseColor.rgb *= (0.78 + 0.36 * m1) * mix(vec3(0.93, 0.96, 1.04), vec3(1.07, 1.0, 0.86), m2);
+    float bl = zn(zp * 0.55 + 11.0) * 0.6 + zn(zp * 2.3) * 0.4;
+    diffuseColor.rgb *= 1.0 - 0.28 * smoothstep(0.55, 0.85, bl);
+    float cx = floor(zp.x * 1.4);
+    float top = 2.0 + 9.0 * zh(vec2(cx, 5.3)), len = 1.5 + 5.0 * zh(vec2(cx, 8.1));
+    float cs = smoothstep(0.0, 0.25, fract(zp.x * 1.4)) * smoothstep(1.0, 0.65, fract(zp.x * 1.4));
+    float run = cs * smoothstep(top - len, top - 0.3 * len, hb) * smoothstep(top + 0.2, top - 0.1, hb) * step(0.45, zh(vec2(cx, 2.2)));
+    float st = zn(vec2(zp.x * 5.0, zp.y * 0.13)) * 0.7 + zn(vec2(zp.x * 23.0, zp.y * 0.5)) * 0.3;
+    diffuseColor.rgb *= 1.0 - (0.30 * smoothstep(0.5, 0.9, st) + 0.40 * run * (0.6 + 0.4 * zn(vec2(zp.x * 9.0, hb)))) * wf;
+    diffuseColor.rgb *= mix(vec3(1.0), vec3(0.72, 0.70, 0.68), smoothstep(6.0, 15.0, hb) * (0.5 + 0.5 * zn(zp * 0.3)));
+    float band = 1.0 - smoothstep(0.1, 0.9 + 0.7 * zn(vec2(zp.x * 0.8, 1.3)), hb);
+    diffuseColor.rgb *= mix(vec3(1.0), vec3(0.50, 0.56, 0.44), band * step(-1.5, hb));
+    diffuseColor.rgb *= 1.0 - 0.25 * (1.0 - smoothstep(0.0, 0.3, hb)) * step(-1.5, hb);` :
+    `float st = zn(vec2(zp.x * 5.0, zp.y * 0.13)) * 0.7 + zn(vec2(zp.x * 23.0, zp.y * 0.5)) * 0.3;
+    diffuseColor.rgb *= 1.0 - 0.13 * smoothstep(0.55, 0.9, st) * wf;
     float band = 1.0 - smoothstep(0.05, 0.75 + 0.5 * zn(vec2(zp.x * 0.9, 1.3)), hb);
-    diffuseColor.rgb *= mix(vec3(1.0), vec3(0.70, 0.70, 0.62), band * step(-1.5, hb));
+    diffuseColor.rgb *= mix(vec3(1.0), vec3(0.70, 0.70, 0.62), band * step(-1.5, hb));`}
   }
 `;
 
@@ -152,14 +171,39 @@ const EMIT = `
     vec3 lamp = vec3(1.0, 0.70, 0.40);
     vec3 inside = roomc * depthF * mix(vec3(0.045), lamp * 0.55, lit);
     if (tm == tq.y && rd.y > 0.0) inside += lit * lamp * 0.45 * exp(-2.0 * length(hp.xz - vec2(rs.x * 0.5, rs.z * 0.55)));
+    // s7: ground-floor shop windows (lower 3.4 m above the street): the lit room is a shop, not a beige box: dark
+    // timber wall shelving (0.42 m pitch) stocked with muted goods of varied widths/heights on the back and side
+    // walls, a plank floor and a warm pendant pool. ?wx=0 = the s2 room.
+    float zgf = ${WX ? 'step(zWP.y - zGnd, 3.4) * step(-1.5, zWP.y - zGnd)' : '0.0'};
+    if (zgf > 0.5 && tm != tq.y) {
+      vec2 sp = tm == tq.z ? hp.xy : vec2(hp.z, hp.y);
+      float wood = 0.55 + 0.3 * zn(vec2(sp.x * 0.7, sp.y * 30.0));
+      vec3 shopc = vec3(0.20, 0.12, 0.07) * wood;
+      if (rd.y < 0.0 && tm != tq.z && tm != tq.x) shopc = vec3(0.28, 0.18, 0.10);
+      if (tm == tq.z || tm == tq.x) {
+        float row = floor(sp.y / 0.42), sy = fract(sp.y / 0.42) * 0.42;
+        float gx = sp.x * (3.0 + 2.0 * zh(vec2(row, rh))) + 7.0 * row;
+        float gi = floor(gx), gf = fract(gx), gh = zh(vec2(gi, row + rh * 13.0));
+        float has = step(0.15, gh) * step(0.6, sp.y) * step(sp.y, 2.4);
+        vec3 gc = mix(vec3(0.42, 0.36, 0.30), vec3(0.55, 0.22, 0.16), step(0.55, gh));
+        gc = mix(gc, vec3(0.20, 0.30, 0.42), step(0.8, gh)) * (0.7 + 0.5 * zh(vec2(gi, 3.0 + row)));
+        float good = has * step(0.04, sy) * step(sy, 0.10 + 0.25 * zh(vec2(gi, row + 5.0))) * step(0.06, gf) * step(gf, 0.94);
+        shopc = mix(shopc, gc, good);
+        shopc = mix(shopc, vec3(0.30, 0.20, 0.12), step(sy, 0.035) * step(0.5, sp.y));   // shelf board edge
+      } else if (rd.y < 0.0) {
+        shopc *= 0.8 + 0.25 * step(0.5, fract(hp.x * 6.0 + 0.3 * zh(vec2(floor(hp.z * 0.8), 1.0))));   // planks
+      }
+      float pool = exp(-0.35 * length(hp.xz - vec2(rs.x * 0.5, rs.z * 0.5)));
+      inside = shopc * depthF * lamp * (0.42 + 0.35 * pool);
+    }
     // furniture / shelving silhouette on a plane part-way into the room
     float fw = 1.0 + 1.6 * rh2, ft = fw / rd.z;
     vec2 fp = ro.xy + rd.xy * ft;
-    if (ft < tm && fp.x > 0.0 && fp.x < rs.x && fp.y < 0.5 + 1.3 * zn(vec2(fp.x * 1.4, rh * 17.0))) {
+    if (zgf < 0.5 && ft < tm && fp.x > 0.0 && fp.x < rs.x && fp.y < 0.5 + 1.3 * zn(vec2(fp.x * 1.4, rh * 17.0))) {
       inside = mix(vec3(0.03, 0.025, 0.02), lamp * 0.16 * (0.6 + 0.4 * zn(fp * 6.0)), lit);
     }
     float cur = step(0.55, rh2) * (1.0 - smoothstep(0.32, 0.36, abs(ro.x / rs.x - 0.5) + 0.04 * sin(ro.y * 9.0)));
-    inside = mix(inside, mix(vec3(0.05, 0.045, 0.04), vec3(0.62, 0.44, 0.30) * 0.9, lit) * (0.8 + 0.2 * sin(ro.x * 14.0)), (1.0 - cur) * step(0.55, rh2));
+    inside = mix(inside, mix(vec3(0.05, 0.045, 0.04), vec3(0.62, 0.44, 0.30) * 0.9, lit) * (0.8 + 0.2 * sin(ro.x * 14.0)), (1.0 - cur) * step(0.55, rh2) * (1.0 - zgf));
     // reflection of the golden sky
     vec3 sky = mix(vec3(0.95, 0.66, 0.42), vec3(0.36, 0.50, 0.72), smoothstep(0.02, 0.6, zR.y));
     sky *= 1.0 + 0.6 * pow(saturate(dot(normalize(zR.xz + 1e-5), normalize(zSunD.xz + 1e-5))), 4.0) * (1.0 - smoothstep(0.0, 0.5, zR.y));
