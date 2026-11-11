@@ -87,7 +87,8 @@
         { "who": "wat", "line": "Somebody with keys and a boat, I'd say. I've seen a lantern going up and down the Backs at night. Not my lantern." },
         { "who": "wat", "line": "Here: my fare-penny. Kept it in my cheek a hundred and thirty years. You show that to the river and it'll carry you. Quick, like." },
         { "who": "wat", "line": "When you want the Backs, come and find me. Under the old bell, that's where the drowned go." }
-      ] }
+      ],
+      "travel": { "x": -126, "y": -101, "look": [-140, -100.5], "caption": "Wat poles you back upriver to the Mill Lane steps. You walk up through the sleeping town to Bene't Street." } }
   ],
   "checkpoint": { "x": -230, "y": 499, "name": "Bridge Street", "look": [-290, 570] },
   "rewards": { "xp": 700, "items": [ "quest_ferrymans_coin" ], "title": "Friend of the Hythe" },
