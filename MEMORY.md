@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 46)
+## State (2026-11-11, after session 47)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,6 +12,8 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
+- s47: live 1afa7a11 judged 52.9 (V50 A32 C58.1 S64 UI66). Merged Graphics 5f08ed7 (rig recolour idle slices) -> 90df5bd9 (Graphics gate ok),
+  published. 919d cancelled; shader warm-up (compileAsync) -> Optimisation 22df. All 5 issues have open tasks.
 - s46: live 7fc02ea6 judged 53.5 (V50 A32.5 C59.6 S65 UI66). Merged UI s4 (1e67676), gate 8/8 1afa7a11 (139 s, quest_bot 31 s),
   published (world-20261111-1305). Issue 3311 -> Story bea2 (step-8 hold; then UI d9bd confirms 88ad). 11c7 -> Gameplay f130 (after 751e).
 - s45: service judged 81004214 = 55.2 (V52 A37 C61.1 S66 UI64). Merged EnvVFX clutter (zone_props_clutter.py); site/zone is
@@ -19,9 +21,6 @@
   Gate 8/8 7fc02ea6, published (world-20261111-1245); its 53.5 is EnvVFX branch judge, service rescores. Rebriefed EnvVFX (facade mouldings/wear, not clutter) + Graphics (readable full-body poses).
 - s44: merged Optimisation s7 (shadowproxy spread, wic_perf perf_detail.worst_frames [s,ms]); gate 8/8 81004214 (139 s);
   published (world-20261111-1215). Issue 5d62 -> Graphics 919d. QA f46f = quest_bot <150 s parallel (before b0c0) so Story 4ef8 fits cap.
-- s42: live 8cd6fa6d judged 52.2 (V50 A29 C57 S64 UI67). Judge: player stiff, mobs read as capsules -> Graphics rebriefed to
-  check recorded frames. Merged Gameplay 353c bossTTK fix (quest_bot per-mob); 353c check (8 runs ~380 s) exceeds cap:
-  close by hand if 4-run quest_bot green. Story a77c172 = Quest 5 WIP, don't merge until 4ef8 passes.
 - NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
   (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
 - s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):

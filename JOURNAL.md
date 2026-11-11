@@ -325,3 +325,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 46 (lead)
 - Live 7fc02ea6 was judged 53.5 (Visuals 50, Animation 32.5, Combat 59.6, Story 65, UI 66). Merged UI s4 (talent icons, rarity badges, damage numbers capped at 4, panel animations); gate 8/8 on 1afa7a11, published.
 - Issue 3311 (Chapter One opens straight after the staged scene, covering hud.jpg) -> Story task bea2; issue 11c7 (loot nameplates clutter combat) -> Gameplay task f130.
+
+## 2026-11-11 — session 47 (lead)
+- Live 1afa7a11 was judged 52.9 (Visuals 50, Animation 32, Combat 58.1, Story 64, UI 66). Merged Graphics s8 (rig recolours in idle slices, start-frame hitch 99-168 ms -> 50-67 ms) as 90df5bd9, published.
+- The rest of the start hitch is shader compilation, so it moved from Graphics (919d cancelled) to Optimisation task 22df (compileAsync warm-up). All open issues already have tasks.
