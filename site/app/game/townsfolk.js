@@ -11,10 +11,10 @@ import { loadNpc, recolour } from './npc_rig.js';
 
 // collision frame (x east, y north, m): the four recorded exploration spots, the square and the parade
 const AREAS = [
-  { x: -108, y: 94, r: 26, n: 6 },   // Market Hill
-  { x: -122, y: -20, r: 18, n: 3 },  // Peas Hill
-  { x: -190, y: 5, r: 26, n: 5 },    // King's Parade
-  { x: -182, y: 68, r: 18, n: 3 },   // Senate House Hill
+  { x: -108, y: 94, r: 26, n: 7 },   // Market Hill
+  { x: -122, y: -20, r: 18, n: 4 },  // Peas Hill
+  { x: -190, y: 5, r: 26, n: 6 },    // King's Parade
+  { x: -182, y: 68, r: 18, n: 4 },   // Senate House Hill
   { x: -150, y: 40, r: 30, n: 3 },   // round Great St Mary's
 ];
 const CYCLISTS = 4;
@@ -77,25 +77,29 @@ async function material(file, pal) {
 }
 
 async function start() {
-  // wait for the collision tiles round the square (the walk is ready, but outer spots may still be streaming)
-  for (let i = 0; i < 100 && !AREAS.every(a => S.world.covered(a.x, a.y)); i++) await new Promise(r => setTimeout(r, 200));
+  // each area spawns as soon as its collision tiles are in (the walk is ready at the spawn; other spots stream later)
   let k = 0;
   const jobs = [];
   for (const a of AREAS) for (let i = 0; i < a.n; i++) jobs.push({ a, bike: false, k: k++ });
   for (let i = 0; i < CYCLISTS; i++) jobs.push({ a: AREAS[[0, 2, 4, 2][i % 4]], bike: true, k: k++ });
-  for (const j of jobs) {
+  for (let tries = 0; jobs.length && tries < 600; tries++) {
     await idle();
-    const p = spot(j.a); if (!p) continue;
-    const file = RIGS[j.k % RIGS.length], pal = PALETTES[(j.k * 5 + (j.k >> 1)) % PALETTES.length];
-    const A = await loadNpc(file), mat = await material(file, pal); if (!A || !mat) continue;
-    spawn(A, file, mat, p, j);
+    for (let i = 0; i < jobs.length; i++) {
+      const j = jobs[i]; if (!S.world.covered(j.a.x, j.a.y)) continue;
+      const p = spot(j.a); if (!p) continue;
+      const file = RIGS[j.k % RIGS.length], pal = PALETTES[(j.k * 5 + (j.k >> 1)) % PALETTES.length];
+      const A = await loadNpc(file), mat = await material(file, pal);
+      jobs.splice(i--, 1);
+      if (A && mat) spawn(A, file, mat, p, j);
+    }
+    if (jobs.length) await new Promise(r => setTimeout(r, 250));
   }
 }
 
 const boxes = {};
 function spawn(A, file, mat, p, j) {
   const model = SkeletonUtils.clone(A.scene), g = new THREE.Group(), body = new THREE.Group(); g.name = 'townsfolk_' + j.k;
-  model.traverse(o => { if (o.isMesh) { o.material = mat; o.castShadow = true; o.frustumCulled = false; } });
+  model.traverse(o => { if (o.isMesh) { o.material = mat; o.castShadow = true; o.frustumCulled = false; o.raycast = () => {}; } });   // not pickable, never blocks camera / view rays
   model.updateMatrixWorld(true);
   const box = boxes[file] ??= new THREE.Box3().setFromObject(model, true);
   const h = HEIGHT[file] * rnd(0.94, 1.06), k = h / (box.max.y - box.min.y || 1);
@@ -146,7 +150,7 @@ function bicycle() {
   tube([0, 0.34, -0.5], [0, 0.42, 0]); tube([0, 0.42, 0], [0, 0.85, -0.12]); tube([0, 0.85, -0.12], [0, 0.82, 0.38]);
   tube([0, 0.42, 0], [0, 0.82, 0.38]); tube([0, 0.34, 0.5], [0, 1.0, 0.4]); tube([-0.25, 1.0, 0.4], [0.25, 1.0, 0.4]);
   tube([0, 0.34, -0.5], [0, 0.85, -0.12]);
-  for (const o of g.children) o.castShadow = true;
+  for (const o of g.children) { o.castShadow = true; o.raycast = () => {}; }
   return g;
 }
 

@@ -25,6 +25,9 @@ F="\"idle\":\"$Q|Flying_Idle\",\"run\":\"$Q|Fast_Flying\",\"attack\":\"$Q|Punch\
 node scripts/build_char_glb.mjs $D/q_demon.glb site/models/mobs/gargoyle.glb "{\"clips\":{$F}}"
 node scripts/build_char_glb.mjs $D/q_ghost.glb site/models/mobs/wisp.glb "{\"clips\":{$F}}"
 B=BatArmature; node scripts/build_char_glb.mjs $D/q_bat.glb site/models/mobs/bat.glb "{\"clips\":{\"run\":\"$B|Bat_Flying\",\"attack\":\"$B|Bat_Attack\",\"attack2\":\"$B|Bat_Attack2\",\"hit\":\"$B|Bat_Hit\",\"death\":\"$B|Bat_Death\"}}"
+# bicycle golem: Quaternius Animated Robot (CC0, poly.pizza/m/QCm7qe9uNJ), recoloured moss + rusted iron in mob_rig.js
+qm robot 7d95dbce-8c73-489b-8298-f430b1f0dbdf; R=RobotArmature
+node scripts/build_char_glb.mjs $D/q_robot.glb site/models/mobs/golem.glb "{\"clips\":{\"idle\":\"$R|Robot_Idle\",\"walk\":\"$R|Robot_Walking\",\"run\":\"$R|Robot_Running\",\"attack\":\"$R|Robot_Punch\",\"attack2\":\"$R|Robot_Jump\",\"hit\":\"$R|Robot_No\",\"death\":\"$R|Robot_Death\",\"taunt\":\"$R|Robot_Yes\"}}"
 # story NPCs (Adventurers pack): talk = Interact, wave = Cheer
 for s in Rogue Rogue_Hooded; do [ -f $D/$s.glb ] || curl -sSL -o $D/$s.glb $B/KayKit-Character-Pack-Adventures-1.0/main/addons/kaykit_character_pack_adventures/Characters/gltf/$s.glb; done
 mkdir -p site/models/npcs; C='"idle":"Idle","talk":"Interact","walk":"Walking_A","wave":"Cheer","hit":"Hit_A","death":"Death_A"'

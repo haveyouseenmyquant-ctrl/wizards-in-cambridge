@@ -27,6 +27,9 @@ export const MOB_MODELS = {
   bell_bats: { glb: 'bat', rough: 0.8, metal: 0, emissive: 0x000000, ei: 0, alias: { idle: 'run', walk: 'run' }, size: 0.4, y0: -0.3,   // belfry bats
     swarm: [[0.8, 0.3, -0.4], [-0.75, -0.2, -0.25]],
     mats: { Main: { color: 0x75606a }, Belly: { color: 0xd0b080 }, Eyes: { color: 0xffc040, emissive: 0xffa020, ei: 2.5 }, '*': { color: 0x2a2224 } } },
+  // s9: Quaternius Animated Robot (CC0) as the moss-golem: moss-green plates over rusted bicycle iron
+  bicycle_golem: { glb: 'golem', rough: 0.9, metal: 0.2, emissive: 0x000000, ei: 0,
+    mats: { Main: { color: 0x6f9a34, emissive: 0x1c3008, ei: 0.5 }, Grey: { color: 0x7a5038 }, Black: { color: 0x202418 } } },
 };
 const ONCE = ['death', 'hit', 'attack', 'attack2', 'spawn', 'taunt'];
 

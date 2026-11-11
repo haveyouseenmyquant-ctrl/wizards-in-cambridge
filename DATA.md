@@ -88,6 +88,10 @@ Market stalls / street furniture (session 34, `scripts/zone_props.py`, `scripts/
 - Mob models `site/models/mobs/{statue,wraith,automaton,imp}.glb`: KayKit "Skeletons" Character Pack 1.0
   (Skeleton_Warrior, _Mage, _Rogue, _Minion), Kay Lousberg, CC0 1.0, same trimming (idle/walk/run/attack/attack2/hit/
   death/spawn/taunt). Drawn in game by `site/app/game/mob_rig.js` for statue, river_wraith, automaton, ink_imp, punt_revenant.
+- Mob model `site/models/mobs/golem.glb` (graphics s9, replaces the procedural bicycle_golem body): Quaternius
+  "Animated Robot" via Poly Pizza, CC0 1.0, https://poly.pizza/m/QCm7qe9uNJ (glb
+  static.poly.pizza/7d95dbce-8c73-489b-8298-f430b1f0dbdf.glb), trimmed by `scripts/build_char_glb.mjs` (idle, walk, run,
+  attack Punch, attack2 Jump, hit No, death, taunt Yes), recoloured moss + rusted iron in mob_rig.js.
 - Mob models `site/models/mobs/{gargoyle,wisp,bat}.glb` (graphics, replace the procedural gargoyle / wisp / bell_bats
   bodies): Quaternius "Ultimate Monsters" via Poly Pizza, CC0 1.0 as listed on each page: "Demon" (flying, winged)
   https://poly.pizza/m/Mo2ky6vkf8 (glb static.poly.pizza/c2e39eb4-4b8e-4d31-b014-d637bf4e15c6.glb) -> gargoyle.glb;
