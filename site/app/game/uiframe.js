@@ -28,6 +28,7 @@ export const KIND = {    // spell-slot icons by spell kind
 export const svg = (inner, cls = '') => `<svg class="${cls}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 
 const CSS = `
+#gf-lock { bottom: 266px !important; }  /* touch Lock button sits above the 4x2 #touch-buttons grid, not on View */
 /* ---- debug labels off in game mode */
 body.game-on #menu:not(.open) > button[data-quality] { display: none !important; }
 body.game-on #status { display: none !important; }
