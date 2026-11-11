@@ -62,6 +62,11 @@ export function install(game) {
         const a = pl.yaw + da, bx = Math.sin(a), by = -Math.cos(a);
         let b = 0; for (let r = 0.25; r <= 2.2; r += 0.25) { if (W.blocked(pl.x + bx * r, pl.y + by * r, z - 0.25, 0.25, 0, 0.5)) break; b = r; }
         b = Math.max(0, b - 0.3);
+        if (pl.camOcclude) {   // s6 (9e85): stall walls / zone facades between the chest and the overhead spot
+          const ox = bx * b, oy = z - (pl.z + CHEST), oz = -by * b, L = Math.hypot(ox, oy, oz);
+          const h = pl.camOcclude(pl.x, pl.z + CHEST, -pl.y, ox / L, oy / L, oz / L, L + 0.3);
+          if (h < L + 0.3) { if (h < 0.9) continue; const s = (h - 0.3) / L; b *= s; if (oy * s < 1) continue; }
+        }
         if (!best || b + pref > best.s) best = { s: b + pref, x: pl.x + bx * b, y: z, z: -(pl.y + by * b) };
       }
       return best;
