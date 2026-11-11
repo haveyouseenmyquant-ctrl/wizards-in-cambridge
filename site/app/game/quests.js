@@ -382,6 +382,9 @@ export async function install(game) {
         if (st.kills >= s.count) completeStep();
         else if ((st.ensureT -= dt) <= 0) {   // keep the objective winnable: respawn a quest pack lost to despawn, wake the boss if it is between respawns
           st.ensureT = 3;
+          // s10: the quest's boss gets a 60 m arena: with the type's 34 m leash, pounces and charges carried the fight
+          // past it and the boss walked home healing 50%/s, over and over (pyromancer bot: 400 s on the Gatehouse Lion)
+          if (s.mob) for (const m of game.mobs) if (!m.dead && m.type?.id === s.mob) m.leash = Math.max(m.type.leash ?? 40, 60);
           if (s.spawn && ![...st.tracked].some(m => !m.dead && !m.removed)) spawnPack(s);
           if (s.mob && !game.mobs.some(m => !m.dead && m.type?.id === s.mob) && Math.hypot(s.at.x - P.x, s.at.y - P.y) < 60) {
             try { const m = sys()?.spawn(s.mob, s.at.x, s.at.y, null); if (m) m.questMob = true; } catch (e) { console.warn('[quests] spawn', e.message); }
