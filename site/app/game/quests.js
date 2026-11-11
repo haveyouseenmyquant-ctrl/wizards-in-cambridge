@@ -343,7 +343,8 @@ export async function install(game) {
   }
   const sysObj = game.add({ update(dt) {
     if (st.cardT > 0 && (st.cardT -= dt) <= 0) card.style.opacity = 0;
-    if (!st.q && st.phase === 'idle' && st.cardT <= 0 && !(game.tutorial && !game.tutorial.done) && game.save.cls && !game.paused && !P.pendingPlace) { const id = firstOpen(); if (id) begin(id, true); else st.phase = 'done'; }
+    if (stage.hold > 0) stage.hold -= dt;   // issue 3311: after the staged scene, a few clear seconds before the next chapter
+    if (!st.q && st.phase === 'idle' && st.cardT <= 0 && !(stage.hold > 0) && !(game.tutorial && !game.tutorial.done) && game.save.cls && !game.paused && !P.pendingPlace) { const id = firstOpen(); if (id) begin(id, true); else st.phase = 'done'; }
     // combat: a hostile mob close by. Story text then shrinks into the quest column, the letterbox and title card get
     // out of the way, and narration advances by itself so it never covers the fight
     const combat = !(st.reveal && game.time - st.reveal.t0 < st.reveal.dur) && game.mobs.some(m => !m.dead && !m.removed && !['idle', 'patrol', 'return', 'dead'].includes(m.state) && Math.hypot(m.x - P.x, m.y - P.y) < 22);
@@ -446,7 +447,7 @@ export async function install(game) {
       case 7: { const n = npcs.nell || q.npcs.nell; at(5); await goNear(n.x, n.y, 3.2, 200); line(q.steps[5].dialogue, 2);
         showCard('Quest complete', q.title, `Title earned: ${q.rewards.title} · +${q.rewards.xp} XP · ${ITEMS[q.rewards.items[0]].name}`, 10);
         save.prologue = { step: q.steps.length, done: true }; st.q = null; st.phase = 'staged'; return `Quest complete: ${q.title}`; }
-      default: st.reveal = null; stage.on = false; hideCard(); if (S) S.encountersEnabled = true; if (stage.view) P.view = stage.view; if (st.phase === 'staged') { st.phase = 'idle'; } return null;
+      default: st.reveal = null; stage.on = false; hideCard(); if (S) S.encountersEnabled = true; if (stage.view) P.view = stage.view; if (st.phase === 'staged') { st.phase = 'idle'; stage.hold = 6; } return null;
     }
   }
   window.__wicStory = stage;
