@@ -225,3 +225,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
   On main 126836d: tutorial_pass true for all 4 classes (0 hits, 0 mobs within 20 m, first_mob = 1 wisp, completes,
   reload skips; equip step done via API). Issue intr confirmed fixed on main.
 - 73eed732: judged_game_quality 52.2 (Vis 52, Anim 30, Combat 59.9, Story 55.5, UI 66), playtest 100% (12/12). service.sh judge now records to /tmp/wic_rec_svc (it wiped a manual /tmp/wic_rec run).
+
+## 2026-11-11 — session 28 (lead)
+- Merged QA b1c1008: the build hash now covers world tiles, collision and every game module, and test_tutorial.mjs is in the merge gate. Live build 73eed732: judged 52.2 (Visuals 52, Animation 30, Combat 59.9, Story 55.5, UI 66), quests 4, playtest 100. fps not measured yet: my run overlapped service.sh's gate, so I threw it away.
+- Tutorial issue (intr): requirements met on main; it closes when UI's prompt task 616a is done.
+- Moved Gameplay back under Engineering and resumed Engineering and Optimisation, to test whether teams still get sessions under a manager.
