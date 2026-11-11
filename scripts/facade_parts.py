@@ -150,6 +150,32 @@ class Parts:
         if bottom:
             self.quad((x0, y0, z0), (x1, y0, z0), (x1, y1, z0), (x0, y1, z0), (0, 0, -1), col, mat)
 
+    def lathe(self, cx, cy, prof, col, n=8, mat=None, sy=1.0):
+        """Solid of revolution about the vertical axis at (cx, cy): prof = [(r, z), ...] bottom to top (r=0 ends are
+        closed); sy squashes the depth (oval bodies, torso stands). Flat-shaded faces (s5 EnvVFX: rounded goods)."""
+        a = np.arange(n) * 2 * np.pi / n
+        ring = lambda r, z: [np.array([cx + r * math.cos(t), cy + r * sy * math.sin(t), z]) for t in a]  # noqa: E731
+        R = [ring(r, z) for r, z in prof]
+        for k in range(len(R) - 1):
+            for i in range(n):
+                j = (i + 1) % n
+                p0, p1, q1, q0 = R[k][i], R[k][j], R[k + 1][j], R[k + 1][i]
+                nn = np.cross(p1 - p0, q0 - p0) if prof[k][0] > 1e-6 else np.cross(q1 - p0, q0 - p0)
+                L = np.linalg.norm(nn)
+                if L < 1e-12:
+                    continue
+                nn = nn / L
+                if prof[k][0] > 1e-6:
+                    self.add([[p0, p1, q1]], nn, col, mat)
+                if prof[k + 1][0] > 1e-6:
+                    self.add([[p0, q1, q0]], nn, col, mat)
+        for (r, z), Rk, s_ in ((prof[0], R[0], -1), (prof[-1], R[-1], 1)):
+            if r > 1e-6:   # flat cap
+                c = np.array([cx, cy, z])
+                for i in range(n):
+                    j = (i + 1) % n
+                    self.add([[c, Rk[i], Rk[j]] if s_ > 0 else [c, Rk[j], Rk[i]]], (0, 0, s_), col, mat)
+
     def extrude_profile(self, prof, x0, x1, col, mat=None):
         """Profile [(y, z), ...] traversed counter-clockwise in the (y, z) plane (y right, z up), from the wall at the
         bottom outwards and back to the wall at the top; extruded along x from x0 to x1, with end caps."""
@@ -322,16 +348,23 @@ def window_display(P, a, b, sr, ztop, key):
             else:
                 P.box(x, x + w, y0 + 0.01, y0 + dy - 0.02, z, z + h, col(), mat=pm)
             x += w + (0.004 if rng.random() < 0.8 else 0.08)
-        elif theme == 1:  # bottles / jars on a stepped riser
-            w = rng.uniform(0.06, 0.09)
-            h = rng.uniform(0.15, 0.3)
+        elif theme == 1:  # bottles / jars on the board, turned (lathe) with shoulders, necks, lids and labels
             c = col()
-            P.box(x, x + w, y0 + 0.04, y0 + 0.04 + w, z, z + h, c, mat=pm)
-            P.box(x + w * 0.3, x + w * 0.7, y0 + 0.04 + w * 0.3, y0 + 0.04 + w * 0.7, z + h, z + h + 0.05,
-                  shade(c, 0.6), mat=pm)                                                         # neck / lid
-            P.box(x + 0.005, x + w - 0.005, y0 + 0.04 + w, y0 + 0.042 + w, z + h * 0.3, z + h * 0.65,
-                  rgb("#ece6d6"), mat=pm)                                                        # label
-            x += w + rng.uniform(0.03, 0.08)
+            cy = y0 + 0.075
+            if rng.random() < 0.6:     # bottle
+                r, h = rng.uniform(0.028, 0.04), rng.uniform(0.17, 0.3)
+                P.lathe(x + r, cy, [(r * 0.9, z), (r, z + 0.01), (r, z + h * 0.68), (r * 0.42, z + h * 0.84),
+                                    (r * 0.36, z + h), (r * 0.4, z + h + 0.004)], c, n=8, mat=pm)
+                P.lathe(x + r, cy, [(r * 0.42, z + h), (r * 0.42, z + h + 0.035)],
+                        rgb("#c9a75a") if rng.random() < 0.4 else shade(c, 0.45), n=6, mat=pm)        # cap / foil
+                P.lathe(x + r, cy, [(r * 1.04, z + h * 0.25), (r * 1.04, z + h * 0.55)], rgb("#ece6d6"), n=8, mat=pm)
+                x += 2 * r + rng.uniform(0.015, 0.05)
+            else:                      # jar
+                r, h = rng.uniform(0.04, 0.06), rng.uniform(0.08, 0.15)
+                P.lathe(x + r, cy, [(r * 0.85, z), (r, z + 0.012), (r, z + h * 0.85), (r * 0.8, z + h)], c, n=10, mat=pm)
+                P.lathe(x + r, cy, [(r * 0.85, z + h), (r * 0.85, z + h + 0.025), (r * 0.6, z + h + 0.03)],
+                        shade(rgb(["#8c2a24", "#c9a75a", "#e8e2d4"][int(rng.integers(3))]), 1.0), n=10, mat=pm)
+                x += 2 * r + rng.uniform(0.01, 0.04)
         elif theme == 2:  # clothes: dressed torso stands
             w = rng.uniform(0.34, 0.42)
             if x + w > b - 0.06:
@@ -339,10 +372,15 @@ def window_display(P, a, b, sr, ztop, key):
             c = col()
             cx = x + w / 2
             k_ = min(1.0, (ztop - z - 0.05) / 1.72)
-            P.box(cx - 0.015, cx + 0.015, y0 + 0.06, y0 + 0.09, z, z + 0.85 * k_, rgb("#2a2a2a"), mat=pm)   # pole
-            P.box(x + 0.03, x + w - 0.03, y0 + 0.02, y0 + dy - 0.01, z + 0.85 * k_, z + 1.2 * k_, c, mat=pm)     # skirt/legs
-            P.box(x, x + w, y0 + 0.02, y0 + dy - 0.01, z + 1.2 * k_, z + 1.62 * k_, c if rng.random() < 0.3 else col(), mat=pm)
-            P.box(cx - 0.05, cx + 0.05, y0 + 0.05, y0 + 0.1, z + 1.62 * k_, z + 1.72 * k_, rgb("#d9c7b0"), mat=pm)  # neck
+            cy, k = y0 + 0.075, k_
+            P.lathe(cx, cy, [(0.12, z), (0.0, z + 0.03)], rgb("#2a2a2a"), n=10, mat=pm)                    # base
+            P.lathe(cx, cy, [(0.012, z), (0.012, z + 0.86 * k)], rgb("#2a2a2a"), n=6, mat=pm)              # pole
+            top = c if rng.random() < 0.3 else col()
+            # dressed torso: hips -> waist -> chest -> shoulders -> neck, oval in depth
+            P.lathe(cx, cy, [(0.15, z + 0.85 * k), (0.17, z + 1.0 * k), (0.15, z + 1.2 * k)], c, n=10, mat=pm, sy=0.45)
+            P.lathe(cx, cy, [(0.15, z + 1.2 * k), (0.135, z + 1.3 * k), (0.17, z + 1.48 * k), (0.19, z + 1.58 * k),
+                             (0.06, z + 1.64 * k)], top, n=10, mat=pm, sy=0.45)
+            P.lathe(cx, cy, [(0.045, z + 1.62 * k), (0.04, z + 1.72 * k), (0.03, z + 1.74 * k)], rgb("#d9c7b0"), n=6, mat=pm)
             x += w + rng.uniform(0.12, 0.3)
         else:             # gifts / homeware: stacked boxes
             w = rng.uniform(0.12, 0.28)
@@ -351,6 +389,10 @@ def window_display(P, a, b, sr, ztop, key):
                 hh = rng.uniform(0.07, 0.16)
                 ww = w * (1 - 0.15 * k)
                 P.box(x + (w - ww) / 2, x + (w + ww) / 2, y0 + 0.01, y0 + dy - 0.02, z + h, z + h + hh, col(), mat=pm)
+                if rng.random() < 0.5:   # ribbon band round the box
+                    xc = x + w / 2
+                    P.box(xc - 0.008, xc + 0.008, y0 + 0.008, y0 + dy - 0.018, z + h - 0.001, z + h + hh + 0.002,
+                          rgb(["#c9a75a", "#e8e2d4", "#8c2a24"][int(rng.integers(3))]), mat=pm)
                 h += hh
             x += w + rng.uniform(0.04, 0.12)
         if rng.random() < 0.12:   # price card
@@ -359,7 +401,12 @@ def window_display(P, a, b, sr, ztop, key):
         x = a + 0.08
         while x < b - 0.1:
             w, h = rng.uniform(0.06, 0.16), rng.uniform(0.08, min(0.25, ztop - zs - 0.1))
-            P.box(x, x + w, y0 + 0.01, y0 + dy * 0.75, zs + 0.015, zs + 0.015 + h, col(), mat=pm)
+            if rng.random() < 0.45:   # turned ware on the shelf: vase / bowl / pot
+                r = w / 2
+                P.lathe(x + r, y0 + 0.07, [(r * 0.6, zs + 0.015), (r, zs + 0.015 + h * 0.45), (r * 0.55, zs + 0.015 + h * 0.85),
+                                          (r * 0.65, zs + 0.015 + h)], col(), n=10, mat=pm)
+            else:
+                P.box(x, x + w, y0 + 0.01, y0 + dy * 0.75, zs + 0.015, zs + 0.015 + h, col(), mat=pm)
             x += w + rng.uniform(0.02, 0.1)
 
 
