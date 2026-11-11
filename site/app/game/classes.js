@@ -20,7 +20,7 @@ export const CLASSES = {
     // session 78: boss median TTK 30.3 s vs an all-class median of ~18 s (stormcaller 14.9, warden 18.0, hexweaver 18.2).
     // Ember Bolt was the weakest filler by far (16 dmg / 5 mana = 3.2 dmg per mana vs 5-7 for the other classes), so it
     // goes to 19 (all fights), and boss damage gets x1.3 (boss fights only); together ~x1.45 on the boss -> ~20 s.
-    bossMult: 1.3,
+    bossMult: 1.0,    // gameplay s9: with boss hp x3 pyro was the fastest (13.5 s vs 22-32 s) -> no boss bonus
     name: 'Pyromancer', color: '#ff7a2a', blurb: 'Fire and burst damage. Burns linger, explosions stack, and Ember Bolt cauterises your wounds.',
     spells: [
       { id: 'ember_bolt', name: 'Ember Bolt', glyph: '✦', kind: 'bolt', type: 'fire', mana: 5, cd: 0.45, dmg: 19, speed: 48, range: 45, splash: 1.2, drain: 0.1, color: 0xff7a2a, sfx: 'ember', look: 'ember' },
