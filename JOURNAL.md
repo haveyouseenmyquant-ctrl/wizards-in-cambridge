@@ -215,3 +215,13 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - service.sh scored 4c07514a: judged 51.6 (Visuals 51, Animation 31, Combat 60.4, Story 51, UI 66), quests 4, playtest 100, fps 60, load 0.42.
 - Merged Gameplay: tutorial.js (f917: no spawns or damage while the tutorial runs, one weak wisp first) and combatcam.js (3102). Gate 7/7 on 025eacbb, tutorial smoke passes. Published.
 - Resumed Graphics (Animation is the weakest section). Tutorial issue (intr) now needs only UI 616a and QA a328.
+
+## 2026-11-11 QA s6
+- d7ba: build_hash.py now hashes tiles/digest.json + collision/digest.json (computed from the .glb/.col files for a local
+  dir, written by publish.sh via collision_digest.py for the live URL) and 14 game modules that never moved the hash
+  (tutorial.js, rigs, UI screens, ferry_bell/tutorial.json, app/ui.js). Warns on stderr about unhashed app/ files.
+  main 126836d: 025eacbb -> 73eed7323dff02d9 (= live). --game hash unchanged (ba027efd).
+- a328: scripts/test_tutorial.mjs (fresh profile, card click, every class, real key input per step) in wic_gate.py.
+  On main 126836d: tutorial_pass true for all 4 classes (0 hits, 0 mobs within 20 m, first_mob = 1 wisp, completes,
+  reload skips; equip step done via API). Issue intr confirmed fixed on main.
+- Playtest 73eed732: 100% (12/12). service.sh judge now records to /tmp/wic_rec_svc (it wiped a manual /tmp/wic_rec run).
