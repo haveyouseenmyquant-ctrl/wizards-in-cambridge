@@ -76,9 +76,21 @@ perf() {   # QA s7: waits for loadavg < 4 and no other test browser, best of 2 r
   $PY -I scripts/wic_perf_robust.py "$S" --hash "$H"
 }
 
+reap() { # QA s7: kill test browsers leaked by killed harness runs (puppeteer/playwright profile, parent launchd, > 2 h old);
+  # three such Chromes kept rendering for 11 h and were the likely cause of a 41 fps reading for a 60 fps build
+  local p e
+  for p in $(pgrep -f "puppeteer_dev_chrome_profile|playwright_chromiumdev_profile"); do
+    [ "$(ps -o ppid= -p $p | tr -d ' ')" = 1 ] || continue
+    e=$(ps -o etime= -p $p | tr -d ' '); case $e in *-*|[0-9][0-9]:*:*) ;; 0[2-9]:*:*) ;; *) continue ;; esac
+    ps -o command= -p $p | grep -q Helper && continue
+    echo "$(date -u +%FT%TZ) reap leaked test browser $p (age $e)"; kill $p
+  done
+}
+
 ONCE=0; [ "$1" = "--once" ] && ONCE=1
 while true; do
   S=site; [ -d data/derived/live_site ] && S=data/derived/live_site
+  reap
   H=$(build_hash); STALE=
   if [ -n "$H" ] && ! session_active; then
     has_key judged_game_quality || run_step judge judge
