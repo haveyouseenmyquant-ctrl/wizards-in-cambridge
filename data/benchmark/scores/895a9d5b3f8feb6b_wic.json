@@ -1,4 +1,171 @@
 {
  "main_quests_shipped": 5,
- "quest_bot_pass_pct": 50
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 8.6,
+  "main_quests_shipped": 5,
+  "wall_s": 86,
+  "at": "2026-11-11T14:19:58.442Z"
+ },
+ "judged_game_quality": 52.4,
+ "judged_sections": {
+  "Visuals": 50,
+  "Animation": 30,
+  "Combat feel": 58.2,
+  "Story presentation": 65,
+  "UI polish": 64
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0,
+   "Animation": 0,
+   "Combat feel": 0.5,
+   "Story presentation": 2,
+   "UI polish": 0
+  },
+  "quality_spread": 0.4,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together, with recognisable textured architecture: brick and stone facades, a Gothic church, market stalls, bikes, railings and trees. It has real-time shadows, warm low-sun lighting and some atmospheric haze, so it lands above an early prototype. It falls short of 60 because the geometry is blocky and low-detail, the materials are flat and repetitive with little wear or clutter, the shop interiors are primitive shapes, and the characters and enemies are small, simple and chunky. The combat effects are busy, translucent overlays that don't sit well in the scene."
+   },
+   "Animation": {
+    "all": "The player character has some limb variation: walking legs in exploration frames and a staff-raised cast pose in frame 6. But at this size most poses look nearly the same, and attacks show up mostly as projectiles, beams and ground circles. Enemies show no visible attack, hit or death animations, only blob-like shapes and 'STAGGERED' text. There's also no visible secondary motion, crowd or foliage movement, or blending."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show solid mid-tier combat feedback. There are crit numbers, INTERRUPTED/STAGGERED callouts, a chain counter and a phased boss with a health bar (PHASE II, VANQUISHED). Loot cards are colour-coded by rarity and drop beams are visible, and the event log shows six spells, crowd control and shade_step mobility. The fight is lopsided, with the player hit only twice in 60 s and half the frames empty of enemies. Heavy overlapping translucent VFX and loot text make several frames hard to read, and nothing visible shows hit-stop, clear telegraphs or varied enemy formations.",
+    "pyromancer": "The visible frames show the main 60-level features: damage numbers including a CRIT popup, combo chain counters, a boss with a phased health bar, an 'ENRAGED' banner and a stagger state, a red ground telegraph for the windup, loot beams colour-coded by rarity with stat tooltips, and six distinct spells over 93 casts. The impact is still weak: the VFX are mostly simple blobs and rings, there's no visible hit-stop, screen shake or knockback, and many frames are empty or have the camera stuck against walls. Only one class appears in these recordings, and 63 of the 93 casts are the basic ember_bolt, so there's little evidence of class differences or of crowd control changing fights.",
+    "stormcaller": "The event log shows a full combat loop: 6 distinct spells, crits, 39 kills, a boss whose phase changes are visible on screen (Phase I/II bar, PHASE II and STAGGERED banners), and loot beams coloured by rarity with item cards. In the frames, though, enemies are barely readable: the boss is killed by 9 s, and most frames show empty streets with no enemies or hits, only a few damage numbers. A huge 'Granta' text overlay blocks the view in one frame. The player took 0 damage over the whole fight, so enemy threat and telegraphing go untested, and there is no visible hit-stop, knockback or enemy formations.",
+    "warden": "Combat clearly works and gives a lot of feedback: crit and damage numbers, STAGGERED/INTERRUPTED tags, a chain counter, a two-phase boss with an enraged banner, and loot beams and tooltips in different rarity colours. Its biggest problem is readability: a large opaque pale-blue shield or orb sits at screen centre in most frames, often hiding the warden and the enemies, and the crowded frames are hard to parse. The fight also leans heavily on one spell (56 of 78 casts are pebble_shot), and the frames show little sign of strong spell shapes, hit-stop or crowd control changing the fight, so it stops short of the 60 anchor."
+   },
+   "Story presentation": {
+    "all": "Named characters (Nell Tapscott, Pip Hobbe) appear on screen in letterboxed over-the-shoulder shots, with portraits, a three-way reply choice, a waypoint tracker with distances, a boss reveal shot and a quest-complete card. The writing is lively and original and tied to real Cambridge places like Market Hill, Great St Mary's and the Guildhall. The biggest gaps are the crude, low-detail character models with no visible expression or animation, static framing, no voice evidence, and choices that look cosmetic rather than branching."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent themed style across all the screens shown. The class selection is clear, with icons and per-class colours. The inventory has slots, a rarity tag and stats, and the talent screen lays out its tiers cleanly. The HUD shows readable health and mana bars, numeric cooldowns on the spell bar, a boss bar, a minimap and quest text. The biggest gaps are combat clutter and weak hierarchy: overlapping damage numbers, nameplates, loot toasts and 'INTERRUPTED' text pile up over the action (frames 6 and 8). Several frames also have low-contrast small text, and the inventory and talent screens are sparse and only lightly decorated, well short of AAA polish."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.35,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.81,
+  "programs": [
+   65,
+   84
+  ],
+  "fps_p5": 59,
+  "fps_min": 51,
+  "slow_secs": [],
+  "long_frames": 3,
+  "worst_frames": [
+   [
+    0.4,
+    84
+   ],
+   [
+    0.1,
+    82
+   ],
+   [
+    18.2,
+    35
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 27,
+  "maxMobs": 36,
+  "dist": 203,
+  "laps": 1,
+  "draw_calls_median": 1350,
+  "tris_median": 7006115,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.88,
+  "loadavg_after": 5.48,
+  "waited_s": 136,
+  "load_ok": true,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.35,
+    "loadavg_before": 3.88,
+    "loadavg_after": 4.09,
+    "fps_p5": 59
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.37,
+    "loadavg_before": 4.09,
+    "loadavg_after": 5.48,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-11T14:30:54+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true
+ }
 }

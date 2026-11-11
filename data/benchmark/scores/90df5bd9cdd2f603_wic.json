@@ -45,11 +45,11 @@
  },
  "judged_game_quality": 54.2,
  "judged_sections": {
-  "Visuals": 50.0,
-  "Animation": 35.0,
+  "Visuals": 50,
+  "Animation": 35,
   "Combat feel": 59.6,
-  "Story presentation": 66.0,
-  "UI polish": 66.0
+  "Story presentation": 66,
+  "UI polish": 66
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -59,11 +59,11 @@
   "calls": 16,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 0.0,
-   "Animation": 2.0,
+   "Visuals": 0,
+   "Animation": 2,
    "Combat feel": 0.2,
-   "Story presentation": 0.0,
-   "UI polish": 0.0
+   "Story presentation": 0,
+   "UI polish": 0
   },
   "quality_spread": 0.5,
   "frames": 68,
@@ -138,7 +138,7 @@
   "loadavg_after": 2.16,
   "waited_s": 1209,
   "load_ok": false,
-  "max_load": 4.0,
+  "max_load": 4,
   "runs": [
    {
     "fps_median": 60,
@@ -156,5 +156,16 @@
    }
   ],
   "at": "2026-11-11T14:06:03+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true
  }
 }
