@@ -44,6 +44,8 @@ export function camClipProbe() {
       const hit = rc.intersectObjects(window.__scene.children, true).find(h => {
         const o = h.object, m = Array.isArray(o.material) ? o.material[0] : o.material;
         if (!o.visible || (m && (m.visible === false || (m.transparent && m.opacity < 0.5)))) return false;
+        // Optimisation s10 (2409): additive see-through shells (the shield bubble's ShaderMaterial has opacity 1) never hide anything
+        if (m && m.transparent && m.depthWrite === false && m.blending === T.AdditiveBlending) return false;
         for (let a = o; a; a = a.parent) if (a.visible === false) return false;
         // stall meshes (zone.js zoneMatCut) discard fragments above zoneCut.y inside its disc: such a hit is not drawn
         const C = window.__zoneCut?.value, q = h.point;

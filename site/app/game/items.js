@@ -335,7 +335,7 @@ export function install(game) {
   const bubble = new T.Mesh(new T.SphereGeometry(0.9, 24, 16), new T.ShaderMaterial({ uniforms: { color: { value: new T.Color(0x7ac8ff) }, opacity: { value: 0.18 } },
     vertexShader: 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalMatrix * normal; vV = -mv.xyz; gl_Position = projectionMatrix * mv; }',
     fragmentShader: 'uniform vec3 color; uniform float opacity; varying vec3 vN; varying vec3 vV; void main(){ float f = 1.0 - abs(dot(normalize(vN), normalize(vV))); float a = opacity * 2.2 * pow(f, 3.0); gl_FragColor = vec4(color * a, a); }',
-    transparent: true, depthWrite: false, blending: T.AdditiveBlending })); bubble.visible = false; game.root.add(bubble);
+    transparent: true, depthWrite: false, blending: T.AdditiveBlending })); bubble.visible = false; bubble.name = 'vfx_shield'; game.root.add(bubble);
   function shieldFx() { const on = (game.shield || 0) > 0; bubble.visible = on; if (on) { bubble.position.copy(S.pp(0.95)); bubble.scale.set(1, 1.15, 1); bubble.material.uniforms.opacity.value = (0.12 + Math.sin(S.t * 5) * 0.05 + Math.min(0.15, game.shield / 200))
       // session 54: fades when the (third-person) camera is close, so the bubble never fills the screen as a flat blue wash
       * Math.max(0.15, Math.min(1, ((game.camera?.position.distanceTo(bubble.position) ?? 9) - 1.5) / 3)); } }

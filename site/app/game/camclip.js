@@ -43,10 +43,38 @@ export function install(game) {
   };
   const hitAny = (x, y, z) => { for (const b of st.near) if (inside(b, x, y, z, MARGIN)) return b; return null; };
 
+  // Optimisation s10 (task 2409, issue 4a30): the prop pull / lift above never looked at buildings, and combatcam's
+  // collision march misses roofs and eaves over the camera. Last step every combat frame: if the camera is inside a
+  // solid surface's reach (wall within WALL_R, or a solid roof / building top above it), march chest -> camera and
+  // stop CLEAR m before the first bad point (collision frame: x, y, z up = three.js x, -z, y).
+  const W = game.world, WALL_R = 0.25, CLEAR = 0.3;
+  const roofAbove = (x, y, z) => {
+    for (const t of W.tiles.values()) {
+      if (!t.contains(x, y)) continue;
+      const k = t.topAt(x, y); if (k >= 0 && t.kind[k] === 0 && t.heightAt(k, x, y) > z - 0.05) return true;
+    }
+    return false;
+  };
+  const bad = (x, y, z) => W.blocked(x, y, z - WALL_R, WALL_R, 0, 2 * WALL_R) || roofAbove(x, y, z);
+  function collide(pl, cam) {
+    const c = cam.position, hx = pl.x, hy = pl.y, hz = pl.z + CHEST;
+    let x = c.x, y = -c.z, z = c.y;
+    const dx = x - hx, dy = y - hy, dz = z - hz, L = Math.hypot(dx, dy, dz);
+    if (L < 0.4 || !bad(x, y, z)) return;
+    let r = 0.3; for (; r < L; r += 0.1) if (bad(hx + dx * r / L, hy + dy * r / L, hz + dz * r / L)) break;
+    const f = Math.max(0.3, r - CLEAR) / L; x = hx + dx * f; y = hy + dy * f; z = hz + dz * f;
+    c.set(x, z, -y); st.walls++;   // same line of sight to the chest, so the aim is kept
+  }
+  st.walls = 0;
+
   const a3 = p.applyCamera3;
   p.applyCamera3 = function (cam, dt = 1 / 60) {
     a3.call(this, cam, dt);
     if (!this.combatCam || window.__cam || window.__explore) { st.lift = 0; return; }
+    clipProps.call(this, cam, dt);
+    if (W?.tiles) collide(this, cam);
+  };
+  function clipProps(cam, dt) {
     if (!st.boxes) {   // zone.js: __zoneReady true once loaded
       if (!window.__zoneReady) return;
       const r = (st.gen ||= build()).next(); if (!r.done) return;
@@ -76,7 +104,7 @@ export function install(game) {
       m4.lookAt(c, v.set(cx, this.z + 0.9, cz), up); q.setFromRotationMatrix(m4);
       cam.quaternion.slerp(q, Math.min(1, st.lift / 0.6));
     }
-  };
+  }
   game.add({ dispose() { p.applyCamera3 = a3; delete game.camClip; } });
 }
 
