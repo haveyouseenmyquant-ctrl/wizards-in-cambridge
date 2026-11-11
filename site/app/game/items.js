@@ -124,7 +124,7 @@ export function install(game) {
   const pickups = [], lingering = [];   // live drops / collected drops still fading (not in items.drops)
   // s71: pillar height / width step clearly with tier, and the beam colours are saturated per tier (white, green, blue,
   // purple, orange) so a common drop no longer reads like an uncommon one
-  const PILLAR = { common: [3.5, 0.14], uncommon: [7, 0.22], rare: [12, 0.3], epic: [19, 0.4], legendary: [30, 0.55] };
+  const PILLAR = { common: [3.5, 0.08], uncommon: [7, 0.13], rare: [12, 0.18], epic: [19, 0.24], legendary: [30, 0.33] };   // EnvVFX s5: ~0.6x width (judge: washed-out columns)
   const BEAM_COL = { common: 0xf4f4f4, uncommon: 0x2fe040, rare: 0x2f7dff, epic: 0xb63cff, legendary: 0xff8a10 };
   const LINGER = 2.5;
   const beamGeo = new T.CylinderGeometry(1, 1, 1, 14, 1, true); beamGeo.translate(0, 0.5, 0);
@@ -164,7 +164,7 @@ export function install(game) {
   function spawnPickup(id, x, y, z, from = null) { const d = ITEMS[id]; if (!d) return null; const col = BEAM_COL[d.rarity] ?? RARITY[d.rarity].hex, ord = RARITY[d.rarity].order;
     const [ph, pw] = PILLAR[d.rarity] || PILLAR.common;
     const g = new T.Group();
-    const beam = new T.Mesh(beamGeo, new T.MeshBasicMaterial(add({ color: col, map: pillarTex, opacity: 0.6, side: T.DoubleSide, fog: false, premultipliedAlpha: true })));
+    const beam = new T.Mesh(beamGeo, new T.MeshBasicMaterial(add({ color: col, map: pillarTex, opacity: 0.48, side: T.DoubleSide, fog: false, premultipliedAlpha: true })));
     beam.scale.set(pw, 0.01, pw);
     const core = new T.Mesh(beamGeo, new T.MeshBasicMaterial(add({ color: 0xffffff, map: pillarTex, opacity: 0.12, fog: false, premultipliedAlpha: true })));
     core.scale.set(pw * 0.3, 0.01, pw * 0.3);
@@ -175,7 +175,7 @@ export function install(game) {
     const gem = new T.Mesh(gemGeo, new T.MeshBasicMaterial({ color: col }));
     const halo = new T.Sprite(new T.SpriteMaterial(add({ color: col, map: padTex, opacity: 0.9, premultipliedAlpha: true }))); halo.scale.setScalar(1.1 + 0.2 * ord);
     // s71: rare+ get a wide soft outer shell, epic+ a turning rune circle on the ground, legendary rising sparkles
-    const shell = new T.Mesh(beamGeo, new T.MeshBasicMaterial(add({ color: col, map: pillarTex, opacity: 0.18, side: T.DoubleSide, fog: false, premultipliedAlpha: true })));
+    const shell = new T.Mesh(beamGeo, new T.MeshBasicMaterial(add({ color: col, map: pillarTex, opacity: 0.1, side: T.DoubleSide, fog: false, premultipliedAlpha: true })));
     shell.scale.set(pw * 2.6, 0.01, pw * 2.6); shell.visible = ord >= 2;
     const rune = new T.Mesh(runeGeo, new T.MeshBasicMaterial(add({ color: col, map: runeTex, opacity: 0.85, side: T.DoubleSide, premultipliedAlpha: true })));
     rune.position.y = 0.07; rune.scale.setScalar(2.2 + 0.5 * ord); rune.visible = ord >= 3;
@@ -258,7 +258,7 @@ export function install(game) {
 
   // ---------------- chests
   const wood = new T.MeshStandardMaterial({ color: 0x6b4423, roughness: 0.85 }), band = new T.MeshStandardMaterial({ color: 0xc9a13b, roughness: 0.4, metalness: 0.8 });
-  const glowMat = new T.MeshBasicMaterial(add({ color: 0xffd060, opacity: 0.35 }));
+  const glowMat = new T.MeshBasicMaterial(add({ color: 0xffd060, opacity: 0.2 }));
   const box = (w, h, d, m, x, y, z) => { const o = new T.Mesh(new T.BoxGeometry(w, h, d), m); o.position.set(x, y, z); return o; };
   const chests = CHESTS.map(c => ({ ...c, placed: false, tries: 0, opened: sv.chests.includes(c.id) }));
   function buildChest(c) { const g = new T.Group();
@@ -266,7 +266,7 @@ export function install(game) {
     const lid = new T.Group(); lid.position.set(0, 0.5, -0.28);
     const top = new T.Mesh(new T.CylinderGeometry(0.28, 0.28, 0.9, 12, 1, false, 0, Math.PI), wood); top.rotation.z = Math.PI / 2; top.rotation.y = 0; top.position.set(0, 0, 0.28); top.rotation.x = 0;
     lid.add(top, box(0.1, 0.3, 0.6, band, -0.32, 0.12, 0.28), box(0.1, 0.3, 0.6, band, 0.32, 0.12, 0.28), box(0.12, 0.14, 0.04, band, 0, 0.0, 0.58));
-    g.add(lid); const glow = new T.Mesh(new T.SphereGeometry(0.7, 12, 8), glowMat); glow.position.y = 0.5; g.add(glow);
+    g.add(lid); const glow = new T.Mesh(new T.SphereGeometry(0.45, 12, 8), glowMat); glow.position.y = 0.5; g.add(glow);
     g.position.copy(v3(c.x, c.y, c.z)); g.rotation.y = c.rot; game.root.add(g);
     Object.assign(c, { g, lid, glow, open: c.opened ? 1 : 0 }); if (c.opened) { lid.rotation.x = -1.9; glow.visible = false; } }
   function placeChest(c) { if (W.support(c.x, c.y, 1e4) == null) return; // tile not loaded yet
@@ -285,7 +285,7 @@ export function install(game) {
   function updateChests(dt) { const p = game.player; chestT -= dt;
     if (chestT <= 0) { chestT = 0.5; for (const c of chests) if (!c.placed && Math.hypot(c.x - p.x, c.y - p.y) < 160) { placeChest(c); break; } }
     for (const c of chests) { if (!c.g) continue;
-      if (c.opening != null && c.opening < 1) { c.opening = Math.min(1, c.opening + dt / 0.6); c.lid.rotation.x = -1.9 * (1 - (1 - c.opening) ** 3); c.glow.material = glowMat; c.glow.scale.setScalar(1 + c.opening); if (c.opening >= 1) c.glow.visible = false; }
+      if (c.opening != null && c.opening < 1) { c.opening = Math.min(1, c.opening + dt / 0.6); c.lid.rotation.x = -1.9 * (1 - (1 - c.opening) ** 3); c.glow.material = glowMat; c.glow.scale.setScalar(1 + 0.4 * c.opening); if (c.opening >= 1) c.glow.visible = false; }
       else if (!c.opened) { c.glow.scale.setScalar(1 + Math.sin(S.t * 2.2) * 0.12); if (Math.hypot(c.x - p.x, c.y - p.y) < 1.6 && Math.abs(c.z - p.z) < 1.5) openChest(c); } } }
   const onKey = e => { if (e.target instanceof HTMLInputElement) return;
     if (e.code === 'KeyE') { const p = game.player; let b = null, bd = 2.5; for (const c of chests) { if (!c.g || c.opened) continue; const d = Math.hypot(c.x - p.x, c.y - p.y); if (d < bd) { bd = d; b = c; } } if (b) openChest(b); }
