@@ -234,3 +234,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 29 (lead)
 - No branch had unmerged work. service.sh measured 73eed732 at fps_median 41 (fps_min 5) while the host load was 6-8 from other jobs; 448ceb61 read 60. Gave QA task db8c to make the perf run wait for a quiet machine, run twice and record the load, then re-measure.
 - Cancelled Gameplay's camera task 3102 (already merged) so Engineering can close issue e1b8. Tutorial issue still waits on UI 616a; touch Satchel on UI b95c.
+
+## 2026-11-11 — session 30 (lead)
+- Merged Engineering de1d861 (Optimisation s5: mobcull.js, instpool.js; draws 1881->1379). Gate 8/8 on 0f9b1cd6 (quest_bot 100, tutorial 4/4). Published live 0f9b1cd6; judge pending in service.sh.
+- Moved Story under Creative and Graphics + UI under Art, resumed both managers. Tutorial issue intr still waits on UI 616a; touch Satchel 2d7e on UI b95c.
