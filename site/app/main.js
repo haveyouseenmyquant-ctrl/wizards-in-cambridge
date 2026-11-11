@@ -128,6 +128,9 @@ async function main() {
   // Frame: x east, y up, z south.
   const sun = new THREE.DirectionalLight(GOLDEN ? 0xffb874 : 0xfff1dc, GOLDEN ? 2.7 : LOOK2 ? 2.6 : (OVERCAST ? 1.0 : 1.8) * LK);
   sun.position.copy(SUN_DIR); scene.add(sun); scene.add(sun.target); zoneSun.value.copy(SUN_DIR).normalize();
+  // a95b: the game's two spell point lights live in the scene from the start (intensity 0), so the world's programs are
+  // built with them; added later by game/vfx.js they recompiled every lit material (~0.2-0.3 s freeze at game start)
+  window.__vfxLights = QUALITY === 'low' ? [] : [0, 1].map(() => { const l = new THREE.PointLight(0xffffff, 0, 16, 2); scene.add(l); return l; });
   // Quality preset (quality.js; ?q=low|medium|high|ultra): Low has no shadows; otherwise a 1024-4096 shadow map, 240 m square
   const quality = QUALITY;
   if (QP.shadow) {

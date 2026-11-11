@@ -308,7 +308,12 @@ export function createVfx(game) {
 
   // short-lived point lights (always in the scene at intensity 0, so materials never recompile)
   const lights = [];
-  for (let i = 0; i < (LOW ? 0 : 2); i++) { const l = new THREE.PointLight(0xffffff, 0, 16, 2); l.castShadow = false; root.add(l); lights.push({ l, t: 0, dur: 0, i0: 0 }); }
+  // Optimisation s6: main.js owns them (window.__vfxLights, already in the scene) so starting the game adds no light
+  const shared = window.__vfxLights;
+  for (let i = 0; i < (LOW ? 0 : 2); i++) {
+    const l = shared?.[i] || root.add(new THREE.PointLight(0xffffff, 0, 16, 2)).children.at(-1);
+    l.castShadow = false; lights.push({ l, t: 0, dur: 0, i0: 0 });
+  }
   function light(x, y, z, color, intensity = 1, dur = 0.4, range = 16) {
     if (!lights.length) return;
     let best = lights[0]; for (const L of lights) if (L.t >= L.dur) { best = L; break; } else if (L.dur - L.t < best.dur - best.t) best = L;
@@ -794,6 +799,7 @@ export function createVfx(game) {
     }
   }
   function dispose() {
+    for (const L of lights) L.l.intensity = 0;
     game.root.remove(root);
     root.traverse(o => { o.geometry?.dispose?.(); o.material?.dispose?.(); });
     for (const g of [...rockGeos, ...spikeGeos, crystalGeo, coreGeo, planeGeo, latticeGeo]) g.dispose();
