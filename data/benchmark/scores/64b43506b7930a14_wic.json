@@ -3,11 +3,11 @@
  "quest_bot_pass_pct": 100,
  "judged_game_quality": 53.4,
  "judged_sections": {
-  "Visuals": 50.0,
-  "Animation": 34.0,
+  "Visuals": 50,
+  "Animation": 34,
   "Combat feel": 59.5,
-  "Story presentation": 64.0,
-  "UI polish": 64.0
+  "Story presentation": 64,
+  "UI polish": 64
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -18,39 +18,39 @@
   "aggregate": "median over passes",
   "section_passes": {
    "Visuals": [
-    50.0,
-    47.0,
-    50.0
+    50,
+    47,
+    50
    ],
    "Animation": [
-    34.0,
-    32.0,
-    34.0
+    34,
+    32,
+    34
    ],
    "Combat feel": [
     59.5,
-    59.0,
+    59,
     59.5
    ],
    "Story presentation": [
-    64.0,
-    64.0,
-    64.0
+    64,
+    64,
+    64
    ],
    "UI polish": [
-    64.0,
-    64.0,
-    66.0
+    64,
+    64,
+    66
    ]
   },
   "calls": 24,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 3.0,
-   "Animation": 2.0,
+   "Visuals": 3,
+   "Animation": 2,
    "Combat feel": 0.5,
-   "Story presentation": 0.0,
-   "UI polish": 2.0
+   "Story presentation": 0,
+   "UI polish": 2
   },
   "quality_spread": 1.6,
   "frames": 68,
@@ -78,5 +78,137 @@
     "all": "The UI has one consistent dark-and-gold theme across the class selection, HUD, inventory and talent screens. The class cards are clear and well laid out, and the spell bar has icons, cooldown numbers, resource bars, a minimap, a boss bar and rarity-tagged loot notices. It falls short of polished because combat gets cluttered: loot toasts, quest panels, damage numbers and nameplates pile up over busy scenes, and some labels are small or clipped. The inventory is sparse and text-heavy, and none of the frames show animation or transitions."
    }
   }
+ },
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 6.3,
+  "main_quests_shipped": 5,
+  "wall_s": 109,
+  "at": "2026-11-11T15:08:51.198Z"
+ },
+ "fps_median": 60,
+ "load_seconds": 0.36,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.75,
+  "programs": [
+   65,
+   85
+  ],
+  "fps_p5": 59,
+  "fps_min": 39,
+  "slow_secs": [
+   [
+    0,
+    39
+   ]
+  ],
+  "long_frames": 5,
+  "worst_frames": [
+   [
+    0.5,
+    168
+   ],
+   [
+    0.2,
+    84
+   ],
+   [
+    0.1,
+    67
+   ],
+   [
+    0,
+    50
+   ],
+   [
+    0.2,
+    35
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 190,
+  "kills": 28,
+  "maxMobs": 36,
+  "dist": 192,
+  "laps": 1,
+  "draw_calls_median": 1318,
+  "tris_median": 6320905,
+  "tiles": 18,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.93,
+  "loadavg_after": 4.65,
+  "waited_s": 46,
+  "load_ok": true,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.36,
+    "loadavg_before": 3.93,
+    "loadavg_after": 4.45,
+    "fps_p5": 59
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.35,
+    "loadavg_before": 4.45,
+    "loadavg_after": 4.65,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-11T15:11:40+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true
  }
 }
