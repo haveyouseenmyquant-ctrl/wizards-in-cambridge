@@ -51,7 +51,7 @@ const per_class = {};
 for (const r of runs) {
   const c = per_class[r.cls] ||= { runs: 0, passed: 0, harness_fails: 0, fails: [] };
   if (isHarness(r)) { c.harness_fails++; continue; }
-  c.runs++; if (r.pass) c.passed++; else c.fails.push(`${r.bot}: ${r.fail}`.slice(0, 300));
+  c.runs++; if (r.pass) c.passed++; else c.fails.push(`${r.bot}: ${r.fail}`.slice(0, 540));
 }
 for (const c of Object.values(per_class)) c.pass_pct = c.runs ? +(100 * c.passed / c.runs).toFixed(1) : 0;
 const result = {

@@ -252,7 +252,13 @@ function installBot(route, runIdx, softS = 0) {
     if (softS > 0) {
       const e0 = ENC[route[bot.leg]], d = e0 ? Math.hypot(e0.x - P.x, e0.y - P.y) : 0;
       if (wd.key !== bot.leg) { wd.key = bot.leg; wd.best = d; prog(); } else if (d < wd.best - 1) { wd.best = d; prog(); }
-      if (g.time - wd.t > softS) { bot.fail = `softlock: no progress for ${softS} s game time (leg ${bot.leg} ${route[bot.leg]}, at ${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)}, ${bot.why || ''})`.slice(0, 300); return; }
+      // QA a756: every 10 s of a stall, note where the bot was and what steer() was doing, so a rare softlock is diagnosable
+      if (g.time - wd.t > 10 * ((wd.hist?.length || 0) + 1)) (wd.hist ||= []).push(`${P.x.toFixed(0)},${P.y.toFixed(0)}${bot.retrace ? 'R' : ''}${bot.escapeT > 0 ? 'E' : ''}`);
+      if (wd.t > (wd.histT ?? -1)) { wd.histT = wd.t; wd.hist = []; }
+      if (g.time - wd.t > softS) {
+        const G = bot.goal, st = `steer path ${bot.path?.length ?? 0} wp ${bot.wp ?? 0} replans ${bot.replans} retraceN ${bot.retraceN || 0} goal ${G ? `${G.x.toFixed(0)},${G.y.toFixed(0)} miss ${G.miss?.toFixed?.(1)} best ${G.best?.toFixed?.(1)}` : 'none'} trail ${(wd.hist || []).join(' ')}`;
+        bot.fail = `softlock: no progress for ${softS} s game time (leg ${bot.leg} ${route[bot.leg]}, at ${P.x.toFixed(1)},${P.y.toFixed(1)},${P.z.toFixed(1)}, ${bot.why || ''}; ${st})`.slice(0, 520); return;
+      }
     }
     // session 76: breadcrumb trail of spots the player really stood on (for retrace), 1 m apart, not while retracing
     if (!bot.retrace && g.stats.hp > 0) { const L = bot.trail[bot.trail.length - 1]; if (!L || Math.hypot(L.x - P.x, L.y - P.y) > 1) { bot.trail.push({ x: P.x, y: P.y }); if (bot.trail.length > 600) bot.trail.splice(0, 100); } }
