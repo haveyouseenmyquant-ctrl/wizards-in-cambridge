@@ -40,6 +40,11 @@ body.wic-menu #wic-q, body.wic-menu #game-hud .gh-toasts, body.wic-menu #game-hu
 body.wic-menu #game-hud .gh-nums, body.wic-menu #game-hud .gh-plates, body.wic-menu #game-hud .gh-boss, body.wic-menu #game-hud .gh-risen,
 body.wic-menu #game-hud .gh-lowtag, body.wic-menu #game-hud .gh-crosshair, body.wic-menu #status { display: none !important; }
 body.wic-menu #game-hud { z-index: 60; }
+/* a menu opened while a story line is up: quests.js fades #game-hud under body.q-talk, which took the talent overlay
+   with it. :has() reacts the same frame the overlay opens (wic-menu waits for a game tick); the story box steps aside */
+body:has(#game-hud > .gh-overlay:not([hidden])) #game-hud { opacity: 1 !important; pointer-events: auto !important; z-index: 60; }
+body:has(#game-hud > .gh-overlay:not([hidden])) .q-dlg, body:has(#game-hud > .gh-overlay:not([hidden])) .q-card,
+body:has(#game-hud > .gh-overlay:not([hidden])) #wic-tut { visibility: hidden !important; }
 body.wic-gridinv #inv-panel { display: none !important; }
 #game-hud .gh-loots { left: 18px; right: auto; top: 44%; max-height: 22vh; align-items: flex-start; }
 #game-hud .gh-loot { align-items: flex-start; border-right: 0; border-left: 3px solid var(--rc); border-radius: 2px 4px 4px 2px; background: linear-gradient(90deg, rgba(10,10,16,.82), rgba(10,10,16,.4)); box-shadow: inset 24px 0 24px -20px var(--rc); }
