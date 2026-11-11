@@ -69,10 +69,14 @@ export function install(game) {
     const c = cam.position, hx = pl.x, hy = pl.y, hz = pl.z + CHEST;
     let x = c.x, y = -c.z, z = c.y;
     const dx = x - hx, dy = y - hy, dz = z - hz, L = Math.hypot(dx, dy, dz);
-    if (L < 0.4 || !bad(x, y, z)) { keep = null; return; }
+    if (L < 0.4) return;
+    // also an un-eased line-of-sight ray (combatcam eases its pull-in; the zone can appear mid-fight)
+    const occ = pl.camOcclude ? pl.camOcclude(hx, hz, -hy, dx / L, dz / L, -dy / L, L) : Infinity;
+    if (occ >= L && !bad(x, y, z)) { keep = null; return; }
     st.walls++;
-    // 1) pull in along the line to just before the first bad point, if that leaves a usable boom
+    // 1) pull in along the line to just before the first bad point or visual hit, if that leaves a usable boom
     let r = 0.3; for (; r < L; r += 0.1) if (bad(hx + dx * r / L, hy + dy * r / L, hz + dz * r / L)) break;
+    r = Math.min(r, occ);
     if (r - CLEAR >= 1.2) { const f = (r - CLEAR) / L; c.set(hx + dx * f, hz + dz * f, -(hy + dy * f)); keep = null; return; }
     // 2) a clear spot around the player (azimuths from the current camera bearing, then shorter/higher booms)
     const roofed = roofAbove(hx, hy, hz);

@@ -265,12 +265,12 @@ async function main() {
   {
     // Optimisation s2: zone looked up once (not a whole-scene search per ray) and rays use rayaccel.js's triangle grid
     const sph = new THREE.Sphere(), o = new THREE.Vector3(), dv = new THREE.Vector3();
-    let near = [], cut = [], nearT = 0, zone = null;
+    let near = [], cut = [], nearT = 0, zone = null, zoneSeen = false;
     // Optimisation s10 (task 2409): also the visible tile building bodies near the player. Some have no collision (the
     // OSM market stall blocks) and stay visible until the zone that hides them has loaded (a fight can start before)
     const isTileB = m => (m.userData.name || m.parent?.userData.name || '').startsWith('b:');
     player.camOcclude = (x, y, z, dx, dy, dz, far) => {
-      if (!zone || !zone.parent) zone = null;
+      if (!zone || !zone.parent) { zone = null; if (window.__zoneReady && nearT > 0 && !zoneSeen) { zoneSeen = true; nearT = 0; } }   // pick it up at once
       o.set(x, y, z);
       if ((nearT -= 1) <= 0) {
         nearT = 30; near = []; cut = [];
