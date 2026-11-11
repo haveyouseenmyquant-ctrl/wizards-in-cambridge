@@ -17,7 +17,7 @@ FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/s
          # wic optimisation s1: quality presets
          "app/quality.js",
          # wic story s2: quests, dialogue and NPCs (quest_bot and judge story scores must follow story changes)
-         "app/game/quests.js", "app/game/npc_rig.js", "app/game/quests/index.json", "app/game/quests/prologue.json", "app/game/quests/rung_down.json", "app/game/quests/lion_at_the_gate.json",
+         "app/game/quests.js", "app/game/npc_rig.js", "app/game/townsfolk.js", "app/game/quests/index.json", "app/game/quests/prologue.json", "app/game/quests/rung_down.json", "app/game/quests/lion_at_the_gate.json",
          # audio s1: the soundscape and score
          "app/game/audio.js", "app/game/audio_world.js", "app/game/audio_music.js", "app/game/audio_game.js",
          # QA s6: the world tiles and collision (digests written by publish.sh; computed from the files for a local dir),
