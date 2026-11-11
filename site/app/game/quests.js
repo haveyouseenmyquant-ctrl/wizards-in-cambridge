@@ -405,13 +405,16 @@ export async function install(game) {
     await settle(); placeNpcs(st.q || quests.prologue);
     for (const n of Object.values(npcs)) if (Math.hypot(n.x - x, n.y - y) < 0.5) n.g.rotation.y = Math.atan2(P.x - n.x, -(P.y - n.y));
   }
-  async function stage(step) {
+  // QA's recorder freezes the game clock between beats, so update() never runs there: refresh what it would
+  async function stage(step) { const cap = await beat(step); dlg.classList.remove('mini'); cine(); return cap; }
+  async function beat(step) {
     const q = quests.prologue, at = i => { save.prologue = { step: i }; st.q = q; st.step = i; st.phase = 'active'; };
     const line = (L, i) => { dq.lines = L; dq.i = i; dq.done = null; dq.at0 = game.time - 1; dq.npc = L.map(l => npcs[l.who]).find(Boolean) || null; show(); return L[i].line; };
     dlg.hidden = true; bars.classList.remove('on');
     const S = sys();
     if (step === 0) { stage.view = P.view; P.view = 3; if (S) S.encountersEnabled = false; }
     stage.on = step < 8; st.focus = null; st.reveal = null; const status = document.getElementById('status'); if (status) status.textContent = '';
+    st.combat = false;
     if (S && step < 8) for (const m of [...game.mobs]) if (!m.dead && !m.removed && !(step === 6 && m.type?.id === 'bellwarden')) S.remove(m);   // a calm square for the scene
     switch (step) {
       case 0: at(0); placeNpcs(q); showCard(q.chapter, q.title, q.summary, 8); return `${q.chapter}: ${q.title}`;

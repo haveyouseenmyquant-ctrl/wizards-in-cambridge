@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Story screenshots: loads /?debug&nopick, picks a class, calls window.__wicStory(0..) like QA's judge recorder and
-// saves one screenshot per beat.   node scripts/story_shots.mjs [site_dir] [out_dir=/tmp/wic_story_shots]
+// saves one screenshot per beat with the game clock frozen, as the recorder does.   node scripts/story_shots.mjs [site_dir] [out_dir=/tmp/wic_story_shots]
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -27,6 +27,10 @@ try {
   await page.goto(`http://127.0.0.1:${server.address().port}/?debug&nopick`, { waitUntil: 'domcontentloaded', timeout: 300000 });
   await page.waitForFunction('window.__walkReady === true && window.__wicStory', { timeout: 300000 });
   await page.evaluate(() => { const g = window.__game; g.caster.setClass('stormcaller'); g.save.cls = 'stormcaller'; g.persist(); g.paused = false; });
+  // like QA's recorder (scripts/wic_record.mjs): let the game run a moment, then freeze the player/game clocks so only
+  // the render loop runs while the beats are staged (state that only update() refreshes would show up stale)
+  await new Promise(r => setTimeout(r, 2500));
+  await page.evaluate(() => { const P = window.__p, g = window.__game; const pu = P.update.bind(P); P.update = dt => { if (window.__stepping) pu(dt); }; g.update = () => {}; });
   for (let i = 0; ; i++) {
     const cap = await page.evaluate(i => window.__wicStory(i), i);
     if (cap == null) break;
