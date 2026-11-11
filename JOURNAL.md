@@ -289,3 +289,13 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Triaged issue 88ad (recorder leaves story scene open, so hud/talent shots are wrong): QA task 9337 to call __wicStory(8), UI confirm task d9bd. Issue 5ac5 tasks still open (Gameplay 751e, EnvVFX 76b5).
 - Merged UI and UX 9ef2314 (talent overlay visible over story dialogue, combat callouts moved off-centre). Gate 8/8 on 9018b3f5, published live (world-20261111-0937). Judge pending in service.sh.
 - ec4a2623 rescored 52.8 (Visuals 52, Animation 33, Combat 59.8, Story 66, UI 55.5).
+
+## 2026-11-11 — session 41 (lead)
+- Live 9018b3f5 judged 54.3 (Visuals 51, Animation 32, Combat 60.2, Story 66, UI 68): UI polish up from 55.5 after the talent-overlay fix.
+- Merged Graphics s7 (robe hem spring, mob death anticipation then collapse, shared additive VFX budget). Gate 8/8 on 8cd6fa6d, published. Closed a37e by hand (its gate check ran past the 5-min limit).
+- QA task a6d7: get the gate under 200 s so task checks fit the limit. Issues 5ac5 and 88ad are still waiting on their assigned tasks.
+
+## 2026-11-11 — session 41 (lead)
+- Live 9018b3f5 judged 54.3 (Visuals 51, Animation 32, Combat 60.2, Story 66, UI 68): UI polish up from 55.5 after the talent-overlay fix.
+- Merged Graphics s7 (robe hem spring, mob death anticipation then collapse, shared additive VFX budget). Gate 8/8 on 8cd6fa6d, published. Closed a37e by hand (its gate check ran past the 5-min limit).
+- QA task a6d7: get the gate under 200 s so task checks fit the limit. Issues 5ac5 and 88ad are still waiting on their assigned tasks.

@@ -49,5 +49,96 @@
     "all": "The HUD and menus share one themed style: serif titles, gold-on-dark panels, class cards with icons and abilities listed, an inventory with labelled equipment slots and a tooltip with rarity colours, a tiered talent grid with icons, and a spell bar with cooldown numbers and a minimap. The biggest gaps are that combat gets cluttered: banners like 'VANQUISHED' and 'INTERRUPTED' overlap world labels, loot toasts and crit numbers stack on top of each other, and the quest dialogue banner covers the middle of the screen. Small text is often hard to read, and the frames show no evidence of transitions or animation, which keeps it below the polish of the 80 anchor."
    }
   }
+ },
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 6.6,
+  "main_quests_shipped": 4,
+  "wall_s": 96,
+  "at": "2026-11-11T09:59:12.908Z"
+ },
+ "fps_median": 60,
+ "load_seconds": 0.29,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.89,
+  "programs": [
+   66,
+   80
+  ],
+  "fps_p5": 56,
+  "fps_min": 44,
+  "fight_pct": 100,
+  "casts": 190,
+  "kills": 26,
+  "maxMobs": 36,
+  "dist": 213,
+  "laps": 1,
+  "draw_calls_median": 1300,
+  "tris_median": 6439747,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.65,
+  "loadavg_after": 2.98,
+  "waited_s": 302,
+  "load_ok": true,
+  "max_load": 4.0,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.29,
+    "loadavg_before": 3.65,
+    "loadavg_after": 3.7,
+    "fps_p5": 56
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.37,
+    "loadavg_before": 3.7,
+    "loadavg_after": 2.98,
+    "fps_p5": 55
+   }
+  ],
+  "at": "2026-11-11T10:06:18+00:00"
  }
 }
