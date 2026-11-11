@@ -363,3 +363,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 54 (lead)
 - Merged Graphics s9 (c7f9285): townsfolk.js adds 28 animated pedestrians and 4 cyclists around Market Hill, Peas Hill, King's Parade and Senate House Hill; bicycle_golem rigged (Quaternius CC0). Gate 10/10 on a1d0bca3 (test_townsfolk 28 walkers, 100% moving); published.
 - Live 39c5a51f judged 53.6 (Animation 32 is weakest). Sent Graphics the judge's player-pose complaint and UI the truncated combat toast stack. Both open issues still wait on their tasks.
+
+## 2026-11-11 — session 55 (lead)
+- Merged Story s9: Quest 6 "The Mainspring" (Trinity Street, Escapement Engine boss). Added mainspring.json to build_hash FILES (hash unchanged). Gate 10/10 on 4a3619f0 (quest_bot 6 quests, 100%); published.
+- Live a1d0bca3 (townsfolk) judged 55.6, up from 53.6: Animation 36, Visuals 54. New task Story c4f9 (Quest 7, ring 2). Both open issues still wait on their tasks.

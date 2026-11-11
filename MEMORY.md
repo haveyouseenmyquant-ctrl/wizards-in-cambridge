@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 54)
+## State (2026-11-11, after session 55)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,10 +9,9 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
-- s54: merged Graphics s9 (townsfolk 28 walkers + rigged bicycle_golem); gate 10/10 on a1d0bca3; published.
-  Last judged live: 39c5a51f = 53.6 (Vis 52, Anim 32, Combat 59, Story 66, UI 64). Animation weakest: judge wants PLAYER
-  stride/arm swing + cast poses (noted to Graphics 8765). UI: combat toast stack truncated (noted to UI 3daf).
-  Open issues: 5d62 wait Opt 22df; 11c7 wait Gameplay f130. Every active team has an open task.
+- s55: merged Story s9 Quest 6 Mainspring (6 quests x 4 classes 100%); added mainspring.json to build_hash FILES;
+  gate 10/10 on 4a3619f0; published. Live a1d0bca3 judged 55.6 (Vis 54, Anim 36, Combat 60.5, Story 66, UI 66).
+  Story -> c4f9 Quest 7 (ring 2). Gameplay told Engine boss dies too fast (11ba). Open issues 5d62 (Opt 22df), 11c7 (Gameplay f130).
 - Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 - Score json merge conflicts: union keys (python, ours first).
 
