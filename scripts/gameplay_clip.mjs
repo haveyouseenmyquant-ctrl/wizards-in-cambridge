@@ -15,6 +15,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { camClipProbe } from './lib/camclip_probe.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const puppeteer = createRequire(path.join(ROOT, 'tools/'))('puppeteer-core');
@@ -316,9 +317,10 @@ try {
           const w1 = Date.now();
           // one real frame so the render reflects the stepped state (DOM HUD + WebGL), then capture it
           await page.evaluate(() => window.__rafFrame());
+          const cam = await page.evaluate(camClipProbe).catch(e => ({ error: e.message }));   // QA s10: camera-clip probe
           const f = path.join(dir, `frame_${String(k + 1).padStart(2, '0')}.jpg`);
           await page.screenshot({ path: f, type: 'jpeg', quality: 85 });
-          frames.push({ file: path.basename(f), ...s });
+          frames.push({ file: path.basename(f), ...s, cam });
           log(cls, `frame ${k + 1} t=${s.t} hp=${s.hp} mobs=${s.liveMobs.length} sim ${((w1 - w0) / 1000).toFixed(1)}s shot ${((Date.now() - w1) / 1000).toFixed(1)}s`);
         }
         const events = await page.evaluate(() => { const e = window.__clip.events; window.__clip.dispose(); return e; });

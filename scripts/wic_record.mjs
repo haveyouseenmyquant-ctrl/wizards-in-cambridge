@@ -17,6 +17,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
+import { installCamHook, camClipProbe } from './lib/camclip_probe.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const puppeteer = createRequire(path.join(ROOT, 'tools/'))('puppeteer-core');
@@ -74,6 +75,7 @@ async function openPage(query, seed) {
   await page.evaluateOnNewDocument(preload, seed);
   await page.goto(BASE + query, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction('window.__walkReady === true', { timeout: 180000 });
+  await page.evaluate(installCamHook);
   return { ctx, page };
 }
 async function settle(page) {
@@ -83,8 +85,9 @@ async function settle(page) {
 async function shot(page, scene, name, label) {
   const dir = path.join(OUT, scene); fs.mkdirSync(dir, { recursive: true });
   await page.evaluate(() => window.__rafHold ? window.__rafFrame() : new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
+  const cam = await page.evaluate(camClipProbe).catch(e => ({ error: e.message }));   // QA s10: camera-clip probe
   await page.screenshot({ path: path.join(dir, name), type: 'jpeg', quality: 85 });
-  (manifest.scenes[scene].frames ||= []).push({ file: `${scene}/${name}`, label });
+  (manifest.scenes[scene].frames ||= []).push({ file: `${scene}/${name}`, label, cam });
   log(scene, name, label);
 }
 // step the player (and the game when present) by `secs` of game time at 20 Hz while holding `keys`
@@ -195,9 +198,22 @@ if (fs.existsSync(cdir)) for (const cls of fs.readdirSync(cdir).sort()) {
   const e = JSON.parse(fs.readFileSync(ev));
   manifest.scenes[`combat_${cls}`] = {
     desc: `Scripted 60 s fight as the ${cls} class (third-person combat camera), frames evenly spaced in time`, events: `combat/${cls}/events.json`,
-    frames: e.frames.map(f => ({ file: `combat/${cls}/${f.file}`, label: `t = ${f.t} s` })),
+    frames: e.frames.map(f => ({ file: `combat/${cls}/${f.file}`, label: `t = ${f.t} s`, cam: f.cam })),
   };
 }
+// QA s10 (task 9be5): camera-clip summary over the explore and combat frames (menus/story frames have no world camera)
+{
+  const probed = [], clip = [];
+  for (const [k, sc] of Object.entries(manifest.scenes)) {
+    if (k !== 'explore' && !k.startsWith('combat_')) continue;
+    for (const f of sc.frames) { if (!f.cam || f.cam.error) continue; probed.push(f); if (f.cam.reasons.length) clip.push({ frame: f.file, scene: k, pos: f.cam.pos, view: f.cam.view, reasons: f.cam.reasons }); }
+  }
+  const pct = n => probed.length ? +(100 * n / probed.length).toFixed(1) : null;
+  const combat = probed.filter(f => f.file.startsWith('combat/')), cclip = clip.filter(c => c.scene !== 'explore');
+  manifest.cam_clip = { cam_clip_pct: pct(clip.length), cam_clip_combat_pct: combat.length ? +(100 * cclip.length / combat.length).toFixed(1) : null,
+    cam_clip_probed: probed.length, cam_clip_frames: clip };
+  log('cam clip', `${clip.length}/${probed.length} frames`);
+}
 fs.writeFileSync(path.join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 1));
-console.log(JSON.stringify({ out: OUT, wall_s: +((Date.now() - T0) / 1000).toFixed(0), scenes: Object.fromEntries(Object.entries(manifest.scenes).map(([k, v]) => [k, v.frames.length])), errors: manifest.errors.length, harness_fail: harnessFail }));
+console.log(JSON.stringify({ out: OUT, wall_s: +((Date.now() - T0) / 1000).toFixed(0), scenes: Object.fromEntries(Object.entries(manifest.scenes).map(([k, v]) => [k, v.frames.length])), errors: manifest.errors.length, cam_clip_pct: manifest.cam_clip?.cam_clip_pct, harness_fail: harnessFail }));
 process.exit(harnessFail ? 1 : 0);
