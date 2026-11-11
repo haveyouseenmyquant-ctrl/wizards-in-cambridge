@@ -187,3 +187,20 @@
 {"hash":"9018b3f5fb5b7fa7","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-11T09:59:12.910Z"}
 {"hash": "9018b3f5fb5b7fa7", "step": "playtest", "status": "ok", "secs": 96, "t": "2026-11-11T09:59:13Z"}
 {"hash": "9018b3f5fb5b7fa7", "step": "perf", "status": "ok", "secs": 425, "t": "2026-11-11T10:06:18Z"}
+{"hash": "9018b3f5fb5b7fa7", "step": "gate", "status": "stale", "secs": 301, "t": "2026-11-11T10:11:19Z"}
+{"hash": "8cd6fa6dbecf9f59", "step": "judge", "status": "ok", "secs": 517, "t": "2026-11-11T10:29:56Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:quest:pyromancer","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:quest:stormcaller","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:quest:warden","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:quest:hexweaver","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:route:warden","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:route:pyromancer","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:route:warden","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash":"8cd6fa6dbecf9f59","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-11T10:31:30.621Z"}
+{"hash": "8cd6fa6dbecf9f59", "step": "playtest", "status": "ok", "secs": 94, "t": "2026-11-11T10:31:30Z"}
+{"hash": "8cd6fa6dbecf9f59", "step": "perf", "status": "ok", "secs": 1334, "t": "2026-11-11T10:53:45Z"}
+{"hash": "8cd6fa6dbecf9f59", "step": "gate", "status": "ok", "secs": 296, "t": "2026-11-11T10:58:41Z"}
