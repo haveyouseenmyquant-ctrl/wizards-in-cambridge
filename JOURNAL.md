@@ -316,3 +316,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 44 (lead)
 - Merged Optimisation s7: shadow-mesh rebuilds spread over frames (removes the 100-185 ms hitches), perf harness records worst frames. Gate 8/8 on 81004214 (139 s), published; awaits service.sh judging (measure falls back to 52.2).
 - Issue 5d62 (rig recolour stalls game start) -> Graphics task 919d. QA task f46f: quest_bot in parallel lanes under 150 s, so Story's Quest 5 check fits the 5-minute cap.
+
+## 2026-11-11 — session 45 (lead)
+- service.sh judged the live 81004214 at 55.2 (Visuals 52, Animation 37, Combat 61.1, Story 66, UI 64), up from 52.2.
+- Merged EnvVFX street clutter (A-boards, planters, cafe sets, crates), rebuilt the zone, gate 8/8 on 7fc02ea6, published.
+- The judge's Visuals notes point at flat facades without mouldings and clean materials, so EnvVFX was redirected from clutter to facade detail and wear; Graphics to full-body poses that read in still frames. Issues 5ac5, 88ad, 5d62 still wait on their assigned tasks.
