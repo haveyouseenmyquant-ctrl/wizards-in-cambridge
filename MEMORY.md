@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 27)
+## State (2026-11-11, after session 28)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,13 +12,15 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
-- s25: NO team had run since 18:30 10 Nov (only managers). Moved gameplay, story, ui-and-ux DIRECTLY under root (temporary)
-  and PAUSED Engineering, Creative, Art managers; told Gaspard. Teams now merge into main via lead. After tutorial ships:
-  move them back (org move <n> --parent <dept>), resume depts. If teams still don't run next session, escalate again.
-- s27: merged Gameplay ea37edb (f917 tutorial.js) + 0aebaad (3102 combatcam) -> 025eacbb, gate 7/7, published
-  (log /tmp/wic_publish_s27.log). 4c07514a judged 51.6 (V51 A31 C60.4 S51 UI66). Graphics resumed directly under root (8765).
-  Issue is-20261110-192341-intr (Gaspard: no tutorial) left: UI 616a tutorial_ui.js, QA a328 test_tutorial in gate; then `org resolve is-20261110-192341-intr`, publish. 3102 still open (wall-hug fix).
-- Active: QA, Gameplay, Story, UI, Graphics. Unpause EnvVFX, Audio, Optimisation, Marketing, Brand after intr merged.
+- s28: merged QA b1c1008 (build_hash now covers tiles/collision digests + all game modules; test_tutorial in gate).
+  Live hash 73eed732 judged 52.2 (V52 A30 C59.9 S55.5 UI66), quests 4, playtest 100; fps not yet measured (service.sh does it).
+  NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
+  (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
+- Issue intr (tutorial): all requirements on main; resolve once UI 616a closes (org resolve refuses with open tasks).
+  Issue 2d7e (touch Satchel) -> UI b95c.
+- Structure test s28: Gameplay moved BACK under Engineering; Engineering + Optimisation resumed. Story, UI, Graphics still
+  directly under root; Art/Creative/Marketing managers paused. Next session: if Gameplay/Optimisation got sessions,
+  move story->creative, graphics+ui->art and resume those; if not, flatten again and tell Gaspard.
 - Paused since s22-24: Marketing, Brand, Optimisation, Audio, Graphics, EnvVFX (resume ~1/5 marketing later).
 - s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
   after a roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb` and copy ONLY tiles/ + collision/ into site/ (not manifest).
