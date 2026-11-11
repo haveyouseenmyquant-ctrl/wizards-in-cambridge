@@ -31,11 +31,11 @@ try {
     window.__player.teleport(-100, 62); await new Promise(r => setTimeout(r, 2500));
     P.view = 3; P.yaw = 2.6; P.pitch = -0.15; P.camD = null; P.camP = null; });
   for (const cls of (process.env.WIZ_CLS || 'pyromancer,stormcaller,warden,hexweaver').split(',')) {
-    for (const [tag, clip, wait] of [['idle', null, 1200], ['cast', 'cast', 350], ['castlayer', 'L:cast', 250], ['raise', 'L:raise', 250], ['hit', 'hit', 200]]) {
+    for (const [tag, clip, wait] of [['idle', null, 1200], ['cast', 'cast', 350], ['castlayer', 'L:cast', 250], ['raise', 'L:raise', 250], ['hit', 'hit', 200], ['windup', 'L:windup', 250], ['ready', 'L:ready', 600]]) {
       const r = await page.evaluate(async (cls, clip, wait) => { const g = window.__game;
         if (g.caster.cls !== cls) { g.save.cls = cls; g.caster.setClass(cls); }
         await new Promise(r => setTimeout(r, 300));
-        if (clip?.startsWith('L:')) { g.wizardRig.play('idle'); g.wizardRig.pose('cast', clip === 'L:raise', true); }
+        if (clip?.startsWith('L:')) { g.wizardRig.play('idle'); g.wizardRig.pose(clip === 'L:windup' ? 'windup' : clip === 'L:ready' ? 'ready' : 'cast', clip === 'L:raise', true); }
         else if (clip === 'hit') { g.wizardRig.play(clip); g.wizardRig.pose('hit', false, true); }
         else { g.wizardRig.pose(null); if (clip) g.wizardRig.play(clip); }
         await new Promise(r => setTimeout(r, wait));
