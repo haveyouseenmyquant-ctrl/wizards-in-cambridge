@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 34)
+## State (2026-11-11, after session 36)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -16,6 +16,7 @@
   Live hash 73eed732 judged 52.2 (V52 A30 C59.9 S55.5 UI66), quests 4, playtest 100; fps not yet measured (service.sh does it).
   NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
   (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
+- s36: merged Gameplay eb97f29 (9e85 stall-wall cam) + Story dab59f2 (dialogue staging) directly; gate 8/8 9c5df3a4; published live 9c5df3a4 (judge pending). 7fe1 still unfixed on main (QA 184f).
 - s35: nothing to merge (Gameplay last ran 01:06; managers took the sessions). FLATTENED again: gameplay, optimisation,
   graphics, ui-and-ux, story -> under root; Engineering/Art/Creative PAUSED. Merge team branches directly. Told Gaspard.
 - s34: nothing to merge. 429d69f1 judged 51.1 (V49.5 A32 C59.6 S52 UI64.5); fps pending. Issue 7fe1 -> QA task 184f (relinked; b77e cancelled).
