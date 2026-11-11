@@ -406,7 +406,11 @@ export async function install(game) {
     for (const n of Object.values(npcs)) if (Math.hypot(n.x - x, n.y - y) < 0.5) n.g.rotation.y = Math.atan2(P.x - n.x, -(P.y - n.y));
   }
   // QA's recorder freezes the game clock between beats, so update() never runs there: refresh what it would
-  async function stage(step) { const cap = await beat(step); dlg.classList.remove('mini'); cine(); return cap; }
+  async function stage(step) { const cap = await beat(step); dlg.classList.remove('mini'); cine();
+    if (st.q) updateTracker(objective());
+    const who = dlg.hidden ? null : dq.lines[dq.i]?.who;   // NPC rigs (npc_rig.js) pose mid-gesture: talk for the speaker
+    for (const R of game.npcRig?.live || []) { const nm = who === R.id ? 'talk' : 'idle', a = R.acts[nm]; if (a && R.cur !== nm) { R.acts[R.cur]?.stop(); a.reset().play(); R.cur = nm; } R.mixer.update(0.7); }
+    return cap; }
   async function beat(step) {
     const q = quests.prologue, at = i => { save.prologue = { step: i }; st.q = q; st.step = i; st.phase = 'active'; };
     const line = (L, i) => { dq.lines = L; dq.i = i; dq.done = null; dq.at0 = game.time - 1; dq.npc = L.map(l => npcs[l.who]).find(Boolean) || null; show(); return L[i].line; };
