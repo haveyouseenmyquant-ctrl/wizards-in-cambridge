@@ -112,14 +112,14 @@ try {
           if (f < 4) continue;
           samples++;
           const c = cam.position, hit = boxes.find(b => inside(b, c.x, c.y, c.z));
-          if (hit) { insideN++; if (bad.length < 12) bad.push({ spot: [+P.x.toFixed(1), +P.y.toFixed(1)], yaw: +P.yaw.toFixed(2), pitch, prop: hit.name, cam: [+c.x.toFixed(2), +c.y.toFixed(2), +c.z.toFixed(2)] }); }
+          if (hit) { insideN++; if (bad.length < 12) bad.push({ cc: { ...g.camClip, boxes: 0, near: g.camClip.near.length }, b: { y0: hit.y0, y1: hit.y1 }, spot: [+P.x.toFixed(1), +P.y.toFixed(1)], yaw: +P.yaw.toFixed(2), pitch, prop: hit.name, cam: [+c.x.toFixed(2), +c.y.toFixed(2), +c.z.toFixed(2)] }); }
         }
       }
       await sleep(0);
     }
     P.camMax = null;
     return { camclip_frames_inside: insideN, samples, spots: used, spots_tried: spots.length, props: boxes.length,
-      z0, stall_boxes: boxes.filter(b => /^market_stalls/.test(b.name)).length, bad };
+      z0, clip: g.camClip && { boxes: g.camClip.boxes?.length, pulls: g.camClip.pulls, lifts: g.camClip.lifts, frames: g.camClip.frames }, stall_boxes: boxes.filter(b => /^market_stalls/.test(b.name)).length, bad };
   });
   out.ok = out.camclip_frames_inside === 0 && out.samples >= 200 && out.stall_boxes > 0 && !errors.length;
 } catch (e) {

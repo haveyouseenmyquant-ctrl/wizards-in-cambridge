@@ -34,7 +34,7 @@ export function install(game) {
   p.applyCamera3 = function (cam, dt = 1 / 60) {
     a3.call(this, cam, dt);
     if (!this.combatCam || window.__cam || window.__explore) { st.lift = 0; return; }
-    if (!st.boxes) { if ((st.nearT -= 1) > 0) return; st.boxes = build(); if (!st.boxes) { st.nearT = 60; return; } st.nearT = 0; }
+    if (!st.boxes) { if (!window.__zoneReady || !(st.boxes = build())) return; st.nearT = 0; }   // zone.js: true once loaded
     const cx = this.x, cy = this.z + CHEST, cz = -this.y;
     if ((st.nearT -= 1) <= 0 || Math.hypot(st.nx - cx, st.nz - cz) > 2) { st.nearT = 15; st.nx = cx; st.nz = cz; st.near = st.boxes.filter(b => Math.hypot(b.cx - cx, b.cz - cz) < b.r + 9); }
     st.frames++;
