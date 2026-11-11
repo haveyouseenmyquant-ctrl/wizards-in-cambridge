@@ -25,7 +25,7 @@ const errors = [];
 try {
   const page = await browser.newPage();
   page.on('pageerror', e => errors.push(String(e))); page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug`, { waitUntil: 'domcontentloaded', timeout: 300000 });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug&tutorial=0`, { waitUntil: 'domcontentloaded', timeout: 300000 });
   await page.waitForFunction('window.__walkReady === true && window.__game && window.__game.mobSystem', { timeout: 300000, polling: 500 });
   const SHOTS = process.env.MOB_SHOTS ? JSON.parse(process.env.MOB_SHOTS) : [
     { types: ['gargoyle', 'wisp', 'statue', 'ink_imp'] },

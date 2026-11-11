@@ -304,7 +304,7 @@ export async function install(game) {
   }
   const sysObj = game.add({ update(dt) {
     if (st.cardT > 0 && (st.cardT -= dt) <= 0) card.style.opacity = 0;
-    if (!st.q && st.phase === 'idle' && st.cardT <= 0 && game.save.cls && !game.paused && !P.pendingPlace) { const id = firstOpen(); if (id) begin(id, true); else st.phase = 'done'; }
+    if (!st.q && st.phase === 'idle' && st.cardT <= 0 && !(game.tutorial && !game.tutorial.done) && game.save.cls && !game.paused && !P.pendingPlace) { const id = firstOpen(); if (id) begin(id, true); else st.phase = 'done'; }
     // combat: a hostile mob close by. Story text then shrinks into the quest column, the letterbox and title card get
     // out of the way, and narration advances by itself so it never covers the fight
     const combat = !(st.reveal && game.time - st.reveal.t0 < st.reveal.dur) && game.mobs.some(m => !m.dead && !m.removed && !['idle', 'patrol', 'return', 'dead'].includes(m.state) && Math.hypot(m.x - P.x, m.y - P.y) < 22);

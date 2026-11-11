@@ -34,7 +34,7 @@ const browser = await puppeteer.launch({
 });
 try {
   const page = await browser.newPage();
-  await page.goto(`http://127.0.0.1:${server.address().port}/?debug`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`http://127.0.0.1:${server.address().port}/?debug&tutorial=0`, { waitUntil: 'domcontentloaded' });
   await page.waitForFunction('window.__walkReady === true', { timeout: 60000 });
   await page.addStyleTag({ content: '#help,#minimap,#status,.hud{display:none!important}' });
   const man = JSON.parse(fs.readFileSync(path.join(SRC, 'manifest.json')));
