@@ -51,5 +51,7 @@
   "errors": 0,
   "first_errors": [],
   "at": "2026-11-11T12:06:07.553Z"
- }
+ },
+ "main_quests_shipped": 4,
+ "quest_bot_pass_pct": 100
 }
