@@ -9,7 +9,7 @@ const PROP = /^(market_stalls|clutter|trailer|fountain|furniture)/, MARGIN = 0.2
 
 export function install(game) {
   const p = game.player, T = game.THREE; if (!p?.applyCamera3 || !T) return;
-  const st = game.camClip = { boxes: null, near: [], nearT: 0, pulls: 0, lifts: 0, frames: 0, lift: 0 };
+  const st = game.camClip = { boxes: null, near: [], nearT: 0, pulls: 0, lifts: 0, frames: 0, lift: 0, nx: 1e9, nz: 1e9 };
   const v = new T.Vector3(), m4 = new T.Matrix4(), q = new T.Quaternion(), up = new T.Vector3(0, 1, 0);
   function build() {
     const zone = game.scene?.getObjectByName('zone'); if (!zone) return null;
@@ -36,7 +36,7 @@ export function install(game) {
     if (!this.combatCam || window.__cam || window.__explore) { st.lift = 0; return; }
     if (!st.boxes) { if ((st.nearT -= 1) > 0) return; st.boxes = build(); if (!st.boxes) { st.nearT = 60; return; } st.nearT = 0; }
     const cx = this.x, cy = this.z + CHEST, cz = -this.y;
-    if ((st.nearT -= 1) <= 0) { st.nearT = 15; st.near = st.boxes.filter(b => Math.hypot(b.cx - cx, b.cz - cz) < b.r + 9); }
+    if ((st.nearT -= 1) <= 0 || Math.hypot(st.nx - cx, st.nz - cz) > 2) { st.nearT = 15; st.nx = cx; st.nz = cz; st.near = st.boxes.filter(b => Math.hypot(b.cx - cx, b.cz - cz) < b.r + 9); }
     st.frames++;
     const c = cam.position;
     let b = hitAny(c.x, c.y, c.z);
