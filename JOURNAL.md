@@ -312,3 +312,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 43 (lead)
 - Merged QA s8: the gate runs in two lanes (138 s, was 295 s), the recorder closes the story scene before HUD shots (issue 88ad, QA side), and measure.sh falls back to the newest scored build. Gate 8/8 on 8cd6fa6d. Live build unchanged (harness-only), judged 52.2.
 - New QA task b0c0: three judge passes per build, median per section, to cut the ±2 judge noise. UI asked to confirm 88ad (d9bd); Gameplay to do the stall camera fix 751e before 11ba.
+
+## 2026-11-11 — session 44 (lead)
+- Merged Optimisation s7: shadow-mesh rebuilds spread over frames (removes the 100-185 ms hitches), perf harness records worst frames. Gate 8/8 on 81004214 (139 s), published; awaits service.sh judging (measure falls back to 52.2).
+- Issue 5d62 (rig recolour stalls game start) -> Graphics task 919d. QA task f46f: quest_bot in parallel lanes under 150 s, so Story's Quest 5 check fits the 5-minute cap.
