@@ -224,4 +224,4 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - a328: scripts/test_tutorial.mjs (fresh profile, card click, every class, real key input per step) in wic_gate.py.
   On main 126836d: tutorial_pass true for all 4 classes (0 hits, 0 mobs within 20 m, first_mob = 1 wisp, completes,
   reload skips; equip step done via API). Issue intr confirmed fixed on main.
-- Playtest 73eed732: 100% (12/12). service.sh judge now records to /tmp/wic_rec_svc (it wiped a manual /tmp/wic_rec run).
+- 73eed732: judged_game_quality 52.2 (Vis 52, Anim 30, Combat 59.9, Story 55.5, UI 66), playtest 100% (12/12). service.sh judge now records to /tmp/wic_rec_svc (it wiped a manual /tmp/wic_rec run).
