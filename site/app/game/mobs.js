@@ -5,8 +5,8 @@ import * as THREE from 'three';
 import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 export const ENCOUNTERS = [];
-// gameplay s9 (11ba): bosses died in 4-17 s in judged clips with no mechanics shown; x3 hp -> ~30 s fights
-const BOSS_HP_MULT = 3.0;
+// gameplay s9 (11ba): bosses died in 4-17 s in judged clips with no mechanics shown; x2.5 hp -> ~25-35 s fights (x3 made the pyro bot time out)
+const BOSS_HP_MULT = 2.5;
 const SPAWN_R = 120, DESPAWN_R = 200, RESPAWN_S = 45, BOSS_RESPAWN_S = 150, MAX_LIVE = 32;
 // session 46: encounter density near the centre (Market Square / ring 1), pack aggro, roaming patrols
 const CENTRE = { x: -105, y: 60 }, DENSE_R = 260, HELP_R = 18, PATROL_SPAWN_R = 110, PATROL_DESPAWN_R = 170, PATROL_SPEED = 2.2;
