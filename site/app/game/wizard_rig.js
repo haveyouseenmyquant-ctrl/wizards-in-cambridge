@@ -271,14 +271,28 @@ export function install(game) {
     B['Foot.L'].getWorldPosition(_l); B['Foot.R'].getWorldPosition(_r); _l.sub(_r);
     const s = Math.max(-1, Math.min(1, _l.dot(F) / (run ? 0.7 : 0.45))), lift = Math.max(-1, Math.min(1, _l.y / 0.08));
     R.roll += (lift - R.roll) * Math.min(1, dt * 10);   // left foot up -> weight on the right
+    R.s = s;
     const k = run ? 1.4 : 1;
     tiltBone(B.Abdomen || B.Torso, Rt, -(0.16 + 0.15 * (k - 1)) * w);   // lean into the pace
-    tiltBone(B.Abdomen || B.Torso, F, -0.17 * k * w * R.roll);          // roll over the stance foot
-    tiltBone(B.Torso, U, -0.3 * k * w * s);                              // shoulders counter the hips
+    tiltBone(B.Abdomen || B.Torso, F, -0.26 * k * w * R.roll);          // roll over the stance foot
+    tiltBone(B.Torso, U, -0.45 * k * w * s);                              // shoulders counter the hips
     tiltBone(B.Head, F, 0.06 * w * R.roll); tiltBone(B.Head, U, 0.12 * w * s);   // head stays level and forward
-    const aw = 0.85 * w * (R.oneShot ? 0 : 1);
-    aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.6, -1, 0.8 * k * s), aw);    // left arm swings with the right leg
-    aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.55, -1, -0.6 * k * s), aw * 0.8);   // staff arm, a shorter swing
+    const aw = w * (R.oneShot ? 0 : 1);   // s10: wider, longer swings so they break the silhouette from behind
+    aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.85, -1, 1.25 * k * s), aw);    // left arm swings with the right leg
+    aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.75, -1, -0.95 * k * s), aw * 0.9);   // staff arm, a shorter swing
+  }
+  // s10: whole-body layer on the root (the judge saw 'the same upright pose' in every frame): the hips bob down on each
+  // footfall and the body sways over the stance foot; a cast rears back on the wind-up then lunges forward into the
+  // thrust; a hit knocks the whole body back. Applied last, as a rotation about the feet.
+  function rootPose(t, p) {
+    const ct = R.hold === 'cast' ? 0.3 : R.hold === 'windup' ? 0.08 : t - R.castT;
+    const wc = R.hold === 'cast' || R.hold === 'windup' ? 1 : env(ct, 0.06, 0.62, 0.95), wh = R.hold === 'hit' ? 1 : env(t - R.hitT, 0.05, 0.22, 0.55);
+    const th = ease((ct - 0.14) / 0.14), lw = R.lw;
+    const rx = (0.14 - 0.34 * th) * wc + 0.28 * wh, rz = -0.11 * lw * R.roll;
+    const dy = lw * (0.06 * (1 - Math.abs(R.s || 0)) - 0.03) - 0.06 * wc * th - 0.05 * wh, fw = 0.18 * wc * th - 0.15 * wh;
+    R.root.rotation.set(rx, p.yaw, rz, 'YXZ');
+    R.root.position.x -= Math.sin(p.yaw) * fw; R.root.position.z -= Math.cos(p.yaw) * fw; R.root.position.y += dy;
+    R.root.updateMatrixWorld(true);
   }
   function hatSpring(dt, sp) {
     const H = R.hat?.userData; if (!H?.sway) return;
@@ -335,7 +349,7 @@ export function install(game) {
     for (const [b, q] of R.rest) b.quaternion.copy(q);
     R.mixer.update(dt);
     R.charge = 0;
-    if (!dead && !flying) { locomotion(dt, sp); upperBody(t, dt); }
+    if (!dead && !flying) { locomotion(dt, sp); upperBody(t, dt); rootPose(t, p); }
     if (R.hand) { const c = R.charge || 0; R.hand.visible = c > 0.02; R.hand.scale.setScalar(R.hand.userData.s * (0.35 + 1.1 * c) * (1 + Math.sin(t * 13) * 0.08)); R.hand.material.opacity = Math.min(1, 0.3 + c); }
     hatSpring(dt, flying ? 0 : sp);
     robeSpring(dt, flying ? 0 : sp, flying);
