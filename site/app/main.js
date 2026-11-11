@@ -18,6 +18,7 @@ import { raycastNearest } from './rayaccel.js';
 import { installShadowLod } from './shadowlod.js';
 import { installShadowProxies } from './shadowproxy.js';
 import { installMainMerge } from './mainmerge.js';
+import { installInstPool } from './instpool.js';
 
 const BASE = new URL('./', location.href).href;
 // ?look=v2: sky dome, AgX tone mapping, plausible albedos (session 9). Off by default: it lowered photo_match on the
@@ -279,6 +280,7 @@ async function main() {
   const shadowLod = sun.castShadow ? installShadowLod(THREE, scene, camera, QP.shadowLod) : () => {};   // Optimisation s2: small far casters off
   const shadowProxies = sun.castShadow ? installShadowProxies(THREE, scene, sun) : () => {};   // and static groups cast as one merged mesh
   const mainMerge = installMainMerge(THREE, scene, sun.castShadow ? sun : null, QP.merge);   // Optimisation s3: static meshes drawn as merged batches
+  const instPool = installInstPool(THREE, scene, camera, sun.castShadow ? sun : null);   // Optimisation s5: per-tile tree/hedge/object instances drawn as cross-tile pools
   status('Loading tiles…');
   let last = performance.now(), streamT = 0, ready = false, hudT = 0, audioSys = null;
   renderer.setAnimationLoop(now => {
@@ -310,7 +312,7 @@ async function main() {
       sun.target.position.set(cx, 0, cz); sun.position.set(cx, 0, cz).addScaledVector(SUN_DIR, 300); sun.target.updateMatrixWorld();
     }
     skyDome.position.copy(camera.position); skyDome.material.uniforms.t.value = performance.now() / 1000;
-    shadowProxies(dt); shadowLod(dt); mainMerge(dt);
+    instPool(dt); shadowProxies(dt); shadowLod(dt); mainMerge(dt);
     if (composer) composer.render(dt); else renderer.render(scene, camera);
     if (!ready && !player.pendingPlace && tiles.readyAt(player.x, player.y)) {
       ready = true; window.__walkReadyAt = performance.now(); window.__walkReady = true;
