@@ -5,6 +5,9 @@ import sys
 import urllib.error
 import urllib.request
 
+sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
+from collision_digest import digest  # noqa: E402
+
 FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/shadowlod.js", "app/shadowproxy.js", "app/mainmerge.js", "app/tiles.js", "app/materials.js", "app/trees.js", "app/objects.js", "app/facades.js", "app/zone.js", "zone/zone.json", "cityfac/index.json",
          "tex/textures.json",
          # session 42: the game layer, so game KPI caches (<hash>_game.json, _gameplay.json) follow game changes
@@ -16,7 +19,14 @@ FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/s
          # wic story s2: quests, dialogue and NPCs (quest_bot and judge story scores must follow story changes)
          "app/game/quests.js", "app/game/npc_rig.js", "app/game/quests/index.json", "app/game/quests/prologue.json", "app/game/quests/rung_down.json", "app/game/quests/lion_at_the_gate.json",
          # audio s1: the soundscape and score
-         "app/game/audio.js", "app/game/audio_world.js", "app/game/audio_music.js", "app/game/audio_game.js"]
+         "app/game/audio.js", "app/game/audio_world.js", "app/game/audio_music.js", "app/game/audio_game.js",
+         # QA s6: the world tiles and collision (digests written by publish.sh; computed from the files for a local dir),
+         # so a tiles-only rebuild (s18 roofs) gets a new hash and is rescored
+         "tiles/digest.json", "collision/digest.json",
+         # QA s6: game modules added since (tutorial, rigs, UI screens...) had never changed the hash
+         "app/ui.js", "app/game/combatcam.js", "app/game/explore_rig.js", "app/game/feel.js", "app/game/itemsets.js", "app/game/mob_rig.js",
+         "app/game/progression.js", "app/game/tutorial.js", "app/game/uiframe.js", "app/game/uipolish.js", "app/game/uiscreens.js",
+         "app/game/wizard_rig.js", "app/game/quests/ferry_bell.json", "app/game/quests/tutorial.json"]
 # session 75: --game hashes only what the game KPIs (test_mobs, test_items, playtest, gameplay clips) depend on: the game
 # layer, the player/collision code and the collision tiles (via collision/digest.json, written by publish.sh). A world-only
 # publish (facades, roofs, textures) then keeps its game scores; before, every publish reset them and the game KPIs read 0
@@ -28,11 +38,18 @@ args = [a for a in sys.argv[1:] if a != "--game"]
 if "--game" in sys.argv:
     FILES = GAME_FILES
 src = args[0].rstrip("/")
+if not src.startswith("http") and "--game" not in sys.argv:  # QA s6: flag viewer files the hash would miss
+    import glob
+    _miss = sorted({p[len(src) + 1:] for p in glob.glob(f"{src}/app/**/*.js", recursive=True) + glob.glob(f"{src}/app/**/*.json", recursive=True)} - set(FILES))
+    if _miss:
+        print("build_hash.py: not hashed (add to FILES):", " ".join(_miss), file=sys.stderr)
 h = hashlib.sha256()
 for f in FILES:
     try:
         if src.startswith("http"):
             data = urllib.request.urlopen(urllib.request.Request(f"{src}/{f}", headers={"User-Agent": "walkable-cambridge-kpi"}), timeout=30).read()
+        elif f.endswith("/digest.json"):  # local: from the tiles themselves, a stale digest.json must not hide a change
+            data = digest(src, f.split("/")[0]).encode()
         else:
             data = open(f"{src}/{f}", "rb").read()
     except (FileNotFoundError, urllib.error.HTTPError) as e:

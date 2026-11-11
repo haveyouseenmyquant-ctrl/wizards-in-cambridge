@@ -8,7 +8,7 @@ git diff --quiet HEAD -- site scripts || { echo "commit first: uncommitted chang
 # session 65: every browser module must parse as an ES module (s64 left a `}` inside a comment in mobs.js: the game
 # layer silently failed to start and every mob/item/playtest test timed out)
 for f in $(find site/app -name '*.js'); do cp "$f" /tmp/wc_check.mjs; node --check /tmp/wc_check.mjs || { echo "syntax error in $f"; exit 1; }; done
-# session 75: digest of the collision tiles, part of the game-only hash (build_hash.py --game); shipped with the world tarball
+# session 75: digests of the collision and (QA s6) world tiles, part of build_hash.py (collision also of --game); shipped with the world tarball
 .venv/bin/python -I scripts/collision_digest.py site
 .venv/bin/python -I scripts/roof_match.py site   # roof_match_pct, cached per build hash
 # game KPIs (mob/item/class tests + route bot), cached per build hash as data/benchmark/scores/<hash>_game.json
