@@ -94,12 +94,15 @@ while true; do
   reap
   H=$(build_hash); STALE=
   if [ -n "$H" ] && ! session_active; then
-    has_key judged_game_quality || run_step judge judge
-    session_active || has_key playtest_pass_pct || run_step playtest playtest
+    # QA faf2: a newly published hash gets its fast step first (playtest ~2 min, then the ~8 min judge), so its
+    # readings replace measure.sh's fallback values (data/derived/measure_fallback.json) as soon as possible
+    has_key playtest_pass_pct || run_step playtest playtest
+    session_active || has_key judged_game_quality || run_step judge judge
     [ -f scripts/quest_bot.mjs ] && ! session_active && ! has_key main_quests_shipped && run_step quests quests
     [ -f scripts/wic_perf.mjs ] && ! session_active && ! has_key fps_median && run_step perf perf
     [ -x tools/wic_gate.sh ] && ! session_active && ! has_key gate_ok && run_step gate gate
   fi
   [ $ONCE = 1 ] && break
-  sleep 600
+  # wait up to 10 min, but wake within a minute when a new build is published (faf2: score it first)
+  for _ in $(seq 10); do sleep 60; N=$(build_hash); [ -n "$N" ] && [ "$N" != "$H" ] && break; done
 done

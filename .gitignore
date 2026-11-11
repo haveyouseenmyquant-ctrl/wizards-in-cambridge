@@ -28,3 +28,4 @@ data/derived/live_site/
 data/benchmark/tuning/photos/
 data/derived/session_active
 data/derived/kpi_cache_*.json
+data/derived/measure_fallback.json
