@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 28)
+## State (2026-11-11, after session 29)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -21,6 +21,9 @@
 - Structure test s28: Gameplay moved BACK under Engineering; Engineering + Optimisation resumed. Story, UI, Graphics still
   directly under root; Art/Creative/Marketing managers paused. Next session: if Gameplay/Optimisation got sessions,
   move story->creative, graphics+ui->art and resume those; if not, flatten again and tell Gaspard.
+  s29 (~1.5 h after s28): Engineering ran, Gameplay/Optimisation not yet; too soon to judge, re-check s30.
+- s29: nothing to merge. Cancelled 3102 (merged). fps 41 on 73eed732 was read at load 6-8 -> QA task db8c
+  (wait loadavg<4, 2 runs, record load). Optimisation bisects only if the clean rerun is <50.
 - Paused since s22-24: Marketing, Brand, Optimisation, Audio, Graphics, EnvVFX (resume ~1/5 marketing later).
 - s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
   after a roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb` and copy ONLY tiles/ + collision/ into site/ (not manifest).
