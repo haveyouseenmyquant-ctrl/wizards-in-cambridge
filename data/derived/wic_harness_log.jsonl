@@ -167,3 +167,5 @@
 {"hash":"73eed7323dff02d9","step":"playtest_run:route:stormcaller","status":"ok","t":"2026-11-11T01:24:51.807Z"}
 {"hash":"73eed7323dff02d9","step":"playtest_run:route:warden","status":"ok","t":"2026-11-11T01:24:51.807Z"}
 {"hash":"73eed7323dff02d9","step":"playtest_run:route:hexweaver","status":"ok","t":"2026-11-11T01:24:51.807Z"}
+{"hash": "73eed7323dff02d9", "step": "perf", "status": "ok", "secs": 64, "t": "2026-11-11T01:53:01Z"}
+{"hash": "73eed7323dff02d9", "step": "gate", "status": "ok", "secs": 315, "t": "2026-11-11T01:58:16Z"}

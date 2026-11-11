@@ -230,3 +230,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged QA b1c1008: the build hash now covers world tiles, collision and every game module, and test_tutorial.mjs is in the merge gate. Live build 73eed732: judged 52.2 (Visuals 52, Animation 30, Combat 59.9, Story 55.5, UI 66), quests 4, playtest 100. fps not measured yet: my run overlapped service.sh's gate, so I threw it away.
 - Tutorial issue (intr): requirements met on main; it closes when UI's prompt task 616a is done.
 - Moved Gameplay back under Engineering and resumed Engineering and Optimisation, to test whether teams still get sessions under a manager.
+
+## 2026-11-11 — session 29 (lead)
+- No branch had unmerged work. service.sh measured 73eed732 at fps_median 41 (fps_min 5) while the host load was 6-8 from other jobs; 448ceb61 read 60. Gave QA task db8c to make the perf run wait for a quiet machine, run twice and record the load, then re-measure.
+- Cancelled Gameplay's camera task 3102 (already merged) so Engineering can close issue e1b8. Tutorial issue still waits on UI 616a; touch Satchel on UI b95c.

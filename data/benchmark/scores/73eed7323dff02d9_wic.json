@@ -45,11 +45,11 @@
  },
  "judged_game_quality": 52.2,
  "judged_sections": {
-  "Visuals": 52.0,
-  "Animation": 30.0,
+  "Visuals": 52,
+  "Animation": 30,
   "Combat feel": 59.9,
   "Story presentation": 55.5,
-  "UI polish": 66.0
+  "UI polish": 66
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -59,11 +59,11 @@
   "calls": 16,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 0.0,
-   "Animation": 0.0,
+   "Visuals": 0,
+   "Animation": 0,
    "Combat feel": 1.2,
-   "Story presentation": 3.0,
-   "UI polish": 0.0
+   "Story presentation": 3,
+   "UI polish": 0
   },
   "quality_spread": 0.1,
   "frames": 68,
@@ -91,5 +91,44 @@
     "all": "The UI has one consistent theme across all screens: serif titles, dark-gold panels, class colour accents, a class-selection screen with icons, rarity-coloured loot toasts, a boss bar, numeric cooldowns, a minimap and a quest tracker. The talent screen is very dark and low in contrast, and the inventory is mostly empty slots. In combat, the cooldown numbers covering the spell icons, the large 'Quest Complete' banner over the scene and the loot toasts stacked on the left all add clutter. The overall hierarchy is good but well short of polished AAA craft."
    }
   }
+ },
+ "fps_median": 41,
+ "load_seconds": 2.37,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 7.66,
+  "programs": [
+   61,
+   79
+  ],
+  "fps_p5": 31,
+  "fps_min": 5,
+  "fight_pct": 100,
+  "casts": 175,
+  "kills": 27,
+  "maxMobs": 36,
+  "dist": 188,
+  "laps": 1,
+  "draw_calls_median": 1892,
+  "tris_median": 7440109,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-11T01:53:31.406Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true
  }
 }
