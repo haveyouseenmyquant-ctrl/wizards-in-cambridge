@@ -179,5 +179,170 @@
     "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
    ]
   }
- ]
+ ],
+ "judged_game_quality": 54.8,
+ "judged_sections": {
+  "Visuals": 47,
+  "Animation": 38,
+  "Combat feel": 62.8,
+  "Story presentation": 66,
+  "UI polish": 66
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    48,
+    47,
+    47
+   ],
+   "Animation": [
+    38,
+    38,
+    40
+   ],
+   "Combat feel": [
+    61.2,
+    62.8,
+    62.8
+   ],
+   "Story presentation": [
+    66,
+    66,
+    64
+   ],
+   "UI polish": [
+    66,
+    66,
+    66
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 1,
+   "Animation": 2,
+   "Combat feel": 1.5,
+   "Story presentation": 2,
+   "UI polish": 0
+  },
+  "quality_spread": 0.2,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together: it has a consistent art direction, recognisable landmark architecture with brick and stone textures, real-time sun shadows and a warm low-sun sky, plus decent props such as bikes, railings, market stalls and a tree. But the geometry is boxy and low-detail, materials are flat and repeat, and shop interiors and stall goods are simple coloured primitives. The characters are small, chunky, low-poly figures with little detail. There's almost no ambient occlusion, bounce light or atmospheric depth, and the combat frames look cluttered, with VFX that don't blend well into the scene. Overall it looks like a polished prototype, well short of commercial density."
+   },
+   "Animation": {
+    "all": "The player's walking frames show some variation in leg poses, and there are small, simple NPC figures on the streets, so a basic locomotion cycle probably exists. In combat, attacks show up mostly as projectiles, rings and other effects with no clear casting or hit-reaction pose. The bell boss looks like rigid parts hinged together, with telegraphs drawn on the ground instead of body wind-ups. There's no visible secondary motion in robes or hair, no environmental motion, and no distinct death animations, so the score sits just below the 40 anchor."
+   },
+   "Combat feel": {
+    "hexweaver": "Several systems work and are visible: a boss with three phases and an enrage banner, STAGGERED/INTERRUPTED labels, damage numbers, a chain counter, a red ground telegraph, and loot beams and labels with rarity cues. Six spells were used and the 3448 sound voices count as sound feedback. The impact is weak, though: hex_dart accounts for 73 of 101 casts, the spell effects are vague glowing blobs, and market stalls often block the camera and hide the fight (frames 2 and 5). Four of 12 frames show no enemies within 30 m, and the boss numbers (1050, 605) don't match the logged max hit of 105, so they read unclearly. Only one class is shown, so differences between classes can't be judged.",
+    "pyromancer": "The frames show a boss with three named phases, an enrage state and telegraphed attacks (the Clapper Sweep cast bar and red ground zones). They also show crit and stagger damage numbers, combo chains, six abilities with cooldowns, and loot popups and beams colour-coded by rarity. That clears the 60 anchor. Holding it near 60: ember_bolt makes up 76% of casts, the bell boss is a simple shape, and the VFX are sparse and blobby with no visible hit-stop, screen shake or crowd control changing fights. Only one class is shown, so there is no evidence that classes play differently.",
+    "stormcaller": "The frames show solid hit feedback: crit-coloured damage numbers, STAGGERED/VANQUISHED callouts, chain counters, a three-phase named boss with an enrage banner and a named attack, rune-circle area effects, and loot beams and toasts colour-coded by rarity. The biggest gaps are the visuals: spell effects are mostly faint white or blue shapes that are hard to read, clutter often blocks the view, and there is no visible hit-stop, knockback or screen feedback. The fight is also over by about 25 s, so the last half has almost no enemies; spark_lance makes up 62 of the 87 casts, and only one class is shown.",
+    "warden": "The fight shows real feedback. There are damage numbers, CRIT and STAGGERED tags, a chain counter, and a three-phase boss with a named bar and an ENRAGED state. The boss telegraphs its attacks with a targeting reticle and a named 'Belfry Drop', and loot beams are colour-coded by rarity. On the other hand, effects are often unreadable: big flat rock shards cover the camera (frames 1, 3, 9) and the chaos is muddy. The fight is mostly one repeated spell (pebble_shot cast 75 of 98 times), and there is no visible evidence of hit-stop, knockback or crowd control changing the fight. Only 2 of 23 loot drops were picked up, and this sheet shows only one class."
+   },
+   "Story presentation": {
+    "all": "The scenes are staged with letterbox framing and over-the-shoulder shots of named characters who have portraits and roles (Nell Tapscott, Pip Hobbe). The writing is sharp, there's a branching reply menu, and the quest is tied to a real location (Great St Mary's, Market Hill) with a boss reveal and a reward screen. The characters are simple, mostly expressionless blocky models with no visible animation or voice. Frame 4 shows the objective only as a caption, with no clear world marker, and the cinematic beats are static camera holds rather than real cutscenes."
+   },
+   "UI polish": {
+    "all": "The HUD, class selection, inventory and talent screens share one gold-on-dark serif style. Each class gets its own colour and icon, and the HUD shows clear health and mana bars, a numbered spell bar with cooldown timers, a boss bar with phase labels, a minimap, damage numbers and loot toasts. Combat gets busy: the 'ENRAGED' banner, damage numbers and the loot toast overlap the action and the boss name, and some text is small and low-contrast. The inventory is mostly empty slots with only a basic rarity tag, the talent screen is dense and text-heavy, and the still frames show no evidence of animation or transitions."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.36,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.74,
+  "programs": [
+   66,
+   83
+  ],
+  "fps_p5": 59,
+  "fps_min": 44,
+  "slow_secs": [
+   [
+    0,
+    44
+   ]
+  ],
+  "long_frames": 4,
+  "worst_frames": [
+   [
+    0.2,
+    84
+   ],
+   [
+    0.6,
+    69
+   ],
+   [
+    0.1,
+    67
+   ],
+   [
+    0,
+    50
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 25,
+  "maxMobs": 36,
+  "dist": 201,
+  "laps": 1,
+  "draw_calls_median": 1343,
+  "tris_median": 6719429,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.9,
+  "loadavg_after": 2.71,
+  "waited_s": 46,
+  "load_ok": true,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.36,
+    "loadavg_before": 3.9,
+    "loadavg_after": 3.9,
+    "fps_p5": 59
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.28,
+    "loadavg_before": 3.9,
+    "loadavg_after": 2.71,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-11T23:00:52+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
+ }
 }
