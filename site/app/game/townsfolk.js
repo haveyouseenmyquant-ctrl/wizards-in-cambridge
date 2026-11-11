@@ -7,7 +7,9 @@
 // hands it the game so walkers can see the mobs.
 import * as THREE from 'three';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 import { loadNpc, recolour } from './npc_rig.js';
+import { mergeSkinned } from '../mobcull.js';
 
 // collision frame (x east, y north, m): the four recorded exploration spots, the square and the parade
 const AREAS = [
@@ -26,12 +28,18 @@ const PALETTES = [
 ];
 const WALK = 1.25, CYCLE = 4.2, R = 0.3;
 const rnd = (a, b) => a + Math.random() * (b - a);
+// draw / update LOD (optimisation s9; ?folklod=0 turns it off): each rig's skinned parts merged once per rig file
+// (KayKit: ~7 draws -> 1), the bicycle's static tubes and spokes merged, walkers out of the camera frustum (sphere
+// padded for their shadow) or beyond FAR m hidden with their mixers paused, mixers beyond MID m stepped every 3rd frame,
+// no shadow casting beyond SHADOW m.
+const LOD = new URLSearchParams(location.search).get('folklod') !== '0';
+const FAR = 90, MID = 30, SHADOW = 40;
 
 let S = null;
 export function install(ctx) {
   if (S) { if (ctx.mobs) S.game = ctx; return S.api; }
   if (!ctx.scene || !ctx.world || window.__cam) return null;   // never in benchmark renders
-  S = { scene: ctx.scene, world: ctx.world, player: ctx.player, game: ctx.mobs ? ctx : null, folk: [], mats: new Map() };
+  S = { camera: ctx.camera, scene: ctx.scene, world: ctx.world, player: ctx.player, game: ctx.mobs ? ctx : null, folk: [], mats: new Map() };
   const root = S.root = new THREE.Group(); root.name = 'townsfolk'; S.scene.add(root);
   S.api = window.__townsfolk = { get folk() { return S.folk; }, root };
   start().catch(e => console.warn('[townsfolk]', e));
@@ -39,6 +47,7 @@ export function install(ctx) {
   const loop = () => {   // wall-clock time (sub-stepped on slow frames, so walkers keep their pace on software GL too)
     const t = performance.now(), dt = Math.min(1, (t - last) / 1000), n = Math.ceil(dt / 0.1); last = t;
     for (let i = 0; i < n; i++) tick(dt / n);
+    cull();
     requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
@@ -92,11 +101,38 @@ async function start() {
       const j = jobs[i]; if (!S.world.covered(j.a.x, j.a.y)) continue;
       const p = spot(j.a); if (!p) continue;
       const r = j.k % RIGS.length, file = RIGS[r], pal = (j.k / RIGS.length | 0) % 2 ? PALETTES[r * 2 + (j.k % 2)] : {};   // stock or one of two per rig
-      const A = await loadNpc(file), mat = await material(file, pal);
+      const A = await template(file), mat = await material(file, pal);
       jobs.splice(i--, 1);
       if (A && mat) spawn(A, file, mat, p, j);
     }
     if (jobs.length) await new Promise(r => setTimeout(r, 250));
+  }
+}
+
+// per rig file: the loaded rig with its skinned parts merged (cloned per walker, so the merge runs once per file)
+const tmpl = {};
+function template(file) {
+  return tmpl[file] ??= loadNpc(file).then(A => {
+    if (!A || !LOD) return A;
+    const scene = SkeletonUtils.clone(A.scene), m = new THREE.MeshStandardMaterial();
+    scene.traverse(o => { if (o.isMesh) o.material = m; });
+    try { mergeSkinned(THREE, scene); } catch (e) { console.warn('[townsfolk] merge', e); return A; }
+    return { ...A, scene };
+  });
+}
+
+const _fr = new THREE.Frustum(), _m = new THREE.Matrix4(), _sp = new THREE.Sphere();
+function cull() {
+  const cam = S.camera; if (!LOD || !cam) return;
+  _fr.setFromProjectionMatrix(_m.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse));
+  const cx = cam.matrixWorld.elements[12], cz = cam.matrixWorld.elements[14];
+  for (const f of S.folk) {
+    const p = f.g.position, d = Math.hypot(p.x - cx, p.z - cz);
+    _sp.center.set(p.x, p.y + 1, p.z); _sp.radius = 4;
+    const vis = d < FAR && _fr.intersectsSphere(_sp);
+    f.g.visible = vis; f.near = d < MID;
+    const sh = d < SHADOW;
+    if (f.shadow !== sh) { f.shadow = sh; f.g.traverse(o => { if (o.isMesh) o.castShadow = sh; }); }
   }
 }
 
@@ -112,7 +148,7 @@ function spawn(A, file, mat, p, j) {
   for (const c of A.animations) acts[c.name] = mixer.clipAction(c);
   const f = { g, body, mixer, acts, cur: null, x: p.x, y: p.y, z: p.z, yaw: rnd(0, Math.PI * 2), bike: j.bike, home: j.a,
     speed: j.bike ? CYCLE * rnd(0.85, 1.15) : WALK * rnd(0.85, 1.2), phase: Math.random() * 10, wait: 0, turn: 0, probe: 0,
-    moved: 0, start: { x: p.x, y: p.y }, h };
+    moved: 0, start: { x: p.x, y: p.y }, h, mskip: 0, near: true };
   if (j.bike) {
     f.bikeG = bicycle(); g.add(f.bikeG);
     body.position.y += 0.62; body.position.z = -0.12; f.baseY = body.position.y;   // sat on the saddle
@@ -143,7 +179,9 @@ function bicycle() {
   for (const z of [0.5, -0.5]) {
     const w = new THREE.Group(); w.position.set(0, 0.34, z); w.rotation.y = Math.PI / 2;
     w.add(new THREE.Mesh(BIKE.wheel, BIKE.tyre));
-    for (let i = 0; i < 3; i++) { const s = new THREE.Mesh(BIKE.spoke, BIKE.frame); s.rotation.z = i * Math.PI / 3; w.add(s); }
+    BIKE.spokes ??= mergeGeometries([0, 1, 2].map(i => BIKE.spoke.clone().rotateZ(i * Math.PI / 3)));
+    if (LOD) w.add(new THREE.Mesh(BIKE.spokes, BIKE.frame));
+    else for (let i = 0; i < 3; i++) { const s = new THREE.Mesh(BIKE.spoke, BIKE.frame); s.rotation.z = i * Math.PI / 3; w.add(s); }
     g.add(w); g.userData.wheels.push(w);
   }
   const tube = (a, b) => {   // a frame tube between two points (side view: y up, z forward)
@@ -154,6 +192,12 @@ function bicycle() {
   tube([0, 0.34, -0.5], [0, 0.42, 0]); tube([0, 0.42, 0], [0, 0.85, -0.12]); tube([0, 0.85, -0.12], [0, 0.82, 0.38]);
   tube([0, 0.42, 0], [0, 0.82, 0.38]); tube([0, 0.34, 0.5], [0, 1.0, 0.4]); tube([-0.25, 1.0, 0.4], [0.25, 1.0, 0.4]);
   tube([0, 0.34, -0.5], [0, 0.85, -0.12]);
+  if (LOD) {   // the seven frame tubes -> one mesh (geometry shared by every bicycle)
+    const tubes = g.children.filter(o => o.geometry === BIKE.tube);
+    BIKE.frameGeo ??= mergeGeometries(tubes.map(o => { o.updateMatrix(); return BIKE.tube.clone().applyMatrix4(o.matrix); }));
+    for (const o of tubes) g.remove(o);
+    g.add(new THREE.Mesh(BIKE.frameGeo, BIKE.frame));
+  }
   for (const o of g.children) { o.castShadow = true; o.raycast = () => {}; }
   return g;
 }
@@ -229,7 +273,8 @@ function tick(dt) {
       f.acts.walk && (f.acts.walk.timeScale = sp / WALK);
       f.body.rotation.z = Math.sin(f.phase) * 0.04; f.body.rotation.x = flee ? 0.18 : 0.04;
     }
-    f.mixer.update(dt);
+    f.mdt = (f.mdt || 0) + dt;   // the mixer runs when the walker is drawn: every frame near, every 3rd far
+    if (!LOD || (f.g.visible && (f.near || ++f.mskip % 3 === 0))) { f.mixer.update(f.mdt); f.mdt = 0; }
     place(f, dt);
   }
 }

@@ -188,6 +188,7 @@ async function main() {
     const ok = info.filter(Boolean);
     if (ok.length) { detail.draw_calls_median = ok.map(i => i.calls).sort((a, b) => a - b)[ok.length >> 1]; detail.tris_median = ok.map(i => i.tris).sort((a, b) => a - b)[ok.length >> 1]; }
     detail.tiles = await page.evaluate('window.__player.loadedTiles');
+    if (process.env.WIC_EVAL) console.error('[wic_perf] WIC_EVAL', JSON.stringify(await page.evaluate(process.env.WIC_EVAL)));   // debug: any page expression at the end
   } catch (e) { err('harness: ' + e.message); }
   finally { await browser.close(); server?.close(); }
   detail.errors = errors.length; detail.first_errors = errors.slice(0, 5);
