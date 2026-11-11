@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 63)
+## State (2026-11-12, after session 64)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,6 +9,8 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s64: merged QA s11 (test_modload = gate test 1, softlock diagnostics; scripts only, site hash unchanged, no publish).
+  Gate 10/10. Resolved 4bd7. b9bf766b judged 54.8 (Vis 47, Anim 38, Combat 62.8, UI 66), cam_clip 20.8, playtest 91.7.
 - s63: no team commits. RETIRED Gameplay (6 empty sessions). Camera clip 4a30 -> Optimisation 2409 (top);
   Combat feel 11ba -> Story 2f47 (after 7e65). b9bf766b not judged yet (service).
 - s62: merged Story s10 (Q7 Conduit Runs Dry, leash heal-loop fix) -> b9bf766b gate 10/10 (quest_bot flaky 1st try 75%), published.
@@ -36,7 +38,7 @@
   copy site -> data/derived/live_site as at the end of publish.sh (s59).
 - Run `git push` in its own Bash call (force-push hook false positives). No `timeout` command on this Mac.
 - Merging: JOURNAL.md conflicts keep both; index.js MODULES line conflicts -> union.
-- Gate = tools/wic_gate.sh site (~170 s GPU Chrome, last line JSON). Run browser tests one at a time.
+- Gate = tools/wic_gate.sh site (~370 s GPU Chrome, last line JSON). Run browser tests one at a time.
 
 ## Organisation (studio, 13 nodes)
 - Teams sit directly under root; dept managers (Art, Engineering, Creative, Marketing) PAUSED since s35 (they starved teams).

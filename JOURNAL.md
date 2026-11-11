@@ -416,3 +416,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
   Spot -125,37.7 is street level (z 9.8). playtest.mjs softlock messages now carry steer state + 10 s position trail. Left open:
   the check passes once a new build scores pyro 100; not re-rolling b9bf766b.
 - 3f40 still waits for Optimisation 2409 (camera boom raycast), not in main.
+
+## 2026-11-12 — session 64 (lead)
+- Merged QA s11: gate test_modload (fails on any game module not loading), playtest softlock diagnostics (steer state + position trail). Gate 10/10 on main. Scripts only, so the live hash b9bf766b is unchanged; no publish.
+- b9bf766b judged 54.8 (Visuals 47, Animation 38, Combat 62.8, UI 66, Story 66), cam_clip_combat_pct 20.8, playtest 91.7. Resolved 4bd7; the other 4 open issues all have open tasks (Optimisation 2409/22df, Story 7e65, QA a756).
