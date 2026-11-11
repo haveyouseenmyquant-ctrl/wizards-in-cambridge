@@ -12,7 +12,7 @@ const base = (n) => new URL(`../../models/mobs/${n}.glb`, import.meta.url).href;
 // type id -> glb + look: colour multiplies the KayKit atlas (or recolours per source material, see `mats`); emissive glow; opacity for the spectral ones
 export const MOB_MODELS = {
   statue: { glb: 'statue', grey: true, color: 0xd8d0bc, rough: 0.95, metal: 0, emissive: 0x000000, ei: 0 },             // weathered Portland stone
-  river_wraith: { glb: 'wraith', color: 0x7fe0d0, rough: 0.4, metal: 0, emissive: 0x1a8070, ei: 0.9, opacity: 0.82 },
+  river_wraith: { glb: 'wraith', color: 0x7fe0d0, rough: 0.4, metal: 0, emissive: 0x1a8070, ei: 0.9, opacity: 0.94 },   // s6: was 0.82, read as a blob under spell VFX
   automaton: { glb: 'automaton', color: 0xd8a860, rough: 0.35, metal: 0.85, emissive: 0x000000, ei: 0 },     // brass
   ink_imp: { glb: 'imp', color: 0x5a5ab8, rough: 0.25, metal: 0.1, emissive: 0x201060, ei: 0.6 },              // wet ink
   punt_revenant: { glb: 'statue', grey: true, color: 0xb8ccd4, rough: 0.7, metal: 0, emissive: 0x0c2830, ei: 0.4 },     // river-drowned bones
@@ -22,7 +22,7 @@ export const MOB_MODELS = {
   // adds extra clones (own mixers, same clips, phase-offset) at the given offsets in fitted-model units.
   gargoyle: { glb: 'gargoyle', rough: 0.95, metal: 0, emissive: 0x000000, ei: 0, alias: { walk: 'run' }, size: 0.6, y0: -1.0,   // flying demon in weathered stone
     mats: { Demon_Main: { color: 0xd0cabc }, Black: { color: 0x7e7a72 }, Eye_White: { color: 0x9a6a40, emissive: 0xff7a10, ei: 1.4 }, Eye_Black: { color: 0x201008 } } },
-  wisp: { glb: 'wisp', rough: 0.3, metal: 0, emissive: 0x12a890, ei: 1.0, opacity: 0.85, alias: { walk: 'run' }, size: 0.5, y0: -0.45,       // marsh-light ghost
+  wisp: { glb: 'wisp', rough: 0.3, metal: 0, emissive: 0x12a890, ei: 1.0, opacity: 0.95, alias: { walk: 'run' }, size: 0.5, y0: -0.45,       // marsh-light ghost
     mats: { Ghost_Main: { color: 0x38d0b0 }, Eye_White: { color: 0xffffff, emissive: 0xe0fff8, ei: 2.5, opacity: 1 }, Eye_Black: { color: 0x0a3a40, emissive: 0x000000, ei: 0, opacity: 1 } } },
   bell_bats: { glb: 'bat', rough: 0.8, metal: 0, emissive: 0x000000, ei: 0, alias: { idle: 'run', walk: 'run' }, size: 0.4, y0: -0.3,   // belfry bats
     swarm: [[0.8, 0.3, -0.4], [-0.75, -0.2, -0.25]],
@@ -61,6 +61,9 @@ export function install(game) {
     const inv = new T.Matrix4().copy(R.matrixWorld).invert(), pb = new T.Box3();
     proc.traverse(o => { if (o.isMesh && !o.userData.outline && o.geometry) { o.geometry.computeBoundingBox(); pb.union(o.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(inv, o.matrixWorld))); } });
     const procH = pb.isEmpty() ? 1.8 : Math.max(0.6, pb.max.y - pb.min.y);
+    // s6: world-space body of the procedural model, for the camera-clearance spheres below (the skinned glbs' own
+    // bounds are metres too big, so combatcam.js hid statues/automata/wraiths from 7 m away and camClear faded them)
+    mob.group.updateMatrixWorld(true); const wb = new T.Box3(); proc.traverse(o => { if (o.isMesh && !o.userData.outline && o.geometry) wb.union(new T.Box3().setFromObject(o)); });
     proc.visible = false;
     const inner = new T.Group(); inner.name = 'glb';
     const made = new Map();   // material per look key, shared by the swarm clones
@@ -102,11 +105,17 @@ export function install(game) {
     }
     const { mixer, acts } = units[0];
     mob.glb = { mixer, acts, units, cur: null, lock: 0, lastState: null, inner };
-    mob.camBody = null;
+    mob.camBody = mob.ccBody = null;
+    if (!wb.isEmpty() && !L.mats) {
+      const c = wb.getCenter(new T.Vector3()), sz = wb.getSize(new T.Vector3()), oy = c.y - mob.group.position.y;
+      mob.camBody = { oy, r: Math.max(0.6, sz.y * 0.4) };   // from the height: the width includes the flat aura disc
+      mob.ccBody = { oy, r: Math.max(0.4, sz.y * 0.28) };
+    }
     if (L.mats) {   // Quaternius rigs give a huge loose skinned box, which made camClear fade them from metres away: measure precisely
       mob.group.updateMatrixWorld(true);
       const bb = new T.Box3().setFromObject(inner, true), c = bb.getCenter(new T.Vector3()), sz = bb.getSize(new T.Vector3());
       mob.camBody = { oy: c.y - mob.group.position.y, r: Math.max(0.6, Math.min(sz.x, sz.z) * 0.5, sz.y * 0.4) };
+      mob.ccBody = { oy: mob.camBody.oy, r: Math.max(0.4, Math.min(sz.x, sz.z) * 0.5) };
     }
     play(mob, mob.dead ? 'death' : 'idle', 0, 1);
     acts.idle && (acts.idle.time = Math.random() * acts.idle.getClip().duration);   // desync packs
@@ -129,6 +138,13 @@ export function install(game) {
   function drive(mob, dt) {
     const G = mob.glb, st = mob.state, a = mob.attack, dur = (n) => G.acts[n]?.getClip().duration || 1;
     G.lock = Math.max(0, G.lock - dt);
+    // s6: every fresh hit restarts the hit clip and kicks a knockback lean on the skinned model (away from the player,
+    // ~0.5 s) on top of mobs.js's 0.22 s rig flinch, so the reaction survives into still frames
+    const newHit = !mob.dead && (mob.hitT || 0) > (G.hitPrev || 0) + 0.05; G.hitPrev = mob.hitT || 0;
+    if (newHit) G.kick = 1;
+    G.kick = Math.max(0, (G.kick || 0) - dt / 0.5);
+    const kk = G.kick * G.kick * (3 - 2 * G.kick) * (mob.dead ? 0 : 1) * (1 - 0.6 * (mob.type.knockResist ?? 0));
+    G.inner.rotation.x = -0.45 * kk; G.inner.rotation.z = 0.12 * kk * Math.sin(mob.id * 2.1 + G.kick * 9);
     if (mob.dead) { if (G.cur !== 'death') play(mob, 'death', 0.1, 1.2); }
     else if (st !== G.lastState && st === 'windup') {
       // strike lands (about 55% into the clip) as the wind-up ends and the attack goes active
@@ -136,7 +152,7 @@ export function install(game) {
       play(mob, n, 0.1, Math.max(0.5, Math.min(2.5, dur(n) * 0.55 / Math.max(0.2, mob.windupEff || a?.windup || 0.8))));
       G.lock = dur(n) / G.acts[n].timeScale;
     } else if (st === 'stagger' && G.lastState !== 'stagger') { play(mob, 'hit', 0.08, 0.8); G.lock = 0.6; }
-    else if (mob.hitT > 0.3 && G.cur !== 'hit' && !['windup', 'active'].includes(st)) { play(mob, 'hit', 0.06, 1.3); G.lock = dur('hit') / 1.3; }
+    else if (newHit && !['windup', 'active'].includes(st)) { G.cur = null; play(mob, 'hit', 0.05, 1.1); G.lock = Math.min(0.7, dur('hit') / 1.1); }
     else if (G.lock <= 0) {
       const moved = Math.hypot(mob.x - (G.px ?? mob.x), mob.y - (G.py ?? mob.y)) / Math.max(1e-3, dt);
       const fly = mob.type.flying;

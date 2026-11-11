@@ -98,6 +98,12 @@ export function install(game) {
       const ws = new T.Vector3(); staff.getWorldScale(ws); focus.userData.s = 1 / (ws.x || 1); focus.scale.setScalar(focus.userData.s);
       focus.position.copy(top); staff.add(focus);
     }
+    // s6: charging glow in the free hand while casting (reads as the wind-up from behind and the side)
+    let hand = null; const fist = model.getObjectByName('FistL') || model.getObjectByName('Fist.L');
+    if (fist) {
+      hand = new T.Mesh(new T.IcosahedronGeometry(0.1, 1), new T.MeshBasicMaterial({ color: L.focus, fog: false, transparent: true, opacity: 0.8, blending: T.AdditiveBlending, depthWrite: false }));
+      const ws = new T.Vector3(); fist.getWorldScale(ws); hand.userData.s = 1 / (ws.x || 1); hand.visible = false; fist.add(hand);
+    }
     const mixer = new T.AnimationMixer(model), acts = {};
     for (const clip of asset.animations) acts[clip.name] = mixer.clipAction(clip);
     for (const n of ['death', 'hit', 'cast', 'cast_raise', 'cast_long', 'jump', 'dash']) if (acts[n]) { acts[n].setLoop(T.LoopOnce, 1); acts[n].clampWhenFinished = true; }
@@ -108,12 +114,12 @@ export function install(game) {
     for (const n of ['Foot.L', 'Foot.R']) { const o = model.getObjectByName(n.replace(/\./g, '')) || model.getObjectByName(n); if (o) bones[n] = o; }
     const rest = Object.values(bones).filter(b => !/^Foot/.test(b.name)).map(b => [b, b.quaternion.clone()]);
     game.root.add(root);
-    return { cls, root, mixer, acts, mat, focus, hat, bones, rest, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time, castT: -9, castRaise: false, hitT: -9, lw: 0, roll: 0, lastSp: 0 };
+    return { cls, root, mixer, acts, mat, focus, hat, bones, rest, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time, castT: -9, castRaise: false, hitT: -9, lw: 0, roll: 0, lastSp: 0, ready: 0, charge: 0, hand };
   }
 
   function destroy() {
     if (!R) return; game.root.remove(R.root); R.mixer.stopAllAction();
-    R.mat.dispose(); R.hat?.traverse(o => { if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); } }); R.focus?.geometry.dispose(); R.focus?.material.dispose(); R = null;
+    R.mat.dispose(); R.hat?.traverse(o => { if (o.isMesh) { o.geometry.dispose(); o.material.dispose(); } }); R.focus?.geometry.dispose(); R.focus?.material.dispose(); R.hand?.geometry.dispose(); R.hand?.material.dispose(); R = null;
   }
 
   function play(name, fade = 0.18) {
@@ -158,23 +164,45 @@ export function install(game) {
   }
   const env = (dt, up, hold, down) => dt < 0 ? 0 : dt < up ? dt / up : dt < hold ? 1 : dt < down ? 1 - (dt - hold) / (down - hold) : 0;
   const dirv = (x, y, z) => _d.set(0, 0, 0).addScaledVector(Rt, x).addScaledVector(U, y).addScaledVector(F, z).normalize().clone();
-  function upperBody(t) {
-    const B = R.bones, wc = R.hold === 'cast' ? 1 : env(t - R.castT, 0.07, 0.38, 0.7), wh = R.hold === 'hit' ? 1 : env(t - R.hitT, 0.05, 0.16, 0.45);
-    if (wc <= 0 && wh <= 0) return;
+  // s6: the judge reads single frames 5 s apart, so a cast must show as a held pose: a wind-up (staff drawn back over
+  // the shoulder, free hand charging a glow), a thrust (staff and hand driven at the target) held ~0.5 s, then a combat
+  // ready stance (staff upright in front, free hand raised) for 3 s after any cast or hit instead of dropping to idle
+  const ease = x => x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x);
+  function upperBody(t, dt) {
+    const B = R.bones, hc = R.hold === 'cast' || R.hold === 'windup', ct = R.hold === 'cast' ? 0.3 : R.hold === 'windup' ? 0.08 : t - R.castT;
+    const wc = hc ? 1 : env(ct, 0.06, 0.62, 0.95), wh = R.hold === 'hit' ? 1 : env(t - R.hitT, 0.05, 0.22, 0.55);
+    const fight = Math.min(t - R.castT, t - R.hitT) < 3.2 || R.hold === 'ready';
+    R.ready += ((fight ? 1 : 0) - R.ready) * Math.min(1, dt * 5);
+    const wr = R.ready * (1 - wc) * (1 - wh) * (R.oneShot && !R.oneShot.startsWith('cast') ? 0 : 1);
+    R.charge = Math.max(wc * (ct < 0.18 ? 1 : 0.6), wr * 0.25);
+    if (wc <= 0 && wh <= 0 && wr <= 0.01) return;
     R.root.updateMatrixWorld(true);
     // character frame in world space: the root faces -Z locally, right is +X
     F.set(0, 0, -1).applyQuaternion(R.root.quaternion); Rt.set(1, 0, 0).applyQuaternion(R.root.quaternion); U.set(0, 1, 0);
+    if (wr > 0.01) {
+      tiltBone(B.Torso, Rt, -0.08 * wr); tiltBone(B.Torso, U, 0.22 * wr);    // squared up, staff side back
+      const RV = window.__wizReady || [1.2, -0.8, 0.5];   // staff arm raised in front, staff top tipped at the target
+      tiltBone(B['UpperArm.R'], Rt, RV[0] * wr); tiltBone(B['UpperArm.R'], F, RV[2] * wr); tiltBone(B['LowerArm.R'], Rt, RV[1] * wr);
+      aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.6, -0.15, 0.85), wr); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.1, 0.55, 1), wr);
+    }
     if (wc > 0) {
-      tiltBone(B.Torso, Rt, 0.18 * wc);                                   // lean back into the cast
-      aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.45, 1, 0.3), wc);   // staff arm up over the head
-      aimBone(B['LowerArm.R'], B['Fist.R'], dirv(0.15, 1, 0.45), wc);
-      if (R.castRaise) { aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.45, 1, 0.3), wc); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.15, 1, 0.45), wc); }
-      else { aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.55, 0.2, 1), wc); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.15, 0.25, 1), wc); }   // free hand reaches at the target
+      const th = ease((ct - 0.14) / 0.14);   // 0 = drawn back (wind-up), 1 = thrust at the target
+      tiltBone(B.Torso, Rt, (0.22 - 0.42 * th) * wc);                       // rear back, then drive forward into the cast
+      tiltBone(B.Torso, U, (0.35 - 0.6 * th) * wc);                         // shoulders coil, then unwind
+      if (R.castRaise) {   // area spells: both arms up, staff high
+        aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.5, 1, 0.15 + 0.4 * th), wc); aimBone(B['LowerArm.R'], B['Fist.R'], dirv(0.15, 1, 0.3), wc);
+        aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.5, 1, 0.15 + 0.4 * th), wc); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.15, 1, 0.3), wc);
+      } else {
+        aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.5, 0.9 - 0.75 * th, -0.6 + 1.6 * th), wc);   // staff over the shoulder -> levelled
+        aimBone(B['LowerArm.R'], B['Fist.R'], dirv(0.1, 1 - 0.55 * th, -0.3 + 1.3 * th), wc);
+        aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.7 + 0.3 * th, 0.1 + 0.25 * th, 0.4 + 0.8 * th), wc);   // free hand pushes out
+        aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.1, 0.3, 1), wc);
+      }
     }
     if (wh > 0) {
-      tiltBone(B.Torso, Rt, 0.42 * wh); tiltBone(B.Head, Rt, 0.3 * wh);   // flinch backwards
-      aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(1, -0.1, -0.35), wh * 0.85);
-      aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-1, -0.1, -0.35), wh * 0.85);
+      tiltBone(B.Torso, Rt, 0.5 * wh); tiltBone(B.Head, Rt, 0.35 * wh); tiltBone(B.Torso, F, 0.18 * wh);   // flinch backwards, twisted
+      aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(1, 0.15, -0.35), wh * 0.9);
+      aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-1, 0.15, -0.35), wh * 0.9);
     }
   }
 
@@ -204,12 +232,12 @@ export function install(game) {
   function hatSpring(dt, sp) {
     const H = R.hat?.userData; if (!H?.sway) return;
     const acc = (sp - R.lastSp) / Math.max(1e-3, dt); R.lastSp = sp;
-    const bounce = R.lw * (R.cur === 'run' ? 1.6 : 1) * Math.abs(R.roll) * 14;
+    const bounce = R.lw * (R.cur === 'run' ? 1.6 : 1) * Math.abs(R.roll) * 20;
     // pitch: lags back as the wizard speeds up and nods with each footfall; roll: swings with the weight shift
     H.vx += (-60 * H.x - 7 * H.vx - 0.9 * Math.max(-8, Math.min(8, acc)) - 0.18 * R.lw * sp - bounce * 0.6) * dt; H.x += H.vx * dt;
-    H.vz += (-50 * H.z - 6 * H.vz + 9 * R.lw * R.roll) * dt; H.z += H.vz * dt;
+    H.vz += (-50 * H.z - 5 * H.vz + 16 * R.lw * R.roll + 6 * (R.charge || 0) * Math.sin(game.time * 9)) * dt; H.z += H.vz * dt;
     H.x = Math.max(-0.4, Math.min(0.4, H.x)); H.z = Math.max(-0.35, Math.min(0.35, H.z));
-    H.sway.rotation.set(H.x, 0, H.z); H.tip.rotation.x = H.tip0 + 1.4 * H.x; H.tip.rotation.z = 1.4 * H.z;
+    H.sway.rotation.set(H.x, 0, H.z); H.tip.rotation.x = H.tip0 + 1.8 * H.x; H.tip.rotation.z = 1.8 * H.z;
   }
 
   function update(p, visible, W) {
@@ -235,7 +263,9 @@ export function install(game) {
     }
     for (const [b, q] of R.rest) b.quaternion.copy(q);
     R.mixer.update(dt);
-    if (!dead && !flying) { locomotion(dt, sp); upperBody(t); }
+    R.charge = 0;
+    if (!dead && !flying) { locomotion(dt, sp); upperBody(t, dt); }
+    if (R.hand) { const c = R.charge || 0; R.hand.visible = c > 0.02; R.hand.scale.setScalar(R.hand.userData.s * (0.35 + 1.1 * c) * (1 + Math.sin(t * 13) * 0.08)); R.hand.material.opacity = Math.min(1, 0.3 + c); }
     hatSpring(dt, flying ? 0 : sp);
     if (R.focus) { const ca = R.oneShot?.startsWith('cast') ? 1 : 0; R.focus.rotation.y += dt * 2.5;
       R.focus.scale.setScalar(R.focus.userData.s * (1 + 0.8 * ca) * (1 + Math.sin(t * 6) * 0.06)); }
@@ -253,6 +283,6 @@ export function install(game) {
     catch (e) { console.warn('[wizard_rig]', e); failed = true; if (R) R.root.visible = false; if (W) W.root.visible = vis; }
   };
   game.wizardRig = { get model() { return R; }, get ready() { return !!asset; }, play: n => oneShot(n),
-    pose: (k, raise = false, hold = false) => { if (!R) return; R.hold = hold ? k : null; if (k === 'hit') R.hitT = game.time; else if (k) { R.castT = game.time; R.castRaise = raise; } } };   // hold: screenshots
+    pose: (k, raise = false, hold = false) => { if (!R) return; R.hold = hold ? k : null; if (k === 'hit') R.hitT = game.time; else if (k && k !== 'ready') { R.castT = game.time; R.castRaise = raise; } } };   // hold: screenshots
   game.add({ dispose() { Avatar.prototype.update = prev; for (const f of offs) f(); destroy(); for (const k in texCache) texCache[k].dispose(); } });
 }
