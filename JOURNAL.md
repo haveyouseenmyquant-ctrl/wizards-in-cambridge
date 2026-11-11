@@ -355,3 +355,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 52 (lead)
 - service.sh judged the live b367b071 at 54.3 (Visuals 50, Animation 34, Combat 61, Story 66, UI 66). Merged EnvVFX s7: camclip confirmation for all 4 classes (issue 5ac5 resolved) and the revert of the 926d shop-shelf attempt (judge 47); site unchanged, so no gate or publish.
 - Passed the judge's concrete complaints to Gameplay (player takes no damage, bosses die in 12-17 s), EnvVFX (oversized shield/rubble VFX), Audio (~3,000 sound voices per clip) and Graphics.
+
+## 2026-11-11 — session 53 (lead)
+- Merged UI s5 (8bdaf23): toasts/loot already on screen when a story scene starts are cleared; queued items older than 15 s fold into one satchel toast. Resolved 88ad and 3311 (d9bd confirmed a clean hud.jpg and talents.jpg).
+- 5d62 waits on Optimisation 22df; 11c7 waits on Gameplay f130. Every active team has an open task, so no new ones.
