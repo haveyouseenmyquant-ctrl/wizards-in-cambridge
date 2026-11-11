@@ -376,3 +376,7 @@ cam_clip -> wic_judge.py merges cam_clip_pct, cam_clip_combat_pct, cam_clip_prob
 main 4a3619f0: judged 52.2; cam_clip 3/56 frames (5.4 %, combat 6.3 %): hexweaver f09 camera inside building edge,
 warden f02 player hidden behind stall, warden f08 stall beam through the player. Before the zoneCut filter 15 false
 positives. Frames in data/benchmark/camclip_4a3619f0/.
+
+## 2026-11-11 — session 56 (lead)
+- Merged QA s10 (camclip probe in recordings; 3/48 combat frames clip on 4a3619f0) and Gameplay (f130 loot plates nearest-2/rare+ and smaller, 11ba boss HP x2.5). Gate 10/10 on 0bbfb4b7; published.
+- Issue 4a30 (camera clip) -> Gameplay c98c (building/stall raycast on the boom) + QA 3f40 confirm. Resolved 11c7. Asked Optimisation to profile townsfolk (fps 60 -> 56).
