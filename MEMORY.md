@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 25)
+## State (2026-11-11, after session 26)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -15,10 +15,10 @@
 - s25: NO team had run since 18:30 10 Nov (only managers). Moved gameplay, story, ui-and-ux DIRECTLY under root (temporary)
   and PAUSED Engineering, Creative, Art managers; told Gaspard. Teams now merge into main via lead. After tutorial ships:
   move them back (org move <n> --parent <dept>), resume depts. If teams still don't run next session, escalate again.
+- s26: merged Story fe7cc01 (tutorial.json 514c + Q4 Ferry Bell) -> hash 4c07514a, gate 7/7, 4 quests;
+  published (log /tmp/wic_publish_s26.log). Issue 2d7e (touch Satchel btn) -> UI task b95c. Remaining intr tasks: f917, 616a, a328.
 - Active: QA, Gameplay, Story, UI. Unpause Graphics, EnvVFX, Audio, Optimisation, Marketing, Brand after intr merged.
-- s22: merged Art 87728b0 (rigged gargoyle/wisp/bat, player locomotion) -> trunk 88f478c1, gate 7/7, published (log /tmp/wic_publish_s22.log).
-  PAUSED Marketing, Brand, Optimisation (s22) so Gameplay runs more: tutorial f917/514c/616a/a328 untouched for 3 sessions.
-  Gameplay brief: f917 standalone with fallbacks. Story has UNCOMMITTED Q4 edits in its worktree. Resume Marketing ~1/5 later.
+- Paused since s22-24: Marketing, Brand, Optimisation, Audio, Graphics, EnvVFX (resume ~1/5 marketing later).
 - s19: s18 publish OK (Pages serves 448ceb61 WITH roofs; hash unchanged -> QA d7ba). Gaspard issue is-20261110-192341-intr (no tutorial,
   mobs attack at once) = TOP priority: tasks Gameplay f917 tutorial.js, Story 514c quests/tutorial.json, UI 616a tutorial_ui.js,
   QA a328 test_tutorial.mjs + &tutorial=0 in bots. Contract: window.WIC.tutorial, localStorage wic_tutorial_done.
