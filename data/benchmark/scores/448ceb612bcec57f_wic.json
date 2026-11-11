@@ -83,7 +83,7 @@
   "first_errors": [],
   "at": "2026-11-10T17:16:55.596Z"
  },
- "playtest_pass_pct": 100,
+ "playtest_pass_pct": 91.7,
  "per_class": {
   "pyromancer": {
    "runs": 3,
@@ -101,10 +101,12 @@
   },
   "warden": {
    "runs": 3,
-   "passed": 3,
+   "passed": 2,
    "harness_fails": 0,
-   "fails": [],
-   "pass_pct": 100
+   "fails": [
+    "route: softlock: no progress for 60 s game time (leg 4 senate-house-hill, at -181.0,20.1,9.9, travel senate-house-hill active true mobs 6 dead 0 removed 0)"
+   ],
+   "pass_pct": 66.7
   },
   "hexweaver": {
    "runs": 3,
@@ -120,9 +122,9 @@
   "runs_judged": 12,
   "harness_fails": 0,
   "softlock_s": 60,
-  "boss_ttk_median_s": 6.8,
+  "boss_ttk_median_s": 7.7,
   "main_quests_shipped": 3,
-  "wall_s": 91,
-  "at": "2026-11-10T17:28:49.541Z"
+  "wall_s": 90,
+  "at": "2026-11-10T17:30:27.226Z"
  }
 }
