@@ -92,33 +92,34 @@
    }
   }
  },
- "fps_median": 41,
- "load_seconds": 2.37,
+ "fps_median": 60,
+ "load_seconds": 0.46,
  "perf_detail": {
   "seconds": 60,
   "viewport": "1280x720",
   "query": "",
   "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
   "preset": "high",
-  "game_ready_s": 7.66,
+  "game_ready_s": 1.85,
   "programs": [
-   61,
-   79
+   64,
+   83
   ],
-  "fps_p5": 31,
-  "fps_min": 5,
+  "fps_p5": 57,
+  "fps_min": 49,
   "fight_pct": 100,
-  "casts": 175,
-  "kills": 27,
+  "casts": 184,
+  "kills": 23,
   "maxMobs": 36,
-  "dist": 188,
+  "dist": 200,
   "laps": 1,
-  "draw_calls_median": 1892,
-  "tris_median": 7440109,
+  "draw_calls_median": 1859,
+  "tris_median": 7461336,
   "tiles": 17,
   "errors": 0,
   "first_errors": [],
-  "at": "2026-11-11T01:53:31.406Z"
+  "at": "2026-11-11T02:46:50.438Z",
+  "note": "s5 re-run of trunk live_site (73eed732 by main build_hash), host load ~11; earlier 41 was at load 6-8 with other browser tests"
  },
  "gate_ok": true,
  "gate_tests": {
