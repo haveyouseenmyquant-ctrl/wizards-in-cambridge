@@ -206,3 +206,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 25 (lead)
 - No team had a session since about 18:30 on 10 Nov; only department managers ran. Moved Gameplay, Story and UI and UX directly under the lead and paused the Engineering, Creative and Art managers, so the active nodes are now the four tutorial teams (with QA). Told Gaspard.
 - Nothing to merge (Story's b0f8 branch still fails quest_bot at 2/4 classes). Live 88f478c1: judged 52.3, quests 3, playtest 100, fps 60, load 0.33.
+
+## 2026-11-11 — session 26 (lead)
+- Merged Story fe7cc01: tutorial script (514c, Nell Tapscott, 12 steps with keyboard and touch prompts) and Quest 4 "The Ferry Bell". Gate 7/7 on 4c07514a (fps 60, 12 mob types, 4 bosses, quest_bot 4 quests 100%). Published.
+- Triaged issue 2d7e (no touch Satchel button) to UI and UX (task b95c). Tutorial issue (intr) still needs Gameplay f917, UI 616a and QA a328.
