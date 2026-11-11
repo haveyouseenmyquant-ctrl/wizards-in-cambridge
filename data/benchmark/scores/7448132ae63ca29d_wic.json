@@ -1,0 +1,286 @@
+{
+ "fps_median": 60,
+ "load_seconds": 0.58,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 1.34,
+  "programs": [
+   68,
+   85
+  ],
+  "fps_p5": 57,
+  "fps_min": 40,
+  "slow_secs": [
+   [
+    0,
+    40
+   ]
+  ],
+  "long_frames": 10,
+  "worst_frames": [
+   [
+    0.7,
+    82
+   ],
+   [
+    0.1,
+    68
+   ],
+   [
+    0.2,
+    51
+   ],
+   [
+    0,
+    50
+   ],
+   [
+    0.3,
+    35
+   ],
+   [
+    0.8,
+    35
+   ],
+   [
+    18.2,
+    35
+   ],
+   [
+    29.3,
+    35
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 183,
+  "kills": 31,
+  "maxMobs": 36,
+  "dist": 189,
+  "laps": 1,
+  "draw_calls_median": 1381,
+  "tris_median": 6743960,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-11T19:45:19.589Z"
+ },
+ "main_quests_shipped": 6,
+ "quest_bot_pass_pct": 100,
+ "cam_clip_pct": 17.9,
+ "cam_clip_combat_pct": 20.8,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [
+  {
+   "frame": "combat/hexweaver/frame_01.jpg",
+   "scene": "combat_hexweaver",
+   "pos": [
+    -79.66,
+    83.1,
+    12.53
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: zone/market_stallsway400160685 4.0 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_01.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -85.92,
+    91.77,
+    12.5
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_02.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -89.86,
+    87.23,
+    12.58
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_03.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -95.53,
+    92.64,
+    12.55
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_04.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -94.29,
+    76.93,
+    11.99
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 0.9 m from camera, 1.6 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_06.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -89.64,
+    79.23,
+    12.62
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_08.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -117.76,
+    73.47,
+    14.63
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_09.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -111.15,
+    73.64,
+    11.12
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.0 m from camera, 4.9 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_10.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -128.81,
+    60.48,
+    14.53
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: zone/gsmeast 1.6 m from camera, 2.9 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_11.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -119.79,
+    60.89,
+    12.89
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  }
+ ],
+ "judged_game_quality": 55.2,
+ "judged_sections": {
+  "Visuals": 52.0,
+  "Animation": 34.0,
+  "Combat feel": 63.8,
+  "Story presentation": 66.0,
+  "UI polish": 64.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    52.0,
+    54.0,
+    50.0
+   ],
+   "Animation": [
+    34.0,
+    34.0,
+    36.0
+   ],
+   "Combat feel": [
+    63.8,
+    63.5,
+    64.0
+   ],
+   "Story presentation": [
+    66.0,
+    66.0,
+    66.0
+   ],
+   "UI polish": [
+    64.0,
+    64.0,
+    64.0
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 4.0,
+   "Animation": 2.0,
+   "Combat feel": 0.5,
+   "Story presentation": 0.0,
+   "UI polish": 0.0
+  },
+  "quality_spread": 0.5,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together, with recognisable textured architecture (brick, stone, a Gothic church), real-time sun shadows, warm low-angle light, some distance haze, and props such as bikes, railings, market stalls and trees. The geometry is still low-detail and boxy: flat fa\u00e7ades, simple shop interiors and a sparse, blocky market. The characters are small and simple. The combat frames are washed out by large flat VFX blobs and overlays that sit poorly in the scene, and there is little ambient occlusion, clutter or material richness."
+   },
+   "Animation": {
+    "all": "The walking frames show a chibi wizard with some leg variation between shots, and simple pedestrian NPCs are present, which suggests a basic locomotion cycle. In combat, effects, damage numbers and telegraph circles dominate, and no clear cast poses, wind-ups or hit reactions are visible on the player. The Bellwarden boss reads as a rigid bell object that moves or rotates, and there is no visible secondary motion (robes, foliage) or death animation beyond a 'VANQUISHED' banner."
+   },
+   "Combat feel": {
+    "hexweaver": "The screenshots show a working ability loop. There are six skills with cooldowns, damage numbers including crits, chain counters, and INTERRUPTED/STAGGERED/VANQUISHED status callouts. The boss has a named health bar and phases, with named telegraphed attacks such as Clapper Sweep and Change-Ringing Cascade. Loot drops come with rarity-coloured popups and beams, so the build meets the 60 anchor. The biggest gaps are readability and weight: the boss fight frames are cluttered with overlapping translucent VFX and camera clipping, and there is no visible hit-stop, screen shake or knockback. Hex_dart makes up 74 of 102 casts, and the second half of the clip is mostly empty streets with only a few enemies at a time.",
+    "pyromancer": "This shows working, readable combat. Hits come with crit-tagged damage numbers, STAGGERED labels, chain counters and telegraph rings on the ground. The Bellwarden boss has a multi-phase health bar, named attacks, an enrage banner and a VANQUISHED moment, and loot drops are labelled by rarity with pickup toasts. The main weakness is that 81 of the 106 casts were the basic ember_bolt, so the spell variety on screen is thin. The VFX are washed-out and often confusing (big translucent blobs, a camera hidden behind market stalls), and there is no visible hit-stop, knockback or crowd control that changes the fight. Only one class was recorded, so class differences can't be judged.",
+    "stormcaller": "The boss has three phases, named and telegraphed attacks (the red lane under 'Clapper Sweep', the 'Great Toll' ground circle), a 'Phase II Interrupted' banner and stagger states. Hits show damage numbers, crits and chain counters, and loot drops show rarity labels and light beams, including a legendary. The fight leans heavily on one spell (82 of 116 casts were spark_lance), and some frames are hard to read, with oversized flat VFX and the camera clipping into geometry (frames 3, 4 and 7). Only one class appears, so there's no evidence that classes play differently, and no hit-stop, screen feedback or visible crowd control.",
+    "warden": "The fight shows a named boss with phase bars, an ENRAGED state, a 'Clapper Sweep' attack label and ground telegraphs, plus stagger and interrupt callouts, crit damage numbers, chain counters, rooting and loot popups with rarity tags, which meets the 60 anchor. Holding it back: earth VFX often turn into muddy clutter that hides the enemies (frames 1, 4, 10), no hit-stop or screen feedback is visible, and pebble_shot makes up 75% of casts. Only one class was recorded, so there is no evidence that classes play differently."
+   },
+   "Story presentation": {
+    "all": "The scenes are staged in letterbox with over-the-shoulder framing on named characters. Dialogue boxes show portraits and character titles, there's a three-way reply choice, and the quest tracker gives distances to real locations (Market Hill, the Guildhall, Great St Mary's). The writing is strong and original, there's a boss-reveal shot and a title card when the quest completes. The biggest gaps: the character models are simple and show no visible facial animation or expressive performance, the portraits are plain icons, nothing shows the lines are voiced, and the cinematic moments are mostly fixed shots with text captions rather than fully staged cutscenes."
+   },
+   "UI polish": {
+    "all": "The HUD and menus share one themed style: serif titles, gold accents, coloured class cards with icons, a clear class selection screen, an inventory showing equipped slots and a 'Common' rarity tag, and a tiered talent screen. Boss bars with phase labels, cooldown numbers and a minimap all read clearly. In combat the screen gets cluttered: the quest banner stays up through the fights, damage numbers and labels overlap the boss name and each other (frame 5), and some cooldown text is hard to read over bright effects. Menu text is small, the talent and inventory screens are plain dark panels, and no animation or transitions are visible."
+   }
+  }
+ }
+}

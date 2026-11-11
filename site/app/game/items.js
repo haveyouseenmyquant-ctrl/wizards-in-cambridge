@@ -234,6 +234,8 @@ export function install(game) {
       pk.beam.scale.y = pk.ph * (1 - (1 - grow) ** 3); pk.core.scale.y = pk.beam.scale.y * 0.85;
       pk.beam.scale.x = pk.beam.scale.z = pk.pw * (1 + 0.8 * Math.max(0, 1 - age / 0.4));   // flare wide on landing
       pk.beam.material.opacity = 0.42 + 0.06 * pk.ord + Math.sin(S.t * 3 + pk.t0) * 0.1; pk.core.material.opacity = 0.12 + 0.03 * pk.ord + Math.sin(S.t * 5 + pk.t0) * 0.04;   // session 48: dimmer pillars (s71: brighter per tier)
+      { const cd = game.camera ? game.camera.position.distanceTo(pk.g.position) : 9, nf = Math.max(0, Math.min(1, (cd - 2) / 4));   // EnvVFX s8: no flat halo discs right in front of the camera
+        pk.halo.material.opacity = 0.9 * nf; pk.halo.visible = nf > 0.02; pk.pad.material.opacity = 0.8 * (0.3 + 0.7 * nf); }
       pk.shell.scale.y = pk.beam.scale.y * 0.7; pk.shell.material.opacity = 0.16 + Math.sin(S.t * 2 + pk.t0) * 0.05;
       pk.rune.rotation.y += dt * 0.8; pk.rune.scale.setScalar((2.2 + 0.5 * pk.ord) * (0.4 + 0.6 * grow));
       for (let k = 0; k < pk.sparks.length; k++) { const f = (S.t * 0.35 + k / pk.sparks.length) % 1, a = k * 2.4 + S.t * 1.7, rr = 0.25 + 0.5 * f;
@@ -329,8 +331,12 @@ export function install(game) {
     shieldFx(dt); updatePickups(dt); updateChests(dt);
   });
   // shield bubble (shown whenever game.shield > 0, whoever granted it)
-  const bubble = new T.Mesh(new T.SphereGeometry(0.9, 16, 12), new T.MeshBasicMaterial(add({ color: 0x7ac8ff, opacity: 0.18 }))); bubble.visible = false; game.root.add(bubble);
-  function shieldFx() { const on = (game.shield || 0) > 0; bubble.visible = on; if (on) { bubble.position.copy(S.pp(0.95)); bubble.scale.set(1, 1.15, 1); bubble.material.opacity = (0.12 + Math.sin(S.t * 5) * 0.05 + Math.min(0.15, game.shield / 200))
+  // EnvVFX s8: fresnel rim shell (a filled sphere read as a flat pale disc over the player)
+  const bubble = new T.Mesh(new T.SphereGeometry(0.9, 24, 16), new T.ShaderMaterial({ uniforms: { color: { value: new T.Color(0x7ac8ff) }, opacity: { value: 0.18 } },
+    vertexShader: 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalMatrix * normal; vV = -mv.xyz; gl_Position = projectionMatrix * mv; }',
+    fragmentShader: 'uniform vec3 color; uniform float opacity; varying vec3 vN; varying vec3 vV; void main(){ float f = 1.0 - abs(dot(normalize(vN), normalize(vV))); float a = opacity * 2.2 * pow(f, 3.0); gl_FragColor = vec4(color * a, a); }',
+    transparent: true, depthWrite: false, blending: T.AdditiveBlending })); bubble.visible = false; game.root.add(bubble);
+  function shieldFx() { const on = (game.shield || 0) > 0; bubble.visible = on; if (on) { bubble.position.copy(S.pp(0.95)); bubble.scale.set(1, 1.15, 1); bubble.material.uniforms.opacity.value = (0.12 + Math.sin(S.t * 5) * 0.05 + Math.min(0.15, game.shield / 200))
       // session 54: fades when the (third-person) camera is close, so the bubble never fills the screen as a flat blue wash
       * Math.max(0.15, Math.min(1, ((game.camera?.position.distanceTo(bubble.position) ?? 9) - 1.5) / 3)); } }
 
