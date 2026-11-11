@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import { mergeGeometries, mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 
 export const ENCOUNTERS = [];
+// gameplay s9 (11ba): bosses died in 4-17 s in judged clips with no mechanics shown; x2.2 hp -> ~30 s fights
+const BOSS_HP_MULT = 2.2;
 const SPAWN_R = 120, DESPAWN_R = 200, RESPAWN_S = 45, BOSS_RESPAWN_S = 150, MAX_LIVE = 32;
 // session 46: encounter density near the centre (Market Square / ring 1), pack aggro, roaming patrols
 const CENTRE = { x: -105, y: 60 }, DENSE_R = 260, HELP_R = 18, PATROL_SPAWN_R = 110, PATROL_DESPAWN_R = 170, PATROL_SPEED = 2.2;
@@ -1142,7 +1144,7 @@ class MobSystem {
     const aura = new THREE.Mesh(G.disc, auraMat(type.color)); aura.renderOrder = 4; aura.scale.setScalar(type.radius * 2.6 * (type.boss ? 1.6 : 1) + 0.6);
     this.root.add(aura);
     const mob = {
-      id: NEXT_ID++, type, name: type.name, boss: !!type.boss, x, y, z, groundZ: z, hp: type.hp, maxHp: type.hp, dead: false,
+      id: NEXT_ID++, type, name: type.name, boss: !!type.boss, x, y, z, groundZ: z, hp: type.hp * (type.boss ? BOSS_HP_MULT : 1), maxHp: type.hp * (type.boss ? BOSS_HP_MULT : 1), dead: false,
       radius: type.radius, xp: type.xp, state: 'idle', home: { x, y, z }, yaw: rnd(0, TAU), group, parts, mats,
       attackCd: {}, t: rnd(0, 10), stateT: 0, flashT: 0, glow: 0, phase: 0, encounter: opts.encounter || null,
       patrol: null, idleT: rnd(0.5, 2), hitPlayer: false, damageTaken: 1, slowUntil: 0, stunUntil: 0,
