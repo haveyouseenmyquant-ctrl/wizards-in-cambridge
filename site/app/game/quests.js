@@ -6,6 +6,7 @@
 // API (game.quests): objective(), interact(), advance(), state, dialogueOpen; events 'questStep', 'questComplete'.
 // window.__wicStory(step) stages the opening beats for QA's judge recorder (caption string, null to end).
 import { ITEMS } from './itemdefs.js';
+import './story_mobs.js';   // quest bosses (Blotted Scribe)
 import * as sfx from './sfx.js';
 
 const BASE = new URL('./quests/', import.meta.url);
@@ -31,6 +32,11 @@ ITEMS.quest_ferrymans_coin = { name: "Ferryman's Coin", slot: 'amulet', rarity: 
   desc: "Wat Gedney's fare, a drowned penny on a cord. Every dash carries you on the river: restore 6 mana and 4 health.",
   fx(c) { c.on('dash', () => { const s = c.game.stats; s.mana = Math.min(s.maxMana, s.mana + 6); c.game.heal(4); c.S.fx?.burst?.(c.S.pp(0.4), 0x40d0c0, 12, 2, 0.5); }); },
   test(t) { const s = t.game.stats; s.mana = 10; s.hp = 50; t.game.emit('dash', {}); return [s.mana >= 16 && s.hp >= 54, `mana ${s.mana} hp ${s.hp}`]; } };
+
+ITEMS.quest_anchoress_taper = { name: "Anchoress's Taper", slot: 'wand', rarity: 'epic', quest: true, stats: { power: 0.06, maxMana: 15 },
+  desc: "Sister Agnes's beeswax taper on a hazel stem. It lit St Bene't's tower through two plagues. Every kill rekindles it: restore 5 health and 5 mana.",
+  fx(c) { c.on('kill', () => { const s = c.game.stats; s.mana = Math.min(s.maxMana, s.mana + 5); c.game.heal(5); c.S.fx?.burst?.(c.S.pp(1.2), 0xffd890, 10, 2, 0.5); }); },
+  test(t) { const s = t.game.stats; s.mana = 10; s.hp = 50; t.game.emit('kill', {}); return [s.mana >= 15 && s.hp >= 55, `mana ${s.mana} hp ${s.hp}`]; } };
 
 const CSS = `
 #wic-q .q-track{position:absolute;right:16px;top:30vh;width:270px;padding:10px 12px;background:linear-gradient(90deg,rgba(14,12,10,0),rgba(14,12,10,.72) 18%);color:#f3e6c8;font:600 13px/1.35 system-ui,sans-serif;text-align:right;pointer-events:none;text-shadow:0 1px 2px #000}
@@ -337,7 +343,8 @@ export async function install(game) {
   }
   const sysObj = game.add({ update(dt) {
     if (st.cardT > 0 && (st.cardT -= dt) <= 0) card.style.opacity = 0;
-    if (!st.q && st.phase === 'idle' && st.cardT <= 0 && !(game.tutorial && !game.tutorial.done) && game.save.cls && !game.paused && !P.pendingPlace) { const id = firstOpen(); if (id) begin(id, true); else st.phase = 'done'; }
+    if (stage.hold > 0) stage.hold -= dt;   // issue 3311: after the staged scene, a few clear seconds before the next chapter
+    if (!st.q && st.phase === 'idle' && st.cardT <= 0 && !(stage.hold > 0) && !(game.tutorial && !game.tutorial.done) && game.save.cls && !game.paused && !P.pendingPlace) { const id = firstOpen(); if (id) begin(id, true); else st.phase = 'done'; }
     // combat: a hostile mob close by. Story text then shrinks into the quest column, the letterbox and title card get
     // out of the way, and narration advances by itself so it never covers the fight
     const combat = !(st.reveal && game.time - st.reveal.t0 < st.reveal.dur) && game.mobs.some(m => !m.dead && !m.removed && !['idle', 'patrol', 'return', 'dead'].includes(m.state) && Math.hypot(m.x - P.x, m.y - P.y) < 22);
@@ -352,6 +359,10 @@ export async function install(game) {
     // NPC markers: only the NPC the current talk step points at
     for (const n of Object.values(npcs)) { const mk = n.g.userData.marker; mk.visible = s?.type === 'talk' && s.npc === n.id; mk.rotation.y += dt * 2; mk.position.y = 2.35 / (n.scale || 1) + Math.sin(game.time * 3) * 0.06; }
     if (st.phase === 'active' && s) {
+      if (s.calm && (st.calmT = (st.calmT || 0) - dt) <= 0) {   // step `calm: r`: the scene's ground stays clear of ambient packs and roaming bosses
+        st.calmT = 1; const c = s.at || s.place, S = sys();
+        if (S) for (const m of [...game.mobs]) if (!m.dead && !m.removed && !m.questMob && Math.hypot(m.x - c.x, m.y - c.y) < s.calm) S.remove(m);
+      }
       if ((s.type === 'reach' || s.type === 'collect') && Math.hypot(s.place.x - P.x, s.place.y - P.y) < s.place.r) completeStep();
       else if (s.type === 'kill') {
         if (st.kills >= s.count) completeStep();
@@ -373,9 +384,9 @@ export async function install(game) {
   }, dispose() { for (const f of offs) f(); endFraming(game.camera); document.body.classList.remove('q-cine', 'q-talk'); root.remove(); game.root.remove(world); if (window.__wicStory === stage) delete window.__wicStory; } });
   // quest checkpoints: falling mid-quest puts you back at the quest's checkpoint instead of the Market Hill spawn
   const riseBtn = () => document.querySelector('.gh-death .gh-btn');
-  offs.push(game.on('playerDeath', () => { const c = st.q?.checkpoint, b = riseBtn(); if (b) b.textContent = `Rise again (at ${c ? c.name : 'Market Hill'})`; }));
+  offs.push(game.on('playerDeath', () => { const c = cur()?.checkpoint || st.q?.checkpoint, b = riseBtn(); if (b) b.textContent = `Rise again (at ${c ? c.name : 'Market Hill'})`; }));
   offs.push(game.on('respawn', () => {
-    const c = st.q?.checkpoint; if (!c) return;
+    const c = cur()?.checkpoint || st.q?.checkpoint; if (!c) return;   // a step may set its own (boss arenas)
     const s = sys()?.findSpot?.(c.x, c.y, 4); if (!s) return;
     P.teleport(s.x, s.y, s.z, c.look || [c.x, c.y + 10]);
   }));
@@ -436,7 +447,7 @@ export async function install(game) {
       case 7: { const n = npcs.nell || q.npcs.nell; at(5); await goNear(n.x, n.y, 3.2, 200); line(q.steps[5].dialogue, 2);
         showCard('Quest complete', q.title, `Title earned: ${q.rewards.title} · +${q.rewards.xp} XP · ${ITEMS[q.rewards.items[0]].name}`, 10);
         save.prologue = { step: q.steps.length, done: true }; st.q = null; st.phase = 'staged'; return `Quest complete: ${q.title}`; }
-      default: st.reveal = null; stage.on = false; hideCard(); if (S) S.encountersEnabled = true; if (stage.view) P.view = stage.view; if (st.phase === 'staged') { st.phase = 'idle'; } return null;
+      default: st.reveal = null; stage.on = false; hideCard(); if (S) S.encountersEnabled = true; if (stage.view) P.view = stage.view; if (st.phase === 'staged') { st.phase = 'idle'; stage.hold = 6; } return null;
     }
   }
   window.__wicStory = stage;

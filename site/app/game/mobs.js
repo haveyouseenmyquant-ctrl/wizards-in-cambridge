@@ -1080,6 +1080,10 @@ export const MOB_TYPES = [
                 A({ id: 'poles', name: 'Falling Poles', kind: 'cascade', range: 20, n: 6, r: 2.2, windup: 1.2, cd: 7, dmg: 20 })] }),
 ];
 const TYPE = Object.fromEntries(MOB_TYPES.map(t => [t.id, t]));
+// Story: other modules add quest bosses here (story_mobs.js); `model` borrows another type's model and part animation
+export function registerMobType(o, adds) {
+  const t = D({ ...o, attacks: (o.attacks || []).map(A) }); MOB_TYPES.push(t); TYPE[t.id] = t; if (adds) BOSS_ADDS[t.id] = adds; return t;
+}
 
 // ---------- the system
 let NEXT_ID = 1;
@@ -1125,7 +1129,7 @@ class MobSystem {
       if (c.isMeshStandardMaterial && !c.transparent) addRim(c, type.color, type.boss ? 0.45 : 0.75);   // s54: stronger rim (reads against stone)
       return c;
     };
-    const { group, parts } = MODELS[type.id](m);
+    const { group, parts } = MODELS[type.model || type.id](m);
     if (!type.boss) addOutlines(group, type.color);
     // session 46: a 'rig' group between the yawed root and the model takes the shared body-language layer
     // (breathing, gait bob, wind-up crouch, strike lunge, hit flinch, death poses) on top of the per-type part animation
@@ -1899,7 +1903,7 @@ class MobSystem {
     const P = mob.parts, t = mob.t, st = mob.state, wf = st === 'windup' ? 1 - mob.stateT / mob.windupEff : 0;
     const walk = moving ? Math.sin(t * (mob.type.speed * 2.5)) : 0;
     mob.hr = mob.hitT > 0 ? Math.min(1, mob.hitT / HIT_T * 2) : 0;   // s69: hit recoil 0..1
-    switch (mob.type.id) {
+    switch (mob.type.model || mob.type.id) {
       case 'gargoyle': {
         const flap = Math.sin(t * (st === 'active' ? 4 : 9)) * (st === 'active' ? 0.2 : 0.6);
         P.wl.rotation.z = flap + (st === 'windup' ? 0.9 * wf : 0); P.wr.rotation.z = -P.wl.rotation.z;
@@ -2209,7 +2213,7 @@ class MobSystem {
   // boss death poses (f 0..1, before the dissolve)
   animateDeath(mob, f) {
     const P = mob.parts, t = mob.t, e = Math.min(1, f * 2.5), set = (o, k, v) => { if (o) o.rotation[k] = v; };
-    switch (mob.type.id) {   // session 50: regular death poses (e = fast-in 0..1)
+    switch (mob.type.model || mob.type.id) {   // session 50: regular death poses (e = fast-in 0..1)
       case 'gargoyle': set(P.wl, 'z', -1.2 * e); set(P.wr, 'z', 1.2 * e); set(P.armL, 'x', -2 * e); set(P.armR, 'x', -2 * e); set(P.head, 'x', -0.8 * e); set(P.jaw, 'x', 0.7 * e); break;
       case 'wisp': P.core.scale.setScalar(0.55 * (1 + 1.5 * e)); P.halo.scale.setScalar(1 + 2.5 * f); P.crown.scale.set(1 + e, 1 + 3 * e, 1 + e); P.reeds.rotation.x = e * 0.8; break;
       case 'statue': set(P.armL, 'x', 0.3 * e); set(P.armR, 'x', -1.4 * e); set(P.head, 'y', 0.6 * e); set(P.torso, 'z', -0.15 * e); break;

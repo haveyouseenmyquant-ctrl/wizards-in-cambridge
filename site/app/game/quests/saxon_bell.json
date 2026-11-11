@@ -1,0 +1,107 @@
+{
+  "id": "saxon_bell",
+  "main": true,
+  "chapter": "Chapter Four",
+  "title": "The Saxon Bell",
+  "summary": "Someone with keys and a boat is cutting the bells loose. Pip Hobbe has smelt the Unwinder's oil on Bene't Street, under the oldest tower in the city.",
+  "npcs": {
+    "pip_benet": { "name": "Pip Hobbe", "role": "Hob of the Guildhall cellars", "x": -140, "y": -100.5, "face": 180, "scale": 0.62,
+              "robe": "#5b4a3a", "trim": "#c98b4a", "skin": "#b9a07a", "hair": "#3b3026", "hat": "hood" },
+    "agnes": { "name": "Sister Agnes Rook", "role": "Anchoress of St Bene't's tower", "x": -156, "y": -104, "face": 90,
+              "robe": "#8d8f96", "trim": "#d9d4c4", "skin": "#d8d2c8", "hair": "#6e6a66", "hat": "hood" },
+    "marisol": { "name": "Dr Marisol Penhaligon", "role": "Keeper of the Ink Hall", "x": -172, "y": -101, "face": 0,
+              "robe": "#6a4f7a", "trim": "#e0c48a", "skin": "#e6c2a0", "hair": "#2e2420", "hat": "none" },
+    "narrator": { "name": "", "role": "" }
+  },
+  "intro": [
+    { "who": "narrator", "line": "Bene't Street, after dark. The Saxon tower of St Bene't's has stood here for a thousand years. Tonight its one small bell is ringing backwards, and the ink in every shop sign is starting to run." }
+  ],
+  "steps": [
+    { "id": "pip", "type": "talk", "npc": "pip_benet",
+      "text": "Find Pip Hobbe sniffing along Bene't Street",
+      "dialogue": [
+        { "who": "pip_benet", "line": "Late'un! Smell that? Unwinder's oil, that is. Stinks of the drove. All up the gutter and in at the old tower." },
+        { "who": "player", "line": "Corvin has been here?",
+          "choices": [
+            { "text": "Corvin has been here?", "reply": [ { "who": "pip_benet", "line": "Him or his boots. Oil don't walk on its own, Late'un." } ] },
+            { "text": "Here, Pip. A candle-end.", "reply": [ { "who": "pip_benet", "line": "Ohh. Beeswax. You're a proper Warden, you are. Pip'll tell you everything. Nearly everything." } ] }
+          ] },
+        { "who": "pip_benet", "line": "The Sister in the tower knows. She's been in there since before the street had a name. Go on, ask her. Pip don't go near anchoresses. They stare." }
+      ] },
+    { "id": "agnes", "type": "talk", "npc": "agnes",
+      "text": "Speak to Sister Agnes Rook at the foot of the Saxon tower",
+      "intro": [
+        { "who": "narrator", "line": "At the foot of the tower a grey shape waits, hands folded, flickering like a candle in a draught." }
+      ],
+      "dialogue": [
+        { "who": "agnes", "line": "I have kept this bell since before your city had a name for its streets. Sit. Tell me who is ringing badly." },
+        { "who": "player", "line": "A man with copied keys. He oils the guardians to sleep and unhooks their bells." },
+        { "who": "agnes", "line": "Then he has been in the Ink Hall. The bell-books are kept there, the record of every peal and every promise. He wanted one page." },
+        { "who": "agnes", "line": "And now the books are bleeding. Every crossed-out line in eight hundred years is crawling out. Go down to Marisol. She will be writing it all down, poor woman, instead of running." }
+      ] },
+    { "id": "marisol", "type": "talk", "npc": "marisol",
+      "text": "Meet Dr Marisol Penhaligon at the coal-hole on Bene't Street",
+      "intro": [
+        { "who": "narrator", "line": "A coal-hole cover by the churchyard has been levered up. Lamplight and a smell of wet ink rise out of it, and a woman in a head-torch climbs out backwards." }
+      ],
+      "dialogue": [
+        { "who": "marisol", "line": "Oh, you're the Latecomer. Good. Hold still. No, not you, the imp on your shoulder. There. Gone." },
+        { "who": "marisol", "line": "Someone tore three pages out of the Saxon bell-book and the rest of the book took it badly. It's hatching. Little inky things with nibs for tails." },
+        { "who": "player", "line": "How many?" },
+        { "who": "marisol", "line": "That's dreadful, I'll count them later. They're coming up the hole now. Mind your cuffs." }
+      ] },
+    { "id": "imps", "type": "kill", "spawn": [ "ink_imp", "ink_imp", "soot_sprite", "ink_imp", "ink_imp" ], "at": { "x": -165, "y": -100 }, "count": 5,
+      "text": "Clear the Ink Imps boiling out of the coal-hole",
+      "intro": [
+        { "who": "narrator", "line": "The coal-hole spits. Blots of ink unfold into grinning things with paper wings, and a soot sprite rides up the draught behind them." }
+      ],
+      "dialogue": [
+        { "who": "marisol", "line": "Splendid. Horrible, but splendid. They dissolve back into ink, did you see? I'll want a sample." },
+        { "who": "marisol", "line": "The three torn pages didn't stay here. The ink is pulling them north, past Great St Mary's, towards the Senate House. Something up there wants to be written." }
+      ] },
+    { "id": "page_benet", "type": "collect", "item": "First page of the Saxon bell-book", "place": { "x": -137.8, "y": -100, "r": 1.6, "name": "Bene't Street" },
+      "text": "Pick up the first torn page in the Bene't Street gutter",
+      "travel": { "x": -180, "y": 52, "look": [-213, 80], "caption": "You follow the ink trail north, past Great St Mary's, to Senate House Hill" },
+      "dialogue": [
+        { "who": "narrator", "line": "A page of vellum, the ink still wet. It lists the Saxon bell's peals by year, in a dozen hands. One line has been scratched through so hard the pen went through the skin." }
+      ] },
+    { "id": "page_kings", "type": "collect", "calm": 45, "item": "Second page of the Saxon bell-book", "place": { "x": -197, "y": 74, "r": 1.6, "name": "Senate House railings" },
+      "text": "Find the second page caught on the Senate House railings",
+      "dialogue": [
+        { "who": "narrator", "line": "The second page is plastered to the Senate House railings. It is the Concord oath, the one the twelve bells swore. A thirteenth line was added later, then scraped out." }
+      ] },
+    { "id": "page_senate", "type": "collect", "calm": 45, "item": "Third page of the Saxon bell-book", "place": { "x": -205, "y": 30, "r": 1.6, "name": "Senate House Passage" },
+      "text": "Recover the third page in Senate House Passage",
+      "intro": [
+        { "who": "narrator", "line": "The ink runs uphill into Senate House Passage in a thin black stream, and the scratch of a pen echoes off the walls." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "Three pages. Laid together, the scraped line shows through: a name, and the words 'keeper of the thirteenth hour'." },
+        { "who": "narrator", "line": "Before you can read the name, every word on the pages slides off the vellum and runs away across the lawn of the Senate House." }
+      ] },
+    { "id": "scribe", "type": "kill", "calm": 45, "mob": "blotted_scribe", "count": 1, "at": { "x": -195, "y": 82 },
+      "checkpoint": { "x": -190, "y": 55, "name": "Senate House Hill", "look": [-195, 82] },
+      "text": "Defeat the Blotted Scribe before the Senate House",
+      "travel": { "x": -150, "y": -101, "look": [-156, -110], "caption": "You carry the pages back down to Bene't Street and the Saxon tower" },
+      "intro": [
+        { "who": "narrator", "line": "Before the white columns of the Senate House the ink stands up: a hunched black scribe made of every crossed-out word in eight centuries of bell-books." },
+        { "who": "narrator", "line": "It dips a claw into itself and begins to write you out." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The Scribe spatters across the setts and soaks away between them. The words crawl back onto the pages, meek as you like." },
+        { "who": "narrator", "line": "Far behind you, down Bene't Street, a small old bell rings the right way round." }
+      ] },
+    { "id": "return", "type": "talk", "npc": "agnes",
+      "text": "Return the pages to Sister Agnes at the Saxon tower",
+      "dialogue": [
+        { "who": "agnes", "line": "There. Four of twelve, child. The Saxon bell sleeps easy, and so shall I." },
+        { "who": "player", "line": "The scraped line named a keeper of the thirteenth hour. The pages wouldn't let me read who." },
+        { "who": "agnes", "line": "No. Some names are struck out for a reason. Your Corvin cut his keys for the gate locks, I can tell you that much. He means to open every one." },
+        { "who": "agnes", "line": "Take my taper. It lit this tower through two plagues and a fire. It will show you the doors that do not want to be seen." },
+        { "who": "agnes", "line": "Now go up Trinity Street and listen. Something there is ticking, and it is not a clock." }
+      ] }
+  ],
+  "checkpoint": { "x": -150, "y": -100, "name": "Bene't Street", "look": [-156, -110] },
+  "rewards": { "xp": 750, "items": [ "quest_anchoress_taper" ], "title": "Reader of the Bell-Books" },
+  "next": "Follow the ticking up Trinity Street (coming soon)"
+}
