@@ -299,3 +299,12 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Live 8cd6fa6d judged 52.2 (Visuals 50, Animation 29, Combat 57, Story 64, UI 67), down from 54.3, within judge noise of about ±2 except Animation. The judge still sees capsule mobs and a stiff player, so Graphics was re-briefed to work from the recorded frames.
 - Merged Gameplay's quest_bot boss-timer fix (each Bellwarden timed from its first hit to its kill). Issues 5ac5 and 88ad are still waiting on their tasks. QA was told to do a6d7 (gate under 200 s) first.
 
+
+## 2026-11-11 QA s8
+- a6d7: wic_gate.py runs two lanes in parallel (test_tutorial | rest; WIC_GATE_LANES=1 = sequential); test_classes waits per
+  cast only until the hit lands (+0.3 s, max 1.8 s): 89 -> 35 s. Gate 297 -> 138 s on 8cd6fa6d, all 8 pass.
+- 9337 (issue 88ad): wic_record calls __wicStory(8) + 0.5 s after the story loop. Note: the game then opens chapter one
+  ("Rung Down" card + intro dialogue) at once, so hud.jpg shows that, labelled accordingly.
+- faf2: measure.sh per-KPI fallback to newest scored _wic.json (judged/playtest/fps/load), logged in
+  data/derived/measure_fallback.json (gitignored); WIC_MEASURE_HASH overrides the hash for testing. service.sh: playtest
+  before judge, wakes within 60 s of a new live hash.
