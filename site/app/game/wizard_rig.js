@@ -28,29 +28,60 @@ export function install(game) {
   const texCache = {};
 
   new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(URL_GLB)
-    .then(g => { asset = g; }).catch(e => { failed = true; console.warn('[wizard_rig] model not loaded, procedural wizard stays:', e.message); });
+    .then(g => { asset = g; prewarm(); }).catch(e => { failed = true; console.warn('[wizard_rig] model not loaded, procedural wizard stays:', e.message); });
+
+  // 919d: recolour the class atlases in idle-time slices once the model arrives, current class first, so neither the
+  // first rigged frame at game start nor any later frame pays the ~50 ms of 1024x1024 pixel work in one go
+  let baseMap = null, hatTop = null, src = null;
+  const jobs = {};
+  function prewarm() {
+    asset.scene.traverse(o => { if (o.isMesh && !baseMap) baseMap = o.material.map; });
+    if (!baseMap?.image) return;
+    const todo = () => [game.caster?.cls, ...Object.keys(LOOK)].filter(c => c && LOOK[c] && !texCache[c]);
+    const idle = window.requestIdleCallback || (f => setTimeout(() => f({ timeRemaining: () => 6 }), 30));
+    const step = (dl) => {
+      const c = todo()[0]; if (!c) return;
+      const job = jobs[c] ??= recolourJob(c, baseMap);
+      while (!job.next().done && dl.timeRemaining() > 3);   // at least one slice, even when the idle callback timed out
+      if (todo().length) idle(step, { timeout: 1000 });
+    };
+    idle(step, { timeout: 1000 });
+  }
 
   function classTexture(cls, base) {
     if (texCache[cls]) return texCache[cls];
-    const L = LOOK[cls] || LOOK.stormcaller, img = base.image;
-    const c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
-    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
-    const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
-    for (let i = 0; i < p.length; i += 4) {
-      const r = p[i] / 255, gg = p[i + 1] / 255, b = p[i + 2] / 255, mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), l = (mx + mn) / 2, dl = mx - mn;
-      if (dl < 0.08) continue;
-      const s = dl / (1 - Math.abs(2 * l - 1));
-      let h = mx === r ? ((gg - b) / dl) % 6 : mx === gg ? (b - r) / dl + 2 : (r - gg) / dl + 4; h = (h * 60 + 360) % 360;
-      // Quaternius wizard: blue robe (hue ~220) and gold trim (hue ~40); skin, leather and grey beard are left alone
-      const tgt = h >= 195 && h < 255 && s > 0.2 ? L.robe : h >= 32 && h < 58 && s > 0.3 && l < 0.6 ? L.trim : null;
-      if (!tgt) continue;
-      const S = Math.min(1, s * tgt[1]), Lt = Math.min(0.95, l * tgt[2]), C = (1 - Math.abs(2 * Lt - 1)) * S, H = tgt[0] / 60, X = C * (1 - Math.abs(H % 2 - 1)), m = Lt - C / 2;
-      const [r1, g1, b1] = H < 1 ? [C, X, 0] : H < 2 ? [X, C, 0] : H < 3 ? [0, C, X] : H < 4 ? [0, X, C] : H < 5 ? [X, 0, C] : [C, 0, X];
-      p[i] = (r1 + m) * 255; p[i + 1] = (g1 + m) * 255; p[i + 2] = (b1 + m) * 255;
+    const job = jobs[cls] ??= recolourJob(cls, base);
+    while (!job.next().done);
+    return texCache[cls];
+  }
+
+  function* recolourJob(cls, base) {
+    const L = LOOK[cls] || LOOK.stormcaller, img = base.image, W = img.width, H0 = img.height;
+    if (!src) {
+      const c0 = document.createElement('canvas'); c0.width = W; c0.height = H0;
+      const g0 = c0.getContext('2d', { willReadFrequently: true }); g0.drawImage(img, 0, 0);
+      src = g0.getImageData(0, 0, W, H0).data; yield;
     }
-    g.putImageData(d, 0, 0);
+    const d = new ImageData(new Uint8ClampedArray(src), W, H0), p = d.data, ROWS = 32;
+    for (let y = 0; y < H0; y += ROWS) {
+      for (let i = y * W * 4, e = Math.min(H0, y + ROWS) * W * 4; i < e; i += 4) {
+        const r = p[i] / 255, gg = p[i + 1] / 255, b = p[i + 2] / 255, mx = Math.max(r, gg, b), mn = Math.min(r, gg, b), l = (mx + mn) / 2, dl = mx - mn;
+        if (dl < 0.08) continue;
+        const s = dl / (1 - Math.abs(2 * l - 1));
+        let h = mx === r ? ((gg - b) / dl) % 6 : mx === gg ? (b - r) / dl + 2 : (r - gg) / dl + 4; h = (h * 60 + 360) % 360;
+        // Quaternius wizard: blue robe (hue ~220) and gold trim (hue ~40); skin, leather and grey beard are left alone
+        const tgt = h >= 195 && h < 255 && s > 0.2 ? L.robe : h >= 32 && h < 58 && s > 0.3 && l < 0.6 ? L.trim : null;
+        if (!tgt) continue;
+        const S = Math.min(1, s * tgt[1]), Lt = Math.min(0.95, l * tgt[2]), C = (1 - Math.abs(2 * Lt - 1)) * S, Hh = tgt[0] / 60, X = C * (1 - Math.abs(Hh % 2 - 1)), m = Lt - C / 2;
+        const r1 = Hh < 1 || Hh >= 5 ? C : Hh < 2 || Hh >= 4 ? X : 0, g1 = Hh < 1 || (Hh >= 3 && Hh < 4) ? X : Hh < 3 ? C : 0, b1 = Hh < 2 ? 0 : Hh < 3 ? X : Hh < 5 ? C : X;
+        p[i] = (r1 + m) * 255; p[i + 1] = (g1 + m) * 255; p[i + 2] = (b1 + m) * 255;
+      }
+      yield;
+    }
+    const c = document.createElement('canvas'); c.width = W; c.height = H0;
+    c.getContext('2d').putImageData(d, 0, 0);
     const t = new T.CanvasTexture(c); t.flipY = base.flipY; t.colorSpace = base.colorSpace; t.anisotropy = 4;
-    return texCache[cls] = t;
+    texCache[cls] = t;
   }
 
   function build(cls) {
@@ -105,7 +136,7 @@ export function install(game) {
       // secondary motion (s4): the hat sways on a spring pivot at the brim and the bent tip lags behind it
       const sway = new T.Group(); sway.name = 'hat_sway'; while (hat.children.length) sway.add(hat.children[0]); hat.add(sway);
       hat.userData = { sway, tip: c2, tip0: c2.rotation.x, x: 0, vx: 0, z: 0, vz: 0 };
-      const top = new T.Box3().setFromObject(model, true).max.y, hp = new T.Vector3(); head.getWorldPosition(hp);
+      const top = hatTop ??= new T.Box3().setFromObject(model, true).max.y, hp = new T.Vector3(); head.getWorldPosition(hp);
       const ws = new T.Vector3(), wq = new T.Quaternion(); head.getWorldScale(ws); head.getWorldQuaternion(wq);
       hat.position.copy(head.worldToLocal(new T.Vector3(hp.x, top - 0.1, hp.z + 0.02)));
       hat.quaternion.copy(wq.invert()); hat.scale.setScalar(1 / (ws.x || 1)); head.add(hat);
