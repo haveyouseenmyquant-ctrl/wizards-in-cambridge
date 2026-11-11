@@ -26,7 +26,9 @@ FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/s
          # QA s6: game modules added since (tutorial, rigs, UI screens...) had never changed the hash
          "app/ui.js", "app/game/combatcam.js", "app/game/explore_rig.js", "app/game/feel.js", "app/game/itemsets.js", "app/game/mob_rig.js",
          "app/game/progression.js", "app/game/tutorial.js", "app/game/uiframe.js", "app/game/uipolish.js", "app/game/uiscreens.js",
-         "app/game/wizard_rig.js", "app/game/quests/ferry_bell.json", "app/game/quests/tutorial.json"]
+         "app/game/wizard_rig.js", "app/game/quests/ferry_bell.json", "app/game/quests/tutorial.json",
+         # QA s7: tutorial UI (task 184f)
+         "app/game/tutorial_ui.js"]
 # session 75: --game hashes only what the game KPIs (test_mobs, test_items, playtest, gameplay clips) depend on: the game
 # layer, the player/collision code and the collision tiles (via collision/digest.json, written by publish.sh). A world-only
 # publish (facades, roofs, textures) then keeps its game scores; before, every publish reset them and the game KPIs read 0
@@ -38,11 +40,12 @@ args = [a for a in sys.argv[1:] if a != "--game"]
 if "--game" in sys.argv:
     FILES = GAME_FILES
 src = args[0].rstrip("/")
-if not src.startswith("http") and "--game" not in sys.argv:  # QA s6: flag viewer files the hash would miss
+if not src.startswith("http") and "--game" not in sys.argv:  # QA s7: any app/**/*.js|json not in FILES is hashed too
     import glob
     _miss = sorted({p[len(src) + 1:] for p in glob.glob(f"{src}/app/**/*.js", recursive=True) + glob.glob(f"{src}/app/**/*.json", recursive=True)} - set(FILES))
-    if _miss:
-        print("build_hash.py: not hashed (add to FILES):", " ".join(_miss), file=sys.stderr)
+    if _miss:  # appended after FILES so builds without extra modules keep their hash; URL mode can't list, so add them to FILES
+        FILES = FILES + _miss
+        print("build_hash.py: auto-hashed, add to FILES for URL mode:", " ".join(_miss), file=sys.stderr)
 h = hashlib.sha256()
 for f in FILES:
     try:
