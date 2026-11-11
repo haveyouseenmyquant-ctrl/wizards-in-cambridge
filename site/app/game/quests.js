@@ -218,7 +218,8 @@ export async function install(game) {
       const who = L.who === 'player' ? 'You' : n.name, role = L.who === 'player' ? (cls?.name || '') : (n.role || '');
       dlg.innerHTML = `${portrait(L.who === 'player' ? pl : { ...n, id: L.who })}<div><div class="q-who">${who}<span class="q-role">${role}</span></div><div class="q-line">${L.line}</div></div><div class="q-next">E ▸</div>`;
     }
-    if (n?.g) { const dx = n.x - P.x, dy = n.y - P.y; if (Math.hypot(dx, dy) < 8) { n.g.rotation.y = Math.atan2(-dx, dy); } }
+    const sp = n?.g ? n : dq.npc;   // the two face each other for the conversation
+    if (sp?.g) { const dx = sp.x - P.x, dy = sp.y - P.y; if (Math.hypot(dx, dy) < 8) { sp.g.rotation.y = Math.atan2(-dx, dy); P.yaw = Math.atan2(-dx, dy); } }
   }
   function choose(k) {
     const L = dq.lines[dq.i], c = L?.choices?.[k]; if (!c) return false;
@@ -254,9 +255,9 @@ export async function install(game) {
   function frameSpeaker(cam, dt) {
     const n = dq.npc?.g ? dq.npc : st.focus; if (!n || !cam) return false;
     const hz = n.hz ?? n.z + 1.62 * (n.scale || 1), who = dlg.hidden ? null : dq.lines[dq.i]?.who;
-    const rev = (who === 'player') && n.g, ph = P.z + 1.62;
-    let best = rev ? shoulderShot(n.x, n.y, n.z ?? P.z, P.x, P.y, ph, 1.0, 0.6, 1.62 * (n.scale || 1) + 0.15) : shoulderShot(P.x, P.y, P.z, n.x, n.y, hz, 0.95, 0.62, 1.78);
-    if (best && best.f < 0.5) best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz);   // cramped (stall canopy, wall): wider set-up
+    const ph = P.z + 1.62; let rev = (who === 'player') && !!n.g, wide = !n.g;
+    let best = rev ? shoulderShot(n.x, n.y, n.z ?? P.z, P.x, P.y, ph, 1.1, 0.9, 1.62 * (n.scale || 1) + 0.1) : wide ? null : shoulderShot(P.x, P.y, P.z, n.x, n.y, hz, 1.25, 1.05, 1.72);
+    if (!best || best.f < 0.5) { best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz); rev = false; wide = true; }   // cramped (stall canopy, wall) or a place, not a person: wider set-up
     if (!best || best.f < 0.45) return false;
     camT.set(best.x, best.z, -best.y);
     const snap = !cs.on || stage.on || cam.position.distanceToSquared(camV) > 400;
@@ -264,7 +265,7 @@ export async function install(game) {
     const a = snap && stage.on ? 1 : 1 - Math.exp(-dt * 6);
     camV.lerp(camT, a); cam.position.copy(camV);
     const k = Math.min(1, (game.time - cs.t0) / 0.5), e = stage.on ? 1 : k * k * (3 - 2 * k);
-    const fov = cs.fov0 + ((rev ? 44 : 38) - cs.fov0) * e;
+    const fov = cs.fov0 + ((wide ? cs.fov0 : rev ? 44 : 40) - cs.fov0) * e;
     if (Math.abs(cam.fov - fov) > 0.05) { cam.fov = fov; cam.updateProjectionMatrix(); }
     if (rev) cam.lookAt(P.x, ph - 0.1, -P.y); else cam.lookAt(n.x, hz - 0.18 * (n.scale || 1), -n.y);
     return true;
