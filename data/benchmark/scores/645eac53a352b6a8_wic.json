@@ -50,13 +50,13 @@
  },
  "main_quests_shipped": 4,
  "quest_bot_pass_pct": 100,
- "judged_game_quality": 51.7,
+ "judged_game_quality": 52.5,
  "judged_sections": {
-  "Visuals": 48.5,
-  "Animation": 29,
-  "Combat feel": 58.5,
-  "Story presentation": 66,
-  "UI polish": 61.5
+  "Visuals": 50.0,
+  "Animation": 30.0,
+  "Combat feel": 60.6,
+  "Story presentation": 66.0,
+  "UI polish": 60.0
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -66,13 +66,13 @@
   "calls": 16,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 3,
-   "Animation": 2,
-   "Combat feel": 0,
-   "Story presentation": 0,
-   "UI polish": 1
+   "Visuals": 0.0,
+   "Animation": 0.0,
+   "Combat feel": 0.2,
+   "Story presentation": 0.0,
+   "UI polish": 0.0
   },
-  "quality_spread": 1,
+  "quality_spread": 0.1,
   "frames": 68,
   "recording_errors": [
    "note: explore King's Parade yaw 2.89 blocked, used 1.91",
@@ -80,22 +80,22 @@
   ],
   "reasons": {
    "Visuals": {
-    "all": "The city holds together well. Its buildings are recognisable, real-time shadows and warm low-sun lighting with some haze add atmosphere, and props like market stalls, bikes, railings and trees give it some density. But the geometry is blocky and low-detail: facades are flat-textured, shop goods are simple boxes and bottles, and the market stalls look primitive. The characters are small, simple and stylised with little visible detail, no enemies are clearly readable in the combat frames, and soft shadows and ambient occlusion are mostly missing, so overall it looks like an advanced prototype rather than a near-commercial build."
+    "all": "The city holds together and reads clearly. Building textures are plausible, and the frames show warm low-sun lighting, real-time shadows, haze and bikes, railings and market stalls as props. Geometry is still blocky, though: shopfronts are flat boxes, goods and stalls are cube-like, and facades are repetitive with little wear or clutter. Characters are small and low-detail, the combat frames show flat primitive props, and pale billboard-like stand-in objects appear in the fights, so the result sits well below commercial quality."
    },
    "Animation": {
-    "all": "In all four walking frames the player has almost the same upright back-facing pose, and there is no visible stride, limb swing or robe motion. In combat the spells appear only as beams, orbs and floating text, with no clear casting pose, wind-up or hit reaction. Enemies are small, vague white shapes with no readable attack or death animation, and the city shows no crowds, foliage or water movement."
+    "all": "Across all four walking frames the player stands in almost the same upright pose. I can't see any clear stride, arm swing or robe motion, so this looks like a minimal walk cycle at best. In the combat frames, attacks show up mostly as effects such as beams, rings, bursts and orbs, and the body doesn't visibly move to match them. The enemies are simple grey shapes that don't appear to animate, and I see no hit reactions, death animations, crowds or moving foliage, even though floating text like 'Staggered' suggests those systems exist."
    },
    "Combat feel": {
-    "hexweaver": "The fight is readable and full of feedback. There are damage numbers, crit labels, chain counters, Staggered, Interrupted and Vanquished callouts, and ground glyph effects. A named boss has a phased health bar and two phase changes, and loot drops with rarity-coloured beams and labels. Several distinct spells are in use, along with shade_step mobility. The weak spots: the last ~20 s are idle with no enemies around, the player was hit only twice, so enemy attacks and their telegraphs are almost never seen, and hex_dart makes up 49 of 74 casts. There's also no visible hit-stop or screen shake, and crowd control and enemy formations are hard to make out in the busy frames.",
-    "pyromancer": "The fight shows a 3-phase boss with an enraged state, crit numbers and chain counters, a 'Staggered' state, loot labels coloured by rarity (including a legendary moment), and six spells with readable fire effects, so the 60 anchor is fully met. What holds it back: the boss dies by about 22 s, frames 6\u201312 show almost no combat, and several frames (1, 4) are washed out with VFX that crowd the view. There is also no visible evidence of hit-stop, knockback or crowd control changing the fight, and only one class can be judged from this sheet.",
-    "stormcaller": "There's a lot of working combat systems: damage numbers with crits, chain counters, Staggered and Interrupted states, and a boss with a three-phase bar, a 'Phase II' banner and a ground telegraph. Loot shows rarity-coloured beams and tooltips, cooldowns are visible on the HUD and the event log shows a varied six-spell kit. The impact is weak, though. Spell VFX are rarely visible, and many frames show the camera clipping into walls or the player alone with no enemies on screen. The player took zero damage, so enemies posed no threat, and with only one class recorded there's no evidence that classes play differently.",
-    "warden": "The basics of the 60 band are clearly visible: floating damage numbers and crits, a combo chain counter, Staggered/Interrupted labels, a boss with a segmented health bar and a 'Phase II' callout, a 'Vanquished' moment, and loot beams and labels with rarity cues. Readability suffers badly because a large, opaque pale-blue ellipse covers the centre of the screen in almost every frame and hides the player and their targets. Spell variety is thin in play (pebble_shot is 58 of 78 casts), enemy attack telegraphs aren't visible, and the player was hit once in 60 s, so the fights show little threat or impact, and there is no visible evidence of hit-stop or screen feedback."
+    "hexweaver": "Combat clearly works and has real feedback: crit and damage numbers, chain counters, Interrupted/Staggered/Vanquished callouts, ground sigils and spell trails, six spells including a shade_step dash, a boss with a three-phase bar and a 'Phase II' banner, and loot cards plus beams with rarity colours. The biggest gap is that the fight has no tension or readability: the boss dies at 11 s, the player takes only 38 damage and never drops below full HP, three frames in a row show no enemies, enemies are small and cluttered, and the camera gets blocked (frame 12 is against a wall, frame 3 is filled by a close enemy). Hit-stop, knockback and enemy telegraphs can't be seen, only one class was recorded so class differences can't be judged, and 3,828 sound voices in 60 s suggests audio spam.",
+    "pyromancer": "The pyromancer uses six distinct spells, and the frames show readable hit feedback: damage numbers, chain counters, 'Staggered'/'Interrupted'/'Vanquished' callouts, red ground telegraphs and a three-phase named boss with a health bar. Loot shows rarity-coloured beams and pickup cards. But only one class is shown, and the VFX are often muddy, with full-screen orange and green washes and camera clipping into geometry (frames 2 and 4) that hurt readability. Nothing shows hit-stop or strong impact weight, and the enemy models are simple.",
+    "stormcaller": "The fight shows the 60-anchor features working. There is a phased boss with a health bar, a Phase II banner, an enraged state and a Vanquished moment. Damage numbers include crits, and stagger labels, chain counters, rarity-tagged loot popups, six distinct spells and level-ups all appear on screen, alongside a high sound-voice count. The biggest gaps are readability and pacing. Spell VFX are muddy, with a white-washed blob at the boss kill and overlapping text clutter. No enemy attack telegraphs are visible. Enemies look like simple placeholder shapes, and about half the clip is empty traversal with no enemies, so the frames show little crowd control, hit-stop or formation play.",
+    "warden": "The frames show the core feedback loop: floating damage numbers including crits, 'Staggered' labels, a chain counter, a boss with a health bar and phases (Phase II/III), earth spike and AoE ground effects, and loot popups colour-coded by rarity. Readability is often poor, though. A large opaque pale-blue sphere covers the player in many frames, and the screen gets cluttered with labels. Threat is low: the player took 0 damage across 60 s, about half the clip has no enemies, and pebble_shot makes up 54 of 76 casts, so combat looks repetitive. There is no visible hit-stop, knockback or enemy telegraphing."
    },
    "Story presentation": {
-    "all": "The prologue has a clear, original premise: Great St Mary's strikes a thirteenth time and it ties to real Cambridge places like Market Hill and the Guildhall. It shows letterboxed over-the-shoulder conversation shots, named NPCs with portraits and titles, a three-option reply choice, a tracker with distances that updates each step, a boss reveal and a quest-complete card with rewards, and the lines are well written. Still, the characters are simple low-poly models with no visible expression or animation, and the portraits are generic icons. There's no visible voice acting, the camera work is basic, and the boss 'cinematic' is just a narration box over a static shot, so it falls well short of fully staged scenes."
+    "all": "The prologue has strong framing: a title card, letterboxed over-the-shoulder shots of named NPCs with portraits and role tags, dialogue choices with three replies, a quest tracker showing distance, a reveal of the Bellwarden boss and a quest-complete card with rewards. The writing is witty, the tone is consistent and the premise is clear, with Cambridge's Market Hill as the setting. Holding it back: the characters are simple low-poly figures with no visible expressions or animation, there is no sign of voice acting, the boss reveal is a static shot under a text box, and the dialogue choices look shallow."
    },
    "UI polish": {
-    "all": "The class selection, quest-complete banner, dialogue box and Satchel inventory share a consistent, themed serif and gold style. The inventory has equipped and bag slots, a tooltip with rarity text and a stats footer, and the combat HUD shows health and mana bars, numbered cooldowns, a minimap and a boss bar. The biggest gap is the talent screen (T): frame 4 shows only the game world with no talent interface. Combat frames are cluttered: floating numbers, loot popups and status text overlap, a world label ('Mathema...') is cut off, and the spell icons are small and hard to read."
+    "all": "The class selection screen, dialogue panel and Satchel inventory share a consistent serif-and-gold theme. The inventory has clear slots, rarity-tagged tooltips and a stats footer. The combat HUD has health and mana bars, numbered cooldowns, a minimap and a boss bar. The biggest gap is that the talent screen (frame 4) shows no talent UI at all, so that system has no visible evidence. Combat frames also get cluttered: in the warden frame a loot popup overlaps the damage numbers and pickup text, and in the stormcaller frame a quest-complete banner stacks on top of the combat effects, which hurts readability."
    }
   }
  },
