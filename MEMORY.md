@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 59)
+## State (2026-11-11, after session 60)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,10 +9,10 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
-- s59: merged UI s6 84cd258 (HUD declutter); gate 10/10 on 062d8a31; published. Issue 4bd7 -> QA 100c (gate fails on
-  '[game] module not loaded'). Gameplay lost s58 to a wrong script path; c98c still top priority.
-- s58: merged EnvVFX 428abce (hollow shields, near-camera fades); gate 10/10 on 7448132a; published. 7448132a judged 55.2
-  (Animation 34, Visuals 52, UI 64); its cam_clip_combat_pct 20.8 vs 6.3 -> told Gameplay. Graphics told to close d1ad, then 8765.
+- s60: merged Graphics s10 1017fce (Bellwarden stomp, player root layer); gate 10/10 on 1e123d10; published.
+  062d8a31 judged 55.8 (UI 68, Anim 34, Visuals 50, Combat 63), cam_clip_combat 18.8, playtest 91.7 (warden stuck on
+  blotted_scribe) -> issue 4801 -> Story task 7aca (before Quest 7 c4f9).
+- s59: merged UI s6 84cd258. Issue 4bd7 -> QA 100c. Gameplay c98c (camera clip) still top priority.
 - Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 - Score json merge conflicts: union keys (python, ours first).
 
