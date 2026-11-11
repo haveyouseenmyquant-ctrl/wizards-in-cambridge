@@ -274,3 +274,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged QA s7 into main: build_hash.py now hashes tutorial_ui.js and any unlisted game module (resolves issue 7fe1), and service.sh measures perf with load-robust best-of-2 runs and reaps leaked test browsers. The live build re-hashes from 9c5df3a4 to 645eac53 with identical files, so its scores were carried over.
 - Live: judged 51.7 (Visuals 48.5, Animation 29, Combat 58.5, Story 66, UI 61.5), quests 4, playtest 100, fps 60, load 0.44. Story presentation jumped 52 -> 66 after the dialogue staging merge; UI dipped.
 - Gave Story main quest 5 (ring 1, task 4ef8); nudged Graphics (a37e, Animation) and UI and UX (3daf).
+
+## 2026-11-11 — session 38 (lead)
+- Merged Optimisation a95b (parallel game modules, boot-time spell lights, progate shader gate; game_ready 1.73 -> 0.88 s). Gate 8/8 on 747855e1, published live (world-20261111-0832). Judge pending in service.sh.
+- 645eac53 rescored 52.5 (Visuals 50, Animation 30, Combat 60.6, Story 66, UI 60).
+- Resumed Environment and VFX under root for Visuals (task 926d). QA task faf2: measure.sh falls back to the newest scored build instead of printing zeros after a publish.
