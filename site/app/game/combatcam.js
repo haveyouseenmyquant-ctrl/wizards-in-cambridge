@@ -65,11 +65,11 @@ export function install(game) {
         if (pl.camOcclude) {   // s6 (9e85): stall walls / zone facades between the chest and the overhead spot
           const ox = bx * b, oy = z - (pl.z + CHEST), oz = -by * b, L = Math.hypot(ox, oy, oz);
           const h = pl.camOcclude(pl.x, pl.z + CHEST, -pl.y, ox / L, oy / L, oz / L, L + 0.3);
-          if (h < L + 0.3) { if (h < 0.9) continue; const s = (h - 0.3) / L; b *= s; if (oy * s < 1) continue; }
+          if (h < L + 0.3) continue;
         }
         if (!best || b + pref > best.s) best = { s: b + pref, x: pl.x + bx * b, y: z, z: -(pl.y + by * b) };
       }
-      return best;
+      if (best) return best;
     }
     return null;
   }
