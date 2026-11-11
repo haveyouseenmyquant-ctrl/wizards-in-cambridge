@@ -1,0 +1,81 @@
+{
+ "fps_median": 60,
+ "load_seconds": 0.44,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 1.33,
+  "programs": [
+   67,
+   81
+  ],
+  "fps_p5": 52,
+  "fps_min": 35,
+  "fight_pct": 100,
+  "casts": 183,
+  "kills": 26,
+  "maxMobs": 36,
+  "dist": 191,
+  "laps": 1,
+  "draw_calls_median": 1413,
+  "tris_median": 6837042,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-11T08:49:22.157Z"
+ },
+ "judged_game_quality": 52.8,
+ "judged_sections": {
+  "Visuals": 52,
+  "Animation": 33,
+  "Combat feel": 59.8,
+  "Story presentation": 66,
+  "UI polish": 55.5
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0,
+   "Animation": 2,
+   "Combat feel": 0,
+   "Story presentation": 0,
+   "UI polish": 3
+  },
+  "quality_spread": 0.8,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together well. It has recognisable period architecture, warm low-sun lighting with real-time shadows, atmospheric haze, and props like market stalls, bikes, railings and trees. The geometry is boxy and low-detail, though, with flat facades, simple shop interiors, bare or repetitive materials and little ambient occlusion or clutter. The characters are small, simple stylised figures, and the combat frames contain clipping and camera-occlusion artefacts (the camera inside the stall in frame 10) and overlapping VFX that muddy the view."
+   },
+   "Animation": {
+    "all": "In the walking frames the player stands in nearly the same upright pose each time, with only slight leg variation, and none of the frames shows a cast pose or wind-up. Combat comes across almost entirely through particle effects, ground circles and text labels such as 'Staggered' and 'Interrupted', so there are no visible hit-reaction or death poses, and the enemies are small and hard to read. There is no secondary motion on robes, no crowds and no environmental motion beyond the effects, which puts this below the basic-cycles anchor."
+   },
+   "Combat feel": {
+    "hexweaver": "There's a lot of real combat feedback: damage numbers and crit callouts, chain counters, Interrupted/Staggered status text, a telegraphed boss attack (Clapper Sweep ring), boss phase banners and an enrage moment, rarity-coded loot popups, and six spells with distinct icons. The fight itself is lopsided and loose. Half the frames show no enemies within 30 m, the player took only 34 damage, and the hex_dart spam (49 of 76 casts) points to one dominant attack. The spell VFX are mostly generic glowing orbs and translucent pillars that blur together into colour haze, with no visible hit-stop, knockback or screen feedback, so it doesn't reach the punchy, readable bar.",
+    "pyromancer": "The visible combat works: damage numbers with crits, chain counters, 'Staggered', 'Interrupted' and 'Vanquished' callouts, a named boss whose phased health bar shows a telegraphed 'Clapper Sweep', loot beams coloured by rarity with pickup cards, and six abilities with cooldowns. Only one class is shown, and the camera often clips into stalls and walls or gets blocked by close-up geometry (frames 2, 4, 6, 8), which makes fights hard to read. Spell effects are mostly vague orange ground glows without clear shapes, there is no visible hit-stop or knockback, and many frames have no enemies, so the depth and punch that 80 requires is missing.",
+    "stormcaller": "The frames show solid 60-level feedback. Damage numbers, a chain counter, 'Staggered' callouts and lightning and ground-ring effects are all visible. The Bellwarden boss has a bar marked with phases, a 'Phase II' banner and a named attack, and loot pops up on cards coloured by rarity. The biggest gaps: the player took 0 hits in 60 s, so enemies pose no threat and their telegraphs never matter. Enemies are often tiny or hidden, and the camera clips into stalls in frames 3–4. Spam of spark_lance makes up most casts, the boss goes down within seconds, and nothing shows hit-stop, knockback or real readability in crowds.",
+    "warden": "The frames show working combat with good feedback. There are crit-tagged damage numbers, status words (Interrupted, Staggered, Vanquished), chain counters, ground-rune AoE circles and rock spikes, a three-phase named boss with a cast bar, and loot labels marked by rarity. The log backs this up with six distinct spells, crits, varied enemies, CC states and 41 kills. Readability is weak, though: a large pale-blue blob hides the player in most frames and the VFX are low-poly clutter. The player took only 25 damage, so the fight has little threat, and nothing shows hit-stop, knockback or a distinct boss mechanic."
+   },
+   "Story presentation": {
+    "all": "The story is presented well for its scale. It has named characters with portraits and titles, letterboxed over-the-shoulder shots of the speaker, three reply choices, and a quest tracker that gives distances to real Cambridge places (Market Hill, Great St Mary's, the Guildhall). There is also a boss reveal and a quest-complete card, and the writing has a clear, consistent tone. The biggest gaps are that the characters are simple low-poly figures with no visible expression or animation, the camera framing is basic, the choices don't visibly branch, there's no sign of voice acting, and the 'cinematic' moments are mostly still shots with a caption."
+   },
+   "UI polish": {
+    "all": "The class selection, inventory (Satchel) and dialogue panels share a polished, consistent serif/gold theme, and the combat HUD has clear health and mana bars, numbered cooldown slots, a minimap, a quest tracker and a boss bar. The talent screen (T) shows no talent UI at all, only the game scene with a stray pale blob, so that system counts as absent. In combat the interface gets cluttered: in the stormcaller frame a huge 'Choral Schola' title is cut off and overlaps a faded loot toast, and in the warden frame damage numbers, 'Vanquished', 'Staggered' and level-up text pile up and hurt readability."
+   }
+  }
+ },
+ "main_quests_shipped": 4,
+ "quest_bot_pass_pct": 100
+}

@@ -137,7 +137,7 @@ export function createVfx(game) {
         void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); gl_Position = projectionMatrix * mv;
           float d = max(0.05, -mv.z); float px = misc.x * projectionMatrix[1][1] * 0.5 * uH / d;
           float a = c4.a * smoothstep(uNear0, uNear1, d) * min(1.0, uMax / max(px, 1.0));
-          ${additive ? 'a = min(a, 0.75) * mix(1.0, 0.4, smoothstep(0.03 * uH, 0.12 * uH, px));' : ''}   // s76: big (near) additive sprites dimmer, alpha capped
+          ${additive ? 'a = min(a, 0.6) * mix(1.0, 0.35, smoothstep(0.03 * uH, 0.12 * uH, px));' : ''}   // s76: big (near) additive sprites dimmer, alpha capped
           vC = vec4(c4.rgb, a); vTile = misc.y; vRot = misc.z; gl_PointSize = misc.x <= 0.0 || a < 0.004 ? 0.0 : min(px, uMax); }`,
       fragmentShader: `uniform sampler2D map; varying vec4 vC; varying float vTile; varying float vRot;
         void main(){ vec2 p = gl_PointCoord - 0.5; float c = cos(vRot), s = sin(vRot); p = vec2(c*p.x - s*p.y, s*p.x + c*p.y) + 0.5;
@@ -151,7 +151,7 @@ export function createVfx(game) {
       transparent: true, depthWrite: false, ...(additive ? SCREEN : { blending: THREE.NormalBlending }),
     });
     S.points = new THREE.Points(geo, S.mat); S.points.frustumCulled = false; S.points.renderOrder = additive ? 11 : 10;
-    S.points.onBeforeRender = (r) => { S.mat.uniforms.uH.value = viewH = r.getDrawingBufferSize(tmpV2).y; S.mat.uniforms.uMax.value = viewH * 0.12; };   // session 48: no sprite larger than 12% of the screen height
+    S.points.onBeforeRender = (r) => { S.mat.uniforms.uH.value = viewH = r.getDrawingBufferSize(tmpV2).y; S.mat.uniforms.uMax.value = viewH * 0.09; };   // session 48: no sprite larger than 12% of the screen height
     root.add(S.points);
     return S;
   }
@@ -337,7 +337,7 @@ export function createVfx(game) {
   function ring(x, y, z, color, r0, r1, dur = 0.5, opacity = 0.9) {
     const m = take(shocks); if (!m) return;
     m.material.color.set(color); m.material.opacity = opacity; m.position.set(x, z + 0.12, -y); m.scale.setScalar(r0); m.rotation.y = rnd() * TAU;
-    const e = rec(m, dur, 'ring'); e.r0 = r0; e.r1 = r1; e.o0 = opacity;
+    const e = rec(m, dur, 'ring'); e.r0 = r0; e.r1 = r1; e.o0 = opacity * 0.7;   // EnvVFX s5: softer shock rings
   }
   // ground decal: type scorch|frost|rune|crack (default: rune tinted by colour). spin rad/s for rune circles
   function decal(type, x, y, z, r, dur = 3, color = 0xffffff, opacity = 0.9, spin = 0) {
