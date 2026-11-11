@@ -250,7 +250,7 @@ export function install(game) {
     const hit = (a, b) => a.left < b.right + 4 && b.left < a.right + 4 && a.top < b.bottom + 2 && b.top < a.bottom + 2;
     vis.forEach(([d], i) => {
       let off = i >= NUM_CAP;
-      if (!off) { const r = d.getBoundingClientRect(); off = (bb && hit(r, bb)) || keep.some(k => hit(r, k)) || r.left < 10 || r.top < 10 || r.right > innerWidth - 10 || r.bottom > innerHeight - 10;   // edge-clamped = off-screen target if (!off) keep.push(r); }
+      if (!off) { const r = d.getBoundingClientRect(); off = (bb && hit(r, bb)) || keep.some(k => hit(r, k)) || r.left < 10 || r.top < 10 || r.right > innerWidth - 10 || r.bottom > innerHeight - 10;   /* edge-clamped = off-screen target */ if (!off) keep.push(r); }
       d.classList.toggle('wu-cap', off);
     });
   }
