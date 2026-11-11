@@ -38,6 +38,12 @@ ITEMS.quest_anchoress_taper = { name: "Anchoress's Taper", slot: 'wand', rarity:
   fx(c) { c.on('kill', () => { const s = c.game.stats; s.mana = Math.min(s.maxMana, s.mana + 5); c.game.heal(5); c.S.fx?.burst?.(c.S.pp(1.2), 0xffd890, 10, 2, 0.5); }); },
   test(t) { const s = t.game.stats; s.mana = 10; s.hp = 50; t.game.emit('kill', {}); return [s.mana >= 15 && s.hp >= 55, `mana ${s.mana} hp ${s.hp}`]; } };
 
+ITEMS.quest_conduit_flask = { name: 'Conduit Flask', slot: 'ring', rarity: 'epic', quest: true, stats: { maxHp: 25, power: 0.04 },
+  desc: "A stoneware flask filled at Hobson's Conduit the night it ran again. When you fall below a third of your health it pours itself: heal 30% (refills after 30 s).",
+  fx(c) { let ready = 0; c.on('playerHit', () => { const s = c.game.stats; if (s.hp <= 0 || s.hp > s.maxHp / 3 || c.game.time < ready) return;
+    ready = c.game.time + 30; c.game.heal(s.maxHp * 0.3); c.S.fx?.burst?.(c.S.pp(1.0), 0x60c8b0, 14, 2, 0.6); }); },
+  test(t) { const s = t.game.stats; s.hp = s.maxHp * 0.2; const h0 = s.hp; t.game.emit('playerHit', {}); return [s.hp >= h0 + s.maxHp * 0.25, `hp ${h0} -> ${s.hp}`]; } };
+
 ITEMS.quest_tamsins_loupe = { name: "Tamsin's Loupe", slot: 'amulet', rarity: 'epic', quest: true, stats: { critChance: 0.06, power: 0.04 },
   desc: "A watchmaker's eyeglass on a brass chain. It finds the weak tooth in anything that ticks: every fifth hit on the same foe jams it for 1 s.",
   fx(c) { c.on('hit', e => { const m = e.target; if (!m || m.dead || ((m.loupeN = (m.loupeN || 0) + 1) % 5)) return; m.stunUntil = Math.max(m.stunUntil || 0, c.game.time + 1); c.S.fx?.burst?.(c.S.mp?.(m, 1.4) ?? c.S.pp(1.2), 0xe8c36a, 12, 2, 0.5); }); },

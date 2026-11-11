@@ -37,3 +37,21 @@ registerMobType({ id: 'escapement_engine', model: 'automaton', death: 'collapse'
     { id: 'escape', name: 'Escapement Slip', kind: 'cascade', range: 20, n: 5, r: 2.4, windup: 1.2, cd: 6, dmg: 18 },
     { id: 'pendulum', name: 'Pendulum Drive', kind: 'charge', range: 16, minRange: 3, len: 15, w: 2.6, windup: 0.9, cd: 4, dmg: 21, speed: 18 },
   ] }, ['automaton', 'bicycle_golem']);
+
+// Quest 7 "The Conduit Runs Dry": Hobson's Conduit's guardian, taken over by the fen. A long eel-thing of peat and
+// water that burrows under Parker's Piece and surfaces in sinkholes. Borrows the Cam Wraith's body at boss scale, on the
+// ground; phase II opens sinkholes all over the turf (cascades) and drives the fen's hags and wisps out of the mud.
+registerMobType({ id: 'lode_wyrm', model: 'river_wraith', death: 'dissolve', scale: 3.2, name: "The Lode-Wyrm of Parker's Piece", boss: true,
+  hp: 900, speed: 2.8, radius: 1.5, xp: 540, aggro: 18, leash: 55, flying: false, hover: 0, color: 0x3a8a70, deathColor: 0x2a2418, knockResist: 1, deathDur: 1.8,
+  loot: [{ rarity: 'rare', chance: 1 }, { rarity: 'rare', chance: 0.6 }, { rarity: 'epic', chance: 0.55 }, { rarity: 'legendary', chance: 0.18 }],
+  phases: [   // I: lash, spit, undertow; II: the turf gives way (sinkholes) and the wyrm surges along the old channel
+    { at: 1.0, attacks: ['lash', 'spit', 'undertow'] },
+    { at: 0.5, attacks: ['lash', 'spit', 'sinkhole', 'surge'], speed: 1.25, windup: 0.85, cd: 0.75, enrage: true },
+  ],
+  attacks: [
+    { id: 'lash', name: 'Peat Lash', kind: 'line', range: 4.5, len: 6, w: 2.6, windup: 0.8, cd: 2.2, dmg: 17 },
+    { id: 'spit', name: 'Silt Spit', kind: 'bolt', range: 16, minRange: 3, windup: 0.85, cd: 3.5, dmg: 14, speed: 12, color: 0x5a6a40 },
+    { id: 'undertow', name: 'Undertow', kind: 'ring', range: 6, r: 6.5, windup: 1.3, cd: 6, dmg: 17, recover: 0.8 },
+    { id: 'sinkhole', name: 'Sinkholes', kind: 'cascade', range: 20, n: 6, r: 2.3, windup: 1.2, cd: 6.5, dmg: 18 },
+    { id: 'surge', name: 'Lode Surge', kind: 'charge', range: 16, minRange: 3, len: 15, w: 2.6, windup: 0.9, cd: 4.5, dmg: 21, speed: 18 },
+  ] }, ['bog_hag', 'wisp']);
