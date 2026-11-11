@@ -1180,7 +1180,10 @@ class MobSystem {
       const dx = mob.x - g.px, dy = mob.y - g.py, d = Math.hypot(dx, dy) || 1;
       mob.kb = { x: dx / d, y: dy / d, v: 2 * k / 0.22, t: 0.22 };
     }
-    if (mob.state === 'idle' || mob.state === 'patrol' || mob.state === 'return') { mob.state = 'chase'; this.callForHelp(mob); }
+    // story s10 (7aca): a mob walking home past its leash keeps walking; re-aggroing it on every hit made it flip
+    // return -> chase -> return each frame, healing 50%/s while never getting home (an unkillable warden-kited boss)
+    const leashing = mob.state === 'return' && Math.hypot(mob.x - mob.home.x, mob.y - mob.home.y) > (mob.leash ?? mob.type.leash ?? 40) * 0.75;
+    if (mob.state === 'idle' || mob.state === 'patrol' || mob.state === 'return' && !leashing) { mob.state = 'chase'; this.callForHelp(mob); }
     // boss phase changes
     if (mob.type.phases) {
       const f = mob.hp / mob.maxHp;
@@ -1586,7 +1589,7 @@ class MobSystem {
         break;
       }
       case 'chase': {
-        if (homeD > T.leash || dist > T.leash * 1.4 || g.stats.hp <= 0) { mob.state = 'return'; break; }
+        if (homeD > (mob.leash ?? T.leash) || dist > (mob.leash ?? T.leash) * 1.4 || g.stats.hp <= 0) { mob.state = 'return'; break; }   // mob.leash: per-mob override (story quest arenas)
         const atk = this.pickAttack(mob, dist);
         if (atk) { mob.chaseNoGainT = 0; mob.chaseBest = dist; this.beginAttack(mob, atk); break; }
         // session 55: evade. A walker that cannot close on the player (cornered behind bollards / railings: a statue
@@ -1607,7 +1610,8 @@ class MobSystem {
       }
       case 'windup': this.tickWindup(mob, dt); break;
       case 'active': this.tickActive(mob, dt); moving = 2; break;
-      case 'recover': case 'stagger': mob.stateT -= dt; if (mob.stateT <= 0) mob.state = 'chase'; break;
+      // story s10: a poise-break stagger (feel.js) on a mob walking home must not turn it back into a chase past its leash
+      case 'recover': case 'stagger': mob.stateT -= dt; if (mob.stateT <= 0) mob.state = homeD > (mob.leash ?? T.leash) ? 'return' : 'chase'; break;
     }
     // vertical: flying hover over ground / bob towards player height; walkers stick to their ground
     if (T.flying) {

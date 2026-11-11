@@ -1,0 +1,106 @@
+{
+  "id": "conduit_runs_dry",
+  "main": true,
+  "chapter": "Chapter Six",
+  "title": "The Conduit Runs Dry",
+  "summary": "For four hundred years Hobson's Conduit has carried clean water into the city, and its runnels have kept part of the Concord running. Tonight the market fountain is dry, and something in the fen is drinking the water at its source.",
+  "npcs": {
+    "marisol": { "name": "Dr Marisol Penhaligon", "role": "Keeper of the Ink Hall", "x": -100.5, "y": 60.5, "face": 40,
+              "robe": "#6a4f7a", "trim": "#e0c48a", "skin": "#e6c2a0", "hair": "#2e2420", "hat": "none" },
+    "marisol_piece": { "name": "Dr Marisol Penhaligon", "role": "Keeper of the Ink Hall", "x": 529, "y": -276, "face": 45, "appear": "lamp",
+              "robe": "#6a4f7a", "trim": "#e0c48a", "skin": "#e6c2a0", "hair": "#2e2420", "hat": "none" },
+    "lantern_mother": { "name": "A voice under the water", "role": "", "robe": "#1e3a34", "trim": "#7fe0a0", "skin": "#9fd8c0", "hair": "#1a2a24", "hat": "hood" },
+    "narrator": { "name": "", "role": "" }
+  },
+  "intro": [
+    { "who": "narrator", "line": "The Mainspring ticks again. Down on Market Hill, for the first time anyone can remember, the old fountain has stopped running." }
+  ],
+  "steps": [
+    { "id": "marisol", "type": "talk", "npc": "marisol",
+      "text": "Find out from Marisol why the market fountain is dry",
+      "travel": { "x": -150, "y": -329, "look": [-122.5, -374.9], "caption": "Marisol leads you down King's Parade to Trumpington Street, where the conduit runs in open channels beside the kerb" },
+      "dialogue": [
+        { "who": "marisol", "line": "Ah, the Latecomer. Look at this. Dry. Dry as a sermon. I've wanted to see this my whole life and I hate it." },
+        { "who": "player", "line": "It's only a fountain.",
+          "choices": [
+            { "text": "It's only a fountain.", "reply": [ { "who": "marisol", "line": "It's the end of a pipe that has run since 1614. Hobson's Conduit. The Concord calls it the running water. Nothing in the city is meant to stand still." } ] },
+            { "text": "Corvin said the conduit was the weak stitch.", "reply": [ { "who": "marisol", "line": "Did he. Then he's read the same ledger I have. The conduit is the one ward nobody guards, because nobody believes a gutter can matter." } ] }
+          ] },
+        { "who": "marisol", "line": "The water comes in from the south, from the springs past the fen edge, down Trumpington Street in those little stone channels." },
+        { "who": "marisol", "line": "If it's stopped, something is sitting on it. Come on. Bring your wand. And your feet, it's a walk." }
+      ] },
+    { "id": "runnel", "type": "reach", "calm": 35, "place": { "x": -122.5, "y": -374.9, "r": 2.2, "name": "Trumpington Street runnels" },
+      "text": "Follow the dry runnels south along Trumpington Street",
+      "intro": [
+        { "who": "narrator", "line": "The stone channels along the kerb are dry, and their beds are lined with a black, wet weed that should not grow this far from the fen." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "Something pale bobs above the runnel ahead, a little lantern-light at knee height. It is moving upstream, against where the water should be." }
+      ] },
+    { "id": "lights", "type": "kill", "calm": 40, "spawn": [ "bog_hag", "wisp", "wisp" ], "at": { "x": -90, "y": -414 }, "count": 3,
+      "text": "Drive off the fen-lights crawling up the runnels",
+      "intro": [
+        { "who": "narrator", "line": "Will-o'-the-Cam wisps, and behind them a stooped shape with a lantern on a pole: a Fen Lantern-Hag, a long way from any water." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The hag sinks into the runnel as if it were a river, and her lantern goes out under the stone." }
+      ] },
+    { "id": "plate_trumpington", "type": "collect", "item": "Sluice-plate of Trumpington Street", "place": { "x": -63.7, "y": -445.1, "r": 1.6, "name": "Trumpington Street sluice" },
+      "travel": { "x": 61.7, "y": -193.5, "look": [99.2, -177.1], "caption": "The conduit's old branch turns east under the streets; you follow it along Pembroke Street to Downing Street" },
+      "text": "Clear the first sluice-plate on Trumpington Street",
+      "dialogue": [
+        { "who": "narrator", "line": "An iron plate set in the channel, choked with fen-weed. You tear the weed out. Somewhere under your feet, water coughs and moves a yard." },
+        { "who": "narrator", "line": "The weed in the next channel all points the same way: east, then south. Towards the open ground of Parker's Piece." }
+      ] },
+    { "id": "plate_downing", "type": "collect", "calm": 35, "item": "Sluice-plate of Downing Street", "place": { "x": 99.2, "y": -177.1, "r": 1.6, "name": "Downing Street sluice" },
+      "text": "Clear the second sluice-plate on Downing Street",
+      "dialogue": [
+        { "who": "narrator", "line": "The second plate is warm to the touch, and the weed on it is breathing. When you pull it free, a long shudder runs away south-east under the road." }
+      ] },
+    { "id": "plate_regent", "type": "collect", "calm": 35, "item": "Sluice-plate of Regent Street", "place": { "x": 322.2, "y": -312, "r": 1.6, "name": "Regent Street sluice" },
+      "text": "Clear the last sluice-plate on Regent Street, at the edge of Parker's Piece",
+      "intro": [
+        { "who": "narrator", "line": "Up St Andrew's Street and on to Regent Street. Beyond the railings the dark grass of Parker's Piece is moving, very slightly, like the skin of a pond." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The last plate comes free. Water gushes up through the grate, and in the middle of the Piece the turf bursts open." },
+        { "who": "narrator", "line": "Out of the hole rises a long, dripping body of peat and weed, with the conduit's old iron sluice-gates still caught in its jaws." }
+      ] },
+    { "id": "wyrm", "type": "kill", "calm": 50, "mob": "lode_wyrm", "count": 1, "at": { "x": 470, "y": -295 },
+      "checkpoint": { "x": 428, "y": -302, "name": "Parker's Piece", "look": [470, -295] },
+      "text": "Defeat the Lode-Wyrm on Parker's Piece",
+      "intro": [
+        { "who": "narrator", "line": "The Lode-Wyrm: the conduit's own guardian, drowned in fen-water and turned. It does not stay above ground for long." },
+        { "who": "narrator", "line": "Watch the turf. Where it sags, the wyrm is coming up." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The wyrm slumps, and the peat falls away from it in wet sheets. What is left is clean water, which runs off across the grass towards Regent Street and the city." },
+        { "who": "narrator", "line": "In the middle of the Piece the old lamp-post is lit, and the light is the wrong colour." }
+      ] },
+    { "id": "lamp", "type": "reach", "calm": 50, "place": { "x": 536, "y": -269.5, "r": 3, "name": "The lamp in the middle of Parker's Piece" },
+      "text": "Go to the lamp at the centre of Parker's Piece",
+      "intro": [
+        { "who": "narrator", "line": "The lamp at the crossing of the paths is burning green, steady as a candle in a still room." }
+      ],
+      "dialogue": [
+        { "who": "lantern_mother", "line": "Thank you for the water, little light. You're tired. Everyone in this town is tired." },
+        { "who": "lantern_mother", "line": "No matter. I'll come up the river instead." },
+        { "who": "narrator", "line": "The green goes out of the lamp. It is only a lamp again, buzzing faintly. Someone is running across the grass towards you with a head-torch on." }
+      ] },
+    { "id": "report", "type": "talk", "npc": "marisol_piece",
+      "text": "Tell Marisol what spoke from the lamp",
+      "dialogue": [
+        { "who": "marisol_piece", "line": "You're alive. Good. The fountain's running, I heard it from Market Hill. What did you see?" },
+        { "who": "player", "line": "The lamp spoke. A woman's voice, under water. She said she'd come up the river instead.",
+          "choices": [
+            { "text": "She said she'd come up the river.", "reply": [ { "who": "marisol_piece", "line": "Then the Backs. The river bell. Oh, that's dreadful. Hold still, I want to write down exactly how dreadful." } ] },
+            { "text": "Who is she?", "reply": [ { "who": "marisol_piece", "line": "The ledgers call her the Lantern Mother. Eldest of the fen-lights, and she signed the first Concord. I thought she was a footnote." } ] }
+          ] },
+        { "who": "marisol_piece", "line": "Here. I filled this at the conduit head when the water came back. Running water remembers who helped it. Keep it on you." },
+        { "who": "marisol_piece", "line": "Get some sleep, Latecomer. Then find Wat Gedney. If she's coming up the river, we'll need a boat." }
+      ] }
+  ],
+  "checkpoint": { "x": -150, "y": -329, "name": "Trumpington Street", "look": [-122.5, -374.9] },
+  "rewards": { "xp": 900, "items": [ "quest_conduit_flask" ], "title": "Friend of the Running Water" },
+  "next": "Follow the Lantern Mother to the river and the Backs (coming soon)"
+}

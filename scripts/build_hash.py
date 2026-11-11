@@ -31,7 +31,7 @@ FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/s
          "app/game/tutorial_ui.js",
          # Lead s48: Story s8 Quest 5 (same order as the auto-hash append, so local hashes are unchanged)
          "app/game/quests/saxon_bell.json", "app/game/story_mobs.js",
-         "app/game/quests/mainspring.json"]
+         "app/game/quests/mainspring.json", "app/game/quests/conduit_runs_dry.json"]
 # session 75: --game hashes only what the game KPIs (test_mobs, test_items, playtest, gameplay clips) depend on: the game
 # layer, the player/collision code and the collision tiles (via collision/digest.json, written by publish.sh). A world-only
 # publish (facades, roofs, textures) then keeps its game scores; before, every publish reset them and the game KPIs read 0

@@ -23,7 +23,7 @@ const RUNS = +(process.argv[3] || 4);
 const WORKERS = Math.max(1, +(process.env.WIC_QUESTBOT_WORKERS || 4));
 const SOFT_S = +(process.env.WIC_SOFTLOCK_S || 0);   // QA main-path bot: soft-lock after this much game time without progress (0 = off)
 const RUN_WALL_S = +(process.env.WIC_QUESTBOT_RUN_WALL_S || 1500);
-const CLASSES = ['pyromancer', 'stormcaller', 'warden', 'hexweaver'];
+const CLASSES = (process.env.WIC_QUESTBOT_CLASSES || 'pyromancer,stormcaller,warden,hexweaver').split(',');
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary' };
 const T0 = Date.now();
@@ -55,7 +55,7 @@ catch (e) { if (process.env.WIC_TEST_GPU !== '1') throw e; log('GPU launch faile
 function installBot(softS = 0, tileIds = []) {
   const g = window.__game, P = window.__p, W = window.__world, C = g.caster, Q = g.quests, DT = 0.05;
   const ev = { kills: 0, deaths: 0, casts: 0, steps: [], talks: 0 };
-  ev.killLog = []; ev.boss = {}; g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; e.target.qbFirst ??= g.time; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; if (e.mob?.type?.id === 'bellwarden' && e.mob.qbFirst != null) { const t = +(g.time - e.mob.qbFirst).toFixed(1); (ev.boss.kills ||= []).push(t); ev.boss.ttk = Math.max(ev.boss.ttk ?? 0, t); } /* per-mob first hit -> kill (a 2nd Bellwarden spawn no longer spans both fights); worst kill reported */ ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => ev.deaths++),
+  ev.killLog = []; ev.boss = {}; g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; e.target.qbFirst ??= g.time; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; if (e.mob?.type?.id === 'bellwarden' && e.mob.qbFirst != null) { const t = +(g.time - e.mob.qbFirst).toFixed(1); (ev.boss.kills ||= []).push(t); ev.boss.ttk = Math.max(ev.boss.ttk ?? 0, t); } /* per-mob first hit -> kill (a 2nd Bellwarden spawn no longer spans both fights); worst kill reported */ ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => { ev.deaths++; (ev.deathLog ||= []).push(`${(g.time - bot.t0).toFixed(0)} ${bot.why}`.slice(0, 70)); }),
     g.on('questStep', e => ev.steps.push(`${e.quest}:${e.step}@${(g.time - bot.t0).toFixed(0)}`)),
     g.on('levelup', () => { for (let t = 0; t < 3; t++) if (C.picks[t] == null && g.stats.level >= C.talentLevels[t]) C.pickTalent(t, t % 2); })];
   function plan(sx, sy, sz, tx, ty, tol, fine = true) {   // A* on a 1 m grid; walkable = world.standAt from the neighbour's feet height
@@ -89,7 +89,8 @@ function installBot(softS = 0, tileIds = []) {
     const pts = []; for (let i = best; i >= 0; i = from[i]) pts.push({ x: i % nx + x0, y: ((i / nx) | 0) + y0 });
     return { pts: pts.reverse(), miss: bestD };
   }
-  const bot = window.__qbot = { ev, t0: g.time, maxT: 1400, goal: null, path: null, wp: 0, stuckT: 0, lastPos: null, replans: 0, escapeT: 0,
+  const bot = window.__qbot = { ev, t0: g.time, maxT: 300 * Math.max(5, Q.order.length),   // s10: was a flat 1400 s, sized for 6 quests
+    goal: null, path: null, wp: 0, stuckT: 0, lastPos: null, replans: 0, escapeT: 0,
     fail: null, done: false, why: '', lastDmg: new Map(), ignore: new Set(), dispose() { for (const f of offs) f(); } };
   const key = code => window.dispatchEvent(new KeyboardEvent('keydown', { code, key: code === 'KeyE' ? 'e' : code, bubbles: true }));
   function setGoal(x, y, tol) { const r = plan(P.x, P.y, P.z, x, y, tol, !(bot.replans % 4 >= 2));   // fine fence checks, coarse on alternate retries
@@ -133,6 +134,10 @@ function installBot(softS = 0, tileIds = []) {
   offs.push(g.on('kill', prog), g.on('hit', e => { if (e.target && e.target !== P && e.target.type) prog(); }));
   bot.step = function (dt) {
     if (bot.done || bot.fail) return;
+    for (const m of g.mobs) if (m.boss && !m.dead) {   // a boss that walks home heals to full: log every leash reset
+      if (m.state === 'return' && m._qbSt !== 'return') (ev.resets ||= []).push(`${m.type.id}@${(g.time - bot.t0).toFixed(0)} hp ${Math.round(m.hp)} home ${Math.round(Math.hypot(m.x - m.home.x, m.y - m.home.y))} pl ${Math.round(Math.hypot(m.x - P.x, m.y - P.y))} php ${Math.round(g.stats.hp)}`);
+      else if (m._qbSt === 'return' && m.state !== 'return' && m.state !== 'idle') ev.resets.push(`->${m.state} home ${Math.round(Math.hypot(m.x - m.home.x, m.y - m.home.y))}`);
+      m._qbSt = m.state; }
     if (softS > 0) {
       const o = Q.objective(), k = o ? `${o.quest}:${o.step}` : 'none', d = o?.x != null ? Math.hypot(o.x - P.x, o.y - P.y) : 0;
       if (wd.key !== k) { wd.key = k; wd.best = d; prog(); } else if (d < wd.best - 1) { wd.best = d; prog(); }
@@ -162,7 +167,7 @@ function installBot(softS = 0, tileIds = []) {
       if (g.time - L.t0 > (tgt.boss ? 400 : 150)) { bot.fail = `stuck mob: ${tgt.type.id} not killed in time (${bot.why})`; return; }
       P.yaw = Math.atan2(-(tgt.x - P.x), tgt.y - P.y);
       const cast = castAt(tgt), want = tgt.boss ? 9 : 7;
-      bot.why = `fight ${tgt.type.id} d ${bd.toFixed(1)} hp ${Math.round(tgt.hp)}`;
+      bot.why = `fight ${tgt.type.id} d ${bd.toFixed(1)} hp ${Math.round(tgt.hp)} ${tgt.state} dmg ${Math.round(g.time - L.t)}s ago`;
       if (!cast && (bd > want + 2 || g.time - L.t > 5)) {   // close in / find a line of fire
         if (!bot.goal || Math.hypot(bot.goal.x - tgt.x, bot.goal.y - tgt.y) > 3 || g.time - L.t > 5 && !bot.goal.flank) {
           const a = Math.random() * 6.283; setGoal(tgt.x + (g.time - L.t > 5 ? Math.cos(a) * 5 : 0), tgt.y + (g.time - L.t > 5 ? Math.sin(a) * 5 : 0), Math.max(1.5, want - 4));
@@ -229,7 +234,7 @@ async function runOne(r) {
   await ctx.close().catch(() => {});
   rec.pass = !rec.fail; rec.wallS = Math.round((Date.now() - w0) / 1000);
   runs.push(rec);
-  log(cls, r, rec.pass ? 'PASS' : 'FAIL ' + rec.fail, JSON.stringify({ completed: rec.completed, gameS: rec.gameS, kills: rec.kills, deaths: rec.deaths, steps: rec.steps, killLog: rec.killLog, boss: rec.boss }));
+  log(cls, r, rec.pass ? 'PASS' : 'FAIL ' + rec.fail, JSON.stringify({ completed: rec.completed, gameS: rec.gameS, kills: rec.kills, deaths: rec.deaths, steps: rec.steps, killLog: rec.killLog, boss: rec.boss, resets: rec.resets, deathLog: rec.deathLog }));
 }
 try {
   const jobs = Array.from({ length: RUNS }, (_, r) => r);
@@ -249,7 +254,7 @@ const result = { main_quests_shipped: shipped, quest_bot_pass_pct: runs.length ?
 try {
   const py = fs.existsSync(path.join(ROOT, '.venv/bin/python')) ? path.join(ROOT, '.venv/bin/python') : 'python3';
   const h = spawnSync(py, ['-I', path.join(ROOT, 'scripts/build_hash.py'), SRC], { encoding: 'utf8' }).stdout.trim();
-  if (h) {
+  if (h && !process.env.WIC_QUESTBOT_CLASSES) {   // a class-subset debug run must not overwrite the build's KPI
     const dir = path.join(ROOT, 'data/benchmark/scores'), f = path.join(dir, `${h}_wic.json`);
     fs.mkdirSync(dir, { recursive: true });
     const cur = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};

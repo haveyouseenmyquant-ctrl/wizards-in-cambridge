@@ -114,5 +114,5 @@
   ],
   "checkpoint": { "x": -166, "y": 140, "name": "Trinity Street", "look": [-164, 165] },
   "rewards": { "xp": 850, "items": [ "quest_tamsins_loupe" ], "title": "Keeper of the Beat" },
-  "next": "Follow the water to Hobson's Conduit (coming soon)"
+  "next": "Follow the water to Hobson's Conduit"
 }

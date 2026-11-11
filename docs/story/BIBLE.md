@@ -278,6 +278,8 @@ The ten main quests move from the centre outwards, ring by ring. Quests 1 and 2 
 
 ### Quest 6: The Conduit Runs Dry
 
+**As shipped (s10, 11 Nov 2026, seventh: quests/conduit_runs_dry.json).** Marisol at the dry Market Hill fountain (the conduit's real outlet) walks the player to the Trumpington Street runnels; wisps and a Fen Lantern-Hag in the channels; three sluice-plates on Trumpington Street, Downing Street (after a travel along Pembroke Street) and Regent Street; the Lode-Wyrm bursts out of Parker's Piece; the Lantern Mother speaks from the lamp at the crossing of the paths; Marisol hands over the **Conduit Flask** (below a third of health it heals 30%, refills after 30 s) and points to Wat and the river. Title: Friend of the Running Water.
+
 **Location.** Regent Street, Hobson's Conduit along Trumpington Street, and Parker's Piece, including the lamp at its centre.
 **Objectives.**
 1. **Talk:** Marisol explains Hobson's Conduit as the "running water" of the Concord.
