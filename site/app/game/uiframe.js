@@ -67,19 +67,28 @@ body #game-hud .gh-loots { left: 18px; right: auto; top: 40%; bottom: auto; max-
 body.wic-story #game-hud .gh-toasts, body.wic-story #game-hud .gh-loots { visibility: hidden; }
 body.wic-qcard #wic-q .q-track { opacity: 0 !important; }
 #wic-q .q-track { transition: opacity .3s; }
-body.wic-fight #wic-q .q-track { opacity: .72; }
+body.wic-fight #wic-q .q-track, body.wic-boss #wic-q .q-track { opacity: 0 !important; }   /* s6: judge 'quest banner stays up through fights' */
 body.wic-fight #wic-q .q-track .q-ob { display: none; }
-body.wic-boss #game-hud .gh-banner { top: 30% !important; }
+body.wic-boss #game-hud .gh-banner { top: 21% !important; }   /* s6: clear of the status words above the crosshair */
 /* ---- combat callouts kept out of the centre (judge: 'Vanquished' / 'Chain' / 'Staggered' text piles over the fight).
    Banner: small caps strip near the top; status words above the crosshair, not over the player; chain count as a
    small tag above the class label, by the bars */
 #game-hud .gh-banner { top: 12% !important; font-size: 17px !important; letter-spacing: .28em !important; text-transform: uppercase;
   text-shadow: 0 0 10px rgba(255,106,16,.7), 0 2px 3px #000 !important; padding: 4px 22px; background: linear-gradient(90deg, transparent, rgba(10,8,6,.55) 20%, rgba(10,8,6,.55) 80%, transparent); }
 .gf-word { top: calc(50% - 64px) !important; font-size: 14px !important; letter-spacing: .16em !important; text-transform: uppercase; }
-.gf-chain { left: 50% !important; top: auto !important; bottom: 84px; transform: translateX(-50%); font-size: 13px !important;
+.gf-chain { left: calc(50% + 182px) !important; top: auto !important; bottom: 30px; font-size: 13px !important;   /* s6: beside the spell bar, not on the class label */
   text-shadow: 0 0 5px rgba(255,122,32,.7), 0 1px 2px #000 !important; }
 .gf-chain small { font-size: 9px !important; }
 body.wic-menu .gf-word, body.wic-menu .gf-chain, body.wic-story .gf-chain { display: none !important; }
+/* ---- s6 boss bar: phase tag on a dark plate so it reads over bright scenes */
+#game-hud .gh-boss .bt { display: table; margin: 5px auto 6px; padding: 3px 10px; font-size: 11px; color: #f4e2b8; background: rgba(8,6,4,.72); border-radius: 2px; text-shadow: 0 1px 2px #000; }
+#game-hud .gh-boss .bt:empty { display: none; }
+#game-hud .gh-boss .bn { font-size: 19px; }
+/* ---- s6 cooldowns: small timer plate at the slot foot, the spell icon stays visible under the sweep */
+#game-hud .gh-cdt { inset: auto 0 3px 0; margin: 0 auto; width: max-content; min-width: 22px; padding: 1px 4px; line-height: 14px; font: 700 12px/14px system-ui, sans-serif;
+  color: #fff; background: rgba(0,0,0,.78); border-radius: 3px; text-shadow: none; font-variant-numeric: tabular-nums; }
+#game-hud .gh-cdt:empty { display: none; }
+#game-hud .gh-sweep { background: conic-gradient(rgba(0,0,0,.55) var(--cd), transparent 0); }
 /* ---- spell slots: drawn icons */
 #game-hud .gh-glyph svg { width: 34px; height: 34px; margin: 7px; filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 1px 1px #000); }
 #game-hud .gh-slot { background: radial-gradient(circle at 50% 40%, rgba(60,50,40,.85), rgba(8,8,14,.9)); }
