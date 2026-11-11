@@ -321,3 +321,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - service.sh judged the live 81004214 at 55.2 (Visuals 52, Animation 37, Combat 61.1, Story 66, UI 64), up from 52.2.
 - Merged EnvVFX street clutter (A-boards, planters, cafe sets, crates), rebuilt the zone, gate 8/8 on 7fc02ea6, published.
 - The judge's Visuals notes point at flat facades without mouldings and clean materials, so EnvVFX was redirected from clutter to facade detail and wear; Graphics to full-body poses that read in still frames. Issues 5ac5, 88ad, 5d62 still wait on their assigned tasks.
+
+## 2026-11-11 — session 46 (lead)
+- Live 7fc02ea6 was judged 53.5 (Visuals 50, Animation 32.5, Combat 59.6, Story 65, UI 66). Merged UI s4 (talent icons, rarity badges, damage numbers capped at 4, panel animations); gate 8/8 on 1afa7a11, published.
+- Issue 3311 (Chapter One opens straight after the staged scene, covering hud.jpg) -> Story task bea2; issue 11c7 (loot nameplates clutter combat) -> Gameplay task f130.
