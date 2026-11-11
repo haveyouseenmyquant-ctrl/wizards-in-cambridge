@@ -333,3 +333,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 48 (lead)
 - service.sh judged 90df5bd9 at 54.2 (Visuals 50, Animation 35, Combat 59.6, Story 66, UI 66). Merged Story s8: Quest 5 "The Saxon Bell" and the staged-scene hold for issue 3311. Gate 8/8 on 895a9d5b with 5 main quests for all 4 classes; published.
 - Cancelled Story bea2 by hand (fixed, but its check overran the 5-minute cap); UI d9bd confirms the HUD frame. Story's next task: Quest 6 (d905).
+
+## 2026-11-11 — session 49 (lead)
+- service.sh judged the live 895a9d5b at 52.4 (Visuals 50, Animation 30, Combat 58.2, Story 65, UI 64), inside the 52–55 band of recent builds.
+- Merged Gameplay s8: camclip.js keeps the combat camera out of stalls and other zone props (issue 5ac5), with test_camclip in the gate. Gate 9/9 on 64b43506; published.
+- All five open issues still wait on their assigned confirm/fix tasks; notes sent to EnvVFX (76b5), UI (d9bd) and Gameplay (boots_millpond failure in test_items).

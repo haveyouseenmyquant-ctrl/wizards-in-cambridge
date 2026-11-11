@@ -1,57 +1,44 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 48)
+## State (2026-11-11, after session 49)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
-  walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
-- .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
-  per hash; skips while a session is active). Published: Pages (GitHub Actions) live at SITE_URL
-  https://haveyouseenmyquant-ctrl.github.io/wizards-in-cambridge/ ; build de19f70 = release world-20261110-0924, published
-  by a one-off task; s10 published 9b1abea2 (release world-20261110-1012) via
-  `WC_SKIP_GAME_KPI=1 WC_SKIP_MS_BENCH=1 scripts/publish.sh` (~5 min; rm /tmp/world.tar.gz after). data/derived/live_site exists, so
-  measure.sh scores the PUBLISHED build. Keep publishing each good trunk build with scripts/publish.sh. Visibility
-  approval a-20261109-235822-7a30 is used up: never run that command again.
+  walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
+- .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
+- Pages live at SITE_URL. Publish each good trunk build: `WC_SKIP_GAME_KPI=1 WC_SKIP_MS_BENCH=1 scripts/publish.sh`
+  (~5 min, run in background; rm /tmp/world.tar.gz after). data/derived/live_site exists -> measure.sh scores the PUBLISHED build.
+  Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
-## KPIs / measure.sh
-- s48: service judged 90df5bd9 = 54.2 (V50 A35 C59.6 S66 UI66). Merged Story s8 (Quest 5 Saxon Bell, 3311 hold) -> 895a9d5b gate 8/8 (5 quests), published.
-  bea2 cancelled by hand (check > 5-min cap); UI d9bd confirms 88ad+3311. Story -> Quest 6 (d905).
-  New app/game files must be added to FILES in scripts/build_hash.py (end, sorted) or publish fails the live-hash check.
-  Before merging: move service-written untracked scores/<hash>_* aside if the branch adds the same file.
-- s47: live 1afa7a11 judged 52.9 (V50 A32 C58.1 S64 UI66). Merged Graphics 5f08ed7 (rig recolour idle slices) -> 90df5bd9 (Graphics gate ok),
-  published. 919d cancelled; shader warm-up (compileAsync) -> Optimisation 22df. All 5 issues have open tasks.
-- s46: live 7fc02ea6 judged 53.5 (V50 A32.5 C59.6 S65 UI66). Merged UI s4 (1e67676), gate 8/8 1afa7a11 (139 s, quest_bot 31 s),
-  published (world-20261111-1305). Issue 3311 -> Story bea2 (step-8 hold; then UI d9bd confirms 88ad). 11c7 -> Gameplay f130 (after 751e).
-- s45: service judged 81004214 = 55.2 (V52 A37 C61.1 S66 UI64). Merged EnvVFX clutter (zone_props_clutter.py); site/zone is
-  git-ignored -> after ANY zone_props* merge run `.venv/bin/python -I scripts/zone_build.py` (~20 s) before gate/publish.
-  Gate 8/8 7fc02ea6, published (world-20261111-1245); its 53.5 is EnvVFX branch judge, service rescores. Rebriefed EnvVFX (facade mouldings/wear, not clutter) + Graphics (readable full-body poses).
-- NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
-  (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
-- s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
-  after a roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb` and copy ONLY tiles/ + collision/ into site/ (not manifest).
-  Gate quest_bot flaked 75% once, rerun 100% (hexweaver boss TTK 222 s). Published s18 (log /tmp/wic_publish_s18.log).
-- measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
-  data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
-- Judge noise ~±2. build_hash.py includes quests.js/npc_rig.js/quests/*.json: any quest edit = new hash = rescore.
-- test_classes.mjs times out on merged trunk under SwiftShader (each branch alone passes; GPU perf fine):
-  QA task c0ca. No `timeout` command on this Mac.
+## Recent
+- s49: service judged 895a9d5b = 52.4 (V50 A30 C58.2 S65 UI64) — quality plateau 52-55 for 8 sessions; Animation weakest.
+  Merged Gameplay 751e camclip -> 64b43506 gate 9/9 (test_camclip added), published. test_items shows failed boots_millpond (told Gameplay; f130 check needs it).
+  Issues: 5ac5 wait EnvVFX 76b5 confirm; 88ad+3311 wait UI d9bd; 5d62 wait Opt 22df; 11c7 wait Gameplay f130.
+- s48: merged Story s8 (Quest 5 Saxon Bell). Story -> Quest 6 (d905). Opt 659a: publish fails fast on unlisted files.
+
+## Rules learned
+- New app/game files must be added to FILES in scripts/build_hash.py or publish fails the live-hash check.
+- Before merging: commit/move service-written scores/<hash>_* (and `git checkout` data/derived/wic_harness_log.jsonl) first.
+- site/zone is git-ignored: after ANY zone_props* merge run `.venv/bin/python -I scripts/zone_build.py` (~20 s) before gate/publish.
+- Tiles/collision git-ignored: after roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb`, copy ONLY tiles/ + collision/ into site/.
+- NEVER run wic_perf while service/gate browsers run (contaminated fps). Another project may hold CPU cores.
+- measure.sh reads caches for the live hash: data/benchmark/scores/<hash>_wic.json + browser_kpi.json; falls back to newest scored build.
+- Judge noise ~±2 (QA b0c0: 3-pass median). Any quest/npc_rig edit = new hash = rescore.
 - scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").
-- skills/wic-rescore = how to score a build by hand (judge ~8 min, playtest ~35 min).
-- org cancel <task> works for tasks fixed elsewhere; org done only by the assignee.
-- Force-push hook false-positives on Bash calls mixing push+rm: always run `git push` in its own call.
-- Merging: JOURNAL.md conflicts -> keep both sides; site/app/game/index.js MODULES line conflicts -> union.
-  Run game tests one at a time (parallel browsers time out; recorder breaks and perf drops if the playtest runs too). Merge gate = tools/wic_gate.sh site (~170 s GPU Chrome, last line JSON). test_feel dodgeIFrames flaked once in gate (Gameplay told).
-  data/derived/wic_harness_log.jsonl is dirtied by service.sh: `git checkout` it before merging QA.
+- skills/wic-rescore = scoring by hand (judge ~8 min, playtest ~35 min). Task checks must fit the 5-min cap.
+- org cancel works for tasks fixed elsewhere; org done only by the assignee.
+- Run `git push` in its own Bash call (force-push hook false positives). No `timeout` command on this Mac.
+- Merging: JOURNAL.md conflicts keep both; index.js MODULES line conflicts -> union.
+- Gate = tools/wic_gate.sh site (~170 s GPU Chrome, last line JSON). Run browser tests one at a time.
 
-## Organisation (studio since s18, 13 nodes; Gaspard 10 Nov direction)
-- s35 TREE: teams under root, dept managers paused (they starved teams of sessions). Resume a manager only if its teams ship steadily.
-- Root = studio head. Departments (managers only review/merge/assign; teams merge into dept branch, dept into main):
-  Art -> graphics (chars+anim; 8765 Animation>40; rig work UNCOMMITTED 2 sessions), environment-and-vfx (926d stalls Visuals>55), ui-and-ux (new; 3daf UI polish>68).
-  Engineering -> gameplay (11ba Combat>66, quest_bot flakes), optimisation (ef24 Safari blocked on Gaspard's safaridriver --enable).
-  Creative -> story (b0f8 Q4 Ferry Bell, 2 unmerged commits, quest_bot 2/4; 69f7 staging), audio-and-music (new; eebc audio v1).
-  Marketing -> brand-and-store-page (new; abd9 drafts + press kit). Keep marketing <= 1/5 of sessions; Trailers/Community later only if earned.
-  qa-and-playtesting stays directly under root (one-team Quality dept = overhead). Retire teams that don't produce.
-- Contract in every brief: results to <hash>_wic.json, /tmp/wic_* locks, symlink heavy data, modular site/app/game files, gate before ready, commit before 45-min limit.
+## Organisation (studio, 13 nodes)
+- Teams sit directly under root; dept managers (Art, Engineering, Creative, Marketing) PAUSED since s35 (they starved teams).
+  Resume a manager only if its teams ship steadily.
+- Active teams: graphics (8765 Animation>40), environment-and-vfx (926d Visuals>55, 4a93 roofs, 76b5), ui-and-ux (3daf UI>68, d9bd),
+  gameplay (f130, 11ba Combat>66), optimisation (22df, 659a, ef24 Safari blocked on safaridriver --enable), story (d905 Quest 6),
+  qa-and-playtesting (f46f, b0c0). audio-and-music + brand-and-store-page have tasks but low priority (marketing <= 1/5 sessions).
+- Contract in every brief: results to <hash>_wic.json, /tmp/wic_* locks, symlink heavy data, modular site/app/game files,
+  gate before ready, commit before 45-min limit.
 
 ## Lead each session
-1. `org status`, `org tasks`, read notes; merge ready DEPARTMENT branches (and QA) into main (resolve conflicts, run game tests).
-2. Check approval outcome; ./measure.sh; push main.
-3. Re-brief / add tasks where KPIs stall; retire nodes that don't earn tokens. Keep this file < 6000 chars.
+1. `org tasks`, read notes; merge ready team branches into main; gate; publish; push.
+2. ./measure.sh; triage issues (all need tasks); resolve those whose tasks are done.
+3. Re-brief/add tasks where KPIs stall; retire non-producing nodes. Keep this file < 6000 chars.
