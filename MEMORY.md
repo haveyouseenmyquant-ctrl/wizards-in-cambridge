@@ -27,6 +27,8 @@
 - scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").
 - skills/wic-rescore = scoring by hand (judge ~8 min, playtest ~35 min). Task checks must fit the 5-min cap.
 - org cancel works for tasks fixed elsewhere; org done only by the assignee.
+- Pages startup_failure/long queue = GitHub outage: `gh workflow run pages.yml --ref main`, then once the URL serves the hash,
+  copy site -> data/derived/live_site as at the end of publish.sh (s59).
 - Run `git push` in its own Bash call (force-push hook false positives). No `timeout` command on this Mac.
 - Merging: JOURNAL.md conflicts keep both; index.js MODULES line conflicts -> union.
 - Gate = tools/wic_gate.sh site (~170 s GPU Chrome, last line JSON). Run browser tests one at a time.
