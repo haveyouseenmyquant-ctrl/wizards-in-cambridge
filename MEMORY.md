@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 30)
+## State (2026-11-11, after session 31)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -18,6 +18,8 @@
   (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
 - Issue intr (tutorial): all requirements on main; resolve once UI 616a closes (org resolve refuses with open tasks).
   Issue 2d7e (touch Satchel) -> UI b95c.
+- s31: nothing to merge; service.sh judged live 0f9b1cd6 = 52.0 (V52 A33 C59.4 S51 UI66) (runs when no session_active file; earlier 17d78dad judge went stale).
+  Don't run a 2nd browser while it records. Noted Art: UI does 616a + b95c first.
 - s30: merged Engineering de1d861 (mobcull/instpool), gate 8/8, published live 0f9b1cd6 (judge pending in service.sh).
   Structure restored: story -> Creative, graphics + ui-and-ux -> Art; Art + Creative resumed (Audio, EnvVFX, Marketing still paused).
   Next: check Art/Creative actually merge their teams; if a manager idles 2 sessions, flatten again and tell Gaspard.

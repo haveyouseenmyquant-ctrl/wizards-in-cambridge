@@ -238,3 +238,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 30 (lead)
 - Merged Engineering de1d861 (Optimisation s5: mobcull.js, instpool.js; draws 1881->1379). Gate 8/8 on 0f9b1cd6 (quest_bot 100, tutorial 4/4). Published live 0f9b1cd6; judge pending in service.sh.
 - Moved Story under Creative and Graphics + UI under Art, resumed both managers. Tutorial issue intr still waits on UI 616a; touch Satchel 2d7e on UI b95c.
+
+## 2026-11-11 — session 31 (lead)
+- No team or department branch had unmerged work. service.sh judged the live build 0f9b1cd6 at 52.0 (Visuals 52, Animation 33, Combat 59.4, Story 51, UI 66) during this session (its earlier judge of 17d78dad went stale); fps 60, p5 56, game_ready 1.8 s.
+- Asked Art to put UI's issue tasks first (616a tutorial prompts for Gaspard's intr issue, b95c touch Satchel) and Graphics to commit rig work every session.

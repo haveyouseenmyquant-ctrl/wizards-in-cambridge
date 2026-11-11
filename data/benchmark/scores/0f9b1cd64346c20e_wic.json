@@ -26,5 +26,56 @@
   "errors": 0,
   "first_errors": [],
   "at": "2026-11-11T02:35:51.993Z"
+ },
+ "main_quests_shipped": 4,
+ "quest_bot_pass_pct": 100,
+ "judged_game_quality": 52.0,
+ "judged_sections": {
+  "Visuals": 52.0,
+  "Animation": 33.0,
+  "Combat feel": 59.4,
+  "Story presentation": 51.0,
+  "UI polish": 66.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 4.0,
+   "Animation": 2.0,
+   "Combat feel": 1.8,
+   "Story presentation": 2.0,
+   "UI polish": 0.0
+  },
+  "quality_spread": 0.7,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together. The architecture is recognisable with textured brick and stone, and the scenes have real-time shadows, warm low-sun lighting with some haze and bloom, and props like market stalls, bicycles, railings and trees. Geometry is still blocky, though: flat facades, box-shaped shop shelves and goods, and plain uniform pavement. The characters are small, low-detail stylised figures, and the enemies and VFX are hard to make out. That keeps it below the 60 anchor in density, richness and character fidelity."
+   },
+   "Animation": {
+    "all": "In the walking frames the small wizard character shows a few different leg and arm poses, which suggests a basic walk cycle. The staff and hat stay rigid, and none of the frames shows a distinct cast or hit-reaction pose. In combat the attacks come across almost entirely as particles, beams and text labels ('Staggered', 'Interrupted'), with no visible body wind-ups, enemy attack or death animations, robe or hair motion, crowds, or moving foliage. Enemies are hard to make out under the effects."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show a full combat loop. There are damage numbers, chain counters, Staggered and Interrupted status text, red ground telegraphs for enemy windups, a boss with named phases and a 'Phase II' banner, loot beams with rarity-coloured popups including a legendary drop, and six spells with cooldowns; the event log backs this up with crits, 33 kills and varied enemy types. The biggest gaps: hex_dart makes up 53 of 78 casts, the spell effects are small, soft glows rather than clear, punchy shapes, and the frames show no hit-stop or screen feedback. The boss died after about 10 s and the last third of the clip has no enemies at all, so there is little sense of weight or crowd control changing the fight.",
+    "pyromancer": "The visible feedback is solid. Damage numbers, crit labels, Staggered/Interrupted callouts and a chain counter all show up, and the boss has a named health bar, Phase II/III banners and a ground telegraph ring. Loot is colour-coded by rarity with light beams, there are 6 distinct spells, and enemies telegraph attacks with windups. The biggest gaps are readability and impact: overlapping translucent effects, text and loot labels turn many frames into hard-to-read clutter. Most enemies are small and hard to pick out, there's no visible hit-stop, knockback or formations, and ember_bolt makes up 64 of the 94 casts, so play looks spammy rather than deep.",
+    "stormcaller": "The boss fight has real feedback: a Bellwarden health bar with phases, a 'Phase II' banner, 'Staggered'/'Interrupted' callouts, a chain counter, damage numbers, ground telegraph circles, and loot beams coloured by rarity with pickup toasts. The fight is over by about 15 s, though, and most later frames are empty market streets with no enemies. The player takes 0 damage, so the threat looks trivial, and the spell VFX in the stills read as thin lines and glows rather than strong, clearly shaped impacts. 4275 sound voices in 60 s points to audio spam. Only one class is shown, so differences between classes can't be judged.",
+    "warden": "There is plenty of hit feedback: damage and crit numbers, a chain counter, 'Staggered'/'Interrupted' labels, a named boss with a phase bar and 'Phase II' banner, a 'Vanquished' moment, and loot toasts colour-coded by rarity. The biggest gaps are readability and stakes. A large flat pale-blue sphere covers the player in most frames, and the spell VFX are muddy, without clear shapes or visible hit-stop. Basic pebble_shot makes up 65 of 89 casts, the boss dies in about 17 s, and the player takes only 8 damage in 60 s, so combat looks trivial and repetitive rather than punchy. The 3774 sound voices suggest audio spam."
+   },
+   "Story presentation": {
+    "all": "The writing is good and has a clear tone. A prologue title card, small portrait dialogue boxes naming Nell Tapscott and Pip Hobbe, a quest tracker, a large world marker, a boss reveal on real Market Hill and a quest-complete card with rewards together give an original premise tied to a real place. The big gaps are staging: the speakers are mostly not on screen or are tiny figures, there is no camera framing or character animation in conversations, no branching choices, and the boss reveal is a plain gameplay shot with a text box."
+   },
+   "UI polish": {
+    "all": "The HUD and menus share one themed look: serif gold titles and dark bordered panels on the class select, satchel and talent screens, with rarity-coloured loot toasts, a boss bar, a minimap, numeric cooldowns on icons and quest tracking. During combat the screen gets cluttered. Loot toasts, quest text, damage numbers, chain counters and a large 'Broom' label pile up over busy VFX. The inventory is mostly empty slots, the talent icons are generic and none of the frames show animation or transition polish."
+   }
+  }
  }
 }
