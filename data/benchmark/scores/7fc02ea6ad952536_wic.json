@@ -66,11 +66,11 @@
  },
  "judged_game_quality": 53.5,
  "judged_sections": {
-  "Visuals": 50.0,
+  "Visuals": 50,
   "Animation": 32.5,
   "Combat feel": 59.6,
-  "Story presentation": 65.0,
-  "UI polish": 66.0
+  "Story presentation": 65,
+  "UI polish": 66
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -80,11 +80,11 @@
   "calls": 16,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 0.0,
-   "Animation": 1.0,
+   "Visuals": 0,
+   "Animation": 1,
    "Combat feel": 1.2,
-   "Story presentation": 2.0,
-   "UI polish": 0.0
+   "Story presentation": 2,
+   "UI polish": 0
   },
   "quality_spread": 0.4,
   "frames": 68,
@@ -94,7 +94,7 @@
   ],
   "reasons": {
    "Visuals": {
-    "all": "The city is coherent, with a consistent art direction. Lighting works: real-time sun shadows, warm low-sun scenes with bloom, and some atmospheric haze. Market stalls, bikes, railings and a gothic church give some recognisable landmarks. Geometry is still mostly boxy, though: fa\u00e7ades are flat and repetitive, shop goods are primitive shapes, materials are plain, and there is little clutter or wear. The wizard characters are small and low in detail, and the combat VFX are basic flat translucent shapes."
+    "all": "The city is coherent, with a consistent art direction. Lighting works: real-time sun shadows, warm low-sun scenes with bloom, and some atmospheric haze. Market stalls, bikes, railings and a gothic church give some recognisable landmarks. Geometry is still mostly boxy, though: façades are flat and repetitive, shop goods are primitive shapes, materials are plain, and there is little clutter or wear. The wizard characters are small and low in detail, and the combat VFX are basic flat translucent shapes."
    },
    "Animation": {
     "all": "In the four walking frames the player has almost the same rear pose, with no clear stride or secondary motion in the robe or hat. A few combat frames suggest a cast pose (staff raised in frames 6 and 7, a 'STAGGERED' label), but attacks show up mostly as effects and light columns, and there is no clear matching body motion. Enemies are barely visible: the one in frame 8 looks like a static white blob, with no wind-ups, hit reactions or deaths shown. There is also no environmental motion, such as crowds or swaying foliage."
@@ -112,5 +112,7 @@
     "all": "The HUD and menus share one style. The class cards are themed with icons and colour coding, the inventory has equipped slots and a tooltip, the talent screen is laid out by tier, and the spell bar shows cooldowns alongside health and mana bars and a minimap. Item tooltips show the rarity tier only as text, and talent icons are generic. During combat the screen gets cluttered: in frame 8, item-name pop-ups, large damage numbers, loot toasts and a cut-off 'Botanic' sign overlap the scene, and some labels are small and hard to read. The inventory bag is mostly empty placeholder slots, and the frames show no animation polish."
    }
   }
- }
+ },
+ "main_quests_shipped": 4,
+ "quest_bot_pass_pct": 100
 }
