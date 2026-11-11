@@ -1,0 +1,118 @@
+{
+ "fps_median": 60,
+ "load_seconds": 0.27,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.77,
+  "programs": [
+   65,
+   82
+  ],
+  "fps_p5": 59,
+  "fps_min": 42,
+  "slow_secs": [
+   [
+    0,
+    42
+   ]
+  ],
+  "long_frames": 7,
+  "worst_frames": [
+   [
+    0.4,
+    81
+   ],
+   [
+    0.2,
+    68
+   ],
+   [
+    0.7,
+    51
+   ],
+   [
+    0,
+    50
+   ],
+   [
+    0.1,
+    50
+   ],
+   [
+    0.2,
+    50
+   ],
+   [
+    0.8,
+    35
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 32,
+  "maxMobs": 36,
+  "dist": 207,
+  "laps": 1,
+  "draw_calls_median": 1313,
+  "tris_median": 6601016,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-11T12:29:42.672Z"
+ },
+ "judged_game_quality": 53.5,
+ "judged_sections": {
+  "Visuals": 50,
+  "Animation": 32.5,
+  "Combat feel": 59.6,
+  "Story presentation": 65,
+  "UI polish": 66
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0,
+   "Animation": 1,
+   "Combat feel": 1.2,
+   "Story presentation": 2,
+   "UI polish": 0
+  },
+  "quality_spread": 0.4,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city is coherent, with a consistent art direction. Lighting works: real-time sun shadows, warm low-sun scenes with bloom, and some atmospheric haze. Market stalls, bikes, railings and a gothic church give some recognisable landmarks. Geometry is still mostly boxy, though: façades are flat and repetitive, shop goods are primitive shapes, materials are plain, and there is little clutter or wear. The wizard characters are small and low in detail, and the combat VFX are basic flat translucent shapes."
+   },
+   "Animation": {
+    "all": "In the four walking frames the player has almost the same rear pose, with no clear stride or secondary motion in the robe or hat. A few combat frames suggest a cast pose (staff raised in frames 6 and 7, a 'STAGGERED' label), but attacks show up mostly as effects and light columns, and there is no clear matching body motion. Enemies are barely visible: the one in frame 8 looks like a static white blob, with no wind-ups, hit reactions or deaths shown. There is also no environmental motion, such as crowds or swaying foliage."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show solid mid-tier combat feedback: damage and crit numbers, chain counters, stagger and interrupt callouts, a three-phase boss bar with a PHASE II banner, a red telegraph lane in frame 8, and loot labels and beams coloured by rarity. The event log backs this up with 6 spells, 29 kills, a boss kill and 2786 sound voices. Hex_dart makes up 51 of 79 casts, so play is spam-heavy, and VFX are small, soft blobs with no visible hit-stop, knockback or screen feedback. The camera often frames walls or the ground, the last third of the clip has no combat, and this sheet shows only one class.",
+    "pyromancer": "The frames show working combat feedback: damage and crit numbers, chain counters, a boss with a phased health bar and an 'ENRAGED' banner, STAGGERED/INTERRUPTED callouts, telegraphed ground markers, and loot popups coloured by rarity. Six spells were cast and enemies are varied, but the VFX are mostly small, washed-out blobs and white puffs, with no visible hit-stop or screen feedback. The player took only one hit in 60 s, so there is little real threat, and only one class is shown, so differences between classes can't be judged.",
+    "stormcaller": "The combat has solid systems. There are damage numbers with crits, STAGGERED and INTERRUPTED callouts, chain-count tags, a named boss with a three-phase health bar and a PHASE II banner, loot beams with rarity-coloured toasts, and six spells on cooldown with lightning and ground-circle effects. In the frames, though, the spell effects are thin, small or washed out, and the camera is often blocked by stalls and walls. Many frames show no enemies on screen, there is no visible hit-stop or screen feedback, and a boss fight that ends in about 10 seconds against a player who barely takes damage suggests little challenge or telegraphing depth.",
+    "warden": "The frames show working combat with a lot of feedback. There are crit and damage numbers, INTERRUPTED and STAGGERED tags, chain counters, a phased boss bar with a PHASE II banner, loot beams in different colours with rarity labels, and a spread of crowd control and mobility spells (rootbind, boulder_leap, granite_skin). It falls short of 60 because the fight is dominated by one spammed attack (57 of 76 casts are pebble_shot). Effects are often unreadable: big translucent blobs and full-screen orange washes hide the action, and five of twelve frames show no enemies within 30 m. No enemy attack telegraphs or hit-stop are visible, and the player took only 8 damage, so the fight has almost no threat."
+   },
+   "Story presentation": {
+    "all": "The scene shows named characters with portraits who appear in the frame during dialogue. There are letterboxed over-the-shoulder shots, a three-option reply choice, a tracker that updates with distances, a boss reveal and a quest-complete card with rewards. The writing is strong and has a consistent tone, and the original premise (a thirteenth chime on Market Hill, Cambridge) comes across clearly. The biggest gaps are simple low-poly characters with no visible facial or body performance, static staging that looks like the gameplay camera, no visible voice acting or seamless cinematics, and a boss set piece that is modest."
+   },
+   "UI polish": {
+    "all": "The HUD and menus share one style. The class cards are themed with icons and colour coding, the inventory has equipped slots and a tooltip, the talent screen is laid out by tier, and the spell bar shows cooldowns alongside health and mana bars and a minimap. Item tooltips show the rarity tier only as text, and talent icons are generic. During combat the screen gets cluttered: in frame 8, item-name pop-ups, large damage numbers, loot toasts and a cut-off 'Botanic' sign overlap the scene, and some labels are small and hard to read. The inventory bag is mostly empty placeholder slots, and the frames show no animation polish."
+   }
+  }
+ },
+ "main_quests_shipped": 4,
+ "quest_bot_pass_pct": 100
+}
