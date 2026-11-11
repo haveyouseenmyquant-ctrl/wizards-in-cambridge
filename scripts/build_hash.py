@@ -8,7 +8,7 @@ import urllib.request
 sys.path.insert(0, __import__("os").path.dirname(__import__("os").path.abspath(__file__)))
 from collision_digest import digest  # noqa: E402
 
-FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/shadowlod.js", "app/shadowproxy.js", "app/mainmerge.js", "app/tiles.js", "app/materials.js", "app/trees.js", "app/objects.js", "app/facades.js", "app/zone.js", "zone/zone.json", "cityfac/index.json",
+FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/shadowlod.js", "app/shadowproxy.js", "app/mainmerge.js", "app/mobcull.js", "app/tiles.js", "app/materials.js", "app/trees.js", "app/objects.js", "app/facades.js", "app/zone.js", "zone/zone.json", "cityfac/index.json",
          "tex/textures.json",
          # session 42: the game layer, so game KPI caches (<hash>_game.json, _gameplay.json) follow game changes
          "app/game/classes.js", "app/game/core.js", "app/game/encounters.json", "app/game/hud.js", "app/game/index.js", "app/game/itemdefs.js", "app/game/items.js", "app/game/mobs.js", "app/game/sfx.js", "app/game/vfx.js",
