@@ -186,7 +186,7 @@ async function main() {
     fs.writeFileSync(bf, JSON.stringify({ ...prev, ts: Math.floor(Date.now() / 1000), src: 'wic_perf', hash, result: { ...(prev.hash === hash ? prev.result : {}), fps_median: out.fps_median, load_seconds: out.load_seconds } }, null, 1));
     log('wrote', sf);
   }
-  console.log(JSON.stringify(out));
+  console.log(JSON.stringify({ ...out, perf_detail: detail }));   // QA s7: detail on stdout for wic_perf_robust.py
 }
 
 main().catch(e => { console.error(e); console.log(JSON.stringify({ fps_median: null, load_seconds: null })); process.exit(1); });

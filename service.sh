@@ -5,7 +5,7 @@
 #   1. scripts/wic_record.mjs + scripts/wic_judge.py   -> judged_game_quality, judged_sections, judge_meta
 #   2. scripts/wic_playtest.mjs (else playtest.mjs)     -> playtest_pass_pct, per_class
 #   3. scripts/quest_bot.mjs (Story, once it exists)    -> main_quests_shipped
-#   4. scripts/wic_perf.mjs (Optimisation, once it exists) -> fps_median, load_seconds
+#   4. scripts/wic_perf_robust.py (wic_perf.mjs x2 once loadavg < 4) -> fps_median, load_seconds, perf_detail{loadavg_*, runs[]}
 #   5. tools/wic_gate.sh (merge gate, all game tests)   -> gate_ok, gate_tests; full result in data/derived/wic_gate_log.jsonl
 # Heavy jobs never run while a work session is active (data/derived/session_active touched < 75 min ago).
 # One instance at a time (/tmp/wic_service.lock); a step that fails for harness reasons is logged to
@@ -72,7 +72,9 @@ gate() {   # merge gate per hash: full result -> data/derived/wic_gate_log.jsonl
   tail -n1 /tmp/wic_gate.out | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(json.dumps({"gate_ok": d["ok"], "gate_tests": {k: v["ok"] for k, v in d["tests"].items()}}))' | merge || return 1
   [ $rc = 0 ] || return 2
 }
-perf() { node scripts/wic_perf.mjs "$S" | tail -n1 | python3 -c 'import json,sys; d=json.loads(sys.stdin.read()); print(json.dumps({k: d[k] for k in ("fps_median", "load_seconds") if k in d}))' | merge; }
+perf() {   # QA s7: waits for loadavg < 4 and no other test browser, best of 2 runs (scripts/wic_perf_robust.py)
+  $PY -I scripts/wic_perf_robust.py "$S" --hash "$H"
+}
 
 ONCE=0; [ "$1" = "--once" ] && ONCE=1
 while true; do
