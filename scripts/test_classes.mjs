@@ -79,7 +79,11 @@ try {
           window.__dummy = m;
           return { id: g.caster.spells[i].id, cast: g.caster.cast(i, m) };
         }, i);
-        await sleep(1800);
+        // wait for the cast to resolve: until its first hit lands (+0.3 s for follow-up ticks), at most 1.8 s
+        for (let t = 0, hitAt = -1; t < 1800 && (hitAt < 0 || t - hitAt < 300); t += 100) {
+          await sleep(100);
+          if (hitAt < 0 && await page.evaluate(id => (window.__hits[id] || 0) > 0, r.id)) hitAt = t;
+        }
         r.dmg = await page.evaluate(id => { const g = window.__game, m = window.__dummy; if (g.mobSystem) g.mobSystem.remove(m); else g.mobs.splice(g.mobs.indexOf(m), 1); return window.__hits[id] || 0; }, r.id);
         if (!r.cast) out.ok = false;
         res[r.id] = r;
