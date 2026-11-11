@@ -57,19 +57,20 @@
       ],
       "dialogue": [
         { "who": "marisol", "line": "Splendid. Horrible, but splendid. They dissolve back into ink, did you see? I'll want a sample." },
-        { "who": "marisol", "line": "The three torn pages didn't stay here. The ink is pulling them up King's Parade, towards the Senate House. Something up there wants to be written." }
+        { "who": "marisol", "line": "The three torn pages didn't stay here. The ink is pulling them north, past Great St Mary's, towards the Senate House. Something up there wants to be written." }
       ] },
     { "id": "page_benet", "type": "collect", "item": "First page of the Saxon bell-book", "place": { "x": -137.8, "y": -100, "r": 1.6, "name": "Bene't Street" },
       "text": "Pick up the first torn page in the Bene't Street gutter",
+      "travel": { "x": -180, "y": 52, "look": [-213, 80], "caption": "You follow the ink trail north, past Great St Mary's, to Senate House Hill" },
       "dialogue": [
         { "who": "narrator", "line": "A page of vellum, the ink still wet. It lists the Saxon bell's peals by year, in a dozen hands. One line has been scratched through so hard the pen went through the skin." }
       ] },
-    { "id": "page_kings", "type": "collect", "item": "Second page of the Saxon bell-book", "place": { "x": -189, "y": 2, "r": 1.6, "name": "King's Parade" },
-      "text": "Follow the ink trail to the second page on King's Parade",
+    { "id": "page_kings", "type": "collect", "calm": 45, "item": "Second page of the Saxon bell-book", "place": { "x": -197, "y": 74, "r": 1.6, "name": "Senate House railings" },
+      "text": "Find the second page caught on the Senate House railings",
       "dialogue": [
-        { "who": "narrator", "line": "The second page is pinned under a bollard. It is the Concord oath, the one the twelve bells swore. A thirteenth line was added later, then scraped out." }
+        { "who": "narrator", "line": "The second page is plastered to the Senate House railings. It is the Concord oath, the one the twelve bells swore. A thirteenth line was added later, then scraped out." }
       ] },
-    { "id": "page_senate", "type": "collect", "item": "Third page of the Saxon bell-book", "place": { "x": -205, "y": 30, "r": 1.6, "name": "Senate House Passage" },
+    { "id": "page_senate", "type": "collect", "calm": 45, "item": "Third page of the Saxon bell-book", "place": { "x": -205, "y": 30, "r": 1.6, "name": "Senate House Passage" },
       "text": "Recover the third page in Senate House Passage",
       "intro": [
         { "who": "narrator", "line": "The ink runs uphill into Senate House Passage in a thin black stream, and the scratch of a pen echoes off the walls." }
@@ -78,9 +79,10 @@
         { "who": "narrator", "line": "Three pages. Laid together, the scraped line shows through: a name, and the words 'keeper of the thirteenth hour'." },
         { "who": "narrator", "line": "Before you can read the name, every word on the pages slides off the vellum and runs away across the lawn of the Senate House." }
       ] },
-    { "id": "scribe", "type": "kill", "mob": "blotted_scribe", "count": 1, "at": { "x": -195, "y": 82 },
+    { "id": "scribe", "type": "kill", "calm": 45, "mob": "blotted_scribe", "count": 1, "at": { "x": -195, "y": 82 },
       "checkpoint": { "x": -190, "y": 55, "name": "Senate House Hill", "look": [-195, 82] },
       "text": "Defeat the Blotted Scribe before the Senate House",
+      "travel": { "x": -150, "y": -101, "look": [-156, -110], "caption": "You carry the pages back down to Bene't Street and the Saxon tower" },
       "intro": [
         { "who": "narrator", "line": "Before the white columns of the Senate House the ink stands up: a hunched black scribe made of every crossed-out word in eight centuries of bell-books." },
         { "who": "narrator", "line": "It dips a claw into itself and begins to write you out." }

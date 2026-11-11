@@ -358,6 +358,10 @@ export async function install(game) {
     // NPC markers: only the NPC the current talk step points at
     for (const n of Object.values(npcs)) { const mk = n.g.userData.marker; mk.visible = s?.type === 'talk' && s.npc === n.id; mk.rotation.y += dt * 2; mk.position.y = 2.35 / (n.scale || 1) + Math.sin(game.time * 3) * 0.06; }
     if (st.phase === 'active' && s) {
+      if (s.calm && (st.calmT = (st.calmT || 0) - dt) <= 0) {   // step `calm: r`: the scene's ground stays clear of ambient packs and roaming bosses
+        st.calmT = 1; const c = s.at || s.place, S = sys();
+        if (S) for (const m of [...game.mobs]) if (!m.dead && !m.removed && !m.questMob && Math.hypot(m.x - c.x, m.y - c.y) < s.calm) S.remove(m);
+      }
       if ((s.type === 'reach' || s.type === 'collect') && Math.hypot(s.place.x - P.x, s.place.y - P.y) < s.place.r) completeStep();
       else if (s.type === 'kill') {
         if (st.kills >= s.count) completeStep();
