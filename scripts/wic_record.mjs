@@ -160,13 +160,16 @@ async function sceneMenusStory() {
       if (cap == null) break;
       await shot(page, 'story', `step${k + 1}.jpg`, String(cap));
     }
+    // issue 88ad: end the story scene (step 8 restores the view, encounters and HUD) before the HUD/menu shots
+    await page.evaluate(() => window.__wicStory(8));
+    await step(page, 0.5);
   } else {
     manifest.scenes.story.desc = 'The build has no scripted story scene; these are the frames right after starting a new game';
     await shot(page, 'story', 'start.jpg', 'immediately after choosing a class on a new game');
     await step(page, 3);
     await shot(page, 'story', 'start_3s.jpg', '3 s after the start of a new game, at the spawn point');
   }
-  await shot(page, 'menus', 'hud.jpg', 'in-game HUD at the spawn point');
+  await shot(page, 'menus', 'hud.jpg', hasStory ? 'in-game HUD 0.5 s after the story scene ends (the next chapter may be opening)' : 'in-game HUD at the spawn point');
   await page.keyboard.press('KeyI'); await step(page, 0.1);
   await shot(page, 'menus', 'inventory.jpg', 'inventory screen (I)');
   await page.keyboard.press('KeyI'); await page.keyboard.press('KeyT'); await step(page, 0.1);
