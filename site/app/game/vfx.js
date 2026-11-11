@@ -115,8 +115,11 @@ export function createVfx(game) {
   // "screen"-style blend kept for legacy sprites
   const SCREEN = { blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcColorFactor };
   const tone = (c, k = 0.8) => { const m = Math.max(c.r, c.g, c.b, 1e-3); const f = Math.min(1, 0.92 / m) * k; c.r *= f; c.g *= f; c.b *= f; return c; };
-  const NEAR = 'uniform float uNear0; uniform float uNear1;';   // near-camera fade band (m)
-  const nearU = () => ({ uNear0: { value: 1.2 }, uNear1: { value: 4.0 } });   // s76: was 0.7-2.6 m; spells cast at the camera whited out the screen
+  const NEAR = 'uniform float uNear0; uniform float uNear1; uniform float uCap;';   // near-camera fade band (m); uCap: additive budget
+  // Graphics s7: one shared brightness budget for all additive VFX. update() estimates how much of the screen the glow
+  // cores, flashes, sprites and shock rings cover and scales them down together when they would wash the frame out
+  const CAP = { value: 1 };
+  const nearU = () => ({ uNear0: { value: 1.2 }, uNear1: { value: 4.0 }, uCap: CAP });   // s76: was 0.7-2.6 m; spells cast at the camera whited out the screen
 
   // ---------------- particles ----------------
   let viewH = 720;
@@ -136,7 +139,7 @@ export function createVfx(game) {
         varying vec4 vC; varying float vTile; varying float vRot;
         void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); gl_Position = projectionMatrix * mv;
           float d = max(0.05, -mv.z); float px = misc.x * projectionMatrix[1][1] * 0.5 * uH / d;
-          float a = c4.a * smoothstep(uNear0, uNear1, d) * min(1.0, uMax / max(px, 1.0));
+          float a = c4.a * smoothstep(uNear0, uNear1, d) * min(1.0, uMax / max(px, 1.0))${additive ? ' * uCap' : ''};
           ${additive ? 'a = min(a, 0.6) * mix(1.0, 0.35, smoothstep(0.03 * uH, 0.12 * uH, px));' : ''}   // s76: big (near) additive sprites dimmer, alpha capped
           vC = vec4(c4.rgb, a); vTile = misc.y; vRot = misc.z; gl_PointSize = misc.x <= 0.0 || a < 0.004 ? 0.0 : min(px, uMax); }`,
       fragmentShader: `uniform sampler2D map; varying vec4 vC; varying float vTile; varying float vRot;
@@ -226,6 +229,8 @@ export function createVfx(game) {
   const sprites = pool(64, () => new THREE.Sprite(new THREE.SpriteMaterial({ map: glow, ...addMat() })));
   const flashes = pool(24, () => new THREE.Sprite(new THREE.SpriteMaterial({ map: star, ...addMat() })));
   // s76: at most 8 rayed flashes at once (a multi-hit spell stacked 20+ screen-blended flashes into a white frame)
+  const capRender = o => { o.onBeforeRender = (r, sc, c, g, m) => { o.userData.op = m.opacity; m.opacity *= CAP.value; }; o.onAfterRender = (r, sc, c, g, m) => { m.opacity = o.userData.op; }; return o; };
+  for (const o of [...sprites, ...flashes]) capRender(o);
   const takeFlash = () => { let n = 0; for (const o of flashes) if (o.visible && ++n >= 8) return null; return take(flashes); };
   const up = new THREE.Vector3(0, 1, 0), tv = new THREE.Vector3(), tv2 = new THREE.Vector3(), tv3 = new THREE.Vector3();
   const fxRec = [];
@@ -235,7 +240,7 @@ export function createVfx(game) {
 
   // shockwave rings (textured plane) and decals
   const planeGeo = new THREE.PlaneGeometry(2, 2); planeGeo.rotateX(-Math.PI / 2);
-  const shocks = pool(24, () => { const m = new THREE.Mesh(planeGeo, new THREE.MeshBasicMaterial({ map: shockTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false, side: THREE.DoubleSide })); m.renderOrder = 9; return m; });
+  const shocks = pool(24, () => { const m = capRender(new THREE.Mesh(planeGeo, new THREE.MeshBasicMaterial({ map: shockTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false, side: THREE.DoubleSide }))); m.renderOrder = 9; return m; });
   const decals = pool(24, () => { const m = new THREE.Mesh(planeGeo, new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false, fog: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -4 })); m.renderOrder = 2; return m; });
 
   // fresnel glow cores
@@ -245,9 +250,9 @@ export function createVfx(game) {
     vertexShader: `varying vec3 vN; varying vec3 vV; varying float vD; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalMatrix * normal; vV = -mv.xyz; vD = -mv.z; gl_Position = projectionMatrix * mv; }`,
     fragmentShader: `uniform vec3 uColor; uniform float uOp; ${NEAR} varying vec3 vN; varying vec3 vV; varying float vD;
       void main(){ float f = 1.0 - abs(dot(normalize(vN), normalize(vV)));
-        ${rim ? `vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.05, 0.75, f)) * (0.9 + 1.4 * f * f); float a = uOp * smoothstep(uNear0, uNear1, vD);`
+        ${rim ? `vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.05, 0.75, f)) * (0.9 + 1.4 * f * f); float a = uOp * uCap * smoothstep(uNear0, uNear1, vD);`
         // s84 (EnvVFX): cores are a white-hot centre fading to a soft coloured edge (the old fresnel rim drew a hard-edged disc); domes keep the rim
-        : `vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.0, 0.55, f)) * 1.35; float a = uOp * smoothstep(uNear0, uNear1, vD) * pow(1.0 - f, 1.4);`}
+        : `vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.0, 0.55, f)) * 1.35; float a = uOp * uCap * smoothstep(uNear0, uNear1, vD) * pow(1.0 - f, 1.4);`}
         gl_FragColor = vec4(c * a, a); }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
   });
@@ -261,7 +266,7 @@ export function createVfx(game) {
     vertexShader: `attribute float aA; varying float vA; varying vec2 vUv; varying float vD; void main(){ vA = aA; vUv = uv; vec4 mv = modelViewMatrix * vec4(position,1.0); vD = -mv.z; gl_Position = projectionMatrix * mv; }`,
     fragmentShader: `uniform vec3 uColor; uniform float uOp; ${NEAR} varying float vA; varying vec2 vUv; varying float vD;
       void main(){ float x = abs(vUv.y * 2.0 - 1.0); float halo = exp(-x * x * 3.5) * 0.6; float core = exp(-x * x * 30.0);
-        vec3 c = uColor * halo + mix(uColor, vec3(1.0), 0.65) * core; float a = vA * uOp * smoothstep(uNear0, uNear1, vD); gl_FragColor = vec4(c * a, a); }`,
+        vec3 c = uColor * halo + mix(uColor, vec3(1.0), 0.65) * core; float a = vA * uOp * uCap * smoothstep(uNear0, uNear1, vD); gl_FragColor = vec4(c * a, a); }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
   });
   function makeRibbon(nVerts, idx) {
@@ -797,6 +802,20 @@ export function createVfx(game) {
           break; }
       }
     }
+    capAdditive(cam);
+  }
+  const ADD_BUDGET = 0.22;   // screen fraction of full-strength additive glow allowed before everything is scaled down
+  function capAdditive(cam) {
+    if (!cam) return; const P = cam.projectionMatrix.elements[5], asp = cam.aspect || 16 / 9; let load = 0;
+    const acc = (o, r, op) => { if (!o.visible || op <= 0.01) return; const d = Math.max(0.3, o.position.distanceTo(camPos)), h = r * P / d * 0.5;
+      load += Math.min(1, Math.PI * h * h / asp) * Math.min(1, op); };
+    for (const o of cores) if (o.visible) acc(o, o.scale.x * 0.6, o.material.uniforms.uOp.value);
+    for (const o of sprites) acc(o, o.scale.x * 0.35, o.material.opacity);
+    for (const o of flashes) acc(o, o.scale.x * 0.3, o.material.opacity);
+    for (const o of shocks) acc(o, o.scale.x * 0.5, o.material.opacity * 0.5);
+    const f = load > ADD_BUDGET ? Math.max(0.35, Math.pow(ADD_BUDGET / load, 0.75)) : 1;
+    CAP.value += (f - CAP.value) * (f < CAP.value ? 1 : 0.15);   // drop at once, recover gently
+    CAP.load = load;
   }
   function dispose() {
     for (const L of lights) L.l.intensity = 0;
@@ -807,5 +826,5 @@ export function createVfx(game) {
   }
   return { burst, orb, release, ring, disc, beam, lightning, crackle, swirl, spike, dome, impact, update, dispose, glow, star, SCREEN, root,
     decal, debris, shardWave, trail, trailPush, trailEnd, streak, core, missile, moveMissile, releaseMissile, tether, sigil, light, quality: QUALITY,
-    fireball, flameColumn, flameWall, emberStreaks };
+    fireball, flameColumn, flameWall, emberStreaks, cap: CAP };
 }
