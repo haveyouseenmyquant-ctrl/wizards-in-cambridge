@@ -12,7 +12,7 @@ export function install(game) {
   const st = game.camClip = { boxes: null, near: [], nearT: 0, pulls: 0, lifts: 0, frames: 0, lift: 0, nx: 1e9, nz: 1e9 };
   const v = new T.Vector3(), m4 = new T.Matrix4(), q = new T.Quaternion(), up = new T.Vector3(0, 1, 0);
   function build() {
-    const zone = game.scene?.getObjectByName('zone'); if (!zone) return null;
+    const zone = game.scene?.getObjectByName('zone'); if (!zone) return [];
     zone.updateMatrixWorld(true);
     const boxes = [];
     zone.traverse(m => {

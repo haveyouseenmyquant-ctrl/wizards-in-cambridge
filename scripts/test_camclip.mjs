@@ -112,7 +112,7 @@ try {
           if (f < 4) continue;
           samples++;
           const c = cam.position, hit = boxes.find(b => inside(b, c.x, c.y, c.z));
-          if (hit) { insideN++; if (bad.length < 12) bad.push({ cc: { ...g.camClip, boxes: 0, near: g.camClip.near.length }, b: { y0: hit.y0, y1: hit.y1 }, spot: [+P.x.toFixed(1), +P.y.toFixed(1)], yaw: +P.yaw.toFixed(2), pitch, prop: hit.name, cam: [+c.x.toFixed(2), +c.y.toFixed(2), +c.z.toFixed(2)] }); }
+          if (hit) { insideN++; if (bad.length < 12) bad.push({ spot: [+P.x.toFixed(1), +P.y.toFixed(1)], yaw: +P.yaw.toFixed(2), pitch, prop: hit.name, cam: [+c.x.toFixed(2), +c.y.toFixed(2), +c.z.toFixed(2)] }); }
         }
       }
       await sleep(0);
