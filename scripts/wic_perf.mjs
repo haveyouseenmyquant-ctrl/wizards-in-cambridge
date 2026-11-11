@@ -163,6 +163,8 @@ async function main() {
     await page.keyboard.up('KeyW');
     await prof;
     detail.programs = [progs0, await page.evaluate('window.__renderer?.info.programs?.length ?? null')];   // shader programs at start/end of the run
+    // WIC_PROGLOG=1: every program linked after load (progate.js ?debug log: name, key, s since load, ready when first seen)
+    if (process.env.WIC_PROGLOG) for (const r of await page.evaluate('window.__progGate?.log || []')) log('prog', JSON.stringify(r), 'walkReady', (await page.evaluate('window.__walkReadyAt') / 1000).toFixed(2));
     if (PROFILE) log('census', JSON.stringify(await page.evaluate(() => {   // visible draw-producing objects per top-level scene child
       const out = {}, cam = window.__scene; if (!cam) return null;
       for (const c of window.__scene.children) { let n = 0, inst = 0; c.traverseVisible(o => { if (o.isMesh || o.isPoints || o.isLine) { n++; if (o.isInstancedMesh) inst++; } }); if (n) { const k = (c.name || c.type) + (inst ? `(${inst}i)` : ''); out[k] = (out[k] || 0) + n; } }

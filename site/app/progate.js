@@ -16,8 +16,12 @@ export function installProgGate(THREE, renderer, scene, camera, target = () => n
   };
   const inScene = o => { while (o.parent) o = o.parent; return o === scene; };
   const stats = { compiled: 0, held: 0 }, wrap = new THREE.Object3D();
-  if (/[?&]debug/.test(location.search)) window.__progGate = stats;
+  if (/[?&]debug/.test(location.search)) { window.__progGate = stats; stats.log = []; }
+  let nProg = 0;
   return () => {
+    // ?debug: every program three.js links: [key, s since load, by 'gate' (parallel compile) or 'draw' (linked on first draw)]
+    const logProgs = by => { const ps = renderer.info.programs || []; for (; nProg < ps.length; nProg++) stats.log.push([ps[nProg].cacheKey, +(performance.now() / 1000).toFixed(2), by]); };
+    if (stats.log) logProgs('draw');
     for (const [m] of held) {
       const p = renderer.properties.get(m).currentProgram;
       if (!p || p.isReady()) { m.visible = true; held.delete(m); }
@@ -38,8 +42,13 @@ export function installProgGate(THREE, renderer, scene, camera, target = () => n
     // compile for the buffer the scene pass draws into: tone mapping and output colour space are part of the program key
     const rt0 = renderer.getRenderTarget(); renderer.setRenderTarget(target());
     wrap.children = batch;   // a parentless stand-in: traverse() follows children only, the objects keep their real parents
+    // s8 (task 22df): compile() skips invisible objects, so pooled VFX (vfx.js adds its sprites/meshes hidden) linked
+    // their programs synchronously on the first cast; show them for the compile only
+    const hidden = []; wrap.traverse(c => { if (!c.visible) { c.visible = true; hidden.push(c); } });
     let mats = [];
     try { mats = renderer.compile(wrap, camera, scene); } catch (e) { }
+    for (const c of hidden) c.visible = false;
+    if (stats.log) logProgs('gate');
     wrap.children = [];
     renderer.setRenderTarget(rt0);
     stats.compiled += batch.length;
