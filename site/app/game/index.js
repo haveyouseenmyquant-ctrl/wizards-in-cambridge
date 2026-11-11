@@ -2,7 +2,7 @@
 // A module that fails to load is skipped (logged as a warning), so the world stays walkable.
 import { Game } from './core.js';
 
-export const MODULES = ['./hud.js', './classes.js', './mobs.js', './items.js', './progression.js', './wizard.js', './wizard_rig.js', './mob_rig.js', '../mobcull.js', './npc_rig.js', './feel.js', './combatcam.js', './quests.js', './tutorial.js', './tutorial_ui.js', './uipolish.js', './uiscreens.js', './uiframe.js', './audio_game.js'];
+export const MODULES = ['./hud.js', './classes.js', './mobs.js', './items.js', './progression.js', './wizard.js', './wizard_rig.js', './mob_rig.js', '../mobcull.js', './npc_rig.js', './feel.js', './combatcam.js', './camclip.js', './quests.js', './tutorial.js', './tutorial_ui.js', './uipolish.js', './uiscreens.js', './uiframe.js', './audio_game.js'];
 
 let pre = null;
 // started by main.js while the world tiles stream in, so the game modules are ready when the walk becomes playable

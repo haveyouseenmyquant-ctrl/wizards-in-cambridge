@@ -92,11 +92,17 @@ try {
     }
     const C = window.__zoneCut?.value, cam = g.camera || window.__scene.children.find(o => o.isCamera);
     let samples = 0, insideN = 0, used = 0; const bad = [];
+    const e0 = g.encounters.find(e => e.id === 'market-north') || g.encounters[0];
+    window.__player.teleport(e0.x, e0.y);
+    for (let i = 0; i < 60 && P.pendingPlace; i++) { P.update(0.05); await sleep(20); }
+    const z0 = P.z;
     P.view = 3; P.combatCam = true;
     for (const s of spots) {
-      window.__player.teleport(s.x, s.y);
-      if (P.pendingPlace) { for (let i = 0; i < 40 && P.pendingPlace; i++) { P.update(0.05); await sleep(10); } }
-      if (W.standAt(P.x, P.y, P.z) == null || Math.hypot(P.x - s.x, P.y - s.y) > 1.5) continue;
+      // placed directly (teleport's placement search may move the player off a spot beside a stall); ground only,
+      // never a canopy top: stand height searched from 1.5 m above the square's ground
+      const z = W.standAt(s.x, s.y, z0 + 1.5);
+      if (z == null || Math.abs(z - z0) > 1.2 || W.blocked(s.x, s.y, z + 0.1, 0.3, 0, 1.6)) continue;
+      P.x = s.x; P.y = s.y; P.z = z; P.vx = P.vy = P.vz = 0; P.pendingPlace = null;
       used++;
       for (let k = 0; k < 8; k++) for (const [pitch, camMax] of [[-0.3, 4.8], [0, null], [-0.6, null]]) {
         P.yaw = k * Math.PI / 4; P.pitch = pitch; P.camMax = camMax; P.camD = P.camP = null;
@@ -113,7 +119,7 @@ try {
     }
     P.camMax = null;
     return { camclip_frames_inside: insideN, samples, spots: used, spots_tried: spots.length, props: boxes.length,
-      stall_boxes: boxes.filter(b => /^market_stalls/.test(b.name)).length, bad };
+      z0, stall_boxes: boxes.filter(b => /^market_stalls/.test(b.name)).length, bad };
   });
   out.ok = out.camclip_frames_inside === 0 && out.samples >= 200 && out.stall_boxes > 0 && !errors.length;
 } catch (e) {

@@ -24,7 +24,7 @@ FILES = ["manifest.json", "index.html", "app/main.js", "app/rayaccel.js", "app/s
          # so a tiles-only rebuild (s18 roofs) gets a new hash and is rescored
          "tiles/digest.json", "collision/digest.json",
          # QA s6: game modules added since (tutorial, rigs, UI screens...) had never changed the hash
-         "app/ui.js", "app/game/combatcam.js", "app/game/explore_rig.js", "app/game/feel.js", "app/game/itemsets.js", "app/game/mob_rig.js",
+         "app/ui.js", "app/game/camclip.js", "app/game/combatcam.js", "app/game/explore_rig.js", "app/game/feel.js", "app/game/itemsets.js", "app/game/mob_rig.js",
          "app/game/progression.js", "app/game/tutorial.js", "app/game/uiframe.js", "app/game/uipolish.js", "app/game/uiscreens.js",
          "app/game/wizard_rig.js", "app/game/quests/ferry_bell.json", "app/game/quests/tutorial.json",
          # QA s7: tutorial UI (task 184f)
