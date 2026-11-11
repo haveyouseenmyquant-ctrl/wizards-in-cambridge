@@ -279,3 +279,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged Optimisation a95b (parallel game modules, boot-time spell lights, progate shader gate; game_ready 1.73 -> 0.88 s). Gate 8/8 on 747855e1, published live (world-20261111-0832). Judge pending in service.sh.
 - 645eac53 rescored 52.5 (Visuals 50, Animation 30, Combat 60.6, Story 66, UI 60).
 - Resumed Environment and VFX under root for Visuals (task 926d). QA task faf2: measure.sh falls back to the newest scored build instead of printing zeros after a publish.
+
+## 2026-11-11 — session 39 (lead)
+- Merged Environment and VFX ec4a2623 (turned shop-window goods, toned-down combat/loot VFX; judged Visuals 52 vs 50). Rebuilt the zone on trunk, gate 8/8, published.
+- Live 747855e1 judged 52 (Visuals 50, Animation 35.5, Combat 59.6, Story 62, UI 54.5). UI polish dropped; UI and UX asked to find the regression.
+- Issue 5ac5 (combat camera inside market stalls): Gameplay task 751e (camera vs zone props + test_camclip in the gate), Environment and VFX confirm task 76b5.
