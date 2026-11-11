@@ -103,5 +103,5 @@
   ],
   "checkpoint": { "x": -150, "y": -100, "name": "Bene't Street", "look": [-156, -110] },
   "rewards": { "xp": 750, "items": [ "quest_anchoress_taper" ], "title": "Reader of the Bell-Books" },
-  "next": "Follow the ticking up Trinity Street (coming soon)"
+  "next": "Follow the ticking up Trinity Street"
 }

@@ -1,0 +1,118 @@
+{
+  "id": "mainspring",
+  "main": true,
+  "chapter": "Chapter Five",
+  "title": "The Mainspring",
+  "summary": "Something on Trinity Street is ticking, and it is not a clock. Pip Hobbe follows the Unwinder's oil north, to a watchmaker's shop that should not be open at this hour.",
+  "npcs": {
+    "pip_benet": { "name": "Pip Hobbe", "role": "Hob of the Guildhall cellars", "x": -140, "y": -100.5, "face": 180, "scale": 0.62,
+              "robe": "#5b4a3a", "trim": "#c98b4a", "skin": "#b9a07a", "hair": "#3b3026", "hat": "hood" },
+    "pip_trinity": { "name": "Pip Hobbe", "role": "Hob of the Guildhall cellars", "x": -164.5, "y": 154, "face": 0, "scale": 0.62,
+              "robe": "#5b4a3a", "trim": "#c98b4a", "skin": "#b9a07a", "hair": "#3b3026", "hat": "hood" },
+    "tamsin": { "name": "Tamsin Ashdown", "role": "Clockmaker of Trinity Street", "x": -161, "y": 171.5, "face": 270,
+              "robe": "#4a5a52", "trim": "#c8a050", "skin": "#e0b894", "hair": "#8a4a2a", "hat": "none" },
+    "tamsin_gate": { "name": "Tamsin Ashdown", "role": "Clockmaker of Trinity Street", "x": -157.5, "y": 205, "face": 0, "appear": "rewind",
+              "robe": "#4a5a52", "trim": "#c8a050", "skin": "#e0b894", "hair": "#8a4a2a", "hat": "none" },
+    "corvin": { "name": "Corvin Ashdown", "role": "The Unwinder", "x": -163, "y": 231, "face": 180,
+              "robe": "#2a2a30", "trim": "#9a8a6a", "skin": "#d6b8a0", "hair": "#bdb6aa", "hat": "hood" },
+    "narrator": { "name": "", "role": "" }
+  },
+  "intro": [
+    { "who": "narrator", "line": "Four bells of twelve sleep easy again. Up the hill, past the Senate House, something keeps a beat that no clock in Cambridge was built to keep." }
+  ],
+  "steps": [
+    { "id": "pip", "type": "talk", "npc": "pip_benet",
+      "text": "Ask Pip Hobbe where the ticking is coming from",
+      "travel": { "x": -170, "y": 128, "look": [-165, 160], "caption": "Pip leads you up past the Senate House, nose to the gutter, onto Trinity Street" },
+      "dialogue": [
+        { "who": "pip_benet", "line": "Hear it, Late'un? Tick. Tick. Up the hill. Pip's ears hurt with it." },
+        { "who": "player", "line": "Corvin's oil again?" },
+        { "who": "pip_benet", "line": "Oil and brass filings, all up Trinity Street. Come on. Stay close. Hobs don't like clockmakers. They count things." }
+      ] },
+    { "id": "drain", "type": "reach", "place": { "x": -166.5, "y": 147, "r": 2.2, "name": "Trinity Street drain" },
+      "text": "Follow Pip's nose up Trinity Street",
+      "intro": [
+        { "who": "narrator", "line": "Brass filings glitter in the gutter like spilt sugar. They lead uphill, towards one lit window." }
+      ],
+      "dialogue": [
+        { "who": "pip_trinity", "line": "There. The clock shop. Lamp's lit, sign says shut. Somebody's lying, and it ain't the sign." }
+      ] },
+    { "id": "tamsin", "type": "talk", "npc": "tamsin",
+      "text": "Confront the clockmaker, Tamsin Ashdown, outside her workshop",
+      "intro": [
+        { "who": "narrator", "line": "A young woman in a leather apron is locking the shop door from the outside. Her hands are black with oil." }
+      ],
+      "dialogue": [
+        { "who": "tamsin", "line": "We're closed. Repairs by appointment. Goodnight." },
+        { "who": "player", "line": "Your hands are covered in the same oil that put four bell-guardians to sleep.",
+          "choices": [
+            { "text": "Your hands are covered in his oil.", "reply": [ { "who": "tamsin", "line": "Half the clocks in Cambridge run on that oil. It proves nothing." } ] },
+            { "text": "Ashdown. Corvin is your family.", "reply": [ { "who": "tamsin", "line": "He's my uncle. That isn't a crime. Not yet." } ] }
+          ] },
+        { "who": "tamsin", "line": "Fine. He came to me a month ago. He wanted a key cut to a pattern no locksmith would touch. I cut it. I didn't ask." },
+        { "who": "tamsin", "line": "Behind my back wall there is a ward-clock, the Mainspring. It keeps the street's hour. Tonight he's been in there, and it's running down." },
+        { "who": "tamsin", "line": "Listen. Hear that? The bicycles are moving." }
+      ] },
+    { "id": "bikes", "type": "kill", "calm": 40, "spawn": [ "bicycle_golem", "automaton", "bicycle_golem", "automaton" ], "at": { "x": -159.5, "y": 190 }, "count": 4, "exit": "tamsin",
+      "text": "Stop the Bicycle-Golems and Clockwork Porters assembling on Trinity Street",
+      "intro": [
+        { "who": "narrator", "line": "Up and down Trinity Street the parked bicycles shake off their locks. Moss crawls up the frames and stands them on their back wheels." },
+        { "who": "narrator", "line": "Behind them two brass porters wind themselves up out of a shop doorway, keys turning in their backs." }
+      ],
+      "dialogue": [
+        { "who": "tamsin", "line": "Those porters are my uncle's work. I'd know his rivets anywhere. He's winding the whole street against us." },
+        { "who": "tamsin", "line": "The Mainspring's door is in the wall up by the Great Gate. Go. I'll follow when my hands stop shaking." }
+      ] },
+    { "id": "ward_clock", "type": "reach", "calm": 40, "place": { "x": -159, "y": 218, "r": 2.2, "name": "Ward-clock door" },
+      "text": "Find the Mainspring's hidden door near the Great Gate",
+      "intro": [
+        { "who": "narrator", "line": "The taper in your hand flares. A door that was not there a moment ago outlines itself in the old brick, ticking." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "Inside, a clock without a face: a great coiled spring of black steel, nearly slack. Each tick comes slower than the last." },
+        { "who": "narrator", "line": "Someone is standing in front of the gate, waiting for you." }
+      ] },
+    { "id": "corvin", "type": "talk", "npc": "corvin", "calm": 40, "exit": true,
+      "text": "Face the man waiting by the Great Gate",
+      "intro": [
+        { "who": "narrator", "line": "A grey-haired man in a long dark coat, keys at his belt, oil on his cuffs. He looks tired rather than wicked." }
+      ],
+      "dialogue": [
+        { "who": "corvin", "line": "You must be the Latecomer. The one who keeps waking things I put to sleep. Go home." },
+        { "who": "player", "line": "You're unwinding the city's guardians, Corvin. Why?",
+          "choices": [
+            { "text": "Why are you doing this?", "reply": [ { "who": "corvin", "line": "Because twelve bells were never the whole oath. Someone scraped out the thirteenth. I mean to read it." } ] },
+            { "text": "Your niece is ashamed of you.", "reply": [ { "who": "corvin", "line": "Tamsin will understand. She always takes a thing apart before she judges it." } ] }
+          ] },
+        { "who": "corvin", "line": "The Mainspring is unwound. What's left is its guardian, and it does not know me any more. It will not know you either." },
+        { "who": "narrator", "line": "He steps back into the shadow of the gate, turns a key in nothing, and is gone. Something behind the wall begins to tick very loudly." }
+      ] },
+    { "id": "engine", "type": "kill", "calm": 45, "mob": "escapement_engine", "count": 1, "at": { "x": -158, "y": 214 },
+      "checkpoint": { "x": -158.5, "y": 196, "name": "Trinity Street", "look": [-158, 214] },
+      "text": "Defeat the Escapement Engine before the Great Gate",
+      "intro": [
+        { "who": "narrator", "line": "The wall opens like a clock case. Out of it walks a thing of brass and oak the height of a shop-front, an escapement wheel turning in its chest." },
+        { "who": "narrator", "line": "It moves on the beat. Every blow lands on the tick. Learn the beat, and you can step between them." }
+      ],
+      "dialogue": [
+        { "who": "narrator", "line": "The escapement wheel jams on a broken tooth. The Engine stops mid-stride, sighs out a breath of hot oil, and sits down on the setts like a tired porter." },
+        { "who": "narrator", "line": "Behind you, a lamp swings up the street. Tamsin, running." }
+      ] },
+    { "id": "rewind", "type": "talk", "npc": "tamsin_gate",
+      "text": "Help Tamsin decide what to do with the Mainspring",
+      "dialogue": [
+        { "who": "tamsin_gate", "line": "He was here, wasn't he. He left you to be ticked to death by his own guardian." },
+        { "who": "tamsin_gate", "line": "I can rewind the Mainspring. It'll take me all night, and he'll know it was me." },
+        { "who": "player", "line": "Then he'll know whose side you're on.",
+          "choices": [
+            { "text": "Then he'll know whose side you're on.", "reply": [ { "who": "tamsin_gate", "line": "Yes. I suppose he will." } ] },
+            { "text": "You don't have to choose tonight.", "reply": [ { "who": "tamsin_gate", "line": "I do, though. That's the thing about clocks. They don't wait for you." } ] }
+          ] },
+        { "who": "tamsin_gate", "line": "Take my loupe. It finds the weak tooth in anything that ticks. You'll need it more than I will." },
+        { "who": "tamsin_gate", "line": "And listen. He always said the conduit was the weak stitch. The water. He's going for Hobson's Conduit next." }
+      ] }
+  ],
+  "checkpoint": { "x": -166, "y": 140, "name": "Trinity Street", "look": [-164, 165] },
+  "rewards": { "xp": 850, "items": [ "quest_tamsins_loupe" ], "title": "Keeper of the Beat" },
+  "next": "Follow the water to Hobson's Conduit (coming soon)"
+}

@@ -256,7 +256,10 @@ The ten main quests move from the centre outwards, ring by ring. Quests 1 and 2 
 **Reward.** XP, the **Anchoress's Taper** (a light source that reveals hidden doors), and access to the Ink Hall as a hub with Marisol's sidequests.
 **Hand-off.** The restored pages show that Corvin's keys were cut for the gate locks on King's Parade, and Sister Agnes hears a lion roaring in the stones. That leads to Quest 5.
 
-### Quest 5: The Mainspring
+### Quest 5: The Mainspring (shipped sixth: quests/mainspring.json)
+
+**As shipped (s9, 11 Nov 2026).** Pip leads the player from Bene't Street onto Trinity Street; Tamsin is confronted outside her shop; the Bicycle-Golem and Porter pack assembles on Trinity Street itself (not Sidney Street); the ward-clock door and the Escapement Engine fight are by the Great Gate (scenery only); Corvin leaves through the gate before the fight; Tamsin then meets the player at the gate and chooses to rewind the Mainspring. Reward: Tamsin's Loupe (every fifth hit on one foe jams it for 1 s). Title: Keeper of the Beat.
+
 
 **Location.** Trinity Street and Sidney Street, Tamsin Ashdown's workshop, and the alleys to the Round Church. Great Gate and Gonville and Caius frontages appear as scenery only.
 **Objectives.**

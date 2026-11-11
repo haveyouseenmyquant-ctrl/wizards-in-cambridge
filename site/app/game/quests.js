@@ -6,7 +6,7 @@
 // API (game.quests): objective(), interact(), advance(), state, dialogueOpen; events 'questStep', 'questComplete'.
 // window.__wicStory(step) stages the opening beats for QA's judge recorder (caption string, null to end).
 import { ITEMS } from './itemdefs.js';
-import './story_mobs.js';   // quest bosses (Blotted Scribe)
+import './story_mobs.js';   // quest bosses (Blotted Scribe, Escapement Engine)
 import * as sfx from './sfx.js';
 
 const BASE = new URL('./quests/', import.meta.url);
@@ -37,6 +37,11 @@ ITEMS.quest_anchoress_taper = { name: "Anchoress's Taper", slot: 'wand', rarity:
   desc: "Sister Agnes's beeswax taper on a hazel stem. It lit St Bene't's tower through two plagues. Every kill rekindles it: restore 5 health and 5 mana.",
   fx(c) { c.on('kill', () => { const s = c.game.stats; s.mana = Math.min(s.maxMana, s.mana + 5); c.game.heal(5); c.S.fx?.burst?.(c.S.pp(1.2), 0xffd890, 10, 2, 0.5); }); },
   test(t) { const s = t.game.stats; s.mana = 10; s.hp = 50; t.game.emit('kill', {}); return [s.mana >= 15 && s.hp >= 55, `mana ${s.mana} hp ${s.hp}`]; } };
+
+ITEMS.quest_tamsins_loupe = { name: "Tamsin's Loupe", slot: 'amulet', rarity: 'epic', quest: true, stats: { critChance: 0.06, power: 0.04 },
+  desc: "A watchmaker's eyeglass on a brass chain. It finds the weak tooth in anything that ticks: every fifth hit on the same foe jams it for 1 s.",
+  fx(c) { c.on('hit', e => { const m = e.target; if (!m || m.dead || ((m.loupeN = (m.loupeN || 0) + 1) % 5)) return; m.stunUntil = Math.max(m.stunUntil || 0, c.game.time + 1); c.S.fx?.burst?.(c.S.mp?.(m, 1.4) ?? c.S.pp(1.2), 0xe8c36a, 12, 2, 0.5); }); },
+  test(t) { const m = t.mob(3, 0); m.stunUntil = 0; for (let i = 0; i < 5; i++) t.game.emit('hit', { target: m, amount: 1 }); return [m.stunUntil > t.game.time, `stun ${m.stunUntil}`]; } };
 
 const CSS = `
 #wic-q .q-track{position:absolute;right:16px;top:30vh;width:270px;padding:10px 12px;background:linear-gradient(90deg,rgba(14,12,10,0),rgba(14,12,10,.72) 18%);color:#f3e6c8;font:600 13px/1.35 system-ui,sans-serif;text-align:right;pointer-events:none;text-shadow:0 1px 2px #000}
@@ -143,7 +148,9 @@ export async function install(game) {
 
   function placeNpcs(q) {   // snapped to walkable ground once the tiles under them have streamed in
     for (const [id, n] of Object.entries(q.npcs)) {
-      if (n.x == null || npcs[id]?.placed) continue;
+      const ex = (s, i) => (s.exit === true ? s.npc : s.exit) === id && i < st.step;   // step `exit` (true = its npc, or an id): the NPC leaves after it
+      if (n.x == null || npcs[id]?.placed || q.steps.some(ex)) continue;
+      if (n.appear && !(q.steps.findIndex(s => s.id === n.appear) <= st.step)) continue;   // npc `appear: stepId`: walks on when that step starts
       if (!game.world.covered?.(n.x, n.y)) continue;
       const s = sys()?.findSpot?.(n.x, n.y, 6) || (game.groundAt(n.x, n.y) != null ? { x: n.x, y: n.y, z: game.groundAt(n.x, n.y) } : null);
       if (!s) continue;
@@ -180,6 +187,7 @@ export async function install(game) {
   function completeStep() {
     const s = cur(); st.phase = 'outro'; shard.visible = false; sfx.play?.('pickup');
     say(s.type === 'talk' ? [] : (s.dialogue || []), () => {
+      const gone = s.exit === true ? s.npc : s.exit; if (gone && npcs[gone]?.g) npcs[gone].g.visible = false;
       if (s.travel) travel(s.travel);
       st.step++; save[st.q.id].step = st.step; game.persist();
       if (st.step >= st.q.steps.length) return finish();
@@ -360,7 +368,7 @@ export async function install(game) {
     for (const n of Object.values(npcs)) { const mk = n.g.userData.marker; mk.visible = s?.type === 'talk' && s.npc === n.id; mk.rotation.y += dt * 2; mk.position.y = 2.35 / (n.scale || 1) + Math.sin(game.time * 3) * 0.06; }
     if (st.phase === 'active' && s) {
       if (s.calm && (st.calmT = (st.calmT || 0) - dt) <= 0) {   // step `calm: r`: the scene's ground stays clear of ambient packs and roaming bosses
-        st.calmT = 1; const c = s.at || s.place, S = sys();
+        st.calmT = 1; const c = s.at || s.place || npcs[s.npc] || st.q.npcs[s.npc], S = sys();
         if (S) for (const m of [...game.mobs]) if (!m.dead && !m.removed && !m.questMob && Math.hypot(m.x - c.x, m.y - c.y) < s.calm) S.remove(m);
       }
       if ((s.type === 'reach' || s.type === 'collect') && Math.hypot(s.place.x - P.x, s.place.y - P.y) < s.place.r) completeStep();
