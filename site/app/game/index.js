@@ -17,6 +17,8 @@ export async function startGame(ctx) {
   MODULES.forEach((m, i) => {
     try { if (mods[i] instanceof Error) throw mods[i]; mods[i].install?.(game); } catch (e) { console.warn('[game] module', m, 'not loaded:', e.message); }
   });
+  // module data the game needs from its first frame (mobs.js: encounters), normally already loaded by the prefetch
+  await Promise.all(mods.map(m => m instanceof Error ? null : m.ready?.catch?.(e => console.warn('[game] module data', e.message))));
   T.installed = performance.now();
   game.emit('ready', {});
   return game;

@@ -2251,8 +2251,9 @@ class MobSystem {
   }
 }
 
-export async function loadEncounters() {
-  if (ENCOUNTERS.length) return ENCOUNTERS;
+let encLoad = null;
+export function loadEncounters() { return encLoad ||= fetchEncounters(); }
+async function fetchEncounters() {
   const r = await fetch(new URL('./encounters.json', import.meta.url));
   const list = await r.json();
   // session 46: denser packs near the centre (runtime only; encounters.json stays as authored for the KPI tooling)
@@ -2299,3 +2300,7 @@ export function install(game) {
     return res;
   };
 }
+
+// Optimisation s6 (a95b): fetched as soon as the module is evaluated (game/index.js prefetches it during the world load);
+// startGame() waits for this before reporting the game ready, so game.encounters is filled from the first frame
+export const ready = loadEncounters();
