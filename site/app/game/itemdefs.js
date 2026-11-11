@@ -257,8 +257,10 @@ const U2 = {
     desc: 'Dashing throws up a splash that knocks foes within 2.5 m back 2 m.',
     fx(c) { c.on('dash', () => { const g = c.game, p = g.player; c.S.fx.ring(p.x, p.y, p.z + 0.05, 0x6ab8ff, 2.5, 0.4); c.S.fx.burst(c.S.pp(0.2), 0x9fd4ff, 30, 4, 0.6);
       for (const m of g.mobsNear(p.x, p.y, 2.5)) { const k = toward(m, p, 2), nx = m.x + k.x, ny = m.y + k.y; const z = g.groundAt(nx, ny, (m.z ?? p.z) + 1);
-        if (z != null && Math.abs(z - (m.z ?? p.z)) < 1) { m.x = nx; m.y = ny; m.z = z; } c.S.fx.burst(c.S.mp(m, 0.3), 0x9fd4ff, 10, 2, 0.5); } }); },
-    test(t) { const m = t.mob(1.5, 0), x0 = m.x; t.game.emit('dash', {}); return [m.x > x0 + 1.5, `pushed ${(m.x - x0).toFixed(2)} m`]; } },
+        if (z == null || Math.abs(z - (m.z ?? p.z)) < 1) { m.x = nx; m.y = ny; if (z != null) m.z = z; } /* no ground data yet: push on the flat */ c.S.fx.burst(c.S.mp(m, 0.3), 0x9fd4ff, 10, 2, 0.5); } }); },
+    // f130: the push is skipped onto walls/steps, so the stub goes on the first side with flat ground 3.5 m out (was always +x)
+    test(t) { const g = t.game, p = g.player; let a = 0; for (let i = 0; i < 8; i++) { const z = g.groundAt(p.x + Math.cos(i * 0.785) * 3.5, p.y + Math.sin(i * 0.785) * 3.5, p.z + 1); if (z != null && Math.abs(z - p.z) < 0.5) { a = i * 0.785; break; } }
+      const m = t.mob(Math.cos(a) * 1.5, Math.sin(a) * 1.5), x0 = m.x, y0 = m.y; g.emit('dash', {}); const d = Math.hypot(m.x - x0, m.y - y0); return [d > 1.5, `pushed ${d.toFixed(2)} m`]; } },
   boots_parkers: { name: "Parker's Piece Sprint Spikes", slot: 'boots', rarity: 'rare', stats: { speedMult: 0.06 },
     desc: 'Dashing trails a lightning wake: 14 storm damage where you start and where you end the dash.',
     fx(c) { c.on('dash', () => { const g = c.game, p = g.player, x0 = p.x, y0 = p.y, z0 = p.z;
