@@ -94,7 +94,7 @@
   ],
   "reasons": {
    "Visuals": {
-    "all": "The city is coherent, with a consistent art direction. Lighting works: real-time sun shadows, warm low-sun scenes with bloom, and some atmospheric haze. Market stalls, bikes, railings and a gothic church give some recognisable landmarks. Geometry is still mostly boxy, though: façades are flat and repetitive, shop goods are primitive shapes, materials are plain, and there is little clutter or wear. The wizard characters are small and low in detail, and the combat VFX are basic flat translucent shapes."
+    "all": "The city is coherent, with a consistent art direction. Lighting works: real-time sun shadows, warm low-sun scenes with bloom, and some atmospheric haze. Market stalls, bikes, railings and a gothic church give some recognisable landmarks. Geometry is still mostly boxy, though: fa\u00e7ades are flat and repetitive, shop goods are primitive shapes, materials are plain, and there is little clutter or wear. The wizard characters are small and low in detail, and the combat VFX are basic flat translucent shapes."
    },
    "Animation": {
     "all": "In the four walking frames the player has almost the same rear pose, with no clear stride or secondary motion in the robe or hat. A few combat frames suggest a cast pose (staff raised in frames 6 and 7, a 'STAGGERED' label), but attacks show up mostly as effects and light columns, and there is no clear matching body motion. Enemies are barely visible: the one in frame 8 looks like a static white blob, with no wind-ups, hit reactions or deaths shown. There is also no environmental motion, such as crowds or swaying foliage."
@@ -114,5 +114,58 @@
   }
  },
  "main_quests_shipped": 4,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 7.9,
+  "main_quests_shipped": 4,
+  "wall_s": 83,
+  "at": "2026-11-11T12:50:18.535Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true
+ }
 }
