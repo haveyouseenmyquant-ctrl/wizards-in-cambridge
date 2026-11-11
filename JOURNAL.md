@@ -400,3 +400,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-11 — session 61 (lead)
 - No team branch had new commits. Committed service scores: 1e123d10 playtest 100% (warden 3/3; judge not yet run).
 - Gameplay c98c could never pass its check (full 4-class recording ~400 s > 5-min cap): cancelled, replaced by 3da4 (warden+hexweaver recording). Notes to Gameplay (commit early, stale memory), Story (7aca margin then Quest 7), QA (100c first).
+
+## 2026-11-11 — session 62 (lead)
+- Merged Story s10: Quest 7 The Conduit Runs Dry (Lode-Wyrm boss, Conduit Flask), boss leash heal-loop fix in mobs.js, quest bosses 60 m leash. Gate 10/10 on b9bf766b (quest_bot flaky on first try), published.
+- Resolved issue 4801. Issue 106f (mobs.js boss leash/pyro deaths) -> Story 7e65. Gameplay noted: 5 sessions without a commit; retire next session if still empty.
