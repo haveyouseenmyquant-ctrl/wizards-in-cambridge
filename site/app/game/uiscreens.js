@@ -172,7 +172,7 @@ export function install(game) {
     if (d < 24 && (m.boss || m.state === 'chase' || m.state === 'windup' || m.state === 'active' || m.hp < m.maxHp)) return true; } return false; };
   const shown = cls => document.querySelectorAll(`#game-hud .${cls}`).length;
   const story = () => !!game.uiFrame?.storyBusy?.();   // uiframe.js: a dialogue box or quest card is up, so loot/toasts wait
-  if (loot0) hud.loot = (...a) => { if (story()) { lq.push(a); if (lq.length > 6) lq.shift(); return null; } if (inCombat() && (shown('gh-loot') >= 1 || lq.length)) { lq.push(a); if (lq.length > 4) lq.splice(Math.max(0, lq.findIndex(x => x[1] === 'common')), 1); return null; } return loot0(...a); };
+  if (loot0) hud.loot = (...a) => { if (story()) { lq.push(a); if (lq.length > 6) lq.shift(); return null; } if ((inCombat() && shown('gh-loot') >= 1) || shown('gh-loot') >= 3 || lq.length) { if (!lq.some(x => x[0] === a[0])) lq.push(a); if (lq.length > 4) lq.splice(Math.max(0, lq.findIndex(x => x[1] === 'common')), 1); return null; } return loot0(...a); };
   if (toast0) hud.toast = (...a) => { if (story()) { if (!tq.some(x => x[0] === a[0])) tq.push(a); return null; } if (inCombat() && (shown('gh-toast') >= 2 || tq.length)) { if (!tq.some(x => x[0] === a[0])) tq.push(a); if (tq.length > 3) tq.shift(); return null; } return toast0(...a); };
   offs.push(() => { if (loot0) hud.loot = loot0; if (toast0) hud.toast = toast0; });
   let qT = 0;
@@ -188,7 +188,7 @@ export function install(game) {
       if (menu) decorate();
       if ((qT -= dt) > 0 || (!lq.length && !tq.length) || story()) return;
       const fight = inCombat();
-      if (lq.length && shown('gh-loot') < (fight ? 1 : 2)) { loot0(...lq.shift()); qT = 0.6; }
+      if (lq.length && shown('gh-loot') < (fight ? 1 : 3)) { loot0(...lq.shift()); qT = 0.6; }
       else if (tq.length && shown('gh-toast') < (fight ? 2 : 3)) { toast0(...tq.shift()); qT = 0.4; }
     },
     dispose() { for (const f of offs) f(); },

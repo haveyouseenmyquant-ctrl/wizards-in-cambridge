@@ -24,7 +24,7 @@ button:disabled { opacity: .45; cursor: default; }
 .keys td, .keys th { padding: 2px 6px; vertical-align: top; text-align: left; }
 .keys th { padding-top: 8px; }
 .keys td:first-child { white-space: nowrap; font-weight: 600; }
-#touch-buttons { position: fixed; right: 12px; bottom: 150px; display: grid; grid-template-columns: repeat(3, 58px); gap: 8px; touch-action: none; }
+#touch-buttons { position: fixed; right: 12px; bottom: 150px; display: grid; grid-template-columns: repeat(4, 58px); gap: 8px; touch-action: none; }
 #touch-buttons button { height: 48px; padding: 0; font-size: 12px; background: rgba(255,255,255,.55); user-select: none; -webkit-user-select: none; }
 #touch-buttons button.on { background: rgba(255,210,120,.85); }
 
