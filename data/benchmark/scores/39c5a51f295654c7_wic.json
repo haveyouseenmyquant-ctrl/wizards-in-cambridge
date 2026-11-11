@@ -1,4 +1,124 @@
 {
  "main_quests_shipped": 5,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 8.1,
+  "main_quests_shipped": 5,
+  "wall_s": 86,
+  "at": "2026-11-11T16:28:28.660Z"
+ },
+ "judged_game_quality": 53.6,
+ "judged_sections": {
+  "Visuals": 52.0,
+  "Animation": 32.0,
+  "Combat feel": 59.0,
+  "Story presentation": 66.0,
+  "UI polish": 64.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    52.0,
+    50.0,
+    52.0
+   ],
+   "Animation": [
+    32.0,
+    32.0,
+    32.0
+   ],
+   "Combat feel": [
+    59.5,
+    59.0,
+    58.5
+   ],
+   "Story presentation": [
+    66.0,
+    64.0,
+    66.0
+   ],
+   "UI polish": [
+    66.0,
+    64.0,
+    64.0
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 2.0,
+   "Animation": 0.0,
+   "Combat feel": 1.0,
+   "Story presentation": 2.0,
+   "UI polish": 2.0
+  },
+  "quality_spread": 1.2,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together as one place: recognisable building types, market stalls, bikes, railings and a tree, plus real-time shadows, warm low-sun lighting and some haze in the distance. But most facades are flat, repeated textures with simple box geometry, there's little ambient occlusion or wear, and shop interiors are filled with primitive shapes. The characters are small and low-detail, the enemies are mostly hard-to-read white or blobby shapes, and the combat effects look like flat stacked billboards, which keeps it well short of the 60 anchor."
+   },
+   "Animation": {
+    "all": "The player character's walking pose looks almost the same in all four exploration frames: upright, viewed from behind, staff held the same way, with no visible stride or arm variation. In combat, the spell effects, beams and rings carry the action, and no cast, wind-up or hit-reaction poses can be seen; enemies are small, hard to read and show no distinct attack or death animations. There is no visible secondary motion (robes, hat), crowd or environmental motion, so the build sits below the basic walk/idle-cycle level."
+   },
+   "Combat feel": {
+    "hexweaver": "The combat clearly works and gives a lot of feedback. There are damage numbers and crit callouts, STAGGERED and INTERRUPTED tags, chain counters, a named boss with a health bar split into phases and a PHASE II banner, loot beams colour-coded by rarity with stat tooltips, and six spells on cooldown. But the effects are mostly generic glowing orbs and rings that are hard to read. Several frames have the camera pressed against a wall or a building, enemies are small and hard to make out, and only one class is shown. The player took 2 hits for 14 damage across the minute, which points to very little threat or telegraphing from enemies, and there is no visible evidence of hit-stop, knockback or crowd control changing the fight.",
+    "pyromancer": "There is real feedback on screen: floating damage numbers including big crits (319), white hit flashes, STAGGERED and ENRAGED banners, a boss bar split into phases, a chain counter, rarity-coloured loot toasts, and readable fire effects like the burst, ring and flame step across six spells. Readability is weak, though. Enemies are small or hidden behind effects and clutter, and half the frames show the pyromancer jogging through empty streets. The boss goes down in about 15 s with only 23 damage taken all fight, so there is little visible threat, telegraphing or crowd-control drama. There is no evidence of hit-stop or screen feedback, and 4001 sound voices in 60 s points to sound spam, not weight.",
+    "stormcaller": "Frames and event log show working combat: six distinct Stormcaller spells, lightning and field effects, damage and crit numbers, combo-chain counters, STAGGERED/INTERRUPTED states, a three-phase boss with a named telegraphed attack ('Belfry Drop'), and loot with rarity labels and beams. It falls short of 80 because effects are mostly thin lines and flat discs, with no visible hit-stop or screen shake, and enemies are small and hard to read in the market clutter. Combat is also lopsided: spark_lance is 52 of 84 casts and the player took only 2 hits in 60 s. Only one class is shown, so differences between classes can't be judged.",
+    "warden": "The frames show many 60-level features: a named boss with phase-marked health bar and an 'ENRAGED' phase banner, STAGGERED tags, damage numbers including crits, a chain counter, earth rune circles and shards, rarity-coloured loot beams and labels, and an epic-drop popup. Readability is the biggest gap. A large pale-blue shield sphere covers the player and target in most frames, enemies are small and hard to pick out, and the camera clips into walls in several frames (9\u201312). The fight also leans heavily on one attack (pebble_shot is 59 of 82 casts), and the boss dies within 15 s, so there's little visible depth or weight."
+   },
+   "Story presentation": {
+    "all": "The scene is well framed. It has letterboxed over-the-shoulder shots, named speakers with portraits and subtitles, and a reply choice with three options. A quest tracker shows distances, and the setting is a real place (Market Hill, Great St Mary's). The writing has a consistent and original tone and ends with a boss reveal and a quest-complete screen with rewards. The biggest gaps are the simple low-poly characters, whose faces and animation show no visible expression. The portraits are basic icons, there's no sign of voice acting, and nothing shows that the dialogue choice changes what happens."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent dark-and-gold style across the class select, HUD, inventory and talent screens. Tier rows, class-colour accents and rarity-coloured item labels give it clear hierarchy. Cooldown numbers, resource bars, the minimap and the quest tracker are all readable. The gaps: during combat, loot pop-ups and level-up text stack up on the left and their descriptions are cut off with ellipses. The talent and inventory icons are generic and low in contrast, with a lot of empty space. There is no visible enemy target frame or animated feedback beyond the 'VANQUISHED' banner."
+   }
+  }
+ }
 }
