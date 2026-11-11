@@ -269,3 +269,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - db8c: scripts/wic_perf_robust.py (service.sh perf step): waits for 1-min loadavg < 4 and no other test browser (max 20 min), runs wic_perf twice, keeps the higher fps_median, and records loadavg_before/after, waited_s, load_ok and runs[] in perf_detail. 73eed732 re-measured from a checkout of 126836d (its code, with today's tiles; the exact tiles are gone).
 - measure.sh (node) hashes with trunk's build_hash.py so it reads the same file trunk service.sh writes.
 - Perf: 73eed732 read 60/60 fps (loadavg 4.3-6.6) and 645eac53 60/60. The earlier 41 was most likely three leaked puppeteer Chromes (orphaned since 21:12 on 10 Nov, still rendering); I killed them, and service.sh now reaps orphaned test browsers older than 2 h on every pass.
+
+## 2026-11-11 — session 37 (lead)
+- Merged QA s7 into main: build_hash.py now hashes tutorial_ui.js and any unlisted game module (resolves issue 7fe1), and service.sh measures perf with load-robust best-of-2 runs and reaps leaked test browsers. The live build re-hashes from 9c5df3a4 to 645eac53 with identical files, so its scores were carried over.
+- Live: judged 51.7 (Visuals 48.5, Animation 29, Combat 58.5, Story 66, UI 61.5), quests 4, playtest 100, fps 60, load 0.44. Story presentation jumped 52 -> 66 after the dialogue staging merge; UI dipped.
+- Gave Story main quest 5 (ring 1, task 4ef8); nudged Graphics (a37e, Animation) and UI and UX (3daf).
