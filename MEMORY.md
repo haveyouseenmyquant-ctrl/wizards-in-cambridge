@@ -21,8 +21,6 @@
   graphics, ui-and-ux, story -> under root; Engineering/Art/Creative PAUSED. Merge team branches directly. Told Gaspard.
 - s34: nothing to merge. 429d69f1 judged 51.1 (V49.5 A32 C59.6 S52 UI64.5); fps pending. Issue 7fe1 -> QA task 184f (relinked; b77e cancelled).
   Judge theme: player tiny/hidden in combat -> noted Engineering (closer camera) + Art (secondary motion, VFX blowout, UI overlaps).
-- s33: merged Graphics 1e7c8bd (cast wind-up, mob hit lean, rigged-mob cam clearance) DIRECTLY (Art idle again), gate 8/8,
-  published live 429d69f1 (judge pending). 3e26ba7c judged 51.3 (V50 A31 C60.1 S50 UI67). QA task b77e: tutorial_ui.js unhashed (issue 7fe1).
 - s30: merged Engineering de1d861, published 0f9b1cd6.
   Structure restored: story -> Creative, graphics + ui-and-ux -> Art; Art + Creative resumed (Audio, EnvVFX, Marketing still paused).
 - Paused since s22-24: Marketing, Brand, Optimisation, Audio, Graphics, EnvVFX (resume ~1/5 marketing later).
