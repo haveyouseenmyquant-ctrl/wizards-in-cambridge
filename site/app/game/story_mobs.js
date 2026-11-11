@@ -44,9 +44,9 @@ registerMobType({ id: 'escapement_engine', model: 'automaton', death: 'collapse'
 registerMobType({ id: 'lode_wyrm', model: 'river_wraith', death: 'dissolve', scale: 3.2, name: "The Lode-Wyrm of Parker's Piece", boss: true,
   hp: 900, speed: 2.8, radius: 1.5, xp: 540, aggro: 18, leash: 55, flying: false, hover: 0, color: 0x3a8a70, deathColor: 0x2a2418, knockResist: 1, deathDur: 1.8,
   loot: [{ rarity: 'rare', chance: 1 }, { rarity: 'rare', chance: 0.6 }, { rarity: 'epic', chance: 0.55 }, { rarity: 'legendary', chance: 0.18 }],
-  phases: [   // I: lash, spit, undertow; II: the turf gives way (sinkholes) and the wyrm surges along the old channel
-    { at: 1.0, attacks: ['lash', 'spit', 'undertow'] },
-    { at: 0.5, attacks: ['lash', 'spit', 'sinkhole', 'surge'], speed: 1.25, windup: 0.85, cd: 0.75, enrage: true },
+  phases: [   // I: lash, spit, surge along the old channel; II: the turf gives way (sinkholes) and the undertow pulls
+    { at: 1.0, attacks: ['lash', 'spit', 'surge'] },
+    { at: 0.5, attacks: ['lash', 'spit', 'sinkhole', 'undertow'], speed: 1.2, windup: 0.9, cd: 0.85, enrage: true },
   ],
   attacks: [
     { id: 'lash', name: 'Peat Lash', kind: 'line', range: 4.5, len: 6, w: 2.6, windup: 0.8, cd: 2.2, dmg: 17 },

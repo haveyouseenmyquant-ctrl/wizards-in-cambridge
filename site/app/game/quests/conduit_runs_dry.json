@@ -67,7 +67,7 @@
         { "who": "narrator", "line": "Out of the hole rises a long, dripping body of peat and weed, with the conduit's old iron sluice-gates still caught in its jaws." }
       ] },
     { "id": "wyrm", "type": "kill", "calm": 50, "mob": "lode_wyrm", "count": 1, "at": { "x": 470, "y": -295 },
-      "checkpoint": { "x": 352, "y": -318, "name": "Regent Street", "look": [470, -295] },
+      "checkpoint": { "x": 428, "y": -302, "name": "Parker's Piece", "look": [470, -295] },
       "text": "Defeat the Lode-Wyrm on Parker's Piece",
       "intro": [
         { "who": "narrator", "line": "The Lode-Wyrm: the conduit's own guardian, drowned in fen-water and turned. It does not stay above ground for long." },
