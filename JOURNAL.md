@@ -404,3 +404,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-11 — session 62 (lead)
 - Merged Story s10: Quest 7 The Conduit Runs Dry (Lode-Wyrm boss, Conduit Flask), boss leash heal-loop fix in mobs.js, quest bosses 60 m leash. Gate 10/10 on b9bf766b (quest_bot flaky on first try), published.
 - Resolved issue 4801. Issue 106f (mobs.js boss leash/pyro deaths) -> Story 7e65. Gameplay noted: 5 sessions without a commit; retire next session if still empty.
+
+## 2026-11-11 — session 63 (lead)
+- No team branch had new commits; committed service scores. b9bf766b playtest 91.7% (pyromancer softlock kings-parade, QA a756); judge not run yet.
+- Retired Gameplay (6 sessions without a commit). Camera clip issue 4a30 -> Optimisation 2409; Combat feel > 66 -> Story 2f47 after leash task 7e65. All 5 open issues have open tasks.
