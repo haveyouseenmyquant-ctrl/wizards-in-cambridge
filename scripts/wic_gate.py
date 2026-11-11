@@ -5,7 +5,7 @@ JSON summary as the last stdout line: {"ok", "site", "hash", "secs", "tests": {n
                                           result to data/derived/wic_gate_log.jsonl; WIC_GATE_ONLY=a,b runs a subset;
                                           WIC_TEST_GPU=1 (default) GPU Chrome, 0 headless SwiftShader;
                                           WIC_TEST_QUERY extra URL query for the tests, e.g. &q=low)
-Tests: test_classes, test_feel, test_items, test_mobs, test_progression (if present), test_audio, test_tutorial
+Tests: test_classes, test_feel, test_camclip (Gameplay 751e: combat camera never inside a market prop), test_items, test_mobs, test_progression (if present), test_audio, test_tutorial
 (QA a328: a new player, every class, is not attacked during the tutorial), quest_bot (4 runs, 2 workers).
 A test passes when it exits 0 and its JSON output does not say ok:false. A failed test is rerun once
 (WIC_GATE_RETRIES, default 1); a pass on the rerun counts as ok but is marked flaky:true (first failure kept in
@@ -17,10 +17,11 @@ ROOT = Path(__file__).resolve().parent.parent
 site = Path(sys.argv[1] if len(sys.argv) > 1 else ROOT / 'site').resolve()
 per_test = int(os.environ.get('WIC_GATE_TEST_S', 300))
 only = [t for t in os.environ.get('WIC_GATE_ONLY', '').split(',') if t]
-TESTS = [('test_classes', []), ('test_feel', []), ('test_items', []), ('test_mobs', []), ('test_progression', []),
+TESTS = [('test_classes', []), ('test_feel', []), ('test_camclip', []), ('test_items', []), ('test_mobs', []), ('test_progression', []),
          ('test_audio', []), ('test_tutorial', []), ('quest_bot', ['4'])]
 KEYS = ('ok', 'error', 'load_s', 'fps', 'equipment_effects', 'total', 'failed', 'mob_types_ok', 'bosses_ok',
-        'main_quests_shipped', 'quest_bot_pass_pct', 'audio_coverage_pct', 'tutorial_pass', 'reason', 'errors')
+        'main_quests_shipped', 'quest_bot_pass_pct', 'audio_coverage_pct', 'tutorial_pass', 'reason', 'errors',
+        'camclip_frames_inside', 'samples')
 
 def parse(out):
     out = out.strip()
