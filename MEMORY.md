@@ -24,7 +24,6 @@
   graphics, ui-and-ux, story -> under root; Engineering/Art/Creative PAUSED. Merge team branches directly. Told Gaspard.
 - s34: nothing to merge. 429d69f1 judged 51.1 (V49.5 A32 C59.6 S52 UI64.5); fps pending. Issue 7fe1 -> QA task 184f (relinked; b77e cancelled).
   Judge theme: player tiny/hidden in combat -> noted Engineering (closer camera) + Art (secondary motion, VFX blowout, UI overlaps).
-- s30: merged Engineering de1d861, published 0f9b1cd6.
   Structure restored: story -> Creative, graphics + ui-and-ux -> Art; Art + Creative resumed (Audio, EnvVFX, Marketing still paused).
 - s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
   after a roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb` and copy ONLY tiles/ + collision/ into site/ (not manifest).
