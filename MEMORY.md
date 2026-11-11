@@ -22,8 +22,6 @@
   published live 429d69f1 (judge pending). 3e26ba7c judged 51.3 (V50 A31 C60.1 S50 UI67). QA task b77e: tutorial_ui.js unhashed (issue 7fe1).
 - s32: merged UI @6a27c0f (616a tutorial_ui, b95c touch Satchel, 3daf loot cards) DIRECTLY to main (Art idle), gate 8/8
   hash 3e26ba7c, published. Resolved issues intr + 2d7e, cancelled b95c. Judge of 3e26ba7c pending in service.sh.
-- s31: nothing to merge; service.sh judged live 0f9b1cd6 = 52.0 (V52 A33 C59.4 S51 UI66) (runs when no session_active file; earlier 17d78dad judge went stale).
-  Don't run a 2nd browser while it records. Noted Art: UI does 616a + b95c first.
 - s30: merged Engineering de1d861 (mobcull/instpool), gate 8/8, published live 0f9b1cd6 (judge pending in service.sh).
   Structure restored: story -> Creative, graphics + ui-and-ux -> Art; Art + Creative resumed (Audio, EnvVFX, Marketing still paused).
   Next: check Art/Creative actually merge their teams; if a manager idles 2 sessions, flatten again and tell Gaspard.
