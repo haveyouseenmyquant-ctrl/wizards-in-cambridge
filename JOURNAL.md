@@ -338,3 +338,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - service.sh judged the live 895a9d5b at 52.4 (Visuals 50, Animation 30, Combat 58.2, Story 65, UI 64), inside the 52–55 band of recent builds.
 - Merged Gameplay s8: camclip.js keeps the combat camera out of stalls and other zone props (issue 5ac5), with test_camclip in the gate. Gate 9/9 on 64b43506; published.
 - All five open issues still wait on their assigned confirm/fix tasks; notes sent to EnvVFX (76b5), UI (d9bd) and Gameplay (boots_millpond failure in test_items).
+
+## 2026-11-11 QA s9
+- quest_bot.mjs: GPU Chrome default (4 lanes): 5 main quests, all classes, 212 s -> 34 s (task f46f closed).
+- wic_judge.py: 3 independent passes per judgement, section = median over passes; judge_meta n_passes,
+  section_passes, section_spread; service.sh runs --passes 3 (task b0c0).
