@@ -125,6 +125,15 @@ def jobs(man, rec):
     return out
 
 
+def merge_cam(out, cc):
+    cur = json.load(open(out)) if os.path.exists(out) and os.path.getsize(out) else {}
+    cur.update({k: cc[k] for k in ("cam_clip_pct", "cam_clip_combat_pct", "cam_clip_probed", "cam_clip_frames") if k in cc})
+    os.makedirs(SCORES, exist_ok=True)
+    with open(out + ".tmp", "w") as f:
+        json.dump(cur, f, indent=1)
+    os.replace(out + ".tmp", out)
+
+
 def main():
     a = sys.argv[1:]
     rec = os.path.abspath(a[0])
@@ -137,10 +146,12 @@ def main():
     assert set(WEIGHTS) <= set(secs), f"RUBRIC.md lacks sections {set(WEIGHTS) - set(secs)}"
     out = os.path.join(SCORES, f"{h}_wic.json")
     cur = json.load(open(out)) if os.path.exists(out) and os.path.getsize(out) else {}
+    man = json.load(open(os.path.join(rec, "manifest.json")))
+    if "cam_clip" in man:   # QA s10: the recording's camera-clip probe (not shown to the judge)
+        merge_cam(out, man["cam_clip"])
     if "-f" not in a and cur.get("judge_meta", {}).get("rubric_sha") == rsha and "judged_game_quality" in cur:
         print(json.dumps({k: cur[k] for k in ("judged_game_quality", "judged_sections")}))
         return
-    man = json.load(open(os.path.join(rec, "manifest.json")))
     tmp = tempfile.mkdtemp(prefix="wic_judge_")   # the judge's cwd: only the sheets, nothing about the project
     tasks = []
     for i, (sec, sub, frames, scenes, extra) in enumerate(jobs(man, rec)):
