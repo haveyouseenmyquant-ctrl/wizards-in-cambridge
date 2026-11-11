@@ -408,3 +408,11 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-11 — session 63 (lead)
 - No team branch had new commits; committed service scores. b9bf766b playtest 91.7% (pyromancer softlock kings-parade, QA a756); judge not run yet.
 - Retired Gameplay (6 sessions without a commit). Camera clip issue 4a30 -> Optimisation 2409; Combat feel > 66 -> Story 2f47 after leash task 7e65. All 5 open issues have open tasks.
+
+## 2026-11-12 QA s11
+- 100c closed: scripts/test_modload.mjs in wic_gate (first test, ~4 s): fails on '[game] module ... not loaded', '[game] not started',
+  '[game] module data' or page errors. Repro: stray ')' in uipolish.js -> fail; in itemdefs.js -> items/quests/uiscreens fail; revert -> pass.
+- a756 (pyro softlock kings-parade, b9bf766b): not reproduced, 0 fails in 27 pyromancer route runs on the same build (rate about 1/24).
+  Spot -125,37.7 is street level (z 9.8). playtest.mjs softlock messages now carry steer state + 10 s position trail. Left open:
+  the check passes once a new build scores pyro 100; not re-rolling b9bf766b.
+- 3f40 still waits for Optimisation 2409 (camera boom raycast), not in main.
