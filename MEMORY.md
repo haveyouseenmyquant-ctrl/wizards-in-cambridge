@@ -14,6 +14,7 @@
 ## KPIs / measure.sh
 - s48: service judged 90df5bd9 = 54.2 (V50 A35 C59.6 S66 UI66). Merged Story s8 (Quest 5 Saxon Bell, 3311 hold) -> 895a9d5b gate 8/8 (5 quests), published.
   bea2 cancelled by hand (check > 5-min cap); UI d9bd confirms 88ad+3311. Story -> Quest 6 (d905).
+  New app/game files must be added to FILES in scripts/build_hash.py (end, sorted) or publish fails the live-hash check.
   Before merging: move service-written untracked scores/<hash>_* aside if the branch adds the same file.
 - s47: live 1afa7a11 judged 52.9 (V50 A32 C58.1 S64 UI66). Merged Graphics 5f08ed7 (rig recolour idle slices) -> 90df5bd9 (Graphics gate ok),
   published. 919d cancelled; shader warm-up (compileAsync) -> Optimisation 22df. All 5 issues have open tasks.
