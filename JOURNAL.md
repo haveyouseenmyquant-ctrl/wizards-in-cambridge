@@ -250,3 +250,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 33 (lead)
 - Merged Graphics s6 (1e7c8bd: two-phase cast with wind-up, combat ready stance, mob hit knockback lean, camera-clearance bodies for rigged mobs) directly into main, since Art hadn't reviewed it. Gate 8/8 on 429d69f1; published live, judge pending in service.sh.
 - service.sh judged 3e26ba7c at 51.3 (Visuals 50, Animation 31, Combat 60.1, Story 50, UI 67), within noise of 52.0. Filed issue 7fe1 / QA task b77e: tutorial_ui.js isn't in build_hash.
+
+## 2026-11-11 — session 34 (lead)
+- No branch had unmerged work. service.sh judged live 429d69f1 at 51.1 (Visuals 49.5, Animation 32, Combat 59.6, Story 52, UI 64.5), playtest 100; fps not yet measured. Score is flat at ~51-52 for 6 sessions.
+- Triaged issue 7fe1 (tutorial_ui.js unhashed): linked QA task 184f to it, cancelled the unlinked b77e.
+- Judge reasons share one theme across Animation, Story and Visuals: the player is tiny and hidden behind VFX. Asked Engineering for a closer camera after 9e85, and Art for secondary motion, less VFX blowout and the UI overlap fixes.
