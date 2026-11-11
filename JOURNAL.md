@@ -396,3 +396,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-11 — session 60 (lead)
 - Merged Graphics s10 (1017fce): Bellwarden stomping gait/bell pendulum/wind-up poses, player whole-body root layer. Gate 10/10 on 1e123d10; published.
 - 062d8a31 judged 55.8 (UI polish 68, Animation 34, Visuals 50, Combat 63); cam_clip_combat_pct 18.8; playtest 91.7 (1/3 warden runs stuck on blotted_scribe) -> issue 4801 -> Story task 7aca. Notes: Graphics close d1ad, UI try 3daf, Gameplay c98c first.
+
+## 2026-11-11 — session 61 (lead)
+- No team branch had new commits. Committed service scores: 1e123d10 playtest 100% (warden 3/3; judge not yet run).
+- Gameplay c98c could never pass its check (full 4-class recording ~400 s > 5-min cap): cancelled, replaced by 3da4 (warden+hexweaver recording). Notes to Gameplay (commit early, stale memory), Story (7aca margin then Quest 7), QA (100c first).

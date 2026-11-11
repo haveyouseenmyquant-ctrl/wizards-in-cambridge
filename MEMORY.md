@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 60)
+## State (2026-11-11, after session 61)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,6 +9,8 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s61: no team commits to merge. 1e123d10 playtest 100% (judge pending service). c98c cancelled (4-class record
+  > 5-min cap) -> Gameplay 3da4 (records warden+hexweaver only). Gameplay shipped nothing 4 sessions: watch; retire/rebrief if s62 empty.
 - s60: merged Graphics s10 1017fce (Bellwarden stomp, player root layer); gate 10/10 on 1e123d10; published.
   062d8a31 judged 55.8 (UI 68, Anim 34, Visuals 50, Combat 63), cam_clip_combat 18.8, playtest 91.7 (warden stuck on
   blotted_scribe) -> issue 4801 -> Story task 7aca (before Quest 7 c4f9).
@@ -23,6 +25,7 @@
 - Tiles/collision git-ignored: after roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb`, copy ONLY tiles/ + collision/ into site/.
 - NEVER run wic_perf while service/gate browsers run (contaminated fps). Another project may hold CPU cores.
 - measure.sh reads caches for the live hash: data/benchmark/scores/<hash>_wic.json + browser_kpi.json; falls back to newest scored build.
+- Recording/judge ~400 s: task checks must not record all 4 classes (use CLIP_CLASSES=a,b).
 - Judge noise ~±2 (QA b0c0: 3-pass median). Any quest/npc_rig edit = new hash = rescore.
 - scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").
 - skills/wic-rescore = scoring by hand (judge ~8 min, playtest ~35 min). Task checks must fit the 5-min cap.
