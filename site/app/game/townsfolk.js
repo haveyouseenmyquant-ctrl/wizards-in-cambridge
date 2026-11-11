@@ -66,12 +66,16 @@ function spot(a) {
   return null;
 }
 
+// one material per (rig, palette): spawns at once with the stock atlas, the recoloured one (idle-sliced, shared with
+// npc_rig.js) is swapped in when ready
 async function material(file, pal) {
   const key = file + pal.robe + pal.trim;
   if (!S.mats.has(key)) S.mats.set(key, (async () => {
     const A = await loadNpc(file); if (!A) return null;
     let src = null; A.scene.traverse(o => { if (o.isMesh) src ??= o.material.map; });
-    return new THREE.MeshStandardMaterial({ map: await recolour(src, pal, file), roughness: 0.88 });
+    const mat = new THREE.MeshStandardMaterial({ map: src, roughness: 0.88 });
+    if (pal.robe) recolour(src, pal, file).then(t => { mat.map = t; mat.needsUpdate = true; }).catch(() => {});
+    return mat;
   })());
   return S.mats.get(key);
 }
@@ -87,7 +91,7 @@ async function start() {
     for (let i = 0; i < jobs.length; i++) {
       const j = jobs[i]; if (!S.world.covered(j.a.x, j.a.y)) continue;
       const p = spot(j.a); if (!p) continue;
-      const file = RIGS[j.k % RIGS.length], pal = PALETTES[(j.k * 5 + (j.k >> 1)) % PALETTES.length];
+      const r = j.k % RIGS.length, file = RIGS[r], pal = (j.k / RIGS.length | 0) % 2 ? PALETTES[r * 2 + (j.k % 2)] : {};   // stock or one of two per rig
       const A = await loadNpc(file), mat = await material(file, pal);
       jobs.splice(i--, 1);
       if (A && mat) spawn(A, file, mat, p, j);
@@ -160,9 +164,27 @@ function place(f, dt) {
   f.g.rotation.y = f.yaw + Math.PI;
 }
 
+// ambient crowd: walkers left far behind (player walked / teleported away) move to street spots 8-35 m round the
+// player, within the city centre, so the street the player is in always has people in it
+const NEAR = 70, CENTRE = { x: -151, y: 60, r: 450 };
+function regroup(P) {
+  if (!P || Math.hypot(P.x - CENTRE.x, P.y - CENTRE.y) > CENTRE.r) return;
+  let n = 0;
+  for (const f of S.folk) {
+    if (Math.hypot(f.x - P.x, f.y - P.y) < NEAR || n >= 4) continue;
+    const a = { x: P.x, y: P.y, r: f.bike ? 40 : 35 }, z0 = S.world.support(P.x, P.y, P.z + 2)?.z ?? P.z;
+    for (let i = 0; i < 20; i++) {
+      const p = spot(a);
+      if (!p || Math.hypot(p.x - P.x, p.y - P.y) < 8 || Math.abs(p.z - z0) > 2.5) continue;
+      Object.assign(f, p, { home: { x: P.x, y: P.y, r: 22 }, stall: 0, yaw: Math.random() * Math.PI * 2 }); n++; break;
+    }
+  }
+}
+
 function tick(dt) {
   if (!S || !S.folk.length) return;
   const P = S.player || S.game?.player, mobs = S.game && !S.game.disposed ? S.game.mobs : null;
+  if ((S.regroupT = (S.regroupT || 0) - dt) <= 0) { S.regroupT = 0.4; regroup(P); }
   for (const f of S.folk) {
     // threats: live mobs within 14 m -> walk / ride away briskly; the player -> step round them
     let ax = 0, ay = 0, flee = false;
