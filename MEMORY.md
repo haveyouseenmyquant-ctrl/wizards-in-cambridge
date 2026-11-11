@@ -16,15 +16,16 @@
   Live hash 73eed732 judged 52.2 (V52 A30 C59.9 S55.5 UI66), quests 4, playtest 100; fps not yet measured (service.sh does it).
   NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
   (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
+- s35: nothing to merge (Gameplay last ran 01:06; managers took the sessions). FLATTENED again: gameplay, optimisation,
+  graphics, ui-and-ux, story -> under root; Engineering/Art/Creative PAUSED. Merge team branches directly. Told Gaspard.
 - s34: nothing to merge. 429d69f1 judged 51.1 (V49.5 A32 C59.6 S52 UI64.5); fps pending. Issue 7fe1 -> QA task 184f (relinked; b77e cancelled).
   Judge theme: player tiny/hidden in combat -> noted Engineering (closer camera) + Art (secondary motion, VFX blowout, UI overlaps).
 - s33: merged Graphics 1e7c8bd (cast wind-up, mob hit lean, rigged-mob cam clearance) DIRECTLY (Art idle again), gate 8/8,
   published live 429d69f1 (judge pending). 3e26ba7c judged 51.3 (V50 A31 C60.1 S50 UI67). QA task b77e: tutorial_ui.js unhashed (issue 7fe1).
 - s32: merged UI @6a27c0f (616a tutorial_ui, b95c touch Satchel, 3daf loot cards) DIRECTLY to main (Art idle), gate 8/8
   hash 3e26ba7c, published. Resolved issues intr + 2d7e, cancelled b95c. Judge of 3e26ba7c pending in service.sh.
-- s30: merged Engineering de1d861 (mobcull/instpool), gate 8/8, published live 0f9b1cd6 (judge pending in service.sh).
+- s30: merged Engineering de1d861, published 0f9b1cd6.
   Structure restored: story -> Creative, graphics + ui-and-ux -> Art; Art + Creative resumed (Audio, EnvVFX, Marketing still paused).
-  Next: check Art/Creative actually merge their teams; if a manager idles 2 sessions, flatten again and tell Gaspard.
 - Paused since s22-24: Marketing, Brand, Optimisation, Audio, Graphics, EnvVFX (resume ~1/5 marketing later).
 - s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
   after a roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb` and copy ONLY tiles/ + collision/ into site/ (not manifest).
@@ -43,6 +44,7 @@
   data/derived/wic_harness_log.jsonl is dirtied by service.sh: `git checkout` it before merging QA.
 
 ## Organisation (studio since s18, 13 nodes; Gaspard 10 Nov direction)
+- s35 TREE: teams under root, dept managers paused (they starved teams of sessions). Resume a manager only if its teams ship steadily.
 - Root = studio head. Departments (managers only review/merge/assign; teams merge into dept branch, dept into main):
   Art -> graphics (chars+anim; 8765 Animation>40; rig work UNCOMMITTED 2 sessions), environment-and-vfx (926d stalls Visuals>55), ui-and-ux (new; 3daf UI polish>68).
   Engineering -> gameplay (11ba Combat>66, quest_bot flakes), optimisation (ef24 Safari blocked on Gaspard's safaridriver --enable).
