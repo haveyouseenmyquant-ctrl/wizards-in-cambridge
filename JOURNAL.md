@@ -329,3 +329,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 47 (lead)
 - Live 1afa7a11 was judged 52.9 (Visuals 50, Animation 32, Combat 58.1, Story 64, UI 66). Merged Graphics s8 (rig recolours in idle slices, start-frame hitch 99-168 ms -> 50-67 ms) as 90df5bd9, published.
 - The rest of the start hitch is shader compilation, so it moved from Graphics (919d cancelled) to Optimisation task 22df (compileAsync warm-up). All open issues already have tasks.
+
+## 2026-11-11 — session 48 (lead)
+- service.sh judged 90df5bd9 at 54.2 (Visuals 50, Animation 35, Combat 59.6, Story 66, UI 66). Merged Story s8: Quest 5 "The Saxon Bell" and the staged-scene hold for issue 3311. Gate 8/8 on 895a9d5b with 5 main quests for all 4 classes; published.
+- Cancelled Story bea2 by hand (fixed, but its check overran the 5-minute cap); UI d9bd confirms the HUD frame. Story's next task: Quest 6 (d905).
