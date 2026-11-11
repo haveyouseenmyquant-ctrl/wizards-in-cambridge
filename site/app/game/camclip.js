@@ -55,16 +55,41 @@ export function install(game) {
     }
     return false;
   };
-  const bad = (x, y, z) => W.blocked(x, y, z - WALL_R, WALL_R, 0, 2 * WALL_R) || roofAbove(x, y, z);
-  function collide(pl, cam) {
+  const wall = (x, y, z) => W.blocked(x, y, z - WALL_R, WALL_R, 0, 2 * WALL_R);
+  const bad = (x, y, z) => wall(x, y, z) || roofAbove(x, y, z);
+  // chest -> point clear of walls (and of roofs too unless the player already stands under one: a tall roof's eave)
+  const lineClear = (hx, hy, hz, x, y, z, roofed) => {
+    const dx = x - hx, dy = y - hy, dz = z - hz, L = Math.hypot(dx, dy, dz);
+    for (let r = 0.3; r <= L; r += 0.2) { const f = r / L, px = hx + dx * f, py = hy + dy * f, pz = hz + dz * f; if (roofed ? wall(px, py, pz) : bad(px, py, pz)) return false; }
+    return !(pl0.camOcclude && pl0.camOcclude(hx, hz, -hy, dx / L, dz / L, -dy / L, L + 0.2) < L + 0.2);
+  };
+  const pl0 = p, A = [0, 0.6, -0.6, 1.2, -1.2, 1.9, -1.9, Math.PI], RH = [[2.6, 1.2], [1.9, 0.9], [1.3, 0.6], [2.6, 2.2]];
+  let keep = null, keepT = 0;   // last off-line spot (offset from the chest), held while it stays clear
+  function collide(pl, cam, dt) {
     const c = cam.position, hx = pl.x, hy = pl.y, hz = pl.z + CHEST;
     let x = c.x, y = -c.z, z = c.y;
     const dx = x - hx, dy = y - hy, dz = z - hz, L = Math.hypot(dx, dy, dz);
-    if (L < 0.4 || !bad(x, y, z)) return;
+    if (L < 0.4 || !bad(x, y, z)) { keep = null; return; }
+    st.walls++;
+    // 1) pull in along the line to just before the first bad point, if that leaves a usable boom
     let r = 0.3; for (; r < L; r += 0.1) if (bad(hx + dx * r / L, hy + dy * r / L, hz + dz * r / L)) break;
-    const f = Math.max(0.3, r - CLEAR) / L; x = hx + dx * f; y = hy + dy * f; z = hz + dz * f;
-    c.set(x, z, -y); st.walls++;   // same line of sight to the chest, so the aim is kept
+    if (r - CLEAR >= 1.2) { const f = (r - CLEAR) / L; c.set(hx + dx * f, hz + dz * f, -(hy + dy * f)); keep = null; return; }
+    // 2) a clear spot around the player (azimuths from the current camera bearing, then shorter/higher booms)
+    const roofed = roofAbove(hx, hy, hz);
+    let spot = null;
+    if (keep && (keepT -= dt) > 0) { const k = [hx + keep[0], hy + keep[1], hz + keep[2]]; if (!bad(...k) && lineClear(hx, hy, hz, ...k, roofed)) spot = k; }
+    if (!spot) {
+      const a0 = Math.hypot(dx, dy) > 0.2 ? Math.atan2(dy, dx) : Math.atan2(Math.cos(pl.yaw), -Math.sin(pl.yaw));
+      search: for (const [R, H] of RH) for (const da of A) {
+        const k = [hx + Math.cos(a0 + da) * R, hy + Math.sin(a0 + da) * R, hz + H];
+        if (!bad(...k) && !hitAny(k[0], k[2], -k[1]) && lineClear(hx, hy, hz, ...k, roofed)) { spot = k; break search; }
+      }
+      if (spot) { keep = [spot[0] - hx, spot[1] - hy, spot[2] - hz]; keepT = 0.4; st.spots++; }
+    }
+    if (spot) { c.set(spot[0], spot[2], -spot[1]); m4.lookAt(c, v.set(hx, pl.z + 0.9, -hy), up); q.setFromRotationMatrix(m4); cam.quaternion.copy(q); return; }
+    const f = Math.max(0.3, r - CLEAR) / L; c.set(hx + dx * f, hz + dz * f, -(hy + dy * f));   // nothing clear: best effort
   }
+  st.spots = 0;
   st.walls = 0;
 
   const a3 = p.applyCamera3;
@@ -72,7 +97,7 @@ export function install(game) {
     a3.call(this, cam, dt);
     if (!this.combatCam || window.__cam || window.__explore) { st.lift = 0; return; }
     clipProps.call(this, cam, dt);
-    if (W?.tiles) collide(this, cam);
+    if (W?.tiles) collide(this, cam, dt);
   };
   function clipProps(cam, dt) {
     if (!st.boxes) {   // zone.js: __zoneReady true once loaded
