@@ -91,5 +91,5 @@
   ],
   "checkpoint": { "x": -230, "y": 499, "name": "Bridge Street", "look": [-290, 570] },
   "rewards": { "xp": 700, "items": [ "quest_ferrymans_coin" ], "title": "Friend of the Hythe" },
-  "next": "Find Wat Gedney when you are ready for the Backs (coming soon)"
+  "next": "Pip Hobbe has smelt the Unwinder's oil on Bene't Street"
 }
