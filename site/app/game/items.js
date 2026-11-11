@@ -205,6 +205,9 @@ export function install(game) {
     sfx.play('pickup', 0.8, 1 + 0.06 * pk.ord); if (pk.ord >= 2) sfx.play('sting_' + def.rarity, 0.6, 1.12);
     game.emit('pickup', { item: def, id: pk.id }); }
   function updatePickups(dt) { const p = game.player;
+    // f130: in combat only the nearest 2 uncollected drops (or rare+) show a nameplate, and plates shrink, so they don't pile up
+    const fight = !!game.uiScreens?.inCombat?.(); let near2 = null;
+    if (fight) near2 = new Set(pickups.filter(q => !q.got).map(q => [q, Math.hypot(p.x - q.x, p.y - q.y)]).sort((u, v) => u[1] - v[1]).slice(0, 2).map(u => u[0]));
     for (const pk of [...lingering, ...pickups]) {
       if (pk.got) {   // collected: gem flies to the player, pillar + nameplate linger and fade
         const a = (S.t - pk.got.t) / LINGER; if (a >= 1 || !pk.d) { removePickup(pk); continue; }
@@ -238,9 +241,9 @@ export function install(game) {
       pk.pad.material.opacity = 0.65 + Math.sin(S.t * 3 + pk.t0) * 0.15;
       pk.plate.position.y = 2.2 + Math.sin(age * 2) * 0.05;
       { const cp = game.camera?.position, cd = cp ? Math.hypot(cp.x - pk.x, cp.y - pk.z - 2.1, cp.z + pk.y) : 99;   // session 48: fade out up close
-        pk.plate.material.opacity = Math.max(0, Math.min(1, (cd - 3) / 3)); pk.plate.visible = cd > 3;
+        pk.plate.material.opacity = Math.max(0, Math.min(1, (cd - 3) / 3)); pk.plate.visible = cd > 3 && (!fight || pk.ord >= 2 || near2.has(pk));
         // session 54: the plate keeps a small fixed on-screen size up close (a 2.3 m sprite 4 m away filled the middle of the screen)
-        const ks = Math.min(1, cd / 16); pk.plate.scale.set(2.8 * ks, 0.7 * ks, 1);
+        const ks = Math.min(1, cd / 16), pw = fight ? 2.0 : 2.8; pk.plate.scale.set(pw * ks, pw / 4 * ks, 1);
         // session 54: the soft halo sprite fades out near the camera (up close it read as a big flat rarity-coloured disc)
         pk.halo.material.opacity = 0.9 * Math.max(0, Math.min(1, (cd - 2.5) / 4)); }
       const rp = (age * 0.8) % 1; pk.ring.scale.setScalar(pk.rs * (0.3 + rp)); pk.ring.material.opacity = 0.65 * (1 - rp);
