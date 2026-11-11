@@ -21,9 +21,7 @@
 - s38: merged Optimisation a95b (837a3c0, ff; game_ready 1.73->0.88 s, progate.js). Gate 8/8 on 747855e1; published live
   (release world-20261111-0832); judge pending -> measure.sh 0s. QA task faf2 = measure.sh fallback to newest scored build.
   EnvVFX RESUMED directly under root (926d stalls first; Visuals 50). Live judge of 645eac53: 52.5 (V50 A30 C60.6 S66 UI60).
-- s28: merged QA b1c1008 (build_hash now covers tiles/collision digests + all game modules; test_tutorial in gate).
-  Live hash 73eed732 judged 52.2 (V52 A30 C59.9 S55.5 UI66), quests 4, playtest 100; fps not yet measured (service.sh does it).
-  NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
+- NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
   (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
 - s35: nothing to merge (Gameplay last ran 01:06; managers took the sessions). FLATTENED again: gameplay, optimisation,
   graphics, ui-and-ux, story -> under root; Engineering/Art/Creative PAUSED. Merge team branches directly. Told Gaspard.
