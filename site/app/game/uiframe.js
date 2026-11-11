@@ -70,6 +70,16 @@ body.wic-qcard #wic-q .q-track { opacity: 0 !important; }
 body.wic-fight #wic-q .q-track { opacity: .72; }
 body.wic-fight #wic-q .q-track .q-ob { display: none; }
 body.wic-boss #game-hud .gh-banner { top: 30% !important; }
+/* ---- combat callouts kept out of the centre (judge: 'Vanquished' / 'Chain' / 'Staggered' text piles over the fight).
+   Banner: small caps strip near the top; status words above the crosshair, not over the player; chain count as a
+   small tag above the class label, by the bars */
+#game-hud .gh-banner { top: 12% !important; font-size: 17px !important; letter-spacing: .28em !important; text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(255,106,16,.7), 0 2px 3px #000 !important; padding: 4px 22px; background: linear-gradient(90deg, transparent, rgba(10,8,6,.55) 20%, rgba(10,8,6,.55) 80%, transparent); }
+.gf-word { top: calc(50% - 64px) !important; font-size: 14px !important; letter-spacing: .16em !important; text-transform: uppercase; }
+.gf-chain { left: 50% !important; top: auto !important; bottom: 84px; transform: translateX(-50%); font-size: 13px !important;
+  text-shadow: 0 0 5px rgba(255,122,32,.7), 0 1px 2px #000 !important; }
+.gf-chain small { font-size: 9px !important; }
+body.wic-menu .gf-word, body.wic-menu .gf-chain, body.wic-story .gf-chain { display: none !important; }
 /* ---- spell slots: drawn icons */
 #game-hud .gh-glyph svg { width: 34px; height: 34px; margin: 7px; filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 1px 1px #000); }
 #game-hud .gh-slot { background: radial-gradient(circle at 50% 40%, rgba(60,50,40,.85), rgba(8,8,14,.9)); }
