@@ -42,5 +42,270 @@
   "main_quests_shipped": 6,
   "wall_s": 124,
   "at": "2026-11-11T21:45:15.827Z"
+ },
+ "cam_clip_pct": 14.3,
+ "cam_clip_combat_pct": 16.7,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [
+  {
+   "frame": "combat/warden/frame_01.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -90.64,
+    91.48,
+    12.53
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_02.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -89.2,
+    86.08,
+    12.58
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_03.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -96.48,
+    88.17,
+    11.58
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 0.5 m from camera, 1.2 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_04.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -96.8,
+    77.71,
+    11.68
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 3.5 m from camera, 4.3 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_06.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -93.88,
+    68.75,
+    13
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 2.2 m from camera, 2.9 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_08.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -97.23,
+    63.7,
+    12.79
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_09.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -102.13,
+    79.68,
+    15.02
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_11.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -112.48,
+    58.08,
+    12.9
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  }
+ ],
+ "judged_game_quality": 55.9,
+ "judged_sections": {
+  "Visuals": 50,
+  "Animation": 38,
+  "Combat feel": 62.8,
+  "Story presentation": 66,
+  "UI polish": 68
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    50,
+    50,
+    49
+   ],
+   "Animation": [
+    38,
+    38,
+    38
+   ],
+   "Combat feel": [
+    63.2,
+    62.8,
+    62.8
+   ],
+   "Story presentation": [
+    66,
+    66,
+    66
+   ],
+   "UI polish": [
+    70,
+    68,
+    66
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 1,
+   "Animation": 0,
+   "Combat feel": 0.5,
+   "Story presentation": 0,
+   "UI polish": 4
+  },
+  "quality_spread": 1,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together: buildings are recognisable with window detail, a Gothic church, bikes, railings and market stalls, the warm low-sun lighting casts real-time shadows, and there's some atmospheric haze. Up close it's still prototype-level. Geometry is blocky (boxy shop interiors with primitive shelf props, flat facades), materials are simple and repetitive, AO and fine detail are minimal, and the characters are small, chunky and low-detail. Combat frames get cluttered, with flat-coloured stalls and VFX that sit on top of the scene instead of blending into it."
+   },
+   "Animation": {
+    "all": "The walking frames show the player in a stride with a staff, and there are a few small background figures, including a cyclist. Even so, the player's pose barely changes across the four walk shots, which suggests a simple looping walk cycle. In combat, the attacks show up almost entirely as projectiles, rings and floating damage numbers, with no readable casting poses or hit reactions. The boss is a rigid mechanical bell construct, and 'Staggered' appears only as a text label with no visible stagger pose. There is no evidence of enemy wind-ups, death animations, secondary motion like robes swaying, or moving foliage."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show clear hit feedback: big crit and damage numbers, STAGGERED/INTERRUPTED tags, chain counters, a boss with a phase bar that reaches Phase III and an enraged state, telegraphed windups with a red ground cone, rarity-coloured loot toasts, and 6 spells with cooldowns. Readability often breaks down: the camera clips into a wall in frame 10 and is blocked by large untextured walls and stalls in frames 3, 6 and 11. Spell effects are mostly generic glowing orbs without strong shapes, and there's no visible evidence of hit-stop or screen shake. Hex_dart makes up 65 of 94 casts, so the fight leans heavily on one attack.",
+    "pyromancer": "Combat is solidly at the 60 anchor and a bit beyond. The frames show distinct fire spells with readable AoE rings, damage numbers including crits, STAGGERED and ENRAGED states, named boss telegraphs (Great Toll, Peal of Shards), a three-phase boss with a segmented health bar, a combo chain counter, and loot pickups colour-coded by rarity with light beams. The biggest gaps are that only one class is shown and it leans on spamming ember_bolt (89 of 119 casts), there's no visible hit-stop or screen shake, and the VFX are often soft orange blobs that blur into the busy market-stall clutter. Enemy formations and crowd control that visibly changes the fight are also hard to see.",
+    "stormcaller": "The visible feedback is solid. There are damage numbers and crit labels, STAGGERED tags, a chain counter, a low-health red vignette, and a three-phase named boss with an enraged state. Loot comes with rarity-coloured beams and labels, and the event log backs this up with 6 distinct spells used, crowd-control states and lots of kills and drops. The biggest gaps: spell effects are thin, and the shapes are hard to read in a cluttered market scene. There's no visible hit-stop, knockback or strong impact flash. The fight is dominated by spamming one spell (71 of 107 casts are spark_lance), the second half of the clip has little action, and only one class is shown, so I can't tell whether classes play differently.",
+    "warden": "The fight shows most of the 60-anchor features. Damage numbers, STAGGERED/INTERRUPTED labels and a chain counter are visible, along with a three-phase boss that has an enrage banner, red telegraph beams and a 'vanquished' moment. Loot drops show rarity-coloured light beams and item tooltips, and the warden uses six distinct spells, including crowd control and a leap. The biggest gaps are readability and depth: in several frames (3, 5, 6, 7) the camera clips through stalls or large effects and the view is blocked, and 72 of the 93 casts are the basic pebble_shot. Only one class is recorded, so I can't judge how differently the classes play, and nothing on the sheet shows hit-stop or screen feedback."
+   },
+   "Story presentation": {
+    "all": "Letterboxed over-the-shoulder conversation shots with named, titled speakers and portraits, three reply choices, well-written lines with clear stakes, quest title and completion cards, and a boss reveal set in a real Cambridge location push this above the 60 anchor. The gaps are that the portraits are simple flat icons and the characters look stiff and low-detail. There is no visible sign of voice acting, expressive animation or any visible effect from the reply choices. Frame 4 doesn't show a quest marker or waypoint in the world either, so the cinematics read as basic framed shots, not real performances."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent style across the class select, inventory and talent screens. It uses serif headers, icons, rarity tags, clear cooldown numbers on the spell bar, a boss bar with phase labels and a minimap, so it is well above the 60 anchor. Combat frames get cluttered, though: an overlapping 'ENRAGED' banner, damage numbers, loot toasts and the reticle all pile up in the middle of the screen and hurt readability. The menus are also mostly text panels with little bespoke art or visible animation."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.34,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.88,
+  "programs": [
+   67,
+   83
+  ],
+  "fps_p5": 59,
+  "fps_min": 51,
+  "slow_secs": [],
+  "long_frames": 3,
+  "worst_frames": [
+   [
+    2.8,
+    94
+   ],
+   [
+    0.1,
+    85
+   ],
+   [
+    0.5,
+    67
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 25,
+  "maxMobs": 36,
+  "dist": 202,
+  "laps": 1,
+  "draw_calls_median": 1322,
+  "tris_median": 6811070,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.69,
+  "loadavg_after": 5.08,
+  "waited_s": 45,
+  "load_ok": true,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 59,
+    "load_seconds": 0.45,
+    "loadavg_before": 3.69,
+    "loadavg_after": 7.31,
+    "fps_p5": 44
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.34,
+    "loadavg_before": 7.31,
+    "loadavg_after": 5.08,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-11T21:55:48+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
  }
 }
