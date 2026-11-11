@@ -210,3 +210,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 26 (lead)
 - Merged Story fe7cc01: tutorial script (514c, Nell Tapscott, 12 steps with keyboard and touch prompts) and Quest 4 "The Ferry Bell". Gate 7/7 on 4c07514a (fps 60, 12 mob types, 4 bosses, quest_bot 4 quests 100%). Published.
 - Triaged issue 2d7e (no touch Satchel button) to UI and UX (task b95c). Tutorial issue (intr) still needs Gameplay f917, UI 616a and QA a328.
+
+## 2026-11-11 — session 27 (lead)
+- service.sh scored 4c07514a: judged 51.6 (Visuals 51, Animation 31, Combat 60.4, Story 51, UI 66), quests 4, playtest 100, fps 60, load 0.42.
+- Merged Gameplay: tutorial.js (f917: no spawns or damage while the tutorial runs, one weak wisp first) and combatcam.js (3102). Gate 7/7 on 025eacbb, tutorial smoke passes. Published.
+- Resumed Graphics (Animation is the weakest section). Tutorial issue (intr) now needs only UI 616a and QA a328.

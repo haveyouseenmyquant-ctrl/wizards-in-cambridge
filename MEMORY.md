@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 26)
+## State (2026-11-11, after session 27)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -15,20 +15,14 @@
 - s25: NO team had run since 18:30 10 Nov (only managers). Moved gameplay, story, ui-and-ux DIRECTLY under root (temporary)
   and PAUSED Engineering, Creative, Art managers; told Gaspard. Teams now merge into main via lead. After tutorial ships:
   move them back (org move <n> --parent <dept>), resume depts. If teams still don't run next session, escalate again.
-- s26: merged Story fe7cc01 (tutorial.json 514c + Q4 Ferry Bell) -> hash 4c07514a, gate 7/7, 4 quests;
-  published (log /tmp/wic_publish_s26.log). Issue 2d7e (touch Satchel btn) -> UI task b95c. Remaining intr tasks: f917, 616a, a328.
-- Active: QA, Gameplay, Story, UI. Unpause Graphics, EnvVFX, Audio, Optimisation, Marketing, Brand after intr merged.
+- s27: merged Gameplay ea37edb (f917 tutorial.js) + 0aebaad (3102 combatcam) -> 025eacbb, gate 7/7, published
+  (log /tmp/wic_publish_s27.log). 4c07514a judged 51.6 (V51 A31 C60.4 S51 UI66). Graphics resumed directly under root (8765).
+  Issue is-20261110-192341-intr (Gaspard: no tutorial) left: UI 616a tutorial_ui.js, QA a328 test_tutorial in gate; then `org resolve is-20261110-192341-intr`, publish. 3102 still open (wall-hug fix).
+- Active: QA, Gameplay, Story, UI, Graphics. Unpause EnvVFX, Audio, Optimisation, Marketing, Brand after intr merged.
 - Paused since s22-24: Marketing, Brand, Optimisation, Audio, Graphics, EnvVFX (resume ~1/5 marketing later).
-- s19: s18 publish OK (Pages serves 448ceb61 WITH roofs; hash unchanged -> QA d7ba). Gaspard issue is-20261110-192341-intr (no tutorial,
-  mobs attack at once) = TOP priority: tasks Gameplay f917 tutorial.js, Story 514c quests/tutorial.json, UI 616a tutorial_ui.js,
-  QA a328 test_tutorial.mjs + &tutorial=0 in bots. Contract: window.WIC.tutorial, localStorage wic_tutorial_done.
-  When all four merged + a328 passes on main: `org resolve is-20261110-192341-intr`, publish.
 - s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
   after a roof/world merge run `.venv/bin/python -I scripts/build.py --out /tmp/wb` and copy ONLY tiles/ + collision/ into site/ (not manifest).
   Gate quest_bot flaked 75% once, rerun 100% (hexweaver boss TTK 222 s). Published s18 (log /tmp/wic_publish_s18.log).
-- Trunk 448ceb612bcec57f (s15, merged Gameplay uiscreens.js grid inventory/talents): gate 6/6 (158 s), judged 51.4
-  (V 51, Anim 30, Combat 60.9, Story 53, UI 63). Story Q4 branch NOT merged: quest_bot 2/4 classes (bell-stay). Gameplay 11ba = Combat>66.
-  s15 publish: Pages failed again (6th) but publish.sh swapped live_site to 448ceb61 anyway (bug -> Optimisation task); Pages serves 1665d3ca.
 - measure.sh reads only caches for the current build = data/derived/live_site (if present) else site/:
   data/benchmark/scores/<build_hash>_wic.json + data/derived/browser_kpi.json if its hash matches. Unmeasured -> 0.
 - Judge noise ~±2. build_hash.py includes quests.js/npc_rig.js/quests/*.json: any quest edit = new hash = rescore.
