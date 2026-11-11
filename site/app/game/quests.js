@@ -254,10 +254,11 @@ export async function install(game) {
   const cs = { fov0: null, on: false };
   function frameSpeaker(cam, dt) {
     const n = dq.npc?.g ? dq.npc : st.focus; if (!n || !cam) return false;
-    const hz = n.hz ?? n.z + 1.62 * (n.scale || 1), who = dlg.hidden ? null : dq.lines[dq.i]?.who;
-    const ph = P.z + 1.62; let rev = (who === 'player') && !!n.g, wide = !n.g;
-    let best = rev ? shoulderShot(n.x, n.y, n.z ?? P.z, P.x, P.y, ph, 1.1, 0.9, 1.62 * (n.scale || 1) + 0.1) : wide ? null : shoulderShot(P.x, P.y, P.z, n.x, n.y, hz, 1.25, 1.05, 1.72);
-    if (!best || best.f < 0.5) { best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz); rev = false; wide = true; }   // cramped (stall canopy, wall) or a place, not a person: wider set-up
+    const hz = n.hz ?? n.z + 1.62 * (n.scale || 1);
+    const ph = P.z + 1.62, L = dlg.hidden ? null : dq.lines[dq.i]; let rev = L?.who === 'player' && !L.choices && !!n.g, wide = !n.g, best = null;
+    if (rev) best = shoulderShot(n.x, n.y, n.z ?? P.z, P.x, P.y, ph, 1.1, 0.9, 1.4 * (n.scale || 1));
+    if (!best || best.f < 0.5) { rev = false; if (!wide) best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz, 1.25, 1.05, 1.42); }   // camera under the hat brim
+    if (!best || best.f < 0.5) { best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz); wide = true; }   // cramped (stall canopy, wall) or a place, not a person: wider set-up
     if (!best || best.f < 0.45) return false;
     camT.set(best.x, best.z, -best.y);
     const snap = !cs.on || stage.on || cam.position.distanceToSquared(camV) > 400;
