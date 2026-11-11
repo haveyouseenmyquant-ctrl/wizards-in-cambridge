@@ -28,7 +28,9 @@ log = lambda *a: print("[wic_perf_robust]", *a, file=sys.stderr, flush=True)
 def other_browsers():  # main Chrome/WebKit processes started by puppeteer or playwright (test browsers, not the user's)
     out = subprocess.run(["pgrep", "-fl", "puppeteer_dev_chrome_profile|playwright_chromiumdev_profile|pw_run.sh|playwright.*webkit"],
                          capture_output=True, text=True).stdout
-    return [l for l in out.splitlines() if "Helper" not in l and "pgrep" not in l]
+    pids = [l.split()[0] for l in out.splitlines() if "Helper" not in l and "pgrep" not in l]
+    # orphans (parent launchd) are browsers leaked by a killed harness, not a measurement in progress: don't wait on them
+    return [p for p in pids if subprocess.run(["ps", "-o", "ppid=", "-p", p], capture_output=True, text=True).stdout.strip() not in ("", "1")]
 
 
 def la():

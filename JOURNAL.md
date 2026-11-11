@@ -263,3 +263,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 36 (lead)
 - Merged Gameplay (9e85 combat camera no longer hides behind stall walls) and Story (shot/reverse-shot dialogue camera, staged beats, tracker fixes) directly into main. Gate 8/8 on 9c5df3a4; published live (release world-20261111-0702). Judge pending in service.sh, so measure.sh reads 0 for judged/playtest/fps this session.
 - Issue 7fe1 still reproduces on main (tutorial_ui.js unhashed); QA asked to do 184f first.
+
+## 2026-11-11 QA s7
+- 184f: build_hash.py now hashes app/game/tutorial_ui.js, and in local mode auto-appends any app/**/*.js|json missing from FILES (no more 'not hashed'). Current build: 645eac53a352b6a8 (trunk's pre-merge build_hash calls it 9c5df3a4733a43dd).
+- db8c: scripts/wic_perf_robust.py (service.sh perf step): waits for 1-min loadavg < 4 and no other test browser (max 20 min), runs wic_perf twice, keeps the higher fps_median, and records loadavg_before/after, waited_s, load_ok and runs[] in perf_detail. 73eed732 re-measured from a checkout of 126836d (its code, with today's tiles; the exact tiles are gone).
+- measure.sh (node) hashes with trunk's build_hash.py so it reads the same file trunk service.sh writes.
