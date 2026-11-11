@@ -257,7 +257,7 @@ export async function install(game) {
     const hz = n.hz ?? n.z + 1.62 * (n.scale || 1);
     const ph = P.z + 1.62, L = dlg.hidden ? null : dq.lines[dq.i]; let rev = L?.who === 'player' && !L.choices && !!n.g, wide = !n.g, best = null;
     if (rev) best = shoulderShot(n.x, n.y, n.z ?? P.z, P.x, P.y, ph, 1.1, 0.9, 1.4 * (n.scale || 1));
-    if (!best || best.f < 0.5) { rev = false; if (!wide) best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz, 1.25, 1.05, 1.42); }   // camera under the hat brim
+    if (!best || best.f < 0.5) { rev = false; if (!wide) best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz, 1.2, 1.25, 1.42); }   // camera under the hat brim
     if (!best || best.f < 0.5) { best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz); wide = true; }   // cramped (stall canopy, wall) or a place, not a person: wider set-up
     if (!best || best.f < 0.45) return false;
     camT.set(best.x, best.z, -best.y);
