@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 50)
+## State (2026-11-11, after session 51)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,10 +9,10 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
-- s50: merged QA s9 (quest_bot GPU lanes 57 s; judge = median of 3 passes). Live 64b43506 = 53.4 (V50 A34 C59.5 S64 UI64).
-  Judge: world static (no crowds/foliage/water) -> Graphics d1ad townsfolk.js walkers; combat cam still clips -> QA 9be5 cam_clip_pct detector.
-  Issues: 5ac5 wait EnvVFX 76b5 (+QA 9be5); 88ad+3311 wait UI d9bd; 5d62 wait Opt 22df; 11c7 wait Gameplay f130.
-- s49: merged Gameplay camclip (5ac5) -> 64b43506 gate 9/9, published. Quality plateau 52-55 since s41.
+- s51: merged Optimisation s8 (659a publish fail-fast; 22df partial camclip incremental boxes) -> b367b071 gate 9/9, published.
+  Judge 64b43506 reasons: player small + static pose in walk frames, mobs crude blobs, cam clips, little threat. Note to Graphics.
+  Issues unchanged: 5ac5 wait EnvVFX 76b5 (+QA 9be5); 88ad+3311 wait UI d9bd; 5d62 wait Opt 22df; 11c7 wait Gameplay f130.
+- Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 
 ## Rules learned
 - New app/game files must be added to FILES in scripts/build_hash.py or publish fails the live-hash check.
