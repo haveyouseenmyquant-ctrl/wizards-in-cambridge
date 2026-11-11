@@ -11,16 +11,29 @@ export function install(game) {
   const p = game.player, T = game.THREE; if (!p?.applyCamera3 || !T) return;
   const st = game.camClip = { boxes: null, near: [], nearT: 0, pulls: 0, lifts: 0, frames: 0, lift: 0, nx: 1e9, nz: 1e9 };
   const v = new T.Vector3(), m4 = new T.Matrix4(), q = new T.Quaternion(), up = new T.Vector3(0, 1, 0);
-  function build() {
+  // Optimisation s8 (task 22df): a generator run at <= 4 ms per frame (building every box in one frame was a 90-120 ms
+  // hitch at game start); the camera is unclipped for the few frames it takes
+  function* build() {
     const zone = game.scene?.getObjectByName('zone'); if (!zone) return [];
     zone.updateMatrixWorld(true);
-    const boxes = [];
-    zone.traverse(m => {
-      if (!m.isMesh || !m.geometry || !(PROP.test(m.name) || PROP.test(m.parent?.name || ''))) return;
-      const pa = m.geometry.getAttribute('position'), pts = []; let y0 = Infinity, y1 = -Infinity;
-      for (let i = 0; i < pa.count; i++) { v.fromBufferAttribute(pa, i).applyMatrix4(m.matrixWorld); pts.push([v.x, v.z]); if (v.y < y0) y0 = v.y; if (v.y > y1) y1 = v.y; }
+    const boxes = [], meshes = [];
+    zone.traverse(m => { if (m.isMesh && m.geometry && (PROP.test(m.name) || PROP.test(m.parent?.name || ''))) meshes.push(m); });
+    let t0 = performance.now();
+    for (const m of meshes) {
+      if (performance.now() - t0 > 4) { yield; t0 = performance.now(); }
+      // only each 1 cm column's lowest and highest z go to the hull (stall strips have 10^5 vertices; hull error <= 1 cm)
+      const pa = m.geometry.getAttribute('position'), col = new Map(), e = m.matrixWorld.elements; let y0 = Infinity, y1 = -Infinity;
+      for (let i = 0; i < pa.count; i++) {
+        if ((i & 4095) === 4095 && performance.now() - t0 > 4) { yield; t0 = performance.now(); }
+        const px = pa.getX(i), py = pa.getY(i), pz = pa.getZ(i);
+        const x = e[0] * px + e[4] * py + e[8] * pz + e[12], y = e[1] * px + e[5] * py + e[9] * pz + e[13], z = e[2] * px + e[6] * py + e[10] * pz + e[14];
+        if (y < y0) y0 = y; if (y > y1) y1 = y;
+        const k = Math.round(x * 100), c = col.get(k);
+        if (!c) col.set(k, [x, z, x, z]); else if (z < c[1]) { c[0] = x; c[1] = z; } else if (z > c[3]) { c[2] = x; c[3] = z; }
+      }
+      const pts = []; for (const c of col.values()) pts.push([c[0], c[1]], [c[2], c[3]]);
       const b = minRect(pts); if (b) boxes.push({ ...b, y0, y1, cx: (b.u0 + b.u1) / 2 * b.ux - (b.w0 + b.w1) / 2 * b.uz, cz: (b.u0 + b.u1) / 2 * b.uz + (b.w0 + b.w1) / 2 * b.ux, r: Math.hypot(b.u1 - b.u0, b.w1 - b.w0) / 2 });
-    });
+    }
     return boxes;
   }
   const inside = (b, x, y, z, e) => {
@@ -34,7 +47,11 @@ export function install(game) {
   p.applyCamera3 = function (cam, dt = 1 / 60) {
     a3.call(this, cam, dt);
     if (!this.combatCam || window.__cam || window.__explore) { st.lift = 0; return; }
-    if (!st.boxes) { if (!window.__zoneReady || !(st.boxes = build())) return; st.nearT = 0; }   // zone.js: true once loaded
+    if (!st.boxes) {   // zone.js: __zoneReady true once loaded
+      if (!window.__zoneReady) return;
+      const r = (st.gen ||= build()).next(); if (!r.done) return;
+      st.boxes = r.value; st.gen = null; st.nearT = 0;
+    }
     const cx = this.x, cy = this.z + CHEST, cz = -this.y;
     if ((st.nearT -= 1) <= 0 || Math.hypot(st.nx - cx, st.nz - cz) > 2) { st.nearT = 15; st.nx = cx; st.nz = cz; st.near = st.boxes.filter(b => Math.hypot(b.cx - cx, b.cz - cz) < b.r + 9); }
     st.frames++;
