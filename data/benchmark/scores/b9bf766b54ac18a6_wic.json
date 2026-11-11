@@ -44,5 +44,140 @@
   "main_quests_shipped": 7,
   "wall_s": 135,
   "at": "2026-11-11T22:50:23.747Z"
- }
+ },
+ "cam_clip_pct": 17.9,
+ "cam_clip_combat_pct": 20.8,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [
+  {
+   "frame": "combat/hexweaver/frame_01.jpg",
+   "scene": "combat_hexweaver",
+   "pos": [
+    -82.41,
+    86.21,
+    12.55
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: zone/market_stallsway400160685 4.1 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_01.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -91.17,
+    91.97,
+    12.52
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: Group/bway400160685 2.0 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_02.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -89.13,
+    86.06,
+    12.58
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_03.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -92.3,
+    71.55,
+    12.26
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 1.0 m from camera, 1.7 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_04.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -90.52,
+    75.69,
+    12.7
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_06.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -92.43,
+    78.78,
+    12.69
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_07.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -99.27,
+    59.57,
+    11.93
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.2 m from camera, 4.9 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_08.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -101.5,
+    70.07,
+    14.08
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_09.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -100.24,
+    51.82,
+    10.55
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 1.2 m from camera, 2.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_11.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -112.65,
+    55.18,
+    13.03
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  }
+ ]
 }
