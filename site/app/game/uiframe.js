@@ -126,7 +126,10 @@ export function install(game) {
   const qcard = () => { const c = document.querySelector('#wic-q .q-card'); return c && +(c.style.opacity || 0) > 0.05 && c.textContent.trim(); };   // inline target, not the mid-transition value
   function syncStory() {
     const B = document.body.classList, dlg = vis(document.querySelector('#wic-q .q-dlg')), card = !!qcard();
-    B.toggle('wic-story', dlg || card); B.toggle('wic-qcard', card);
+    const on = dlg || card;
+    // s5: cards already up when a scene starts would sit out the (game-time-paused) scene and resurface stale after it
+    if (on && !B.contains('wic-story')) document.querySelectorAll('#game-hud .gh-toasts > *, #game-hud .gh-loots > *').forEach(e => e.remove());
+    B.toggle('wic-story', on); B.toggle('wic-qcard', card);
   }
   // react in the same frame the quest layer shows a card or dialogue (#wic-q may load after us: attached from update)
   const mo = new MutationObserver(() => syncStory());

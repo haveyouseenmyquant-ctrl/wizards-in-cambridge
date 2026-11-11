@@ -213,8 +213,17 @@ export function install(game) {
     if (d < 24 && (m.boss || m.state === 'chase' || m.state === 'windup' || m.state === 'active' || m.hp < m.maxHp)) return true; } return false; };
   const shown = cls => document.querySelectorAll(`#game-hud .${cls}`).length;
   const story = () => !!game.uiFrame?.storyBusy?.();   // uiframe.js: a dialogue box or quest card is up, so loot/toasts wait
-  if (loot0) hud.loot = (...a) => { if (story()) { lq.push(a); if (lq.length > 6) lq.shift(); return null; } if ((inCombat() && shown('gh-loot') >= 1) || shown('gh-loot') >= 3 || lq.length) { if (!lq.some(x => x[0] === a[0])) lq.push(a); if (lq.length > 4) lq.splice(Math.max(0, lq.findIndex(x => x[1] === 'common')), 1); return null; } return loot0(...a); };
-  if (toast0) hud.toast = (...a) => { if (story()) { if (!tq.some(x => x[0] === a[0])) tq.push(a); return null; } if (inCombat() && (shown('gh-toast') >= 2 || tq.length)) { if (!tq.some(x => x[0] === a[0])) tq.push(a); if (tq.length > 3) tq.shift(); return null; } return toast0(...a); };
+  const now = () => performance.now() / 1000, STALE = 15;   // s5: what waited out a long story scene is stale news
+  const stamp = a => (a.t = now(), a);
+  function dropStale() {   // stale toasts go; stale common/uncommon loot folds into one 'in your satchel' toast
+    for (let i = tq.length - 1; i >= 0; i--) if (now() - (tq[i].t || 0) > STALE) tq.splice(i, 1);
+    const old = lq.filter(a => now() - (a.t || 0) > STALE && (a[1] === 'common' || a[1] === 'uncommon'));
+    if (old.length < 2) return;
+    for (const a of old) lq.splice(lq.indexOf(a), 1);
+    tq.unshift(stamp([`${old.length} items added to your satchel (I)`]));
+  }
+  if (loot0) hud.loot = (...a) => { stamp(a); if (story()) { lq.push(a); if (lq.length > 6) lq.shift(); return null; } if ((inCombat() && shown('gh-loot') >= 1) || shown('gh-loot') >= 3 || lq.length) { if (!lq.some(x => x[0] === a[0])) lq.push(a); if (lq.length > 4) lq.splice(Math.max(0, lq.findIndex(x => x[1] === 'common')), 1); return null; } return loot0(...a); };
+  if (toast0) hud.toast = (...a) => { stamp(a); if (story()) { if (!tq.some(x => x[0] === a[0])) tq.push(a); return null; } if (inCombat() && (shown('gh-toast') >= 2 || tq.length)) { if (!tq.some(x => x[0] === a[0])) tq.push(a); if (tq.length > 3) tq.shift(); return null; } return toast0(...a); };
   offs.push(() => { if (loot0) hud.loot = loot0; if (toast0) hud.toast = toast0; });
   let qT = 0;
 
@@ -244,6 +253,7 @@ export function install(game) {
       if (menu) decorate();
       capNums();
       if ((qT -= dt) > 0 || (!lq.length && !tq.length) || story()) return;
+      dropStale();
       const fight = inCombat();
       if (lq.length && shown('gh-loot') < (fight ? 1 : 3)) { loot0(...lq.shift()); qT = 0.6; }
       else if (tq.length && shown('gh-toast') < (fight ? 2 : 3)) { toast0(...tq.shift()); qT = 0.4; }
