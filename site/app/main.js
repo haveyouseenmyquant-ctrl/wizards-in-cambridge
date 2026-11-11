@@ -35,6 +35,8 @@ const LK = parseFloat(new URLSearchParams(location.search).get('light') || '0.45
 // ?ao=<intensity> (default 1), ?aor=<radius m> (default 2), ?aores=<AO buffer scale>, ?aos=<AO and denoise samples>.
 let gndT = 99;
 const QS = new URLSearchParams(location.search);
+// a95b: fetch the game layer in parallel with the world (not after it); installed only once the walk is ready
+const gameMod = QS.has('explore') ? null : import('./game/index.js').then(m => (m.preload(), m));
 const POST = QS.get('post') || (QP.ao ? 'ao' : 'off');   // Ultra preset: GTAO on unless ?post=off
 const $ = id => document.getElementById(id);
 const status = msg => { $('status').textContent = msg; };
@@ -328,7 +330,7 @@ async function main() {
       loadZone(BASE, scene);
       // game layer (session 40): off in exploration mode (?explore, or G toggles); never loaded for benchmark renders
       window.__explore = QS.has('explore') || !!window.__cam;
-      const startGame = () => import('./game/index.js').then(m => m.startGame({ scene, camera, player, world }))
+      const startGame = () => (gameMod || import('./game/index.js')).then(m => m.startGame({ scene, camera, player, world }))
         .then(g => { window.__game = g; }).catch(e => console.warn('[game] not started', e));
       if (!window.__explore) startGame();
       const exploreRig = () => import('./game/explore_rig.js').then(m => m.install({ scene })).catch(e => console.warn('[explore_rig]', e));   // graphics: rigged wizard in ?explore
