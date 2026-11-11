@@ -340,7 +340,7 @@ async function main() {
       const gameUp = window.__explore ? Promise.resolve() : startGame();
       const exploreRig = () => import('./game/explore_rig.js').then(m => m.install({ scene })).catch(e => console.warn('[explore_rig]', e));   // graphics: rigged wizard in ?explore
       if (window.__explore) exploreRig();
-      import('./game/townsfolk.js').then(m => m.install({ scene, world, player })).catch(e => console.warn('[townsfolk]', e));   // graphics: pedestrians + cyclists, both modes
+      import('./game/townsfolk.js').then(m => m.install({ scene, world, player, camera })).catch(e => console.warn('[townsfolk]', e));   // graphics: pedestrians + cyclists, both modes
       addEventListener('keydown', e => {
         if (e.code !== 'KeyG' || e.target instanceof HTMLInputElement) return;
         window.__explore = !window.__explore;
