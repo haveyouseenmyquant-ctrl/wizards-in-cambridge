@@ -1,0 +1,120 @@
+{
+ "fps_median": 60,
+ "load_seconds": 0.36,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.98,
+  "programs": [
+   71,
+   81
+  ],
+  "fps_p5": 59,
+  "fps_min": 52,
+  "slow_secs": [],
+  "long_frames": 2,
+  "worst_frames": [
+   [
+    0.4,
+    68
+   ],
+   [
+    0,
+    50
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 191,
+  "kills": 24,
+  "maxMobs": 36,
+  "dist": 205,
+  "laps": 1,
+  "draw_calls_median": 1280,
+  "tris_median": 6165889,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-11T15:49:53.232Z"
+ },
+ "judged_game_quality": 52.5,
+ "judged_sections": {
+  "Visuals": 47.0,
+  "Animation": 32.0,
+  "Combat feel": 58.0,
+  "Story presentation": 64.0,
+  "UI polish": 68.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    46.0,
+    47.0,
+    47.0
+   ],
+   "Animation": [
+    30.0,
+    32.0,
+    34.0
+   ],
+   "Combat feel": [
+    58.0,
+    57.5,
+    58.0
+   ],
+   "Story presentation": [
+    64.0,
+    64.0,
+    66.0
+   ],
+   "UI polish": [
+    66.0,
+    68.0,
+    70.0
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 1.0,
+   "Animation": 4.0,
+   "Combat feel": 0.5,
+   "Story presentation": 2.0,
+   "UI polish": 4.0
+  },
+  "quality_spread": 1.9,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together: the buildings are recognisable and textured, there's a church with Gothic windows, plus market stalls, bikes and railings, with directional shadows, warm sky lighting and some haze in the distance. But the geometry is blocky and low-detail, materials repeat (flat shelf textures, plain fa\u00e7ades), and the characters are small, simple low-poly wizards. The combat frames show crude, flat-coloured primitives such as stall boxes, a translucent blue enemy blob and clipping camera angles, and there's no ambient occlusion, clutter or detailed vegetation to speak of."
+   },
+   "Animation": {
+    "all": "In the walking frames the player has the same upright, back-facing pose every time, so there's little sign of a locomotion cycle. The combat frames show only small pose changes, such as a raised staff in the stormcaller and warden shots. Attacks read mostly as beams, rings and particles with no clear matching body motion, and the enemies are stiff, simple figures with no visible wind-ups, hit reactions or deaths. The world is static, with no moving foliage, crowds or secondary motion on cloth."
+   },
+   "Combat feel": {
+    "hexweaver": "The early frames show working feedback: crit and damage numbers, STAGGERED tags, a boss with a phased health bar and an ENRAGED banner, chain counters, rarity-coloured loot labels, beams and level-ups, and the event log has 30 kills across varied enemies. But the boss dies within about 17 s, and frames 5\u201311 show almost no enemies, so half the clip is empty wandering. The spell effects are small, soft green and purple blobs with weak shapes, and there's no visible hit-stop, knockback or clear enemy telegraphs, and frames 2 and 10 have the view blocked by camera clipping.",
+    "pyromancer": "There is clear evidence of mid-tier combat systems. You can see a phased boss with a health bar marked 'Phase I of III' and an 'ENRAGED' banner, a 'STAGGERED' state callout, chain counters, damage numbers, loot beams with item cards in rarity colours, six distinct spells, and a wide range of enemy types, backed up by healthy cast, hit and kill counts. However, readability is weak: frames 2 and 4 are blocked by large dark meshes, VFX are mostly flat placeholder shapes (white circles, solid blue enemy silhouettes), hit-stop, screen feedback and enemy telegraphs can't be made out, and several frames show no combat at all. Only one class is shown, so the frames give no evidence that classes play differently.",
+    "stormcaller": "The fight shows real hit feedback: damage and crit numbers, STAGGERED, INTERRUPTED and VANQUISHED callouts, chain counters, lightning effects, a named boss with a phase bar, and loot pop-ups colour-coded by rarity, all backed by 70 casts across 6 spells. It is held back because the player took 0 damage and enemy attacks are never shown being telegraphed, the effects look washed out and only one class appears. Frames 7-12 are mostly empty alleys or camera-clipped shots with few enemies, and no hit-stop or crowd control that visibly changes a fight is shown.",
+    "warden": "This warden run shows real combat feedback: damage and crit numbers, INTERRUPTED/STAGGERED states, a chain counter, and a three-phase named boss with phase banners and an enrage. Loot drops are colour-coded by rarity, with pillars and tooltips. The event log confirms six distinct spells, crowd control and mobility (boulder_leap). The biggest gaps are readability and difficulty: the player's large translucent shield bubble and heavy overlapping VFX hide enemies and spell shapes in many frames. Pebble_shot makes up 53 of 73 casts, and the player took 0 damage from just 3 hits, so there's little sign of threat or varied enemy pressure. Several frames have no enemies at all, and none of these frames shows hit-stop or knockback."
+   },
+   "Story presentation": {
+    "all": "The scene uses letterboxed over-the-shoulder shots, named speakers with portraits and roles, a three-option reply choice, and a quest tracker that gives distances to real Cambridge locations (Market Hill, Great St Mary's, the Guildhall). The writing is lively and the premise is original, ending in a staged boss reveal and a quest-complete title card. Holding it back: the characters are simple blocky models with no visible facial or gesture animation, the portraits are basic, there is no sign of voice acting, and the 'cinematic' beats are mostly static framed shots with text boxes, not fully performed scenes."
+   },
+   "UI polish": {
+    "all": "The HUD and menus share one consistent dark-gold serif style. Class selection is clear, with an icon and colour accent for each class. The inventory has slots, rarity tags and a tooltip, and the talent tree is tiered with icons. HUD cooldowns, resources, minimap and quest tracker are all readable. The biggest gaps: the sheet has no frames from the 60 s hexweaver fight, so combat UI is judged from single frames of each class at 17.5 s. In those frames, big damage numbers, VANQUISHED/STAGGERED banners and the quest panel crowd the screen and sit over busy effects. Cooldown numbers overwrite the skill icons, the bag is empty, and talent descriptions are small and low-contrast."
+   }
+  }
+ }
+}
