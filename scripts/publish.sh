@@ -5,6 +5,10 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 # the Pages workflow deploys the viewer from git: refuse to publish with uncommitted changes
 git diff --quiet HEAD -- site scripts || { echo "commit first: uncommitted changes in site/ or scripts/"; exit 1; }
+# optimisation s8: fail fast before any release when build_hash.py would auto-hash app files missing from FILES: the
+# URL hash can't list them, so the live-hash check after deploy fails (s48 deployed 895a9d5b over 2 unlisted Quest 5 files)
+AUTO=$(.venv/bin/python -I scripts/build_hash.py site 2>&1 >/dev/null | grep 'auto-hash' || true)
+[ -z "$AUTO" ] || { echo "not publishing: $AUTO (scripts/build_hash.py FILES)"; exit 1; }
 # session 65: every browser module must parse as an ES module (s64 left a `}` inside a comment in mobs.js: the game
 # layer silently failed to start and every mob/item/playtest test timed out)
 for f in $(find site/app -name '*.js'); do cp "$f" /tmp/wc_check.mjs; node --check /tmp/wc_check.mjs || { echo "syntax error in $f"; exit 1; }; done
