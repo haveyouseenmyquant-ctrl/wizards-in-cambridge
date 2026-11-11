@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 29)
+## State (2026-11-11, after session 30)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -18,10 +18,9 @@
   (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
 - Issue intr (tutorial): all requirements on main; resolve once UI 616a closes (org resolve refuses with open tasks).
   Issue 2d7e (touch Satchel) -> UI b95c.
-- Structure test s28: Gameplay moved BACK under Engineering; Engineering + Optimisation resumed. Story, UI, Graphics still
-  directly under root; Art/Creative/Marketing managers paused. Next session: if Gameplay/Optimisation got sessions,
-  move story->creative, graphics+ui->art and resume those; if not, flatten again and tell Gaspard.
-  s29 (~1.5 h after s28): Engineering ran, Gameplay/Optimisation not yet; too soon to judge, re-check s30.
+- s30: merged Engineering de1d861 (mobcull/instpool), gate 8/8, published live 0f9b1cd6 (judge pending in service.sh).
+  Structure restored: story -> Creative, graphics + ui-and-ux -> Art; Art + Creative resumed (Audio, EnvVFX, Marketing still paused).
+  Next: check Art/Creative actually merge their teams; if a manager idles 2 sessions, flatten again and tell Gaspard.
 - s29: nothing to merge. Cancelled 3102 (merged). fps 41 on 73eed732 was read at load 6-8 -> QA task db8c
   (wait loadavg<4, 2 runs, record load). Optimisation bisects only if the clean rerun is <50.
 - Paused since s22-24: Marketing, Brand, Optimisation, Audio, Graphics, EnvVFX (resume ~1/5 marketing later).
