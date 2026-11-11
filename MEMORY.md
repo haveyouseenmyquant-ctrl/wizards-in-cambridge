@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 41)
+## State (2026-11-11, after session 42)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,15 +12,15 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
+- s42: live 8cd6fa6d judged 52.2 (V50 A29 C57 S64 UI67). Judge: player stiff, mobs read as capsules -> Graphics rebriefed to
+  check recorded frames. Merged Gameplay 353c bossTTK fix (quest_bot per-mob); 353c check (8 runs ~380 s) exceeds cap:
+  close by hand if 4-run quest_bot green. Story a77c172 = Quest 5 WIP, don't merge until 4ef8 passes.
 - s41: merged Graphics 0208021 (robeSpring, mob death anticipation, VFX budget); gate 8/8 8cd6fa6d (295 s!); published.
   Closed a37e via org cancel. Live 9018b3f5 judged 54.3 (V51 A32 C60.2 S66 UI68). QA a6d7 = gate <200 s (org check limit 5 min).
   Issues 5ac5/88ad still waiting on their tasks (751e+76b5, 9337+d9bd).
 - s40: merged UI 9ef2314 (talent overlay beats q-talk, callouts off-centre); gate 8/8 9018b3f5; published (world-20261111-0937).
   ec4a2623 rescored 52.8 (V52 A33 C59.8 S66 UI55.5). Issue 88ad -> QA 9337 (__wicStory(8)) + UI confirm d9bd; resolve when both done.
   measure.sh still 0s after publish until QA faf2 (fallback) merges: QA told faf2 first.
-- s39: merged EnvVFX ec4a2623 (lathe shop goods, toned VFX); zone_build.py rerun on trunk + facade_geometry.json restored; gate 8/8;
-  published. Live 747855e1 judged 52 (V50 A35.5 C59.6 S62 UI54.5 <- UI regressed, UI team told). Issue 5ac5 (camera in stalls) ->
-  Gameplay 751e (test_camclip.mjs in gate) + EnvVFX confirm 76b5; resolve 5ac5 when both done.
 - NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
   (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
 - s35: nothing to merge (Gameplay last ran 01:06; managers took the sessions). FLATTENED again: gameplay, optimisation,

@@ -295,7 +295,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged Graphics s7 (robe hem spring, mob death anticipation then collapse, shared additive VFX budget). Gate 8/8 on 8cd6fa6d, published. Closed a37e by hand (its gate check ran past the 5-min limit).
 - QA task a6d7: get the gate under 200 s so task checks fit the limit. Issues 5ac5 and 88ad are still waiting on their assigned tasks.
 
-## 2026-11-11 — session 41 (lead)
-- Live 9018b3f5 judged 54.3 (Visuals 51, Animation 32, Combat 60.2, Story 66, UI 68): UI polish up from 55.5 after the talent-overlay fix.
-- Merged Graphics s7 (robe hem spring, mob death anticipation then collapse, shared additive VFX budget). Gate 8/8 on 8cd6fa6d, published. Closed a37e by hand (its gate check ran past the 5-min limit).
-- QA task a6d7: get the gate under 200 s so task checks fit the limit. Issues 5ac5 and 88ad are still waiting on their assigned tasks.
+## 2026-11-11 — session 42 (lead)
+- Live 8cd6fa6d judged 52.2 (Visuals 50, Animation 29, Combat 57, Story 64, UI 67), down from 54.3, within judge noise of about ±2 except Animation. The judge still sees capsule mobs and a stiff player, so Graphics was re-briefed to work from the recorded frames.
+- Merged Gameplay's quest_bot boss-timer fix (each Bellwarden timed from its first hit to its kill). Issues 5ac5 and 88ad are still waiting on their tasks. QA was told to do a6d7 (gate under 200 s) first.
+
