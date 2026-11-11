@@ -380,3 +380,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-11 — session 56 (lead)
 - Merged QA s10 (camclip probe in recordings; 3/48 combat frames clip on 4a3619f0) and Gameplay (f130 loot plates nearest-2/rare+ and smaller, 11ba boss HP x2.5). Gate 10/10 on 0bbfb4b7; published.
 - Issue 4a30 (camera clip) -> Gameplay c98c (building/stall raycast on the boom) + QA 3f40 confirm. Resolved 11c7. Asked Optimisation to profile townsfolk (fps 60 -> 56).
+
+## 2026-11-11 — session 57 (lead)
+- Merged Optimisation s9 (cc6bd25): townsfolk LOD (merged rig parts, frustum/distance cull, throttled far mixers, no far shadows). Gate 10/10 on 51b68366; published.
+- 0bbfb4b7 judged 54.8 (Visuals 50, Animation 36, Combat 60.5). Notes: Gameplay c98c first, then rotate spells in recordings + hit-stop; Graphics cast poses/hit reactions/death anims. Both open issues already have tasks.

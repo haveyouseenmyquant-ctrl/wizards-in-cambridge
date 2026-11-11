@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 56)
+## State (2026-11-11, after session 57)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,6 +9,8 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s57: merged Optimisation cc6bd25 (townsfolk LOD); gate 10/10 on 51b68366; published. Issues 5d62 (Opt 22df) and 4a30
+  (Gameplay c98c + QA 3f40) still open. 0bbfb4b7 judged 54.8; Animation 36 / Visuals 50 weakest.
 - s56: merged QA s10 (camclip probe: cam_clip_combat_pct in <hash>_wic.json) + Gameplay f130/11ba-step1; gate 10/10 on
   0bbfb4b7; published. Issue 4a30 camera clip -> Gameplay c98c + QA 3f40 confirm; 11c7 resolved. Open: 5d62 (Opt 22df).
   fps 60->56 and load 0.34->0.56 s since townsfolk: Optimisation asked to profile townsfolk.js after 22df.
