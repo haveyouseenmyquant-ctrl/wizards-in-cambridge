@@ -207,7 +207,7 @@ export function install(game) {
   function updatePickups(dt) { const p = game.player;
     // f130: in combat only the nearest 2 uncollected drops (or rare+) show a nameplate, and plates shrink, so they don't pile up
     const fight = !!game.uiScreens?.inCombat?.(); let near2 = null;
-    if (fight) near2 = new Set(pickups.filter(q => !q.got).map(q => [q, Math.hypot(p.x - q.x, p.y - q.y)]).sort((u, v) => u[1] - v[1]).slice(0, 2).map(u => u[0]));
+    if (fight) near2 = new Set(pickups.filter(q => !q.got && q.landed).map(q => [q, Math.hypot(p.x - q.x, p.y - q.y)]).sort((u, v) => u[1] - v[1]).slice(0, 2).map(u => u[0]));
     for (const pk of [...lingering, ...pickups]) {
       if (pk.got) {   // collected: gem flies to the player, pillar + nameplate linger and fade
         const a = (S.t - pk.got.t) / LINGER; if (a >= 1 || !pk.d) { removePickup(pk); continue; }
