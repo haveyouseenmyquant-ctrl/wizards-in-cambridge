@@ -29,6 +29,7 @@ const SECONDS = Number(opt('--seconds', 60));
 const QUERY = opt('--query', '');
 const UNCAPPED = flag('--uncapped');   // no vsync / frame-rate limit: shows headroom above 60; never writes
 const PROFILE = Number(opt('--profile', 0));   // CPU-profile N seconds mid-run and print the top self-time functions
+const PROFILE_AT = opt('--profile-at', null);   // with --profile: start at this second of the run and break down the longest busy run (hitch hunting)
 const NO_WRITE = flag('--no-write') || UNCAPPED || PROFILE > 0;
 const SRC = argv[0] || path.join(ROOT, 'site');
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -126,7 +127,7 @@ async function main() {
     });
     let prof = null;
     if (PROFILE) prof = (async () => {
-      await sleep(Math.max(0, (SECONDS - PROFILE) / 2) * 1000);
+      await sleep((PROFILE_AT != null ? Number(PROFILE_AT) : Math.max(0, (SECONDS - PROFILE) / 2)) * 1000);
       const cdp = await page.createCDPSession();
       await cdp.send('Profiler.enable'); await cdp.send('Profiler.setSamplingInterval', { interval: 200 }); await cdp.send('Profiler.start');
       await sleep(PROFILE * 1000);
@@ -134,6 +135,20 @@ async function main() {
       const dt = {}, tot = { all: 0 };
       const td = profile.timeDeltas; const idx = new Map(profile.nodes.map(n => [n.id, n]));
       profile.samples.forEach((id, i) => { const n = idx.get(id); const cf = n.callFrame; const k = `${cf.functionName || '(anon)'} ${cf.url.split('/').slice(-2).join('/')}:${cf.lineNumber + 1}`; dt[k] = (dt[k] || 0) + (td[i] || 0); tot.all += td[i] || 0; });
+      if (PROFILE_AT != null) {   // longest run of non-idle samples = the hitch: self + inclusive ms inside it
+        const times = []; let t = 0; for (const d of td) times.push(t += d);
+        const parent = new Map(); for (const n of profile.nodes) for (const ch of n.children || []) parent.set(ch, n.id);
+        const key = cf => `${cf.functionName || '(anon)'} ${cf.url.split('/').slice(-2).join('/')}:${cf.lineNumber + 1}`;
+        let best = [0, 0], cur = 0;
+        profile.samples.forEach((id, i) => { if (idx.get(id).callFrame.functionName === '(idle)') cur = i + 1; else if (times[i] - times[cur] > times[best[1]] - times[best[0]]) best = [cur, i]; });
+        log('longest busy run ms', ((times[best[1]] - times[best[0]]) / 1000).toFixed(0), 'at', ((times[best[0]]) / 1e6 + Number(PROFILE_AT)).toFixed(2), 's');
+        const self = {}, incl = {};
+        for (let i = best[0]; i <= best[1]; i++) { const id = profile.samples[i], d = td[i + 1] || 200; const k = key(idx.get(id).callFrame); self[k] = (self[k] || 0) + d;
+          const seen = new Set(); for (let x = id; x; x = parent.get(x)) { const kk = key(idx.get(x).callFrame); if (!seen.has(kk)) { seen.add(kk); incl[kk] = (incl[kk] || 0) + d; } } }
+        log('--self'); for (const [k, v] of Object.entries(self).sort((a, b) => b[1] - a[1]).slice(0, 15)) log((v / 1000).toFixed(1).padStart(6), k);
+        log('--incl'); for (const [k, v] of Object.entries(incl).sort((a, b) => b[1] - a[1]).slice(0, 40)) log((v / 1000).toFixed(1).padStart(6), k);
+        return;
+      }
       const top = Object.entries(dt).sort((a, b) => b[1] - a[1]).slice(0, 30);
       for (const [k, v] of top) log(`${(100 * v / tot.all).toFixed(1).padStart(5)}%  ${k}`);
     })().catch(e => log('profile failed', e.message));
@@ -162,6 +177,9 @@ async function main() {
     out.fps_median = c.length ? c[Math.floor(c.length / 2)] : null;
     detail.fps_p5 = c.length ? c[Math.floor(c.length * 0.05)] : null;
     detail.fps_min = c[0] ?? null;
+    detail.slow_secs = Object.entries(per).filter(([k, v]) => +k < full && v < 50).map(([k, v]) => [+k, v]);   // [second, fps] below 50
+    const gaps = f.slice(1).map((t, i) => [Math.round((f[i] - f[0]) / 100) / 10, Math.round(t - f[i])]).filter(g => g[1] > 34);
+    detail.long_frames = gaps.length; detail.worst_frames = gaps.sort((x, y) => y[1] - x[1]).slice(0, 8);   // [s, ms]
     detail.fight_pct = Math.round(100 * fightTicks / Math.max(1, ticks));
     Object.assign(detail, await page.evaluate('window.__perfStats'));
     detail.dist = Math.round(detail.dist);
