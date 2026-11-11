@@ -22,8 +22,6 @@
   Judge theme: player tiny/hidden in combat -> noted Engineering (closer camera) + Art (secondary motion, VFX blowout, UI overlaps).
 - s33: merged Graphics 1e7c8bd (cast wind-up, mob hit lean, rigged-mob cam clearance) DIRECTLY (Art idle again), gate 8/8,
   published live 429d69f1 (judge pending). 3e26ba7c judged 51.3 (V50 A31 C60.1 S50 UI67). QA task b77e: tutorial_ui.js unhashed (issue 7fe1).
-- s32: merged UI @6a27c0f (616a tutorial_ui, b95c touch Satchel, 3daf loot cards) DIRECTLY to main (Art idle), gate 8/8
-  hash 3e26ba7c, published. Resolved issues intr + 2d7e, cancelled b95c. Judge of 3e26ba7c pending in service.sh.
 - s30: merged Engineering de1d861, published 0f9b1cd6.
   Structure restored: story -> Creative, graphics + ui-and-ux -> Art; Art + Creative resumed (Audio, EnvVFX, Marketing still paused).
 - Paused since s22-24: Marketing, Brand, Optimisation, Audio, Graphics, EnvVFX (resume ~1/5 marketing later).
