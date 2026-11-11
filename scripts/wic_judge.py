@@ -1,14 +1,16 @@
 """judged_game_quality: blind Claude vision judge over the fixed recordings of one build (scripts/wic_record.mjs),
 scored against the frozen rubric docs/RUBRIC.md.
 
-    .venv/bin/python -I scripts/wic_judge.py <record_dir> [-f] [--hash <build_hash>] [--site site] [--samples 2]
+    .venv/bin/python -I scripts/wic_judge.py <record_dir> [-f] [--hash <build_hash>] [--site site] [--passes 3]
 
 For each rubric section a contact sheet is built from the recordings that section is judged on (time order, each
 frame labelled), and the judge (local `claude -p`, model claude-opus-5-5, Read tool only, run in an empty temp dir)
 gets only: the general scoring rules and that section's anchors from RUBRIC.md, neutral descriptions of the
 recordings and the sheet. Combat feel is judged per class (sheet + event summary from gameplay_judge.summarise) and
-averaged. Each judgement is sampled --samples times and averaged. judged_game_quality = weighted mean of the sections.
-judge_meta.section_spread / quality_spread = max - min over samples (judge noise, about +-1 with 2 samples).
+averaged. Each judgement runs --passes (default 3; --samples is an alias) independent judge calls on the same sheets;
+a section's score is the median over passes of that pass's section score, judged_game_quality = weighted mean of the
+section medians. judge_meta: n_passes, section_passes (per-pass section scores), section_spread / quality_spread
+(max - min over passes = judge noise).
 Merged (never clobbering other keys) into data/benchmark/scores/<hash>_wic.json as judged_game_quality,
 judged_sections and judge_meta; skipped if already scored with the same rubric unless -f.
 """
@@ -16,6 +18,7 @@ import hashlib
 import json
 import os
 import re
+import statistics
 import subprocess
 import sys
 import tempfile
@@ -126,7 +129,8 @@ def main():
     a = sys.argv[1:]
     rec = os.path.abspath(a[0])
     site = a[a.index("--site") + 1] if "--site" in a else os.path.join(ROOT, "site")
-    samples = int(a[a.index("--samples") + 1]) if "--samples" in a else 2
+    flag = "--passes" if "--passes" in a else "--samples" if "--samples" in a else None
+    samples = int(a[a.index(flag) + 1]) if flag else 3
     h = a[a.index("--hash") + 1] if "--hash" in a else subprocess.run(
         [sys.executable, "-I", os.path.join(ROOT, "scripts/build_hash.py"), site], capture_output=True, text=True, check=True).stdout.strip()
     secs, ver, rsha = rubric()
@@ -153,13 +157,15 @@ def main():
         if r:
             by.setdefault(sec, {}).setdefault(sub, []).append(r)
             per_sample.setdefault(sec, {}).setdefault(smp, {})[sub] = r["score"]
+    # per pass: section score = mean of that pass's answered sub-judgements; section = median over passes (noise down)
+    passes = {sec: [round(sum(v.values()) / len(v), 1) for _, v in sorted(per_sample.get(sec, {}).items()) if v] for sec in WEIGHTS}
     sections, reasons = {}, {}
     for sec in WEIGHTS:
         subs = by.get(sec, {})
-        if not subs:
+        if not passes[sec]:
             sections[sec] = 0.0   # nothing recorded / judge failed: scores as absent
             continue
-        sections[sec] = round(sum(sum(r["score"] for r in v) / len(v) for v in subs.values()) / len(subs), 1)
+        sections[sec] = round(statistics.median(passes[sec]), 1)
         reasons[sec] = {k or "all": v[0]["reason"] for k, v in subs.items()}
     q = round(sum(WEIGHTS[s] * sections[s] for s in WEIGHTS), 1)
     # spread = max - min over samples of the section score (and of the weighted total), so judged thresholds can
@@ -173,7 +179,8 @@ def main():
     # re-read and merge just before writing: other harness steps may have written keys meanwhile
     cur = json.load(open(out)) if os.path.exists(out) and os.path.getsize(out) else {}
     cur.update({"judged_game_quality": q, "judged_sections": sections,
-                "judge_meta": {"rubric_version": ver, "rubric_sha": rsha, "model": JUDGE_MODEL, "samples": samples,
+                "judge_meta": {"rubric_version": ver, "rubric_sha": rsha, "model": JUDGE_MODEL, "samples": samples, "n_passes": samples,
+                               "aggregate": "median over passes", "section_passes": passes,
                                "calls": len(res), "failed_calls": failed,
                                "section_spread": spread, "quality_spread": q_spread, "frames": sum(len(v.get("frames", [])) for v in man["scenes"].values()),
                                "recording_errors": man.get("errors", [])[:10], "reasons": reasons}})
