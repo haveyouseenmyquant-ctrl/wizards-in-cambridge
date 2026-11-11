@@ -1,4 +1,160 @@
 {
  "main_quests_shipped": 4,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 7.1,
+  "main_quests_shipped": 4,
+  "wall_s": 83,
+  "at": "2026-11-11T13:36:25.539Z"
+ },
+ "judged_game_quality": 54.2,
+ "judged_sections": {
+  "Visuals": 50.0,
+  "Animation": 35.0,
+  "Combat feel": 59.6,
+  "Story presentation": 66.0,
+  "UI polish": 66.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0.0,
+   "Animation": 2.0,
+   "Combat feel": 0.2,
+   "Story presentation": 0.0,
+   "UI polish": 0.0
+  },
+  "quality_spread": 0.5,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together and is easy to recognise. Buildings are textured, there are real-time shadows, warm low-sun lighting with some atmospheric haze, and plenty of props like market stalls, bikes, railings and trees. Geometry is still blocky and simple: flat facades, box-shaped shop interiors, tiled materials and a low-poly bush. The characters are small and low-detail with basic silhouettes, little ambient occlusion or bounce light shows, and combat effects are flat green and white shapes. Overall it sits well short of the 60 anchor's prop detail and character quality."
+   },
+   "Animation": {
+    "all": "The player character is in all frames, and there's some pose variety: walking with a staff in the exploration shots and a raised-staff casting pose in a few combat frames (e.g. 9). Most combat feedback comes from projectiles, beams, ground decals and damage numbers rather than readable body motion. Enemies show up only as small, pale, ghostly figures with no visible wind-ups, hit reactions or death animations beyond a 'STAGGERED' label, and the city has no visible crowds or foliage/cloth motion."
+   },
+   "Combat feel": {
+    "hexweaver": "Combat in the frames is full and easy to read. There are damage numbers and crit callouts, STAGGERED/INTERRUPTED tags, chain counters, and a Bellwarden boss with a phase bar, an 'enraged' banner and a named 'Clapper Sweep' attack. Loot callouts are colour-coded by rarity, including an epic drop. Six spells are triggered, with mobility (shade_step), and some enemies are seen in windup. Against that, most VFX are blobby translucent circles and beams that often hide the action. Camera angles are awkward at times (frames 1, 9). The boss dies in about 13 s, and the frames show no visible hit-stop, knockback or crowd-control shapes. Only one class can be judged here, so there is no evidence that classes play differently.",
+    "pyromancer": "The pyromancer fight shows working mid-tier combat. There are six spells on cooldown bars, CRIT and STAGGERED damage numbers, a chain-combo counter, and a named boss with a Phase I\u2013III bar that reaches an enraged phase with a named attack ('Peal of Shards'). There is also a ground-crack telegraph, and loot drops show coloured beams and rarity-tagged item cards. The spell effects are mostly blurry orange blobs, and in busy frames like 3 and 4 they turn into hard-to-read clutter. The frames show no clear hit-stop, knockback or crowd control. A 591 number appears on screen even though the log's max hit is 67, which makes the feedback less trustworthy. Only one class is shown, so this sheet gives no evidence that the classes play differently.",
+    "stormcaller": "The visible evidence puts this just under the 60 anchor. There are crit damage numbers, STAGGERED tags, chain-count popups, a three-phase boss with a named bar and a PHASE II banner, loot labels and beams coloured by rarity, and the event log shows a varied six-spell kit with 3515 sound voices. The biggest gaps are weak readability and impact: enemies are tiny or hidden by the camera, there are no clear attack telegraphs and no visible hit-stop or knockback. Half the frames show no combat, and the camera clips into walls in frames 7, 8 and 10. Only one class was recorded, so I couldn't check whether the classes play differently.",
+    "warden": "Combat has real depth: six warden spells with cooldowns, damage and crit numbers, STAGGERED/INTERRUPTED callouts, chain counters, a phased Bellwarden boss with an enrage banner, and loot drops in common through epic with rarity-coloured toasts and beams. Readability suffers, though. Several frames are cluttered by translucent shield domes and camera-filling effects that hide enemies and the player. Enemies show up as small, simple low-poly models with little visible telegraphing or variety in formation. The player took 0 damage and pebble_shot was 62 of 83 casts, so the fight looks one-sided and repetitive, with no clear evidence of hit-stop or knockback."
+   },
+   "Story presentation": {
+    "all": "The game shows named characters on screen in letterboxed over-the-shoulder shots with portraits, branching reply choices, well-written lines, and a quest tracker with distances tied to real Cambridge locations (Market Hill, Great St Mary's, the Guildhall). It also has a boss reveal and a quest-complete reward card. The biggest gaps are the simple low-poly characters with no visible facial expression or performance, no evidence of voice acting, and a static, text-box-driven staging well short of true cinematics."
+   },
+   "UI polish": {
+    "all": "The UI has a consistent dark-and-gold serif theme across the class select, inventory and talent screens. The class cards are clear, the boss bar has phase markers, item rarity is tagged, and there is a minimap and readable resource bars. The biggest gaps are the small, cramped text on the menus and talent tiles, and the cooldown icons, which are mostly bare numbers on dark squares rather than spell art. Combat feedback text (INTERRUPTED, STAGGERED, loot popups) stacks and clutters the middle of the screen, and the inventory has a lot of empty, flat space."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.36,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.96,
+  "programs": [
+   70,
+   84
+  ],
+  "fps_p5": 59,
+  "fps_min": 50,
+  "slow_secs": [],
+  "long_frames": 3,
+  "worst_frames": [
+   [
+    0.5,
+    65
+   ],
+   [
+    0.1,
+    50
+   ],
+   [
+    0.1,
+    50
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 26,
+  "maxMobs": 36,
+  "dist": 202,
+  "laps": 1,
+  "draw_calls_median": 1348,
+  "tris_median": 7008047,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 5.94,
+  "loadavg_after": 2.16,
+  "waited_s": 1209,
+  "load_ok": false,
+  "max_load": 4.0,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.36,
+    "loadavg_before": 5.94,
+    "loadavg_after": 3.64,
+    "fps_p5": 59
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.35,
+    "loadavg_before": 3.64,
+    "loadavg_after": 2.16,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-11T14:06:03+00:00"
+ }
 }
