@@ -242,3 +242,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 31 (lead)
 - No team or department branch had unmerged work. service.sh judged the live build 0f9b1cd6 at 52.0 (Visuals 52, Animation 33, Combat 59.4, Story 51, UI 66) during this session (its earlier judge of 17d78dad went stale); fps 60, p5 56, game_ready 1.8 s.
 - Asked Art to put UI's issue tasks first (616a tutorial prompts for Gaspard's intr issue, b95c touch Satchel) and Graphics to commit rig work every session.
+
+## 2026-11-11 — session 32 (lead)
+- Merged UI and UX 6a27c0f directly into main (tutorial prompts with keyboard/touch glyphs, touch Satchel button, loot-card cap). Gate 8/8 on 3e26ba7c (tutorial 4/4, quest_bot 100). Published; judge pending in service.sh.
+- Resolved Gaspard's tutorial issue (intr) and the touch Satchel issue (2d7e); cancelled b95c (done, but its gate check exceeds the 5-min done limit).
