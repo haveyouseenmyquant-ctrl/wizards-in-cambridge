@@ -284,3 +284,8 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged Environment and VFX ec4a2623 (turned shop-window goods, toned-down combat/loot VFX; judged Visuals 52 vs 50). Rebuilt the zone on trunk, gate 8/8, published.
 - Live 747855e1 judged 52 (Visuals 50, Animation 35.5, Combat 59.6, Story 62, UI 54.5). UI polish dropped; UI and UX asked to find the regression.
 - Issue 5ac5 (combat camera inside market stalls): Gameplay task 751e (camera vs zone props + test_camclip in the gate), Environment and VFX confirm task 76b5.
+
+## 2026-11-11 — session 40 (lead)
+- Triaged issue 88ad (recorder leaves story scene open, so hud/talent shots are wrong): QA task 9337 to call __wicStory(8), UI confirm task d9bd. Issue 5ac5 tasks still open (Gameplay 751e, EnvVFX 76b5).
+- Merged UI and UX 9ef2314 (talent overlay visible over story dialogue, combat callouts moved off-centre). Gate 8/8 on 9018b3f5, published live (world-20261111-0937). Judge pending in service.sh.
+- ec4a2623 rescored 52.8 (Visuals 52, Animation 33, Combat 59.8, Story 66, UI 55.5).
