@@ -81,7 +81,8 @@ reap() { # QA s7: kill test browsers leaked by killed harness runs (puppeteer/pl
   local p e
   for p in $(pgrep -f "puppeteer_dev_chrome_profile|playwright_chromiumdev_profile"); do
     [ "$(ps -o ppid= -p $p | tr -d ' ')" = 1 ] || continue
-    e=$(ps -o etime= -p $p | tr -d ' '); case $e in *-*|[0-9][0-9]:*:*) ;; 0[2-9]:*:*) ;; *) continue ;; esac
+    e=$(ps -o etime= -p $p | tr -d ' ')   # [[dd-]hh:]mm:ss
+    [ "$(echo "$e" | awk -F'[-:]' '{s=0; for (i=1; i<=NF; i++) s = s*(i==NF-2 && NF==4 ? 24 : 60) + $i; print (s > 7200)}')" = 1 ] || continue
     ps -o command= -p $p | grep -q Helper && continue
     echo "$(date -u +%FT%TZ) reap leaked test browser $p (age $e)"; kill $p
   done
