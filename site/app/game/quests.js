@@ -148,7 +148,9 @@ export async function install(game) {
 
   function placeNpcs(q) {   // snapped to walkable ground once the tiles under them have streamed in
     for (const [id, n] of Object.entries(q.npcs)) {
-      if (n.x == null || npcs[id]?.placed || q.steps.some((s, i) => s.exit && s.npc === id && i < st.step)) continue;   // `exit` talk steps: the NPC leaves the scene
+      const ex = (s, i) => (s.exit === true ? s.npc : s.exit) === id && i < st.step;   // step `exit` (true = its npc, or an id): the NPC leaves after it
+      if (n.x == null || npcs[id]?.placed || q.steps.some(ex)) continue;
+      if (n.appear && !(q.steps.findIndex(s => s.id === n.appear) <= st.step)) continue;   // npc `appear: stepId`: walks on when that step starts
       if (!game.world.covered?.(n.x, n.y)) continue;
       const s = sys()?.findSpot?.(n.x, n.y, 6) || (game.groundAt(n.x, n.y) != null ? { x: n.x, y: n.y, z: game.groundAt(n.x, n.y) } : null);
       if (!s) continue;
@@ -184,8 +186,8 @@ export async function install(game) {
   }
   function completeStep() {
     const s = cur(); st.phase = 'outro'; shard.visible = false; sfx.play?.('pickup');
-    if (s.exit && npcs[s.npc]?.g) npcs[s.npc].g.visible = false;
     say(s.type === 'talk' ? [] : (s.dialogue || []), () => {
+      const gone = s.exit === true ? s.npc : s.exit; if (gone && npcs[gone]?.g) npcs[gone].g.visible = false;
       if (s.travel) travel(s.travel);
       st.step++; save[st.q.id].step = st.step; game.persist();
       if (st.step >= st.q.steps.length) return finish();
