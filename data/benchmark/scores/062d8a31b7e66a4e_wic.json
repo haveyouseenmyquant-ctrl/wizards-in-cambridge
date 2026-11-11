@@ -1,6 +1,6 @@
 {
  "main_quests_shipped": 6,
- "quest_bot_pass_pct": 75,
+ "quest_bot_pass_pct": 100,
  "playtest_pass_pct": 91.7,
  "per_class": {
   "pyromancer": {
@@ -170,11 +170,11 @@
  ],
  "judged_game_quality": 55.8,
  "judged_sections": {
-  "Visuals": 50.0,
-  "Animation": 34.0,
-  "Combat feel": 63.0,
-  "Story presentation": 70.0,
-  "UI polish": 68.0
+  "Visuals": 50,
+  "Animation": 34,
+  "Combat feel": 63,
+  "Story presentation": 70,
+  "UI polish": 68
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -185,39 +185,39 @@
   "aggregate": "median over passes",
   "section_passes": {
    "Visuals": [
-    52.0,
-    50.0,
-    50.0
+    52,
+    50,
+    50
    ],
    "Animation": [
-    34.0,
-    33.0,
-    34.0
+    34,
+    33,
+    34
    ],
    "Combat feel": [
-    63.0,
-    63.0,
+    63,
+    63,
     63.5
    ],
    "Story presentation": [
-    66.0,
-    70.0,
-    70.0
+    66,
+    70,
+    70
    ],
    "UI polish": [
-    68.0,
-    66.0,
-    68.0
+    68,
+    66,
+    68
    ]
   },
   "calls": 24,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 2.0,
-   "Animation": 1.0,
+   "Visuals": 2,
+   "Animation": 1,
    "Combat feel": 0.5,
-   "Story presentation": 4.0,
-   "UI polish": 2.0
+   "Story presentation": 4,
+   "UI polish": 2
   },
   "quality_spread": 0.6,
   "frames": 68,
@@ -292,7 +292,7 @@
   "loadavg_after": 3.89,
   "waited_s": 998,
   "load_ok": true,
-  "max_load": 4.0,
+  "max_load": 4,
   "runs": [
    {
     "fps_median": 60,
@@ -310,5 +310,18 @@
    }
   ],
   "at": "2026-11-11T21:35:24+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
  }
 }
