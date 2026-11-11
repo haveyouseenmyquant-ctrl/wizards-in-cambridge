@@ -57,8 +57,9 @@ run_step() { # name command...   (exit 0 ok, 2 game failure, else harness failur
 }
 
 judge() {
-  rm -rf /tmp/wic_rec; node scripts/wic_record.mjs "$S" /tmp/wic_rec || return 1
-  $PY -I scripts/wic_judge.py /tmp/wic_rec --site "$S" --hash "$H" -f
+  local R=/tmp/wic_rec_svc   # QA s6: own dir (a manual rescore in /tmp/wic_rec was wiped mid-run by this step)
+  rm -rf $R; node scripts/wic_record.mjs "$S" $R || return 1
+  $PY -I scripts/wic_judge.py $R --site "$S" --hash "$H" -f
 }
 playtest() {   # wic_playtest.mjs merges its own keys; exit 2 = game failures (still a measurement)
   if [ -f scripts/wic_playtest.mjs ]; then node scripts/wic_playtest.mjs "$S"; return; fi
