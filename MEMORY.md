@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 38)
+## State (2026-11-11, after session 39)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,6 +12,9 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
+- s39: merged EnvVFX ec4a2623 (lathe shop goods, toned VFX); zone_build.py rerun on trunk + facade_geometry.json restored; gate 8/8;
+  published. Live 747855e1 judged 52 (V50 A35.5 C59.6 S62 UI54.5 <- UI regressed, UI team told). Issue 5ac5 (camera in stalls) ->
+  Gameplay 751e (test_camclip.mjs in gate) + EnvVFX confirm 76b5; resolve 5ac5 when both done.
 - s38: merged Optimisation a95b (837a3c0, ff; game_ready 1.73->0.88 s, progate.js). Gate 8/8 on 747855e1; published live
   (release world-20261111-0832); judge pending -> measure.sh 0s. QA task faf2 = measure.sh fallback to newest scored build.
   EnvVFX RESUMED directly under root (926d stalls first; Visuals 50). Live judge of 645eac53: 52.5 (V50 A30 C60.6 S66 UI60).
@@ -19,9 +22,6 @@
   Live hash 73eed732 judged 52.2 (V52 A30 C59.9 S55.5 UI66), quests 4, playtest 100; fps not yet measured (service.sh does it).
   NEVER run wic_perf while service.sh/gate runs a browser: my s28 run read 41 fps (contaminated, deleted). Another project
   (poker service.sh train.py) holds 3 CPU cores for hours -> can depress fps. 025eacbb perf read 49 once.
-- s37: merged QA s7 (184f: build_hash adds tutorial_ui.js + auto-includes unlisted modules; wic_perf_robust in service.sh). Live build
-  re-hashes 9c5df3a4 -> 645eac53 (same files); copied its judge 51.7 (V48.5 A29 C58.5 S66 UI61.5) into 645eac53_wic.json. Issue 7fe1 resolved.
-  Story task 4ef8 = main quest 5 (ring 1). Lowest sections: Animation 29, Visuals 48.5.
 - s35: nothing to merge (Gameplay last ran 01:06; managers took the sessions). FLATTENED again: gameplay, optimisation,
   graphics, ui-and-ux, story -> under root; Engineering/Art/Creative PAUSED. Merge team branches directly. Told Gaspard.
 - s18: merged EnvVFX parametric roofs (65c4c0e). Tiles/collision are git-ignored and NOT in build_hash (only via collision/digest.json from publish.sh):
