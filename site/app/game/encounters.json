@@ -143,6 +143,17 @@
 "boss": true
 },
 {
+"id": "boss-magdalene-bridge",
+"name": "The Quant-King of Magdalene Bridge",
+"x": -290,
+"y": 570,
+"r": 16,
+"mobs": [
+"quant_king"
+],
+"boss": true
+},
+{
 "id": "gen-000",
 "name": "Ring 1 cloisters - Sidney Street",
 "x": 1.4,

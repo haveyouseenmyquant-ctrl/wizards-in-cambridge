@@ -1,0 +1,103 @@
+{
+  "id": "tutorial",
+  "title": "A Saturday Assistant",
+  "summary": "Late afternoon on Market Hill, an hour before the thirteenth chime. Nell Tapscott needs a hand packing up her flower stall and notices something about you that nobody else has.",
+  "mentor": "nell",
+  "npcs": {
+    "nell": { "name": "Nell Tapscott", "role": "Flower-seller, Market Hill", "x": -106.5, "y": 90.5, "face": 0,
+      "robe": "#3f6b4a", "trim": "#e9c46a", "skin": "#e0b48f", "hair": "#8a4b2a", "hat": "scarf" },
+    "narrator": { "name": "", "role": "" }
+  },
+  "steps": [
+    { "id": "intro", "speaker": "nell",
+      "lines": [
+        "narrator: Market Hill, late on a grey afternoon. Great St Mary's tower watches over the striped stall roofs; the Guildhall glowers across the square.",
+        "nell: You. Yes, you, with the lost look. My Saturday girl's gone home with a cold and these buckets won't carry themselves. Ten pounds and all the rosemary you can smell.",
+        "nell: Hold that bundle. No, by the stems. ...Well. Would you look at that.",
+        "narrator: A thread of light runs out of your fingers and through the rosemary. The leaves turn towards you, like a field towards the sun.",
+        "nell: Thought so. You've got the knack, love, and you've got it loud. The old places in this city will hear you whether you like it or not.",
+        "nell: The name's Nell Tapscott. I sell flowers, and I keep an eye on things. Before the hour strikes, I'm going to teach you to stand up straight, move quick and keep that knack of yours pointed away from my dahlias."
+      ],
+      "prompt_kbm": "Press E or Enter to continue",
+      "prompt_touch": "Tap the dialogue box to continue" },
+
+    { "id": "move", "speaker": "nell",
+      "lines": [ "nell: First things first. Walk with me to the end of the stalls, and mind the cobbles. They've tripped better wizards than you." ],
+      "prompt_kbm": "Move with W A S D (or the arrow keys)",
+      "prompt_touch": "Drag the joystick at bottom left to walk" },
+
+    { "id": "look", "speaker": "nell",
+      "lines": [ "nell: Now look about you. Up at the tower, over at the Guildhall. Half of what's wrong in this city is up on a roof, so get used to looking." ],
+      "prompt_kbm": "Move the mouse to look around (click the view first to capture the mouse)",
+      "prompt_touch": "Drag anywhere on the right of the screen to look around" },
+
+    { "id": "jump", "speaker": "nell",
+      "lines": [ "nell: Hop up on that kerb. Go on. The market was built on a hill and it never let anyone forget it." ],
+      "prompt_kbm": "Press Space to jump",
+      "prompt_touch": "Tap the Jump button" },
+
+    { "id": "run", "speaker": "nell",
+      "lines": [ "nell: Faster. When something in this city comes for you, you won't be strolling to the bus stop." ],
+      "prompt_kbm": "Hold Shift while moving to run",
+      "prompt_touch": "Tap Run to toggle running, or push the joystick all the way out" },
+
+    { "id": "dash", "speaker": "nell",
+      "lines": [ "nell: And when it swings at you, don't be there. A quick step to the side. That's the whole secret of staying alive, and most people never learn it." ],
+      "prompt_kbm": "Press Q to dash in the direction you are moving",
+      "prompt_touch": "Tap the Dash button while moving" },
+
+    { "id": "broom", "speaker": "nell",
+      "lines": [
+        "nell: Here. Take the yard broom from under the stall. Not for sweeping. Hold it like you mean it and push.",
+        "narrator: The broom bucks once, then lifts you a hand's breadth off the setts and hums like a kettle.",
+        "nell: The old Wardens rode the commons on these. Press again to come down, and don't try King's Parade on a Saturday."
+      ],
+      "prompt_kbm": "Press B to mount or dismount the broom; Space rises, C descends",
+      "prompt_touch": "Tap Broom to mount or dismount; Jump rises, Crouch descends" },
+
+    { "id": "cast", "speaker": "nell",
+      "lines": [
+        "nell: Now that knack of yours. Point it at the old fountain basin. It's survived worse than you.",
+        "nell: Every one of your tricks, one after another. Learn how each one feels in the hand, so you don't have to think about it later."
+      ],
+      "by_class": {
+        "pyromancer": "nell: Fire. Of course it's fire. Keep it off the chrysanthemums.",
+        "stormcaller": "nell: Lightning and wind. That'll be why my awning keeps flapping when you walk past.",
+        "warden": "nell: Stone, is it? Steady sort. The city likes that; it's mostly stone itself.",
+        "hexweaver": "nell: Hexes. Hm. Not a word to the vicar, and never on anyone who hasn't earned it."
+      },
+      "prompt_kbm": "Cast each spell once: keys 1 to 6 (left mouse also casts spell 1). Aim with the mouse",
+      "prompt_touch": "Tap each spell button once; spells aim at the nearest target or where you face" },
+
+    { "id": "first_mob", "speaker": "nell",
+      "lines": [
+        "narrator: Between two stalls a pale light gutters on, and bobs, and drifts towards you on the wind.",
+        "nell: A wisp off the commons. Stray, by the look of it, and weak as dishwater. It'll still nip. Watch for it to flare before it lunges, step aside, and put it out."
+      ],
+      "prompt_kbm": "Defeat the wisp: cast at it, and press Q to dodge when it flares. Tab locks on",
+      "prompt_touch": "Defeat the wisp: tap your spells and tap Dash to dodge when it flares" },
+
+    { "id": "loot", "speaker": "nell",
+      "lines": [ "nell: There. It dropped something; they always carry a bit of what they've stolen. Pick it up before a pigeon does." ],
+      "prompt_kbm": "Walk over the glowing drop to pick it up (press E at a chest to open it)",
+      "prompt_touch": "Walk over the glowing drop to pick it up" },
+
+    { "id": "equip", "speaker": "nell",
+      "lines": [ "nell: Put it on, then. Wardens wear what the city gives them. Gold edging means it's special, grey means it's not worth arguing over." ],
+      "prompt_kbm": "Press I to open your satchel, then click the item to equip it",
+      "prompt_touch": "Tap the Satchel button, then tap the item to equip it" },
+
+    { "id": "quest_log", "speaker": "nell",
+      "lines": [
+        "nell: Last thing. When I ask you to go somewhere, the tracker in the corner tells you where, and the pale beam shows you the spot. Follow it and you won't end up in a car park.",
+        "nell: That's the basics. Now help me with these buckets, and keep your ears open. It's nearly the hour.",
+        "narrator: Above the square, the clock of Great St Mary's ticks towards the hour."
+      ],
+      "prompt_kbm": "The quest tracker (top right) shows your goal; follow the beam of light. Press E to finish",
+      "prompt_touch": "The quest tracker (top right) shows your goal; follow the beam of light. Tap to finish" }
+  ],
+  "skip": {
+    "label": "Skip tutorial",
+    "line": "nell: Done this before, have you? Fine. Keep your ears open; it's nearly the hour."
+  }
+}

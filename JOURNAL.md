@@ -162,3 +162,56 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - wic_playtest.mjs: children default to WIC_TEST_GPU=1 + WIC_TEST_QUERY=&q=low; playtest.mjs now uses wicLaunch and honours
   WIC_TEST_QUERY. Full main-path playtest 765 s -> 91-107 s, same 12 judged runs. One intermittent warden quest_bot fail
   (crest_griffin not killed in time) seen once in 2 runs.
+
+## 2026-11-10 — session 17 (lead)
+- Merged QA 5d49e23: the main-path playtest runs on GPU Chrome with the low preset (~100 s instead of 765 s).
+- No other branch was ready. EnvVFX has not committed any roof work yet (dd7b, Gaspard's priority). Graphics and Story still have uncommitted work in their worktrees; all three were told again. The warden crest_griffin flake was passed to Gameplay.
+- measure.sh (live 448ceb61): judged 51.4, quests 3, playtest 100, fps 60, load 0.51.
+
+## 2026-11-10 — session 18 (lead)
+- Merged EnvVFX parametric roofs (Gaspard's priority): flat+parapet/gable/hip/mansard/lean-to fitted to the DSM, landmarks unchanged;
+  rebuilt site/tiles+collision (348 -> 143 MB tiles). Gate: 5/6 then quest_bot rerun 4/4 (flake). Before/after: data/derived/roof_shots/ab_*.jpg, docs/roofs_parametric_*.jpg. Publishing.
+- Restructured into a studio: departments Art (Graphics, EnvVFX, new UI and UX), Engineering (Gameplay, Optimisation),
+  Creative (Story, new Audio and Music), Marketing (new Brand and Store Page). QA stays under the studio head.
+  Starter tasks: 3daf UI polish>68, eebc audio v1, abd9 marketing drafts.
+
+## 2026-11-10 — session 19 (lead)
+- Triaged Gaspard's high issue (intro too harsh, no tutorial) into four tasks with one shared contract: Gameplay f917 (tutorial.js,
+  no mobs or damage while it runs, first enemy one weak mob), Story 514c (intro scene + step text), UI and UX 616a (kbm/touch prompts),
+  QA a328 (test_tutorial.mjs in the gate; bots skip via ?tutorial=0). Department heads told it outranks other game work.
+- Nothing to merge: no department branch is ahead of main. s18 publish succeeded (live 448ceb61 includes the roofs).
+- measure.sh (live 448ceb61): judged 51.4, quests 3, playtest 100, fps 60, load 0.41.
+
+## 2026-11-10 — session 20 (lead)
+- Merged Marketing (drafts, press kit, site/about/), Creative (procedural audio v1, test_audio) and Art (UI title/class-select, HUD de-overlap, icons, About link). Only conflict: index.js MODULES (union).
+- Gate 7/7 ok on 473c678d (fps 60, 12 mob types, 58 effects, quest_bot 3 quests 100%). Published: Pages serves 473c678d, about/ live.
+- Tutorial issue (intr) tasks still open with Gameplay, Story, UI, QA. New build awaits service.sh scoring (measure.sh 0 until then).
+
+## 2026-11-10 — session 21 (lead)
+- service.sh has scored the live build 473c678d: judged 52.2 (Visuals 51, Animation 33.5, Combat 62, Story 52, UI 63), quests 3, playtest 100, fps 60, load 0.46.
+- Merged Marketing's checklist tick. No other branch ready; the tutorial issue (intr) tasks are still open with Gameplay, Story, UI and QA.
+
+## 2026-11-10 — session 22 (lead)
+- Merged Art 87728b0 (Graphics: rigged gargoyle, wisp and bell-bat mobs, Quaternius CC0; player locomotion layer and hat spring; corpses sink after 2 s). Gate 7/7 on 88f478c1 (fps 61, 12 mob types, 3 bosses). Published.
+- The tutorial issue (intr) has had no commits from any of its four teams for three sessions. Paused Marketing, Brand and Store Page, and Optimisation so Gameplay gets the sessions; Gameplay told to ship f917 on its own with fallback text.
+
+## 2026-11-10 — session 23 (lead)
+- service.sh scored the live build 88f478c1: judged 52.3 (Visuals 54, Animation 33.5, Combat 60.9, Story 50, UI 62.5), quests 3, playtest 100, fps 60, load 0.33.
+- Nothing to merge: no team has run since s22. Tutorial issue (intr) tasks still open. Paused Audio and Music too, so Gameplay, Story and UI get the sessions; re-sent tutorial-first notes to Engineering, Creative and Art.
+
+## 2026-11-11 — session 24 (lead)
+- Nothing to merge: no team has committed since s22. Live 88f478c1: judged 52.3, quests 3, playtest 100, fps 60, load 0.33.
+- Tutorial issue (intr) still has no commits. Paused Graphics and Environment and VFX as well, so only QA, Gameplay, Story and UI and UX compete for team sessions; managers told the four tutorial tasks ship standalone.
+
+## 2026-11-11 — session 25 (lead)
+- No team had a session since about 18:30 on 10 Nov; only department managers ran. Moved Gameplay, Story and UI and UX directly under the lead and paused the Engineering, Creative and Art managers, so the active nodes are now the four tutorial teams (with QA). Told Gaspard.
+- Nothing to merge (Story's b0f8 branch still fails quest_bot at 2/4 classes). Live 88f478c1: judged 52.3, quests 3, playtest 100, fps 60, load 0.33.
+
+## 2026-11-11 — session 26 (lead)
+- Merged Story fe7cc01: tutorial script (514c, Nell Tapscott, 12 steps with keyboard and touch prompts) and Quest 4 "The Ferry Bell". Gate 7/7 on 4c07514a (fps 60, 12 mob types, 4 bosses, quest_bot 4 quests 100%). Published.
+- Triaged issue 2d7e (no touch Satchel button) to UI and UX (task b95c). Tutorial issue (intr) still needs Gameplay f917, UI 616a and QA a328.
+
+## 2026-11-11 — session 27 (lead)
+- service.sh scored 4c07514a: judged 51.6 (Visuals 51, Animation 31, Combat 60.4, Story 51, UI 66), quests 4, playtest 100, fps 60, load 0.42.
+- Merged Gameplay: tutorial.js (f917: no spawns or damage while the tutorial runs, one weak wisp first) and combatcam.js (3102). Gate 7/7 on 025eacbb, tutorial smoke passes. Published.
+- Resumed Graphics (Animation is the weakest section). Tutorial issue (intr) now needs only UI 616a and QA a328.

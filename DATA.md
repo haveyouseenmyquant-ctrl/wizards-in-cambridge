@@ -88,9 +88,23 @@ Market stalls / street furniture (session 34, `scripts/zone_props.py`, `scripts/
 - Mob models `site/models/mobs/{statue,wraith,automaton,imp}.glb`: KayKit "Skeletons" Character Pack 1.0
   (Skeleton_Warrior, _Mage, _Rogue, _Minion), Kay Lousberg, CC0 1.0, same trimming (idle/walk/run/attack/attack2/hit/
   death/spawn/taunt). Drawn in game by `site/app/game/mob_rig.js` for statue, river_wraith, automaton, ink_imp, punt_revenant.
+- Mob models `site/models/mobs/{gargoyle,wisp,bat}.glb` (graphics, replace the procedural gargoyle / wisp / bell_bats
+  bodies): Quaternius "Ultimate Monsters" via Poly Pizza, CC0 1.0 as listed on each page: "Demon" (flying, winged)
+  https://poly.pizza/m/Mo2ky6vkf8 (glb static.poly.pizza/c2e39eb4-4b8e-4d31-b014-d637bf4e15c6.glb) -> gargoyle.glb;
+  "Ghost" https://poly.pizza/m/Iip30bDHmu (static.poly.pizza/810f60a2-6e45-4c4e-a0d5-da91cd7288bd.glb) -> wisp.glb;
+  "Bat" https://poly.pizza/m/hNO9XvjlKa (static.poly.pizza/4ae13ae9-c257-41ed-86b5-1b4760924ebc.glb) -> bat.glb.
+  Trimmed by `scripts/build_char_glb.mjs` (idle(Flying_Idle)/run(Fast_Flying)/attack(Punch)/attack2(Headbutt)/
+  hit(HitReact)/death/taunt(No); bat: run(Bat_Flying)/attack/attack2/hit/death; walk/idle aliased at runtime), meshopt.
+  Recoloured per material at runtime by `mob_rig.js` (grey stone gargoyle, glowing teal wisp, a 3-bat swarm). Credited in-game.
 - Story NPC models `site/models/npcs/{nell,pip,absalom}.glb`: KayKit Adventurers 1.0 (`Rogue`, `Rogue_Hooded`, `Mage`
   without hat/weapons), Kay Lousberg, CC0 1.0; clips idle/talk(Interact)/walk/wave(Cheer)/hit/death; recoloured at
   runtime from the palettes in `site/app/game/quests/*.json` by `site/app/game/npc_rig.js`.
+
+## Audio (audio node, 10 Nov 2026)
+All sound and music is synthesised in the browser with WebAudio (oscillators and filtered noise); no audio files, samples
+or third-party recordings are used (0 bytes of audio assets). The score and all sound designs are original. The Great St
+Mary's chime is the "Cambridge Quarters" (composed for Great St Mary's in 1793, public domain), played on synthesised bells.
+Code: site/app/game/audio.js, audio_world.js, audio_music.js, audio_game.js, sfx.js; checklist: docs/audio_checklist.md.
 
 ## Held-out benchmark (session 8)
 - 200 Mapillary photos (CC-BY-SA 4.0, contributors credited per photo in `data/benchmark/benchmark.json`),

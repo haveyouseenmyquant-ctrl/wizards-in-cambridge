@@ -135,7 +135,7 @@ async function sceneExplore() {
 async function sceneMenusStory() {
   manifest.scenes.menus = { desc: 'Menus and HUD on a fresh save: class selection, the in-game HUD, inventory and talent screens', frames: [] };
   manifest.scenes.story = { desc: '', frames: [] };
-  const { ctx, page } = await openPage('?debug', 2);
+  const { ctx, page } = await openPage('?debug&tutorial=0', 2);
   await page.waitForFunction('window.__game && window.__game.caster && window.__game.hud', { timeout: 120000 });
   // the class picker opens on the game's 'ready' event (paused game), so wait for it before gating the clock
   // (game bug seen 2026-11-10: classes.js stores a default class before 'ready', so a new game never opens the picker;

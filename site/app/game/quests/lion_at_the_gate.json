@@ -76,10 +76,10 @@
         { "who": "player", "line": "The porters were wound with a new key. Corvin's had keys cut for every lock on the Parade." },
         { "who": "gadd", "line": "Then somebody cut them for him. And the water coming up the gutters, that's from the Backs. Something's opened a way under the river." },
         { "who": "gadd", "line": "Here: a piece of the lion's shield. It took a hundred years of rain without a crack; it'll take a hit or two for you." },
-        { "who": "gadd", "line": "Now go and see the Sister in Bene't Street. Absalom says the Saxon bell's ringing flat, and she'll know whose key that is." }
+        { "who": "gadd", "line": "Now, that water. Folk up Bridge Street say there's a mist round the Round Church that won't shift. Follow the water, love, and you'll find who's letting it in." }
       ] }
   ],
   "checkpoint": { "x": -190, "y": -55, "name": "King's Parade", "look": [-197, -22] },
   "rewards": { "xp": 600, "items": [ "quest_crest_ward" ], "title": "Warden of the Parade" },
-  "next": "See Sister Agnes at St Bene't's tower (coming soon)"
+  "next": "Follow the mist up Bridge Street to the Round Church"
 }

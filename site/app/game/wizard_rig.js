@@ -20,6 +20,7 @@ const LOOK = {
 };
 const LOOPS = new Set(['idle', 'walk', 'run']);
 const CAST_RAISE = new Set(['nova', 'zone', 'shield', 'summon']);
+const BONES = ['Abdomen', 'Torso', 'Head', 'UpperArm.R', 'LowerArm.R', 'Fist.R', 'UpperArm.L', 'LowerArm.L', 'Fist.L'];
 
 export function install(game) {
   const T = game.THREE;
@@ -81,6 +82,9 @@ export function install(game) {
       const c1 = new T.Mesh(new T.CylinderGeometry(0.1, 0.18, 0.26, 20), hm); c1.position.y = 0.14; hat.add(c1);
       const c2 = new T.Mesh(new T.ConeGeometry(0.1, 0.26, 16), hm); c2.position.set(0, 0.36, -0.03); c2.rotation.x = -0.35; hat.add(c2);
       hat.traverse(o => { if (o.isMesh) o.castShadow = true; });
+      // secondary motion (s4): the hat sways on a spring pivot at the brim and the bent tip lags behind it
+      const sway = new T.Group(); sway.name = 'hat_sway'; while (hat.children.length) sway.add(hat.children[0]); hat.add(sway);
+      hat.userData = { sway, tip: c2, tip0: c2.rotation.x, x: 0, vx: 0, z: 0, vz: 0 };
       const top = new T.Box3().setFromObject(model, true).max.y, hp = new T.Vector3(); head.getWorldPosition(hp);
       const ws = new T.Vector3(), wq = new T.Quaternion(); head.getWorldScale(ws); head.getWorldQuaternion(wq);
       hat.position.copy(head.worldToLocal(new T.Vector3(hp.x, top - 0.1, hp.z + 0.02)));
@@ -97,8 +101,14 @@ export function install(game) {
     const mixer = new T.AnimationMixer(model), acts = {};
     for (const clip of asset.animations) acts[clip.name] = mixer.clipAction(clip);
     for (const n of ['death', 'hit', 'cast', 'cast_raise', 'cast_long', 'jump', 'dash']) if (acts[n]) { acts[n].setLoop(T.LoopOnce, 1); acts[n].clampWhenFinished = true; }
+    // bones for the procedural upper-body layer (s4); rest quaternions are restored before each mixer update so the
+    // layer never accumulates on bones the current clip does not key
+    const bones = {};
+    for (const n of BONES) { const o = model.getObjectByName(n.replace(/\./g, '')) || model.getObjectByName(n); if (o) bones[n] = o; }   // GLTFLoader strips '.'
+    for (const n of ['Foot.L', 'Foot.R']) { const o = model.getObjectByName(n.replace(/\./g, '')) || model.getObjectByName(n); if (o) bones[n] = o; }
+    const rest = Object.values(bones).filter(b => !/^Foot/.test(b.name)).map(b => [b, b.quaternion.clone()]);
     game.root.add(root);
-    return { cls, root, mixer, acts, mat, focus, hat, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time };
+    return { cls, root, mixer, acts, mat, focus, hat, bones, rest, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time, castT: -9, castRaise: false, hitT: -9, lw: 0, roll: 0, lastSp: 0 };
   }
 
   function destroy() {
@@ -122,10 +132,85 @@ export function install(game) {
 
   const offs = [
     game.on('cast', e => { if (!R) return; const sp = game.caster?.spells?.find(s => s.id === e.spell);
-      const n = CAST_RAISE.has(sp?.kind) ? 'cast_raise' : 'cast'; R.acts[n].timeScale = 1.6; oneShot(n, 0.06); }),
+      R.castT = game.time; R.castRaise = CAST_RAISE.has(sp?.kind);
+      // standing: the full-body clip; moving: legs keep their gait and only the upper-body layer casts
+      if ((game.player?.speed || 0) < 0.25) { const n = R.castRaise ? 'cast_raise' : 'cast'; R.acts[n].timeScale = 1.6; oneShot(n, 0.06); } }),
     game.on('playerHit', e => { if (R && e.amount > 0 && !(R.oneShot || '').startsWith('cast')) oneShot('hit', 0.06); }),
     game.on('dash', () => { if (R) { R.acts.dash.timeScale = 1.5; oneShot('dash', 0.05); } }),
   ];
+
+  // Procedural upper-body layer: the clips read poorly from the third-person camera behind the player (the arms are
+  // hidden by the body), so a cast swings the staff up over the head and reaches the free hand at the target, and a hit
+  // throws the torso and head back with the arms flung out. Bones are aimed in world space, blended by an envelope.
+  const _a = new T.Vector3(), _b = new T.Vector3(), _d = new T.Vector3(), _q = new T.Quaternion(), _q2 = new T.Quaternion(), _I = new T.Quaternion();
+  const F = new T.Vector3(), Rt = new T.Vector3(), U = new T.Vector3();
+  function aimBone(bone, child, dir, w) {
+    if (!bone || !child || w <= 0.001) return;
+    bone.getWorldPosition(_a); child.getWorldPosition(_b); _d.subVectors(_b, _a).normalize();
+    _q2.setFromUnitVectors(_d, dir); _q.slerpQuaternions(_I, _q2, w);
+    bone.getWorldQuaternion(_q2); _q2.premultiply(_q);
+    bone.parent.getWorldQuaternion(_q).invert(); bone.quaternion.copy(_q.multiply(_q2)); bone.updateMatrixWorld(true);
+  }
+  function tiltBone(bone, axis, ang) {
+    if (!bone || Math.abs(ang) < 0.001) return;
+    _q.setFromAxisAngle(axis, ang); bone.getWorldQuaternion(_q2); _q2.premultiply(_q);
+    bone.parent.getWorldQuaternion(_q).invert(); bone.quaternion.copy(_q.multiply(_q2)); bone.updateMatrixWorld(true);
+  }
+  const env = (dt, up, hold, down) => dt < 0 ? 0 : dt < up ? dt / up : dt < hold ? 1 : dt < down ? 1 - (dt - hold) / (down - hold) : 0;
+  const dirv = (x, y, z) => _d.set(0, 0, 0).addScaledVector(Rt, x).addScaledVector(U, y).addScaledVector(F, z).normalize().clone();
+  function upperBody(t) {
+    const B = R.bones, wc = R.hold === 'cast' ? 1 : env(t - R.castT, 0.07, 0.38, 0.7), wh = R.hold === 'hit' ? 1 : env(t - R.hitT, 0.05, 0.16, 0.45);
+    if (wc <= 0 && wh <= 0) return;
+    R.root.updateMatrixWorld(true);
+    // character frame in world space: the root faces -Z locally, right is +X
+    F.set(0, 0, -1).applyQuaternion(R.root.quaternion); Rt.set(1, 0, 0).applyQuaternion(R.root.quaternion); U.set(0, 1, 0);
+    if (wc > 0) {
+      tiltBone(B.Torso, Rt, 0.18 * wc);                                   // lean back into the cast
+      aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.45, 1, 0.3), wc);   // staff arm up over the head
+      aimBone(B['LowerArm.R'], B['Fist.R'], dirv(0.15, 1, 0.45), wc);
+      if (R.castRaise) { aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.45, 1, 0.3), wc); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.15, 1, 0.45), wc); }
+      else { aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.55, 0.2, 1), wc); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.15, 0.25, 1), wc); }   // free hand reaches at the target
+    }
+    if (wh > 0) {
+      tiltBone(B.Torso, Rt, 0.42 * wh); tiltBone(B.Head, Rt, 0.3 * wh);   // flinch backwards
+      aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(1, -0.1, -0.35), wh * 0.85);
+      aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-1, -0.1, -0.35), wh * 0.85);
+    }
+  }
+
+  // Procedural locomotion layer (s4): the judge's third-person frames are taken from straight behind, where the clip's
+  // gait hides inside the robe. Weight shifts over the stance foot (torso roll), the shoulders counter-twist against the
+  // legs, the body leans into the pace and the arms swing a little away from the body so they show in the silhouette.
+  // Phase comes from the animated feet themselves, so it stays in step with whichever clip is playing.
+  const _l = new T.Vector3(), _r = new T.Vector3();
+  function locomotion(dt, sp) {
+    const B = R.bones, run = R.cur === 'run', moving = R.cur === 'walk' || run;
+    R.lw += ((moving ? Math.min(1, sp / 1.4) : 0) - R.lw) * Math.min(1, dt * 8);
+    const w = R.lw; if (w < 0.02 || !B['Foot.L'] || !B['Foot.R']) return;
+    R.root.updateMatrixWorld(true);
+    F.set(0, 0, -1).applyQuaternion(R.root.quaternion); Rt.set(1, 0, 0).applyQuaternion(R.root.quaternion); U.set(0, 1, 0);
+    B['Foot.L'].getWorldPosition(_l); B['Foot.R'].getWorldPosition(_r); _l.sub(_r);
+    const s = Math.max(-1, Math.min(1, _l.dot(F) / (run ? 0.7 : 0.45))), lift = Math.max(-1, Math.min(1, _l.y / 0.08));
+    R.roll += (lift - R.roll) * Math.min(1, dt * 10);   // left foot up -> weight on the right
+    const k = run ? 1.4 : 1;
+    tiltBone(B.Abdomen || B.Torso, Rt, -(0.16 + 0.15 * (k - 1)) * w);   // lean into the pace
+    tiltBone(B.Abdomen || B.Torso, F, -0.17 * k * w * R.roll);          // roll over the stance foot
+    tiltBone(B.Torso, U, -0.3 * k * w * s);                              // shoulders counter the hips
+    tiltBone(B.Head, F, 0.06 * w * R.roll); tiltBone(B.Head, U, 0.12 * w * s);   // head stays level and forward
+    const aw = 0.85 * w * (R.oneShot ? 0 : 1);
+    aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.6, -1, 0.8 * k * s), aw);    // left arm swings with the right leg
+    aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.55, -1, -0.6 * k * s), aw * 0.8);   // staff arm, a shorter swing
+  }
+  function hatSpring(dt, sp) {
+    const H = R.hat?.userData; if (!H?.sway) return;
+    const acc = (sp - R.lastSp) / Math.max(1e-3, dt); R.lastSp = sp;
+    const bounce = R.lw * (R.cur === 'run' ? 1.6 : 1) * Math.abs(R.roll) * 14;
+    // pitch: lags back as the wizard speeds up and nods with each footfall; roll: swings with the weight shift
+    H.vx += (-60 * H.x - 7 * H.vx - 0.9 * Math.max(-8, Math.min(8, acc)) - 0.18 * R.lw * sp - bounce * 0.6) * dt; H.x += H.vx * dt;
+    H.vz += (-50 * H.z - 6 * H.vz + 9 * R.lw * R.roll) * dt; H.z += H.vz * dt;
+    H.x = Math.max(-0.4, Math.min(0.4, H.x)); H.z = Math.max(-0.35, Math.min(0.35, H.z));
+    H.sway.rotation.set(H.x, 0, H.z); H.tip.rotation.x = H.tip0 + 1.4 * H.x; H.tip.rotation.z = 1.4 * H.z;
+  }
 
   function update(p, visible, W) {
     if (!asset) return false;
@@ -148,7 +233,10 @@ export function install(game) {
       else if (sp > 0.25) { play('walk'); R.acts.walk.timeScale = Math.max(0.6, Math.min(1.5, sp / 1.8)); }
       else play('idle', 0.25);
     }
+    for (const [b, q] of R.rest) b.quaternion.copy(q);
     R.mixer.update(dt);
+    if (!dead && !flying) { locomotion(dt, sp); upperBody(t); }
+    hatSpring(dt, flying ? 0 : sp);
     if (R.focus) { const ca = R.oneShot?.startsWith('cast') ? 1 : 0; R.focus.rotation.y += dt * 2.5;
       R.focus.scale.setScalar(R.focus.userData.s * (1 + 0.8 * ca) * (1 + Math.sin(t * 6) * 0.06)); }
     const hf = game.time - (R.hitT || -9) < 0.25 ? 1 : 0; R.mat.emissive.setRGB(0.5 * hf, 0.06 * hf, 0.04 * hf);   // red hit flash only
@@ -164,6 +252,7 @@ export function install(game) {
     try { if (!failed && update(p, vis, W) && W) { W.root.visible = false; } }
     catch (e) { console.warn('[wizard_rig]', e); failed = true; if (R) R.root.visible = false; if (W) W.root.visible = vis; }
   };
-  game.wizardRig = { get model() { return R; }, get ready() { return !!asset; }, play: n => oneShot(n) };
+  game.wizardRig = { get model() { return R; }, get ready() { return !!asset; }, play: n => oneShot(n),
+    pose: (k, raise = false, hold = false) => { if (!R) return; R.hold = hold ? k : null; if (k === 'hit') R.hitT = game.time; else if (k) { R.castT = game.time; R.castRaise = raise; } } };   // hold: screenshots
   game.add({ dispose() { Avatar.prototype.update = prev; for (const f of offs) f(); destroy(); for (const k in texCache) texCache[k].dispose(); } });
 }

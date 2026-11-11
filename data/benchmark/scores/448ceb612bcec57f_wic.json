@@ -56,34 +56,34 @@
  "main_quests_shipped": 3,
  "quest_bot_pass_pct": 100,
  "fps_median": 60,
- "load_seconds": 0.51,
+ "load_seconds": 0.41,
  "perf_detail": {
   "seconds": 60,
   "viewport": "1280x720",
   "query": "",
   "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
   "preset": "high",
-  "game_ready_s": 1.83,
+  "game_ready_s": 1.66,
   "programs": [
    65,
-   83
+   82
   ],
   "fps_p5": 59,
-  "fps_min": 47,
+  "fps_min": 45,
   "fight_pct": 100,
-  "casts": 189,
-  "kills": 30,
+  "casts": 190,
+  "kills": 21,
   "maxMobs": 36,
   "dist": 200,
-  "laps": 0,
-  "draw_calls_median": 1824,
-  "tris_median": 8023366,
+  "laps": 1,
+  "draw_calls_median": 1721,
+  "tris_median": 7368279,
   "tiles": 17,
   "errors": 0,
   "first_errors": [],
-  "at": "2026-11-10T17:16:55.596Z"
+  "at": "2026-11-10T17:56:28.496Z"
  },
- "playtest_pass_pct": 91.7,
+ "playtest_pass_pct": 100,
  "per_class": {
   "pyromancer": {
    "runs": 3,
@@ -101,12 +101,10 @@
   },
   "warden": {
    "runs": 3,
-   "passed": 2,
+   "passed": 3,
    "harness_fails": 0,
-   "fails": [
-    "route: softlock: no progress for 60 s game time (leg 4 senate-house-hill, at -181.0,20.1,9.9, travel senate-house-hill active true mobs 6 dead 0 removed 0)"
-   ],
-   "pass_pct": 66.7
+   "fails": [],
+   "pass_pct": 100
   },
   "hexweaver": {
    "runs": 3,
@@ -122,9 +120,18 @@
   "runs_judged": 12,
   "harness_fails": 0,
   "softlock_s": 60,
-  "boss_ttk_median_s": 7.7,
+  "boss_ttk_median_s": 10.4,
   "main_quests_shipped": 3,
-  "wall_s": 90,
-  "at": "2026-11-10T17:30:27.226Z"
+  "wall_s": 897,
+  "at": "2026-11-10T17:34:59.216Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "quest_bot": true
  }
 }

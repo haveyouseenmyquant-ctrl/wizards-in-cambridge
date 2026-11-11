@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200">
+  <title>Wizards in Cambridge wordmark</title>
+  <rect width="640" height="200" rx="18" fill="#0d1020"/>
+  <g fill="none" stroke="#f2c46b" stroke-width="3">
+    <path d="M70 150 V92 a20 20 0 0 1 40 0 V150"/>
+    <path d="M90 72 V40 M80 50 h20"/>
+    <circle cx="90" cy="118" r="9"/>
+  </g>
+  <text x="140" y="98" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="52" font-weight="700" fill="#e9e6dc">Wizards in</text>
+  <text x="140" y="152" font-family="Iowan Old Style, Palatino, Georgia, serif" font-size="52" font-weight="700" fill="#ffdf9e">Cambridge</text>
+</svg>

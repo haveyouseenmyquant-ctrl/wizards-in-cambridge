@@ -7,6 +7,7 @@
 //  - Combat toast queue: during a fight at most one loot card and two toasts show; the rest wait and play out after.
 // Exploration mode never installs the game layer, so it is untouched.
 import { ITEMS, RARITY, SLOTS } from './itemdefs.js';
+import { KIND } from './uiframe.js';
 
 const ICON = {   // 48x48 line icons per slot (stroke = currentColor)
   wand: '<path d="M10 40 L34 14"/><path d="M34 6 L36 12 L42 14 L36 16 L34 22 L32 16 L26 14 L32 12 Z" fill="currentColor" fill-opacity=".35"/>',
@@ -81,12 +82,12 @@ body.wic-gridinv #inv-panel { display: none !important; }
 #game-hud .gh-talents .gh-tier-lv small { display: block; font-weight: 500; letter-spacing: 0; text-transform: none; color: #a08a60; font-size: 10px; margin-top: 3px; }
 #game-hud .gh-talent { width: 250px; min-height: 74px; flex-direction: row; align-items: center; gap: 10px; background: rgba(14,12,10,.92); border: 1px solid #4a3e2a; font-size: 12px; }
 #game-hud .gh-talent:not(.locked):hover { border-color: #d9b45a; }
-#game-hud .gh-talent .wt-ic { flex: none; width: 46px; height: 46px; padding: 5px; box-sizing: border-box; border-radius: 50%; border: 2px solid #6a5630; color: #b9a77f; background: radial-gradient(circle, rgba(60,48,30,.9), rgba(10,8,6,.95)); }
+#game-hud .gh-talent .wt-ic { --cc: #b9a77f; flex: none; width: 46px; height: 46px; padding: 6px; box-sizing: border-box; border-radius: 8px; transform: rotate(0); border: 2px solid color-mix(in srgb, var(--cc) 55%, #3a3020); color: var(--cc); background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--cc) 28%, rgba(20,16,12,.9)), rgba(10,8,6,.95) 75%); filter: drop-shadow(0 0 4px color-mix(in srgb, var(--cc) 40%, transparent)); }
 #game-hud .gh-talent .wt-tx { display: flex; flex-direction: column; gap: 3px; }
 #game-hud .gh-talent .wt-tx b { font: 600 14px/1.1 Georgia, serif; color: #f3ead6; }
 #game-hud .gh-talent .wt-tx span { color: #c8bca0; line-height: 1.3; }
 #game-hud .gh-talent.on { border-color: #f2d36b; background: linear-gradient(rgba(90,70,24,.95), rgba(50,38,14,.95)); box-shadow: 0 0 12px rgba(242,211,107,.45); }
-#game-hud .gh-talent.on .wt-ic { border-color: #f2d36b; color: #ffe8a0; box-shadow: 0 0 10px rgba(242,211,107,.6); }
+#game-hud .gh-talent.on .wt-ic { border-color: #f2d36b; box-shadow: 0 0 10px rgba(242,211,107,.6); }
 #game-hud .gh-talent.locked { opacity: .5; filter: grayscale(.7); }
 `;
 
@@ -154,7 +155,9 @@ export function install(game) {
       if (lab && need != null) lab.innerHTML = `Tier ${['I', 'II', 'III', 'IV'][t] || t + 1}<small>${lv >= need ? `level ${need} · open` : `unlocks at level ${need}`}</small>`;
       row.querySelectorAll('.gh-talent').forEach(b => {
         const nm = b.querySelector('b')?.textContent || '', ds = b.querySelector('span')?.outerHTML || '';
-        b.innerHTML = svg(RUNES[hash(nm) % RUNES.length], 'wt-ic') + `<div class="wt-tx"><b>${esc(nm)}</b>${ds}</div>`;
+        const dtx = b.querySelector('span')?.textContent || '', sp = c?.classes?.[c.cls]?.spells?.find(x => dtx.includes(x.name) || nm.includes(x.name.split(' ')[0]));
+        b.innerHTML = svg(sp && KIND[sp.kind] ? KIND[sp.kind] : RUNES[hash(nm) % RUNES.length], 'wt-ic') + `<div class="wt-tx"><b>${esc(nm)}</b>${ds}</div>`;
+        const cc = c?.classes?.[c.cls]?.color; if (cc) b.style.setProperty('--cc', cc);
       });
     });
     decorating = false;
@@ -168,8 +171,9 @@ export function install(game) {
   const inCombat = () => { for (const m of game.mobs || []) { if (m.dead) continue; const d = Math.hypot(m.x - game.px, m.y - game.py);
     if (d < 24 && (m.boss || m.state === 'chase' || m.state === 'windup' || m.state === 'active' || m.hp < m.maxHp)) return true; } return false; };
   const shown = cls => document.querySelectorAll(`#game-hud .${cls}`).length;
-  if (loot0) hud.loot = (...a) => { if (inCombat() && (shown('gh-loot') >= 1 || lq.length)) { lq.push(a); if (lq.length > 4) lq.splice(Math.max(0, lq.findIndex(x => x[1] === 'common')), 1); return null; } return loot0(...a); };
-  if (toast0) hud.toast = (...a) => { if (inCombat() && (shown('gh-toast') >= 2 || tq.length)) { if (!tq.some(x => x[0] === a[0])) tq.push(a); if (tq.length > 3) tq.shift(); return null; } return toast0(...a); };
+  const story = () => !!game.uiFrame?.storyBusy?.();   // uiframe.js: a dialogue box or quest card is up, so loot/toasts wait
+  if (loot0) hud.loot = (...a) => { if (story()) { lq.push(a); if (lq.length > 6) lq.shift(); return null; } if (inCombat() && (shown('gh-loot') >= 1 || lq.length)) { lq.push(a); if (lq.length > 4) lq.splice(Math.max(0, lq.findIndex(x => x[1] === 'common')), 1); return null; } return loot0(...a); };
+  if (toast0) hud.toast = (...a) => { if (story()) { if (!tq.some(x => x[0] === a[0])) tq.push(a); return null; } if (inCombat() && (shown('gh-toast') >= 2 || tq.length)) { if (!tq.some(x => x[0] === a[0])) tq.push(a); if (tq.length > 3) tq.shift(); return null; } return toast0(...a); };
   offs.push(() => { if (loot0) hud.loot = loot0; if (toast0) hud.toast = toast0; });
   let qT = 0;
 
@@ -182,7 +186,7 @@ export function install(game) {
       const menu = invOpen || isOpen(tal) || isOpen(document.querySelector('#game-hud .gh-pick')) || isOpen(document.querySelector('#game-hud .gh-death'));
       if (menu !== document.body.classList.contains('wic-menu')) document.body.classList.toggle('wic-menu', menu);
       if (menu) decorate();
-      if ((qT -= dt) > 0 || (!lq.length && !tq.length)) return;
+      if ((qT -= dt) > 0 || (!lq.length && !tq.length) || story()) return;
       const fight = inCombat();
       if (lq.length && shown('gh-loot') < (fight ? 1 : 2)) { loot0(...lq.shift()); qT = 0.6; }
       else if (tq.length && shown('gh-toast') < (fight ? 2 : 3)) { toast0(...tq.shift()); qT = 0.4; }

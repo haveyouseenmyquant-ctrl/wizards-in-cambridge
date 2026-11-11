@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wizards in Cambridge: a free wizard action RPG in your browser</title>
+<meta name="description" content="A free wizard action RPG you play in the browser, set in a model of Cambridge city centre built from open map data. Four classes, twelve kinds of enemy, three main quests. In development.">
+<meta property="og:title" content="Wizards in Cambridge">
+<meta property="og:description" content="The bells of Cambridge are ringing wrong. A free wizard action RPG in your browser, in development.">
+<meta property="og:image" content="img/hero.jpg">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<style>
+:root { --ink: #0d1020; --ink2: #151a30; --card: #1b2140; --line: #2c3560; --text: #e9e6dc; --dim: #a9adc4;
+  --gold: #f2c46b; --gold2: #ffdf9e; --fire: #ff7a2a; --storm: #7fd4ff; --stone: #c9a66b; --hex: #b070ff; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--ink); color: var(--text); font: 17px/1.6 "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+a { color: var(--gold2); }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.sans { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+nav.top { position: absolute; top: 0; left: 0; right: 0; z-index: 2; }
+nav.top .wrap { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+nav.top a { color: var(--text); text-decoration: none; font: 600 14px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; margin-left: 22px; opacity: .85; }
+nav.top .brand { margin: 0; opacity: 1; color: var(--gold2); }
+.hero { position: relative; min-height: 88vh; display: flex; align-items: flex-end; background: #000 url(img/hero.jpg) center / cover no-repeat; }
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(13,16,32,.55) 0%, rgba(13,16,32,.05) 35%, rgba(13,16,32,.55) 70%, var(--ink) 100%); }
+.hero .wrap { position: relative; z-index: 1; padding-bottom: 64px; width: 100%; }
+.hero .kicker { display: inline-block; padding: 7px 12px; border-radius: 6px; background: rgba(13,16,32,.78); }
+.kicker { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); }
+h1 { font-size: clamp(44px, 8vw, 92px); line-height: .98; margin: 14px 0 16px; font-weight: 700; letter-spacing: -.01em; text-shadow: 0 3px 24px rgba(0,0,0,.6); }
+.lede { font-size: clamp(19px, 2.3vw, 24px); max-width: 640px; margin: 0 0 28px; text-shadow: 0 2px 12px rgba(0,0,0,.7); }
+.btn { display: inline-block; padding: 16px 30px; border-radius: 999px; font: 700 17px/1 -apple-system, system-ui, sans-serif; text-decoration: none; letter-spacing: .02em; }
+.btn.play { background: linear-gradient(180deg, var(--gold2), var(--gold)); color: #1a1406; box-shadow: 0 6px 30px rgba(242,196,107,.35); }
+.btn.play:hover { filter: brightness(1.08); }
+.btn.ghost { color: var(--text); border: 1.5px solid rgba(233,230,220,.5); margin-left: 10px; }
+.chips { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 8px; }
+.chips span { font: 600 13px/1 -apple-system, system-ui, sans-serif; padding: 8px 12px; border-radius: 999px; background: rgba(13,16,32,.7); border: 1px solid var(--line); color: var(--dim); }
+section { padding: 72px 0; }
+section.alt { background: var(--ink2); }
+h2 { font-size: clamp(30px, 4vw, 42px); margin: 0 0 8px; }
+h2 + p.sub { color: var(--dim); margin: 0 0 32px; max-width: 720px; }
+.gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.gallery figure { margin: 0; background: var(--card); border-radius: 10px; overflow: hidden; border: 1px solid var(--line); }
+.gallery img { display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover; }
+.gallery figcaption { padding: 10px 14px; font: 14px/1.45 -apple-system, system-ui, sans-serif; color: var(--dim); }
+.gallery figure.wide { grid-column: span 2; }
+.classes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.cls { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--c); border-radius: 10px; padding: 20px; }
+.cls h3 { margin: 0 0 6px; color: var(--c); font-size: 22px; }
+.cls p { margin: 0 0 10px; font-size: 16px; }
+.cls small { font: 13px/1.5 -apple-system, system-ui, sans-serif; color: var(--dim); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+ul.list { padding-left: 1.1em; margin: 0; }
+ul.list li { margin: 0 0 8px; }
+blockquote.story { margin: 0 0 18px; padding: 18px 22px; border-left: 3px solid var(--gold); background: var(--card); border-radius: 0 10px 10px 0; }
+blockquote.story b { color: var(--gold2); display: block; font-size: 19px; }
+table.facts { width: 100%; border-collapse: collapse; font: 15px/1.5 -apple-system, system-ui, sans-serif; }
+table.facts th, table.facts td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+table.facts th { color: var(--dim); font-weight: 600; width: 34%; }
+.cta { text-align: center; padding: 88px 0; background: radial-gradient(ellipse at center, #232a52 0%, var(--ink) 70%); }
+.cta p { color: var(--dim); }
+footer { padding: 36px 0 48px; color: var(--dim); font: 13px/1.6 -apple-system, system-ui, sans-serif; border-top: 1px solid var(--line); }
+@media (max-width: 860px) {
+  .classes { grid-template-columns: 1fr 1fr; }
+  .two { grid-template-columns: 1fr; gap: 32px; }
+}
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  nav.top a:not(.brand):not(.navplay) { display: none; }
+  .hero { min-height: 78vh; }
+  .gallery, .classes { grid-template-columns: 1fr; }
+  .gallery figure.wide { grid-column: auto; }
+  .btn { display: block; text-align: center; }
+  .btn.ghost { margin: 12px 0 0; }
+  section { padding: 52px 0; }
+}
+</style>
+</head>
+<body>
+<nav class="top"><div class="wrap">
+  <a class="brand" href="#">Wizards in Cambridge</a>
+  <div><a href="#screens">Screens</a><a href="#classes">Classes</a><a href="#press">Press</a><a class="navplay" href="../">Play</a></div>
+</div></nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="kicker">Free browser action RPG · in development</div>
+    <h1>Wizards in<br>Cambridge</h1>
+    <p class="lede">The bells of Cambridge are ringing wrong. Pick one of four wizard classes and fight what has woken on
+      the rooftops, the river and the old stone of a city centre built from open map data.</p>
+    <a class="btn play" href="../">▶ Play free in your browser</a><a class="btn ghost" href="#screens">See screenshots</a>
+    <div class="chips"><span>No download</span><span>No account</span><span>Desktop &amp; phone</span><span>Keyboard, gamepad, touch</span></div>
+  </div>
+</header>
+
+<section id="screens">
+  <div class="wrap">
+    <h2>From the game</h2>
+    <p class="sub">Unretouched frames from the current build (448ceb61), captured by script in Chrome. Combat and
+      exploration at 1920×1080 on a Mac mini GPU; the menu and story frames at 960×540.</p>
+    <div class="gallery">
+<figure class="wide"><img src="img/combat_hexweaver_bellwarden.jpg" alt="Hex Weaver casting on Market Hill during the Bellwarden of Market Hill boss fight" loading="lazy" width="1280" height="720"><figcaption>Hex Weaver vs the Bellwarden of Market Hill, the first boss</figcaption></figure>
+      <figure><img src="img/explore_market_hill_fp.jpg" alt="First-person view along Market Hill with striped market stalls" loading="lazy" width="1280" height="720"><figcaption>Market Hill at dusk, first person</figcaption></figure>
+      <figure><img src="img/combat_pyromancer_market.jpg" alt="Pyromancer fire spells between the market stalls" loading="lazy" width="1280" height="720"><figcaption>Pyromancer: fire between the stalls</figcaption></figure>
+      <figure><img src="img/combat_stormcaller_rune.jpg" alt="Stormcaller standing in a blue rune circle while fighting" loading="lazy" width="1280" height="720"><figcaption>Stormcaller fighting in a glowing rune circle</figcaption></figure>
+      <figure><img src="img/combat_warden_bellwarden.jpg" alt="Stone Warden fighting the Bellwarden with loot beams nearby" loading="lazy" width="1280" height="720"><figcaption>Stone Warden in the boss fight, with loot dropping</figcaption></figure>
+      <figure><img src="img/explore_peas_hill_tp.jpg" alt="Third-person view of a wizard on Peas Hill by a church and bike racks" loading="lazy" width="1280" height="720"><figcaption>Peas Hill, third person</figcaption></figure>
+      <figure><img src="img/combat_hexweaver_flyer.jpg" alt="Hex Weaver casting at a winged enemy over the market" loading="lazy" width="1280" height="720"><figcaption>A winged enemy over the market</figcaption></figure>
+      <figure><img src="img/explore_kings_parade_tp.jpg" alt="Wizard walking past a shopfront toward King's Parade" loading="lazy" width="1280" height="720"><figcaption>Toward King's Parade</figcaption></figure>
+      <figure><img src="img/menu_class_select.jpg" alt="Class selection screen showing Pyromancer, Stormcaller, Stone Warden and Hex Weaver with their spells" loading="lazy" width="1280" height="720"><figcaption>Choose your path: the class selection screen</figcaption></figure>
+      <figure class="wide"><img src="img/story_prologue_title.jpg" alt="Prologue title card, The Thirteenth Chime, over the game view" loading="lazy" width="1280" height="720"><figcaption>The prologue begins: The Thirteenth Chime</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<section id="classes" class="alt">
+  <div class="wrap">
+    <h2>Four ways to be a wizard</h2>
+    <p class="sub">Each class has six spells and a three-tier talent tree that changes how the spells behave. Level,
+      experience and talents are saved in your browser.</p>
+    <div class="classes">
+      <div class="cls" style="--c: var(--fire)"><h3>Pyromancer</h3><p>Fire and burst damage. Burns linger and explosions stack.</p><small>Ember Bolt · Cinder Spray · Fireburst Orb · Flame Step · Kindle Ring · Sunfall</small></div>
+      <div class="cls" style="--c: var(--storm)"><h3>Stormcaller</h3><p>Lightning and wind. Fast and mobile, with chains of lightning; Wind Dash goes further on a broom.</p><small>Spark Lance · Arc Chain · Gale Burst · Wind Dash · Static Field · Tempest</small></div>
+      <div class="cls" style="--c: var(--stone)"><h3>Stone Warden</h3><p>Earth and stone. Shields, stuns and roots; outlasts anything.</p><small>Pebble Shot · Granite Skin · Quake Stomp · Boulder Leap · Rootbind Spikes · Monolith Ward</small></div>
+      <div class="cls" style="--c: var(--hex)"><h3>Hex Weaver</h3><p>Curses, bound wisps and life drain. Weakens enemies and feeds on them.</p><small>Hex Dart · Withering Mark · Soul Siphon · Shade Step · Bound Wisps · Night Bloom</small></div>
+    </div>
+  </div>
+</section>
+
+<section id="world">
+  <div class="wrap two">
+    <div>
+      <h2>The city fights back</h2>
+      <p>Twelve kinds of enemy drawn from Cambridge's stone, river and bells, with three bosses at its landmarks.</p>
+      <ul class="list">
+        <li><b>Rooftop Gargoyles</b> swoop down from the gutters</li>
+        <li><b>Will-o'-the-Cam</b> lights drift in from the river</li>
+        <li><b>Library Ink Imps</b> bite and spit ink</li>
+        <li><b>Clockwork Porters</b> charge on wound springs</li>
+        <li><b>Chimney-Soot Sprites</b>, <b>Cam Wraiths</b>, <b>Bell-Rope Bat Swarms</b> and more</li>
+      </ul>
+      <p>Loot comes in rarity tiers from drops, chests and bosses, with 58 different equipment effects to find.</p>
+    </div>
+    <div>
+      <h2>Follow the bells</h2>
+      <blockquote class="story"><b>The Thirteenth Chime</b>Dusk on Market Hill. Great St Mary's strikes the hour, and then strikes once more. Nobody else seems to hear it.</blockquote>
+      <blockquote class="story"><b>The Lion at the Gate</b>Night on King's Parade. The college gates are locked, the gutters run the wrong way, and something with a mane is pacing behind the stonework.</blockquote>
+      <blockquote class="story"><b>Rung Down</b>Since sunset the Cambridge Quarters have played three phrases of four. Somebody has pulled the pins out of the tune.</blockquote>
+      <p class="sans" style="font-size:14px;color:var(--dim)">The three main quests in the current build.</p>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap two">
+    <div>
+      <h2>Real streets, open data</h2>
+      <p>Market Hill, Peas Hill, King's Parade and Senate House Hill are modelled from OpenStreetMap, with building
+        heights from Environment Agency LiDAR. Walk them, run them, climb ledges or take to the air on a broom.</p>
+      <p>Don't want to fight? <a href="../?explore">Exploration mode</a> turns off the enemies and the HUD so you can wander.</p>
+    </div>
+    <div>
+      <h2>Honest status</h2>
+      <p>This is a game in active development, not a finished release. The area around Market Square has had the
+        most work, and other streets are rougher. There is no release date. There are no reviews yet, so you won't
+        find any quoted here.</p>
+      <p>It is made by Tobi, an AI agent operated by Gaspard Oliviers.</p>
+    </div>
+  </div>
+</section>
+
+<section id="press">
+  <div class="wrap two">
+    <div>
+      <h2>Press kit</h2>
+      <p class="sub" style="margin-bottom:18px">Fact sheet below. <a href="https://github.com/haveyouseenmyquant-ctrl/wizards-in-cambridge/tree/main/docs/marketing/press_kit">Download the press kit</a>:
+        17 full-size screenshots (1920×1080 for exploration and combat), a wordmark, and a list giving the build each frame came from.</p>
+      <table class="facts">
+        <tr><th>Title</th><td>Wizards in Cambridge</td></tr>
+        <tr><th>Genre</th><td>Action RPG (wizard combat, loot, talents)</td></tr>
+        <tr><th>Developer</th><td>Tobi, an AI agent operated by Gaspard Oliviers</td></tr>
+        <tr><th>Platform</th><td>Web browser: Chrome and Safari, desktop and phone</td></tr>
+        <tr><th>Price</th><td>Free</td></tr>
+        <tr><th>Status</th><td>In development; no release date</td></tr>
+        <tr><th>Tracking</th><td>None; progress is saved in your browser</td></tr>
+        <tr><th>Source</th><td><a href="https://github.com/haveyouseenmyquant-ctrl/wizards-in-cambridge">github.com/haveyouseenmyquant-ctrl/wizards-in-cambridge</a></td></tr>
+      </table>
+    </div>
+    <div>
+      <h2>Credits &amp; licences</h2>
+      <ul class="list sans" style="font-size:15px">
+        <li>© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL)</li>
+        <li>© Environment Agency copyright and/or database right (LiDAR, <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">OGL v3</a>)</li>
+        <li>Contains OS data © Crown copyright and database right (OGL v3)</li>
+        <li>CC0 and CC-BY assets and sounds, each listed in the in-game credits (Menu → Credits)</li>
+        <li>An original setting: real colleges and shops appear as scenery only and are not affiliated with the game</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>The thirteenth chime is about to strike</h2>
+    <p>It runs right here in your browser and takes one click to start.</p>
+    <a class="btn play" href="../">▶ Play Wizards in Cambridge</a>
+  </div>
+</section>
+
+<footer><div class="wrap">Wizards in Cambridge · made by Tobi, an AI agent operated by Gaspard Oliviers · no cookies, no analytics ·
+  <a href="../">Play</a> · <a href="https://github.com/haveyouseenmyquant-ctrl/wizards-in-cambridge">Source</a> · <a href="https://github.com/haveyouseenmyquant-ctrl/wizards-in-cambridge/tree/main/docs/marketing/press_kit">Press kit</a></div></footer>
+</body>
+</html>
