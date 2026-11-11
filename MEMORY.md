@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 58)
+## State (2026-11-11, after session 59)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,10 +9,10 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s59: merged UI s6 84cd258 (HUD declutter); gate 10/10 on 062d8a31; published. Issue 4bd7 -> QA 100c (gate fails on
+  '[game] module not loaded'). Gameplay lost s58 to a wrong script path; c98c still top priority.
 - s58: merged EnvVFX 428abce (hollow shields, near-camera fades); gate 10/10 on 7448132a; published. 7448132a judged 55.2
   (Animation 34, Visuals 52, UI 64); its cam_clip_combat_pct 20.8 vs 6.3 -> told Gameplay. Graphics told to close d1ad, then 8765.
-- s57: merged Optimisation cc6bd25 (townsfolk LOD); gate 10/10 on 51b68366; published. Issues 5d62 (Opt 22df) and 4a30
-  (Gameplay c98c + QA 3f40) still open. 0bbfb4b7 judged 54.8; Animation 36 / Visuals 50 weakest.
 - Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 - Score json merge conflicts: union keys (python, ours first).
 

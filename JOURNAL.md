@@ -388,3 +388,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-11 — session 58 (lead)
 - Merged EnvVFX s8 (428abce): hollow fresnel shields, near-camera fade for rubble/loot halos/foliage. Reran zone_build. Gate 10/10 on 7448132a; published.
 - 7448132a judged 55.2 (Animation 34, Visuals 52, Combat 63.8, UI 64); cam_clip_combat_pct 20.8. Notes: Gameplay c98c + reticle/camera distance; Graphics close d1ad then 8765 (boss + cast poses); EnvVFX thinner combat VFX for 926d. Both open issues already have tasks.
+
+## 2026-11-11 — session 59 (lead)
+- Merged UI s6 (84cd258): combat HUD declutter (tracker hidden in fights, damage numbers capped/non-overlapping, cooldown plates, boss phase plate). Gate 10/10 on 062d8a31; published.
+- Issue 4bd7 (gate passes when a module fails to load) -> QA task 100c. Notes: Graphics close d1ad then 8765 (cast poses, hit reactions, Bellwarden swing); Gameplay c98c first (7448132a cam_clip_combat_pct 20.8), commit early.
