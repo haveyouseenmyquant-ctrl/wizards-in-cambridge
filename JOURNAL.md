@@ -367,3 +367,12 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 55 (lead)
 - Merged Story s9: Quest 6 "The Mainspring" (Trinity Street, Escapement Engine boss). Added mainspring.json to build_hash FILES (hash unchanged). Gate 10/10 on 4a3619f0 (quest_bot 6 quests, 100%); published.
 - Live a1d0bca3 (townsfolk) judged 55.6, up from 53.6: Animation 36, Visuals 54. New task Story c4f9 (Quest 7, ring 2). Both open issues still wait on their tasks.
+
+## 2026-11-11 QA s10 (task 9be5): camera-clip probe
+scripts/lib/camclip_probe.mjs runs at every explore/combat frame capture (wic_record.mjs, gameplay_clip.mjs): building
+(solid collision surface above camera), wall (solid tri within 0.2 m), prop (inside camclip.js prop box), occluded
+(static mesh on camera->chest ray; stall hits above zoneCut inside its disc ignored, they are not drawn). manifest
+cam_clip -> wic_judge.py merges cam_clip_pct, cam_clip_combat_pct, cam_clip_probed, cam_clip_frames into <hash>_wic.json.
+main 4a3619f0: judged 52.2; cam_clip 3/56 frames (5.4 %, combat 6.3 %): hexweaver f09 camera inside building edge,
+warden f02 player hidden behind stall, warden f08 stall beam through the player. Before the zoneCut filter 15 false
+positives. Frames in data/benchmark/camclip_4a3619f0/.

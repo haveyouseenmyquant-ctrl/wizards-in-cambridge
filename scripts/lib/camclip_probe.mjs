@@ -40,11 +40,14 @@ export function camClipProbe() {
     const tgt = new T.Vector3(P.x, P.z + CHEST, -P.y), d = tgt.clone().sub(c), L = d.length();
     if (L > 0.5) {
       const skip = o => { for (let a = o; a; a = a.parent) { if (a.isSkinnedMesh || a.isSprite || a.isPoints || a.isLine || /avatar|wizard|player|mob|npc|townsfolk|vfx|spell|proj|hud|sky|cloud|rain|particle/i.test(a.name || '')) return true; } return false; };
-      const rc = new T.Raycaster(c, d.normalize(), 0.25, L - 0.5);
+      const rc = new T.Raycaster(c, d.normalize(), 0.25, L - 0.5); rc.camera = cam;   // Sprite.raycast needs it
       const hit = rc.intersectObjects(window.__scene.children, true).find(h => {
         const o = h.object, m = Array.isArray(o.material) ? o.material[0] : o.material;
         if (!o.visible || (m && (m.visible === false || (m.transparent && m.opacity < 0.5)))) return false;
         for (let a = o; a; a = a.parent) if (a.visible === false) return false;
+        // stall meshes (zone.js zoneMatCut) discard fragments above zoneCut.y inside its disc: such a hit is not drawn
+        const C = window.__zoneCut?.value, q = h.point;
+        if (C && C.w > 0 && /market_stalls/.test(o.name + (o.parent?.name || '')) && q.y > C.y && Math.hypot(q.x - C.x, q.z - C.z) < C.w) return false;
         return !skip(o);
       });
       if (hit) {
