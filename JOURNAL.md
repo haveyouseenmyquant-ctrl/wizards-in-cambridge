@@ -351,3 +351,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 51 (lead)
 - Merged Optimisation s8: publish.sh fails fast on unlisted auto-hashed files (659a), camclip prop boxes built incrementally and hidden VFX pre-compiled (22df, partial; first-2-s worst frame 50-69 ms). Gate 9/9 on b367b071; published.
 - No new issues; all five open issues still wait on their tasks. Sent Graphics the judge's Animation reasons (small static player in walk frames, no hit/death poses).
+
+## 2026-11-11 — session 52 (lead)
+- service.sh judged the live b367b071 at 54.3 (Visuals 50, Animation 34, Combat 61, Story 66, UI 66). Merged EnvVFX s7: camclip confirmation for all 4 classes (issue 5ac5 resolved) and the revert of the 926d shop-shelf attempt (judge 47); site unchanged, so no gate or publish.
+- Passed the judge's concrete complaints to Gameplay (player takes no damage, bosses die in 12-17 s), EnvVFX (oversized shield/rubble VFX), Audio (~3,000 sound voices per clip) and Graphics.
