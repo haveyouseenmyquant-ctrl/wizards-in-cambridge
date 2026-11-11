@@ -7,13 +7,13 @@
   "npcs": {
     "pip_benet": { "name": "Pip Hobbe", "role": "Hob of the Guildhall cellars", "x": -140, "y": -100.5, "face": 180, "scale": 0.62,
               "robe": "#5b4a3a", "trim": "#c98b4a", "skin": "#b9a07a", "hair": "#3b3026", "hat": "hood" },
-    "pip_trinity": { "name": "Pip Hobbe", "role": "Hob of the Guildhall cellars", "x": -186, "y": 157, "face": 0, "scale": 0.62,
+    "pip_trinity": { "name": "Pip Hobbe", "role": "Hob of the Guildhall cellars", "x": -164.5, "y": 154, "face": 0, "scale": 0.62,
               "robe": "#5b4a3a", "trim": "#c98b4a", "skin": "#b9a07a", "hair": "#3b3026", "hat": "hood" },
-    "tamsin": { "name": "Tamsin Ashdown", "role": "Clockmaker of Trinity Street", "x": -185.5, "y": 168.5, "face": 270,
+    "tamsin": { "name": "Tamsin Ashdown", "role": "Clockmaker of Trinity Street", "x": -161, "y": 171.5, "face": 270,
               "robe": "#4a5a52", "trim": "#c8a050", "skin": "#e0b894", "hair": "#8a4a2a", "hat": "none" },
-    "tamsin_gate": { "name": "Tamsin Ashdown", "role": "Clockmaker of Trinity Street", "x": -188.5, "y": 205, "face": 0, "appear": "rewind",
+    "tamsin_gate": { "name": "Tamsin Ashdown", "role": "Clockmaker of Trinity Street", "x": -157.5, "y": 205, "face": 0, "appear": "rewind",
               "robe": "#4a5a52", "trim": "#c8a050", "skin": "#e0b894", "hair": "#8a4a2a", "hat": "none" },
-    "corvin": { "name": "Corvin Ashdown", "role": "The Unwinder", "x": -193, "y": 222, "face": 180,
+    "corvin": { "name": "Corvin Ashdown", "role": "The Unwinder", "x": -163, "y": 231, "face": 180,
               "robe": "#2a2a30", "trim": "#9a8a6a", "skin": "#d6b8a0", "hair": "#bdb6aa", "hat": "hood" },
     "narrator": { "name": "", "role": "" }
   },
@@ -23,13 +23,13 @@
   "steps": [
     { "id": "pip", "type": "talk", "npc": "pip_benet",
       "text": "Ask Pip Hobbe where the ticking is coming from",
-      "travel": { "x": -187, "y": 140, "look": [-187, 175], "caption": "Pip leads you up past the Senate House, nose to the gutter, onto Trinity Street" },
+      "travel": { "x": -170, "y": 128, "look": [-165, 160], "caption": "Pip leads you up past the Senate House, nose to the gutter, onto Trinity Street" },
       "dialogue": [
         { "who": "pip_benet", "line": "Hear it, Late'un? Tick. Tick. Up the hill. Pip's ears hurt with it." },
         { "who": "player", "line": "Corvin's oil again?" },
         { "who": "pip_benet", "line": "Oil and brass filings, all up Trinity Street. Come on. Stay close. Hobs don't like clockmakers. They count things." }
       ] },
-    { "id": "drain", "type": "reach", "place": { "x": -187, "y": 152, "r": 2.2, "name": "Trinity Street drain" },
+    { "id": "drain", "type": "reach", "place": { "x": -166.5, "y": 147, "r": 2.2, "name": "Trinity Street drain" },
       "text": "Follow Pip's nose up Trinity Street",
       "intro": [
         { "who": "narrator", "line": "Brass filings glitter in the gutter like spilt sugar. They lead uphill, towards one lit window." }
@@ -53,7 +53,7 @@
         { "who": "tamsin", "line": "Behind my back wall there is a ward-clock, the Mainspring. It keeps the street's hour. Tonight he's been in there, and it's running down." },
         { "who": "tamsin", "line": "Listen. Hear that? The bicycles are moving." }
       ] },
-    { "id": "bikes", "type": "kill", "calm": 40, "spawn": [ "bicycle_golem", "automaton", "bicycle_golem", "automaton" ], "at": { "x": -188, "y": 186 }, "count": 4, "exit": "tamsin",
+    { "id": "bikes", "type": "kill", "calm": 40, "spawn": [ "bicycle_golem", "automaton", "bicycle_golem", "automaton" ], "at": { "x": -159.5, "y": 190 }, "count": 4, "exit": "tamsin",
       "text": "Stop the Bicycle-Golems and Clockwork Porters assembling on Trinity Street",
       "intro": [
         { "who": "narrator", "line": "Up and down Trinity Street the parked bicycles shake off their locks. Moss crawls up the frames and stands them on their back wheels." },
@@ -63,7 +63,7 @@
         { "who": "tamsin", "line": "Those porters are my uncle's work. I'd know his rivets anywhere. He's winding the whole street against us." },
         { "who": "tamsin", "line": "The Mainspring's door is in the wall up by the Great Gate. Go. I'll follow when my hands stop shaking." }
       ] },
-    { "id": "ward_clock", "type": "reach", "calm": 40, "place": { "x": -191, "y": 210, "r": 2.2, "name": "Ward-clock door" },
+    { "id": "ward_clock", "type": "reach", "calm": 40, "place": { "x": -159, "y": 218, "r": 2.2, "name": "Ward-clock door" },
       "text": "Find the Mainspring's hidden door near the Great Gate",
       "intro": [
         { "who": "narrator", "line": "The taper in your hand flares. A door that was not there a moment ago outlines itself in the old brick, ticking." }
@@ -87,8 +87,8 @@
         { "who": "corvin", "line": "The Mainspring is unwound. What's left is its guardian, and it does not know me any more. It will not know you either." },
         { "who": "narrator", "line": "He steps back into the shadow of the gate, turns a key in nothing, and is gone. Something behind the wall begins to tick very loudly." }
       ] },
-    { "id": "engine", "type": "kill", "calm": 45, "mob": "escapement_engine", "count": 1, "at": { "x": -190, "y": 214 },
-      "checkpoint": { "x": -188, "y": 190, "name": "Trinity Street", "look": [-190, 214] },
+    { "id": "engine", "type": "kill", "calm": 45, "mob": "escapement_engine", "count": 1, "at": { "x": -158, "y": 214 },
+      "checkpoint": { "x": -158.5, "y": 196, "name": "Trinity Street", "look": [-158, 214] },
       "text": "Defeat the Escapement Engine before the Great Gate",
       "intro": [
         { "who": "narrator", "line": "The wall opens like a clock case. Out of it walks a thing of brass and oak the height of a shop-front, an escapement wheel turning in its chest." },
@@ -112,7 +112,7 @@
         { "who": "tamsin_gate", "line": "And listen. He always said the conduit was the weak stitch. The water. He's going for Hobson's Conduit next." }
       ] }
   ],
-  "checkpoint": { "x": -187, "y": 150, "name": "Trinity Street", "look": [-187, 175] },
+  "checkpoint": { "x": -166, "y": 140, "name": "Trinity Street", "look": [-164, 165] },
   "rewards": { "xp": 850, "items": [ "quest_tamsins_loupe" ], "title": "Keeper of the Beat" },
   "next": "Follow the water to Hobson's Conduit (coming soon)"
 }
