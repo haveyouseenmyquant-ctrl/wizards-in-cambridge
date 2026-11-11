@@ -105,15 +105,19 @@ body.wic-gridinv #inv-panel { display: none !important; }
 #game-hud .gh-talents .gh-tier { padding: 8px 10px; background: rgba(28,23,18,.92); border: 1px solid #5a4828; border-radius: 6px; box-shadow: 0 6px 20px rgba(0,0,0,.5); }
 #game-hud .gh-talents .gh-tier-lv { width: 64px; font: 700 12px/1.2 system-ui; letter-spacing: .12em; color: #d9b45a; text-transform: uppercase; }
 #game-hud .gh-talents .gh-tier-lv small { display: block; font-weight: 500; letter-spacing: 0; text-transform: none; color: #a08a60; font-size: 10px; margin-top: 3px; }
-#game-hud .gh-talent { width: 250px; min-height: 74px; flex-direction: row; align-items: center; gap: 10px; background: rgba(14,12,10,.92); border: 1px solid #4a3e2a; font-size: 12px; }
+#game-hud .gh-talent { width: 250px; min-height: 74px; flex-direction: row; align-items: center; gap: 10px; background: linear-gradient(160deg, rgba(34,28,20,.95), rgba(12,10,9,.95)); border: 1px solid #4a3e2a; font-size: 13px; }
 #game-hud .gh-talent:not(.locked):hover { border-color: #d9b45a; }
 #game-hud .gh-talent .wt-ic { --cc: #b9a77f; flex: none; width: 46px; height: 46px; padding: 6px; box-sizing: border-box; border-radius: 8px; transform: rotate(0); border: 2px solid color-mix(in srgb, var(--cc) 55%, #3a3020); color: var(--cc); background: radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--cc) 28%, rgba(20,16,12,.9)), rgba(10,8,6,.95) 75%); filter: drop-shadow(0 0 4px color-mix(in srgb, var(--cc) 40%, transparent)); }
 #game-hud .gh-talent .wt-tx { display: flex; flex-direction: column; gap: 3px; }
 #game-hud .gh-talent .wt-tx b { font: 600 14px/1.1 Georgia, serif; color: #f3ead6; }
-#game-hud .gh-talent .wt-tx span { color: #c8bca0; line-height: 1.3; }
+#game-hud .gh-talent .wt-tx span { color: #ded3b9; line-height: 1.3; }
 #game-hud .gh-talent.on { border-color: #f2d36b; background: linear-gradient(rgba(90,70,24,.95), rgba(50,38,14,.95)); box-shadow: 0 0 12px rgba(242,211,107,.45); }
 #game-hud .gh-talent.on .wt-ic { border-color: #f2d36b; box-shadow: 0 0 10px rgba(242,211,107,.6); }
-#game-hud .gh-talent.locked { opacity: .5; filter: grayscale(.7); }
+#game-hud .gh-talent.locked { opacity: .62; filter: grayscale(.6); }
+/* s6: tiers read as one tree: a gold spine between tier panels, warmer panel fill */
+#game-hud .gh-talents .gh-tier { position: relative; background: linear-gradient(90deg, rgba(48,38,24,.94), rgba(26,21,16,.94) 30%); }
+#game-hud .gh-talents .gh-tier + .gh-tier::before { content: ''; position: absolute; left: 41px; top: -10px; width: 2px; height: 10px; background: linear-gradient(#d9b45a, #7a6236); }
+#game-hud .gh-talents .gh-tier-lv small { color: #c4ab78 !important; font-size: 11px !important; }
 #game-hud .gh-talent .wt-icw { position: relative; flex: none; display: block; }
 #game-hud .gh-talent .wt-sp { position: absolute; right: -5px; bottom: -5px; width: 20px; height: 20px; padding: 2px; box-sizing: border-box; border-radius: 50%; color: #f3ead6; background: #1a140e; border: 1px solid var(--cc, #b9a77f); }
 #wic-inv .wi-det { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--rc) 45%, transparent), 0 0 14px color-mix(in srgb, var(--rc) 25%, transparent); border-radius: 0 5px 5px 0; }
@@ -129,7 +133,7 @@ body.wic-gridinv #inv-panel { display: none !important; }
 #game-hud .gh-num.crit::before { font-size: 12px; }
 #game-hud .gh-num.wu-cap { visibility: hidden; }
 `;
-const NUM_CAP = 4;
+const NUM_CAP = 3;
 
 export function install(game) {
   if (typeof document === 'undefined' || !game.items) return;
@@ -239,7 +243,16 @@ export function install(game) {
       vis.push([d, r.t + (d.classList.contains('crit') ? 1e6 : 0)]);
     }
     vis.sort((a, b) => b[1] - a[1]);
-    vis.forEach(([d], i) => d.classList.toggle('wu-cap', i >= NUM_CAP));
+    // s6: a number that would overlap a higher-priority one or the boss bar stays hidden (judge: numbers overlap the
+    // boss name and each other)
+    const bossEl = document.querySelector('#game-hud .gh-boss'), keep = [];
+    const bb = bossEl && bossEl.style.display === 'block' ? bossEl.getBoundingClientRect() : null;
+    const hit = (a, b) => a.left < b.right + 4 && b.left < a.right + 4 && a.top < b.bottom + 2 && b.top < a.bottom + 2;
+    vis.forEach(([d], i) => {
+      let off = i >= NUM_CAP;
+      if (!off) { const r = d.getBoundingClientRect(); off = (bb && hit(r, bb)) || keep.some(k => hit(r, k)) || r.left < 10 || r.top < 10 || r.right > innerWidth - 10 || r.bottom > innerHeight - 10;   // edge-clamped = off-screen target if (!off) keep.push(r); }
+      d.classList.toggle('wu-cap', off);
+    });
   }
 
   // ---------------- per frame: menu state, inventory mirror, queue drain
