@@ -250,7 +250,7 @@ export function createVfx(game) {
     vertexShader: `varying vec3 vN; varying vec3 vV; varying float vD; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalMatrix * normal; vV = -mv.xyz; vD = -mv.z; gl_Position = projectionMatrix * mv; }`,
     fragmentShader: `uniform vec3 uColor; uniform float uOp; ${NEAR} varying vec3 vN; varying vec3 vV; varying float vD;
       void main(){ float f = 1.0 - abs(dot(normalize(vN), normalize(vV)));
-        ${rim ? `vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.05, 0.75, f)) * (0.9 + 1.4 * f * f); float a = uOp * uCap * smoothstep(uNear0, uNear1, vD);`
+        ${rim ? `vec3 c = mix(uColor, vec3(1.0, 0.98, 0.92), 0.35 * f * f) * (0.7 + 1.6 * f * f); float a = uOp * uCap * smoothstep(uNear0, uNear1, vD) * (0.06 + 0.94 * pow(f, 3.0));`   // EnvVFX s8: domes are a hollow rim (the filled shell swamped warden frames)
         // s84 (EnvVFX): cores are a white-hot centre fading to a soft coloured edge (the old fresnel rim drew a hard-edged disc); domes keep the rim
         : `vec3 c = mix(vec3(1.0, 0.98, 0.92), uColor, smoothstep(0.0, 0.55, f)) * 1.35; float a = uOp * uCap * smoothstep(uNear0, uNear1, vD) * pow(1.0 - f, 1.4);`}
         gl_FragColor = vec4(c * a, a); }`,
@@ -779,11 +779,11 @@ export function createVfx(game) {
           u.uOp.value = e.flicker ? Math.sqrt(1 - k) * (rnd() > 0.2 ? 1 : 0.3) : (1 - k);
           break; }
         case 'tether': tetherGeom(o, e); o.material.uniforms.uOp.value = Math.min(1, e.t / 0.06) * (k > 0.75 ? (1 - k) / 0.25 : 1) * (0.8 + 0.2 * Math.sin(e.t * 40)); break;
-        case 'spike': { const g = Math.min(1, e.t / 0.1), f = k > 0.75 ? (1 - k) / 0.25 : 1; o.scale.set(1, e.h * (g < 1 ? g * (2 - g) * 1.1 : 1) * f + 0.01, 1); break; }
+        case 'spike': { const g = Math.min(1, e.t / 0.1), f = k > 0.75 ? (1 - k) / 0.25 : 1; o.scale.set(1, e.h * (g < 1 ? g * (2 - g) * 1.1 : 1) * f + 0.01, 1); o.material.opacity = smooth(1.5, 3.5, o.position.distanceTo(camPos)); break; }   // EnvVFX s8: no rubble filling the camera
         case 'rock': {
           e.vy -= 18 * dt; o.position.x += e.vx * dt; o.position.y += e.vy * dt; o.position.z += e.vz * dt;
           if (o.position.y < e.floor + e.s * 0.5) { o.position.y = e.floor + e.s * 0.5; e.vy = Math.abs(e.vy) * 0.3; e.vx *= 0.6; e.vz *= 0.6; e.wx *= 0.6; e.wy *= 0.6; }
-          o.rotation.x += e.wx * dt; o.rotation.y += e.wy * dt; o.scale.setScalar(e.s * (k > 0.7 ? (1 - k) / 0.3 : 1)); break; }
+          o.rotation.x += e.wx * dt; o.rotation.y += e.wy * dt; o.scale.setScalar(e.s * (k > 0.7 ? (1 - k) / 0.3 : 1)); o.material.opacity = smooth(1.2, 3, o.position.distanceTo(camPos)); break; }
         case 'core': if (e.dur !== Infinity) { o.material.uniforms.uOp.value = 1 - k; o.scale.setScalar(e.r * (1 + k * 0.8)); } break;
         case 'dome': {
           o.position.set(p.x, p.z + 1, -p.y); o.material.uniforms.uOp.value = (0.13 + 0.04 * Math.sin(e.t * 6))   /* s80: shell fainter, the stone carries the shield */ * (0.25 + 0.75 * smooth(e.r + 0.5, e.r + 3, o.position.distanceTo(camPos)));   // session 54: faint when the camera is close (third person)
@@ -797,7 +797,7 @@ export function createVfx(game) {
           if (e.pl) { const m2 = e.pl.length, rise = Math.min(1, e.t / 0.35);
             for (let c = 0; c < m2; c++) { const a = -e.t * 0.9 + c / m2 * TAU, s = e.pl[c];
               s.position.set(p.x + Math.cos(a) * e.r * 1.05, p.z - 0.4 + rise * (0.75 + 0.12 * Math.sin(e.t * 2 + c * 1.7)), -(p.y + Math.sin(a) * e.r * 1.05));
-              s.rotation.set(0.15 * Math.sin(e.t + c), -a + Math.PI / 2, 0.1); } }
+              s.rotation.set(0.15 * Math.sin(e.t + c), -a + Math.PI / 2, 0.1); s.material.opacity = smooth(1.2, 3, s.position.distanceTo(camPos)); } }
           if (rnd() < dt * 6) { const a = rnd() * TAU; burst(p.x + Math.cos(a) * e.r, p.y + Math.sin(a) * e.r, p.z + 0.2, 1, { tex: 'rune', color: e.color, speed: 0, size: 0.35, life: 1, up: 1.4, drag: 0, jitter: 0, spin: 1 }); }
           break; }
       }

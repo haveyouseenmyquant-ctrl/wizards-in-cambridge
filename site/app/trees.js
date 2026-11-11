@@ -226,11 +226,26 @@ function foliageLight(mat, wrap, trans, gain = 1) {
   return mat;
 }
 
+// EnvVFX s8: foliage within ~3 m of the camera dissolves (screen-door dither), so a crown next to the third-person
+// combat camera doesn't fill the frame with leaves
+function nearFade(mat) {
+  const prev = mat.onBeforeCompile;
+  mat.onBeforeCompile = (sh, r) => {
+    if (prev) prev(sh, r);
+    sh.fragmentShader = sh.fragmentShader.replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
+      { float nd = smoothstep(1.2, 3.2, length(vViewPosition));
+        if (nd < 1.0 && fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715)))) > nd) discard; }`);
+  };
+  const key = mat.customProgramCacheKey();
+  mat.customProgramCacheKey = () => key + '_nf';
+  return mat;
+}
+
 const LEAF_TEX = FOLIAGE ? leafTexture() : null;
 const cardMat = FOLIAGE ? windPatch(new THREE.MeshLambertMaterial({ map: LEAF_TEX, vertexColors: true, alphaTest: 0.45,
   side: THREE.DoubleSide, alphaToCoverage: true }), true) : null;
-if (cardMat) foliageLight(cardMat, 0.5, 0.6, 1.3);
-const coreMat = foliageLight(windPatch(new THREE.MeshLambertMaterial({ vertexColors: true }), false), 0.3, 0.0);
+if (cardMat) nearFade(foliageLight(cardMat, 0.5, 0.6, 1.3));
+const coreMat = nearFade(foliageLight(windPatch(new THREE.MeshLambertMaterial({ vertexColors: true }), false), 0.3, 0.0));
 // s70: colour per instance; wrapped diffuse so the shaded side of a trunk isn't near-black
 const barkMat = foliageLight(windPatch(new THREE.MeshLambertMaterial({ color: 0xffffff, vertexColors: true }), false), 0.45, 0.0);
 const trunkMat = foliageLight(new THREE.MeshLambertMaterial({ color: 0xffffff }), 0.45, 0.0);
