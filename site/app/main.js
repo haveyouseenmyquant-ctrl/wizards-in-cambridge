@@ -19,6 +19,7 @@ import { installShadowLod } from './shadowlod.js';
 import { installShadowProxies } from './shadowproxy.js';
 import { installMainMerge } from './mainmerge.js';
 import { installInstPool } from './instpool.js';
+import { installProgGate } from './progate.js';
 
 const BASE = new URL('./', location.href).href;
 // ?look=v2: sky dome, AgX tone mapping, plausible albedos (session 9). Off by default: it lowered photo_match on the
@@ -118,6 +119,7 @@ async function main() {
   }));
   skyDome.renderOrder = -1; skyDome.frustumCulled = false; if (GOLDEN || LOOK2 || SKYMODE !== 'flat') scene.add(skyDome);
   const camera = new THREE.PerspectiveCamera(70, 1, 0.2, LOOK2 ? 1200 : 600);
+  const progGate = installProgGate(THREE, renderer, scene, camera, () => composer ? composer.readBuffer : null);   // Optimisation s6: new materials wait for a parallel compile instead of stalling
   if (LOOK2) { renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = 1.15; }
   if (GOLDEN) { renderer.toneMapping = THREE.AgXToneMapping; renderer.toneMappingExposure = parseFloat(QS.get('exposure') || '1.1'); }
   // fill: cool blue sky light against the warm sun (warm/cool contrast reads as depth); warm bounce from the ground
@@ -323,7 +325,7 @@ async function main() {
       sun.target.position.set(cx, 0, cz); sun.position.set(cx, 0, cz).addScaledVector(SUN_DIR, 300); sun.target.updateMatrixWorld();
     }
     skyDome.position.copy(camera.position); skyDome.material.uniforms.t.value = performance.now() / 1000;
-    instPool(dt); shadowProxies(dt); shadowLod(dt); mainMerge(dt);
+    instPool(dt); shadowProxies(dt); shadowLod(dt); mainMerge(dt); progGate();
     if (composer) composer.render(dt); else renderer.render(scene, camera);
     if (!ready && !player.pendingPlace && tiles.readyAt(player.x, player.y)) {
       ready = true; window.__walkReadyAt = performance.now(); window.__walkReady = true;

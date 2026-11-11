@@ -11,10 +11,13 @@ export function preload() { return pre ||= Promise.all(MODULES.map(m => import(m
 export async function startGame(ctx) {
   const game = new Game(ctx);
   // fetch all modules in parallel (a serial await chain cost ~1 s of round trips), then install in the listed order
+  const T = window.__gameT = { start: performance.now() };
   const mods = await preload();
+  T.mods = performance.now();
   MODULES.forEach((m, i) => {
     try { if (mods[i] instanceof Error) throw mods[i]; mods[i].install?.(game); } catch (e) { console.warn('[game] module', m, 'not loaded:', e.message); }
   });
+  T.installed = performance.now();
   game.emit('ready', {});
   return game;
 }
