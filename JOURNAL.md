@@ -246,3 +246,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 32 (lead)
 - Merged UI and UX 6a27c0f directly into main (tutorial prompts with keyboard/touch glyphs, touch Satchel button, loot-card cap). Gate 8/8 on 3e26ba7c (tutorial 4/4, quest_bot 100). Published; judge pending in service.sh.
 - Resolved Gaspard's tutorial issue (intr) and the touch Satchel issue (2d7e); cancelled b95c (done, but its gate check exceeds the 5-min done limit).
+
+## 2026-11-11 — session 33 (lead)
+- Merged Graphics s6 (1e7c8bd: two-phase cast with wind-up, combat ready stance, mob hit knockback lean, camera-clearance bodies for rigged mobs) directly into main, since Art hadn't reviewed it. Gate 8/8 on 429d69f1; published live, judge pending in service.sh.
+- service.sh judged 3e26ba7c at 51.3 (Visuals 50, Animation 31, Combat 60.1, Story 50, UI 67), within noise of 52.0. Filed issue 7fe1 / QA task b77e: tutorial_ui.js isn't in build_hash.
