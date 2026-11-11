@@ -89,6 +89,7 @@ body.wic-gridinv #inv-panel { display: none !important; }
 #wic-inv .wi-tile:hover, #wic-inv .wi-tile.sel { border-color: var(--rc); box-shadow: 0 0 10px color-mix(in srgb, var(--rc) 60%, transparent), inset 0 0 0 1px rgba(0,0,0,.7); }
 #wic-inv .wi-tile.empty { --rc: #4a4438; cursor: default; background: rgba(10,9,8,.6); border-style: dashed; }
 #wic-inv .wi-tile .wi-pip { position: absolute; right: 3px; top: 3px; width: 7px; height: 7px; border-radius: 50%; background: var(--rc); box-shadow: 0 0 4px var(--rc); }
+#wic-inv .wi-hint { margin-top: 6px; color: #9a8a6a; font-style: italic; font-size: 12px; }
 #wic-inv .wi-cell.empty { width: 58px; height: 58px; border-radius: 5px; border: 1px dashed #3a3428; background: rgba(10,9,8,.45); }
 #wic-inv .wi-det { --rc: #888; margin-top: 12px; min-height: 96px; padding: 10px 12px; border-left: 3px solid var(--rc); background: linear-gradient(90deg, color-mix(in srgb, var(--rc) 14%, rgba(0,0,0,.4)), rgba(0,0,0,.25)); border-radius: 0 4px 4px 0; }
 #wic-inv .wi-det b { display: block; font: 600 18px/1.2 Georgia, serif; color: var(--rc); }
@@ -165,7 +166,7 @@ export function install(game) {
     const s = game.stats, chests = items.chests?.length ?? 8;
     inv.innerHTML = `<div class="wi-box"><div class="wi-head"><h2>Satchel</h2><span>${bag.length} in bag · ${SLOTS.filter(k => sv.eq[k]).length}/${SLOTS.length} worn</span><button class="wi-x">Close (I)</button></div>`
       + `<div><h3>Equipped</h3><div class="wi-doll">${SLOTS.map(k => tile(sv.eq[k], k)).join('')}</div></div>`
-      + `<div><h3>Bag</h3><div class="wi-bag">${bag.map(id => tile(id)).join('')}${'<div class="wi-cell empty"></div>'.repeat(cells - bag.length)}</div><div class="wi-detwrap">${details(sel)}</div></div>`
+      + `<div><h3>Bag</h3><div class="wi-bag">${bag.map(id => tile(id)).join('')}${'<div class="wi-cell empty"></div>'.repeat(cells - bag.length)}</div>${bag.length ? '' : '<div class="wi-hint">Empty. Drops from foes, chests at real places and bosses land here.</div>'}<div class="wi-detwrap">${details(sel)}</div></div>`
       + `<div class="wi-foot"><span>Health <b>${Math.ceil(s.hp)}/${s.maxHp}</b></span><span>Mana <b>${Math.floor(s.mana)}/${s.maxMana}</b></span>`
       + `<span>Spell power <b>${Math.round(s.power * 100)}%</b></span><span>Crit <b>${Math.round(s.critChance * 100)}%</b></span><span>Armour <b>${Math.round(s.armor)}</b></span>`
       + `<span>Chests opened <b>${sv.chests.length}/${chests}</b></span></div></div>`;
