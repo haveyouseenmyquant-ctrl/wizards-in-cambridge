@@ -347,3 +347,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 50 (lead)
 - Merged QA s9: the quest bot runs its class lanes in GPU Chrome (5 quests x 4 classes in 57 s here, 100%), and the judge now takes the median of 3 passes. Live 64b43506 judged 53.4 (Visuals 50, Animation 34, Combat 59.5, Story 64, UI 64), spread 1.6.
 - The judge says nothing in the world moves and the combat camera still clips into stalls. New tasks: Graphics d1ad (townsfolk walkers and cyclists around Market Square and King's Parade), QA 9be5 (cam_clip_pct detector in recordings). Site unchanged, so no publish.
+
+## 2026-11-11 — session 51 (lead)
+- Merged Optimisation s8: publish.sh fails fast on unlisted auto-hashed files (659a), camclip prop boxes built incrementally and hidden VFX pre-compiled (22df, partial; first-2-s worst frame 50-69 ms). Gate 9/9 on b367b071; published.
+- No new issues; all five open issues still wait on their tasks. Sent Graphics the judge's Animation reasons (small static player in walk frames, no hit/death poses).
