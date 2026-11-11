@@ -2089,18 +2089,41 @@ class MobSystem {
         break;
       }
       case 'bellwarden': {
-        const enr = mob.type.phases[mob.phase].enrage;
-        P.legL.rotation.x = walk * 0.35; P.legR.rotation.x = -walk * 0.35;
-        P.torso.rotation.z = Math.sin(t * 1.2) * 0.05 + walk * 0.05;
-        P.clapper.position.x = Math.sin(t * (enr ? 6 : 2)) * 0.4;
-        const k = mob.attack?.kind;
-        P.armL.rotation.x = P.armR.rotation.x = 0; P.armL.rotation.z = -0.15; P.armR.rotation.z = 0.15;
+        // graphics s10: the judge read the boss as 'a rigid bell that only tilts'. Heavy stomping gait (body drops on each
+        // footfall, rolls over the stance leg, arms swing), the bell rocks like a pendulum with a lagging clapper, and every
+        // attack has a big held wind-up silhouette: Toll/Drop = arms up and rear back, Sweep = coiled twist with the mace
+        // arm drawn back, Peal = arms flung wide and the bell shudders, Cascade = arms raised forward. Hits rock it back.
+        const enr = mob.type.phases[mob.phase].enrage, k = mob.attack?.kind, hr = mob.hr;
+        const sw = Math.sin(t * (enr ? 2.6 : 1.6)), wv = moving ? walk : 0;
+        P.legL.rotation.set(wv * 0.75, 0, 0); P.legR.rotation.set(-wv * 0.75, 0, 0);
+        P.body.position.y = moving ? 0.22 * (1 - Math.abs(wv)) - 0.08 : 0.04 * sw;
+        P.torso.rotation.set(moving ? 0.12 : 0.04 * sw, wv * 0.18, wv * 0.16 + sw * (enr ? 0.12 : 0.07));
+        P.armL.rotation.set(-wv * 0.7 + 0.1 * sw, 0, -0.3); P.armR.rotation.set(wv * 0.7 - 0.1 * sw, 0, 0.3);
         if (st === 'windup') {
-          if (k === 'ring' || k === 'leap') { P.armL.rotation.z = -2.6 * wf; P.armR.rotation.z = 2.6 * wf; }
-          else if (k === 'line') { P.armR.rotation.x = -2.2 * wf; }
-          else { P.torso.rotation.y = wf * 2; }
+          const e = wf * (2 - wf), shake = Math.sin(t * 34) * 0.06 * wf;
+          if (k === 'ring' || k === 'leap') {
+            P.armL.rotation.set(-0.5 * e, 0, -2.8 * e); P.armR.rotation.set(-0.5 * e, 0, 2.8 * e);
+            P.torso.rotation.set(-0.4 * e, 0, shake); P.body.position.y = -(k === 'leap' ? 0.55 : 0.3) * e;
+            P.legL.rotation.x = P.legR.rotation.x = 0; P.legL.rotation.z = -0.25 * e; P.legR.rotation.z = 0.25 * e;
+          } else if (k === 'line') {
+            P.torso.rotation.set(-0.15 * e, -1.3 * e, 0.1 * e); P.armR.rotation.set(-1.4 * e, 0, 1.4 * e); P.armL.rotation.set(-0.8 * e, 0, -0.6 * e);
+            P.body.position.y = -0.2 * e;
+          } else if (k === 'nova') {
+            P.armL.rotation.set(0, 0, -1.7 * e); P.armR.rotation.set(0, 0, 1.7 * e);
+            P.torso.rotation.set(-0.25 * e + shake, 0, shake * 2); P.body.position.y = -0.15 * e;
+          } else {
+            P.armL.rotation.set(-2.5 * e, 0, -0.3); P.armR.rotation.set(-2.5 * e, 0, 0.3); P.torso.rotation.set(-0.3 * e, 0, shake);
+          }
+        } else if (st === 'active' || st === 'recover') {
+          const f = st === 'active' ? 1 : 0.6;
+          if (k === 'ring' || k === 'leap') { P.armL.rotation.set(-1.2 * f, 0, -0.6); P.armR.rotation.set(-1.2 * f, 0, 0.6); P.torso.rotation.set(0.4 * f, 0, 0); P.body.position.y = -0.3 * f; }
+          else if (k === 'line') { P.torso.rotation.set(0.2 * f, 1.0 * f, -0.1); P.armR.rotation.set(-1.5 * f, 0, -0.4 * f); }
+          else { P.torso.rotation.x = 0.25 * f; }
         }
-        if (st === 'stagger') P.torso.rotation.x = Math.sin(t * 25) * 0.1;
+        if (st === 'stagger') { P.torso.rotation.set(0.35 + Math.sin(t * 25) * 0.1, 0, Math.sin(t * 9) * 0.15); P.armL.rotation.set(0.3, 0, -0.1); P.armR.rotation.set(0.3, 0, 0.1); P.body.position.y = -0.35; }
+        if (hr > 0) { P.torso.rotation.x -= 0.4 * hr; P.torso.rotation.z += Math.sin(t * 40) * 0.12 * hr; P.armL.rotation.z -= 0.6 * hr; P.armR.rotation.z += 0.6 * hr; }
+        // the clapper hangs inside the bell and swings behind the bell's own rocking
+        P.clapper.position.x = -Math.sin(t * (enr ? 2.6 : 1.6) - 0.7) * 0.55 - P.torso.rotation.z * 1.2 + (st === 'windup' && k === 'nova' ? Math.sin(t * 30) * 0.5 : 0);
         P.lantern.rotation.y = t * 2;
         P.eye.material.emissive.setHex(enr ? 0xff2000 : 0xff7a00);
         break;

@@ -57,7 +57,7 @@ try {
         sys.animate(m, dt, mv); sys.bodyLanguage(m, dt, mv); sys.place(m);
       } g.mobRig?.tick(dt); };
       const mid = shot[Math.floor(shot.length / 2)];
-      const gz = mid.groundZ ?? mid.z; window.__cam = { pos: [X0 + 6.5, Y0 + 5.1 - 3.5, gz + 2.6], at: [X0, Y0 + 5.1, gz + 1.2], fov: 60 };
+      const gz = mid.groundZ ?? mid.z; const cd = S.camDist || 1; window.__cam = { pos: [X0 + 6.5 * cd, Y0 + 5.1 - 3.5 * cd, gz + 2.6 * cd], at: [X0, Y0 + 5.1, gz + 1.2 * cd], fov: 60 };
       await new Promise(r => setTimeout(r, 2500));
     }, SHOTS[i]);
     await page.screenshot({ path: `${OUT}_${SHOTS[i].name || i + 1}.${process.env.MOB_JPG ? 'jpg' : 'png'}`, ...(process.env.MOB_JPG ? { type: 'jpeg', quality: 85 } : {}) });
