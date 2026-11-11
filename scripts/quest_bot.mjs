@@ -23,7 +23,7 @@ const RUNS = +(process.argv[3] || 4);
 const WORKERS = Math.max(1, +(process.env.WIC_QUESTBOT_WORKERS || 4));
 const SOFT_S = +(process.env.WIC_SOFTLOCK_S || 0);   // QA main-path bot: soft-lock after this much game time without progress (0 = off)
 const RUN_WALL_S = +(process.env.WIC_QUESTBOT_RUN_WALL_S || 1500);
-const CLASSES = ['pyromancer', 'stormcaller', 'warden', 'hexweaver'];
+const CLASSES = (process.env.WIC_QUESTBOT_CLASSES || 'pyromancer,stormcaller,warden,hexweaver').split(',');
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary' };
 const T0 = Date.now();
@@ -133,6 +133,9 @@ function installBot(softS = 0, tileIds = []) {
   offs.push(g.on('kill', prog), g.on('hit', e => { if (e.target && e.target !== P && e.target.type) prog(); }));
   bot.step = function (dt) {
     if (bot.done || bot.fail) return;
+    for (const m of g.mobs) if (m.boss && !m.dead) {   // a boss that walks home heals to full: log every leash reset
+      if (m.state === 'return' && m._qbSt !== 'return') (ev.resets ||= []).push(`${m.type.id}@${(g.time - bot.t0).toFixed(0)} hp ${Math.round(m.hp)} home ${Math.round(Math.hypot(m.x - m.home.x, m.y - m.home.y))} pl ${Math.round(Math.hypot(m.x - P.x, m.y - P.y))} php ${Math.round(g.stats.hp)}`);
+      m._qbSt = m.state; }
     if (softS > 0) {
       const o = Q.objective(), k = o ? `${o.quest}:${o.step}` : 'none', d = o?.x != null ? Math.hypot(o.x - P.x, o.y - P.y) : 0;
       if (wd.key !== k) { wd.key = k; wd.best = d; prog(); } else if (d < wd.best - 1) { wd.best = d; prog(); }
@@ -162,7 +165,7 @@ function installBot(softS = 0, tileIds = []) {
       if (g.time - L.t0 > (tgt.boss ? 400 : 150)) { bot.fail = `stuck mob: ${tgt.type.id} not killed in time (${bot.why})`; return; }
       P.yaw = Math.atan2(-(tgt.x - P.x), tgt.y - P.y);
       const cast = castAt(tgt), want = tgt.boss ? 9 : 7;
-      bot.why = `fight ${tgt.type.id} d ${bd.toFixed(1)} hp ${Math.round(tgt.hp)}`;
+      bot.why = `fight ${tgt.type.id} d ${bd.toFixed(1)} hp ${Math.round(tgt.hp)} ${tgt.state} dmg ${Math.round(g.time - L.t)}s ago`;
       if (!cast && (bd > want + 2 || g.time - L.t > 5)) {   // close in / find a line of fire
         if (!bot.goal || Math.hypot(bot.goal.x - tgt.x, bot.goal.y - tgt.y) > 3 || g.time - L.t > 5 && !bot.goal.flank) {
           const a = Math.random() * 6.283; setGoal(tgt.x + (g.time - L.t > 5 ? Math.cos(a) * 5 : 0), tgt.y + (g.time - L.t > 5 ? Math.sin(a) * 5 : 0), Math.max(1.5, want - 4));
@@ -229,7 +232,7 @@ async function runOne(r) {
   await ctx.close().catch(() => {});
   rec.pass = !rec.fail; rec.wallS = Math.round((Date.now() - w0) / 1000);
   runs.push(rec);
-  log(cls, r, rec.pass ? 'PASS' : 'FAIL ' + rec.fail, JSON.stringify({ completed: rec.completed, gameS: rec.gameS, kills: rec.kills, deaths: rec.deaths, steps: rec.steps, killLog: rec.killLog, boss: rec.boss }));
+  log(cls, r, rec.pass ? 'PASS' : 'FAIL ' + rec.fail, JSON.stringify({ completed: rec.completed, gameS: rec.gameS, kills: rec.kills, deaths: rec.deaths, steps: rec.steps, killLog: rec.killLog, boss: rec.boss, resets: rec.resets }));
 }
 try {
   const jobs = Array.from({ length: RUNS }, (_, r) => r);

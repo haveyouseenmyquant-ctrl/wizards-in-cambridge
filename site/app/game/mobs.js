@@ -1180,7 +1180,10 @@ class MobSystem {
       const dx = mob.x - g.px, dy = mob.y - g.py, d = Math.hypot(dx, dy) || 1;
       mob.kb = { x: dx / d, y: dy / d, v: 2 * k / 0.22, t: 0.22 };
     }
-    if (mob.state === 'idle' || mob.state === 'patrol' || mob.state === 'return') { mob.state = 'chase'; this.callForHelp(mob); }
+    // story s10 (7aca): a mob walking home past its leash keeps walking; re-aggroing it on every hit made it flip
+    // return -> chase -> return each frame, healing 50%/s while never getting home (an unkillable warden-kited boss)
+    const leashing = mob.state === 'return' && Math.hypot(mob.x - mob.home.x, mob.y - mob.home.y) > (mob.type.leash ?? 40) * 0.75;
+    if (mob.state === 'idle' || mob.state === 'patrol' || mob.state === 'return' && !leashing) { mob.state = 'chase'; this.callForHelp(mob); }
     // boss phase changes
     if (mob.type.phases) {
       const f = mob.hp / mob.maxHp;

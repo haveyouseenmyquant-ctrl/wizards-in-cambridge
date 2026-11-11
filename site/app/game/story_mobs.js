@@ -4,8 +4,9 @@ import { registerMobType } from './mobs.js';
 
 // Quest 5 "The Saxon Bell": every crossed-out word in eight centuries of bell-books, risen as one hunched ink scribe.
 // Borrows the ink imp's body at boss scale; phase II blots the page (ink rain, nib rush) and calls imps out of itself.
+// leash 55 (not 34): Nib Rush / Pendulum Drive carry the boss 15 m, which reset fights at 1% hp (s10, 7aca)
 registerMobType({ id: 'blotted_scribe', model: 'ink_imp', death: 'dissolve', scale: 4.2, name: 'The Blotted Scribe of Bene\'t Street', boss: true,
-  hp: 820, speed: 3.0, radius: 1.4, xp: 460, aggro: 17, leash: 34, color: 0x7a60ff, knockResist: 1, deathDur: 1.6,
+  hp: 820, speed: 3.0, radius: 1.4, xp: 460, aggro: 17, leash: 55, color: 0x7a60ff, knockResist: 1, deathDur: 1.6,
   loot: [{ rarity: 'rare', chance: 1 }, { rarity: 'rare', chance: 0.6 }, { rarity: 'epic', chance: 0.5 }, { rarity: 'legendary', chance: 0.16 }],
   phases: [   // I: the scribe writes (quill slash, backwards curse, blot); II: the page is ruined (ink rain, nib rush, more blots)
     { at: 1.0, attacks: ['slash', 'curse', 'blot'] },
@@ -23,7 +24,7 @@ registerMobType({ id: 'blotted_scribe', model: 'ink_imp', death: 'dissolve', sca
 // shop-front. Borrows the Clockwork Porter's body at boss scale; every attack lands on the beat (fixed, even cooldowns),
 // and phase II slips a cog (the beat quickens) and winds Porters and Bicycle-Golems off the street.
 registerMobType({ id: 'escapement_engine', model: 'automaton', death: 'collapse', scale: 2.7, name: 'The Escapement Engine of Trinity Street', boss: true,
-  hp: 980, speed: 2.4, radius: 1.5, xp: 520, aggro: 18, leash: 34, color: 0xd8a040, knockResist: 1, deathDur: 1.8,
+  hp: 980, speed: 2.4, radius: 1.5, xp: 520, aggro: 18, leash: 55, color: 0xd8a040, knockResist: 1, deathDur: 1.8,
   loot: [{ rarity: 'rare', chance: 1 }, { rarity: 'rare', chance: 0.6 }, { rarity: 'epic', chance: 0.55 }, { rarity: 'legendary', chance: 0.18 }],
   phases: [   // I: tick, tock, strike (all on a 2 s beat); II: a cog slips, the beat quickens and the pendulum charges
     { at: 1.0, attacks: ['tick', 'tock', 'strike'] },
