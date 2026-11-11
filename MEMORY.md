@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 62)
+## State (2026-11-11, after session 63)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,9 +9,10 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s63: no team commits. RETIRED Gameplay (6 empty sessions). Camera clip 4a30 -> Optimisation 2409 (top);
+  Combat feel 11ba -> Story 2f47 (after 7e65). b9bf766b not judged yet (service).
 - s62: merged Story s10 (Q7 Conduit Runs Dry, leash heal-loop fix) -> b9bf766b gate 10/10 (quest_bot flaky 1st try 75%), published.
   Resolved 4801. Issue 106f (mobs.js boss leash 34->55, pyro deaths) -> Story 7e65 (Story is the reliable shipper).
-  Gameplay: 5 sessions empty, note sent (3da4 only). If s63 still empty: set-status done, move 3da4/11ba to Story or Graphics.
 - s60: merged Graphics s10 1017fce (Bellwarden stomp, player root layer); gate 10/10 on 1e123d10; published.
   062d8a31 judged 55.8 (UI 68, Anim 34, Visuals 50, Combat 63), cam_clip_combat 18.8, playtest 91.7 (warden stuck on
   blotted_scribe) -> issue 4801 -> Story task 7aca (before Quest 7 c4f9).
@@ -41,8 +42,8 @@
 - Teams sit directly under root; dept managers (Art, Engineering, Creative, Marketing) PAUSED since s35 (they starved teams).
   Resume a manager only if its teams ship steadily.
 - Active teams: graphics (8765 Animation>40, d1ad townsfolk), environment-and-vfx (926d Visuals>55, 4a93 roofs, 76b5), ui-and-ux (3daf UI>68, d9bd),
-  gameplay (f130, 11ba Combat>66), optimisation (22df, 659a, ef24 Safari blocked on safaridriver --enable), story (d905 Quest 6),
-  qa-and-playtesting (9be5). audio-and-music + brand-and-store-page have tasks but low priority (marketing <= 1/5 sessions).
+  optimisation (2409 camera, 22df, ef24 Safari blocked), story (7e65 leash, 2f47 Combat>66; owns mobs.js now),
+  qa-and-playtesting (a756 pyro softlock, 100c, 3f40). gameplay DONE s63. audio-and-music + brand-and-store-page have tasks but low priority (marketing <= 1/5 sessions).
 - Contract in every brief: results to <hash>_wic.json, /tmp/wic_* locks, symlink heavy data, modular site/app/game files,
   gate before ready, commit before 45-min limit.
 
