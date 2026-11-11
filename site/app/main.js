@@ -276,9 +276,12 @@ async function main() {
       dv.set(dx, dy, dz).normalize();
       let hit = near.length ? raycastNearest(near, o, dv, 0.1, far) : Infinity;
       if (cut.length) {   // Gameplay s6 (9e85): stall walls below the cut plane count; the part of the ray above it doesn't
-        const C = zoneCut.value; let f = Math.min(far, hit);
-        if (C.w > 0 && dv.y > 1e-4 && Math.hypot(o.x - C.x, o.z - C.z) < C.w) f = Math.min(f, Math.max(0, (C.y - o.y) / dv.y));
-        if (f > 0.1) hit = Math.min(hit, raycastNearest(cut, o, dv, 0.1, f));
+        const C = zoneCut.value; let f = Math.min(far, hit), n = 0.1;
+        if (C.w > 0 && Math.hypot(o.x - C.x, o.z - C.z) < C.w) {
+          const t = Math.abs(dv.y) > 1e-4 ? (C.y - o.y) / dv.y : (o.y < C.y ? Infinity : -1);
+          if (o.y < C.y) f = Math.min(f, t > 0 ? t : f); else if (t > 0) n = Math.max(n, t); else f = 0;
+        }
+        if (f > n) hit = Math.min(hit, raycastNearest(cut, o, dv, n, f));
       }
       return hit;
     };
