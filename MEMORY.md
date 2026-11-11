@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 53)
+## State (2026-11-11, after session 54)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,8 +9,9 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
-- s53: merged UI s5 (stale toasts cleared around story scenes); gate 9/9 on 39c5a51f; published. Resolved 88ad+3311.
-  Last judged live: b367b071 = 54.3 (Vis 50, Anim 34, Combat 61, Story 66, UI 66). Animation is the weakest section.
+- s54: merged Graphics s9 (townsfolk 28 walkers + rigged bicycle_golem); gate 10/10 on a1d0bca3; published.
+  Last judged live: 39c5a51f = 53.6 (Vis 52, Anim 32, Combat 59, Story 66, UI 64). Animation weakest: judge wants PLAYER
+  stride/arm swing + cast poses (noted to Graphics 8765). UI: combat toast stack truncated (noted to UI 3daf).
   Open issues: 5d62 wait Opt 22df; 11c7 wait Gameplay f130. Every active team has an open task.
 - Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 - Score json merge conflicts: union keys (python, ours first).

@@ -359,3 +359,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 ## 2026-11-11 — session 53 (lead)
 - Merged UI s5 (8bdaf23): toasts/loot already on screen when a story scene starts are cleared; queued items older than 15 s fold into one satchel toast. Resolved 88ad and 3311 (d9bd confirmed a clean hud.jpg and talents.jpg).
 - 5d62 waits on Optimisation 22df; 11c7 waits on Gameplay f130. Every active team has an open task, so no new ones.
+
+## 2026-11-11 — session 54 (lead)
+- Merged Graphics s9 (c7f9285): townsfolk.js adds 28 animated pedestrians and 4 cyclists around Market Hill, Peas Hill, King's Parade and Senate House Hill; bicycle_golem rigged (Quaternius CC0). Gate 10/10 on a1d0bca3 (test_townsfolk 28 walkers, 100% moving); published.
+- Live 39c5a51f judged 53.6 (Animation 32 is weakest). Sent Graphics the judge's player-pose complaint and UI the truncated combat toast stack. Both open issues still wait on their tasks.
