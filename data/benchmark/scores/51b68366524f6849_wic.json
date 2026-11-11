@@ -57,5 +57,182 @@
   "at": "2026-11-11T19:17:25.417Z"
  },
  "main_quests_shipped": 6,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 20.4,
+  "main_quests_shipped": 6,
+  "wall_s": 127,
+  "at": "2026-11-11T19:38:23.622Z"
+ },
+ "cam_clip_pct": 5.4,
+ "cam_clip_combat_pct": 6.3,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [
+  {
+   "frame": "combat/hexweaver/frame_01.jpg",
+   "scene": "combat_hexweaver",
+   "pos": [
+    -83.33,
+    85.89,
+    12.53
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: zone/market_stallsway400160685 4.2 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/stormcaller/frame_01.jpg",
+   "scene": "combat_stormcaller",
+   "pos": [
+    -95.52,
+    88.54,
+    12.56
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: Group/bway400160682 0.4 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_01.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -91.14,
+    91.18,
+    12.53
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: zone/market_stallsway400160685 4.3 m from camera, 5.1 m to player"
+   ]
+  }
+ ],
+ "judged_game_quality": 55,
+ "judged_sections": {
+  "Visuals": 52,
+  "Animation": 34,
+  "Combat feel": 60.8,
+  "Story presentation": 64,
+  "UI polish": 69
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    52,
+    52,
+    52
+   ],
+   "Animation": [
+    34,
+    34,
+    32
+   ],
+   "Combat feel": [
+    60.5,
+    61,
+    60.8
+   ],
+   "Story presentation": [
+    64,
+    64,
+    64
+   ],
+   "UI polish": [
+    68,
+    70,
+    69
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0,
+   "Animation": 2,
+   "Combat feel": 0.5,
+   "Story presentation": 0,
+   "UI polish": 2
+  },
+  "quality_spread": 0.6,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together: recognisable architecture with window detail, a Gothic church, market stalls, bikes and railings, warm low-sun lighting with real-time shadows, bloom and some haze. But geometry and materials are simple and blocky: flat facades, untextured boxy stall goods and shop shelves, sparse clutter and vegetation. The characters are small, low-detail chibi figures with little cloth or hair detail, and the combat frames are full of flat, opaque VFX blobs that hide the scene. That puts it below the 60 anchor."
+   },
+   "Animation": {
+    "all": "In the exploration frames the wizard's legs are in different stride positions, which suggests a basic walk cycle, and a few small pedestrians appear in the distance. In combat, attacks show up almost entirely as projectiles, rings and damage numbers, and the player is too small and too covered by effects to show any visible cast or hit-reaction poses. The Bellwarden boss is a rigid bell that only changes tint and tilt, and there is no visible secondary motion on robes or hats, no wind-ups or death animations, and no foliage or crowd motion."
+   },
+   "Combat feel": {
+    "hexweaver": "Combat clearly works and has real feedback. There are crit and damage numbers, STAGGERED and INTERRUPTED tags, chain counters, a boss with a phase bar and named attack windups (Clapper Sweep, Belfry Drop) with ground telegraph rings, six spells on cooldowns, and rarity-labelled loot cards. Readability is poor, though: enemies often appear as flat blue or white placeholder-looking silhouettes, effects are mostly small green and purple orbs without strong shapes or weight, and many frames show little or no enemy action. hex_dart makes up most casts, and there is no visible hit-stop, screen feedback or crowd control that visibly reshapes fights. Only one class appears on this sheet, so differences between classes can't be judged.",
+    "pyromancer": "Combat clearly works and has a lot of feedback. There are damage numbers, crits, STAGGERED and INTERRUPTED labels, named boss telegraphs (Belfry Drop, Great Toll, Peal of Shards) with ground circles, a three-phase boss with an enrage, a combo-chain counter, and rarity-coloured loot toasts. The VFX are weak and hard to read, though. Spell effects are small blobs, clutter and walls often hide the action (frames 2 and 9), and there is no visible hit-stop, knockback or screen feedback. Only one class is shown, so I can't judge how the classes differ, and ember_bolt accounts for 86 of the 113 casts, so the spell use is repetitive.",
+    "stormcaller": "The basics of the 60 band are clearly there. The boss fight has a named health bar with phases, called attacks (Change-Ringing Cascade, Peal of Shards) and red floor telegraphs; hits show damage numbers and crit popups, with chain counters and INTERRUPTED/STAGGERED labels; loot toasts are colour-coded by rarity. What keeps it from scoring higher: spark_lance is 70 of the 104 casts, the effects are thin and low in detail, there is no visible hit-stop or screen shake, and the camera clips into the ground in frame 1. Several frames show empty market stalls with few or barely visible enemies, and only one class is shown, so differences between classes can't be judged.",
+    "warden": "The fight shows crit damage numbers, STAGGERED states, a chain combo counter, a named boss with a three-phase bar and an 'enraged' banner, red telegraph lines on the ground, and loot toasts colour-coded by rarity up to a legendary, so it meets the 60 anchor. Readability is weak: the translucent granite-skin bubble and stall geometry often block the player and enemies, the VFX are flat, low-poly shapes, and there is no visible hit-stop or screen feedback. Pebble_shot makes up 73 of the 96 casts, so the fight leans on one attack, and enemy formations are not varied."
+   },
+   "Story presentation": {
+    "all": "Named characters appear on screen with portraits during conversations. The camera frames each talking character in letterboxed shots, and there are branching reply choices. The quest tracker shows distances to real Cambridge locations, and the writing is strong, with a clear original premise (the thirteenth chime, the Unwinder, the Bellwarden boss reveal) plus title cards and a quest-complete reward screen. The biggest gaps are the simple, expressionless chibi character models with no visible facial or gesture animation, no sign of voice acting, and staging that is mostly static over-the-shoulder shots rather than real cinematics."
+   },
+   "UI polish": {
+    "all": "Class selection, HUD, inventory and talent screens share one themed serif/gold style with icons, a boss bar showing phases, a minimap, numbered cooldowns, rarity tags and a loot toast, so it sits clearly above the 60 anchor. The biggest gaps are the inventory and talent screens, which are dark, small-text and sparse (empty bag slots, faint talent icons), and the cooldown numbers, which cover the spell icons. During combat, large damage numbers and the quest banner pile onto the centre of the screen and the target, and the menus show no animation or transitions."
+   }
+  }
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
+ }
 }
