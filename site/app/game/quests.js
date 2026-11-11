@@ -43,8 +43,8 @@ const CSS = `
 #wic-q .q-bars::before,#wic-q .q-bars::after{content:'';position:fixed;left:0;right:0;height:9vh;background:#000;transition:transform .5s;z-index:30}
 #wic-q .q-bars::before{top:0;transform:translateY(-100%)} #wic-q .q-bars::after{bottom:0;transform:translateY(100%)}
 #wic-q .q-bars.on::before,#wic-q .q-bars.on::after{transform:none}
-#wic-q .q-dlg{position:fixed;left:50%;bottom:calc(9vh + 14px);transform:translateX(-50%);width:min(760px,92vw);min-height:92px;display:flex;gap:14px;align-items:center;padding:14px 18px;background:linear-gradient(rgba(20,16,12,.9),rgba(10,8,6,.94));border:1px solid #6b5630;border-radius:6px;box-shadow:0 6px 30px rgba(0,0,0,.6);color:#f6ead0;z-index:31;pointer-events:auto;cursor:pointer}
-#wic-q .q-dlg svg{flex:none;width:84px;height:84px;border-radius:50%;border:2px solid #b8913e;background:#222}
+#wic-q .q-dlg{position:fixed;left:50%;bottom:calc(9vh + 14px);transform:translateX(-50%);width:min(820px,94vw);min-height:104px;display:flex;gap:14px;align-items:center;padding:14px 18px;background:linear-gradient(rgba(20,16,12,.9),rgba(10,8,6,.94));border:1px solid #6b5630;border-radius:6px;box-shadow:0 6px 30px rgba(0,0,0,.6);color:#f6ead0;z-index:31;pointer-events:auto;cursor:pointer}
+#wic-q .q-dlg svg{flex:none;width:96px;height:96px;border-radius:50%;border:2px solid #b8913e;background:#222}
 #wic-q .q-dlg .q-who{font:700 12px/1 system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#e9c46a;margin-bottom:6px}
 #wic-q .q-dlg .q-role{font-weight:500;letter-spacing:.04em;text-transform:none;color:#b9a77f;margin-left:8px}
 #wic-q .q-dlg .q-line{font:400 18px/1.4 Georgia,serif}
@@ -55,6 +55,11 @@ const CSS = `
 #wic-q .q-dlg.mini .q-line{font-size:13px;line-height:1.3}
 #wic-q .q-dlg.mini .q-who{font-size:10px;margin-bottom:3px}
 body.q-cine #status,body.q-cine .gh-loot{visibility:hidden}
+body.q-talk #game-hud,body.q-talk #minimap,body.q-talk #touch-buttons{opacity:0;pointer-events:none;transition:opacity .3s}
+#wic-q .q-dlg .q-opts{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:5px}
+#wic-q .q-dlg .q-opts li{font:400 17px/1.3 Georgia,serif;padding:5px 10px;border:1px solid #5a4828;border-radius:4px;background:rgba(60,46,24,.35);cursor:pointer}
+#wic-q .q-dlg .q-opts li:first-child{border-color:#c9a24e;background:rgba(120,90,36,.4)}
+#wic-q .q-dlg .q-opts li b{display:inline-block;width:20px;color:#e9c46a;font:700 13px/1 system-ui,sans-serif}
 #wic-q .q-dlg.mini .q-role,#wic-q .q-dlg.mini .q-next{display:none}
 @keyframes qPulse{from{opacity:.35}to{opacity:1}}
 #wic-q .q-fade{position:fixed;inset:0;background:#05070a;pointer-events:none;z-index:31;opacity:0;display:flex;align-items:center;justify-content:center;font:italic 22px/1.4 Georgia,serif;color:#e6d6b0;text-shadow:0 2px 10px #000}
@@ -205,15 +210,25 @@ export async function install(game) {
     const narr = L.who === 'narrator';
     dlg.className = 'q-dlg' + (narr ? ' narr' : '') + (st.combat ? ' mini' : ''); dlg.hidden = false; bars.classList.toggle('on', !st.combat);
     if (narr) dlg.innerHTML = `<div class="q-line">${L.line}</div><div class="q-next">E ▸</div>`;
-    else {
+    else if (L.choices) {   // a reply for the player to pick: E / 1 takes the first, 2-4 or a click the others
+      const cls = game.caster?.classes?.[game.caster.cls], pl = { id: 'pl', robe: cls?.color || '#556', trim: '#e9c46a', skin: '#d8b090', hair: '#2a2018', hat: 'tall' };
+      dlg.innerHTML = `${portrait(pl)}<div style="flex:1"><div class="q-who">You<span class="q-role">reply</span></div><ol class="q-opts">${L.choices.map((c, k) => `<li data-k="${k}"><b>${k + 1}</b>${c.text}</li>`).join('')}</ol></div>`;
+    } else {
       const cls = game.caster?.classes?.[game.caster.cls], pl = { id: 'pl', robe: cls?.color || '#556', trim: '#e9c46a', skin: '#d8b090', hair: '#2a2018', hat: 'tall' };
       const who = L.who === 'player' ? 'You' : n.name, role = L.who === 'player' ? (cls?.name || '') : (n.role || '');
       dlg.innerHTML = `${portrait(L.who === 'player' ? pl : { ...n, id: L.who })}<div><div class="q-who">${who}<span class="q-role">${role}</span></div><div class="q-line">${L.line}</div></div><div class="q-next">E ▸</div>`;
     }
     if (n?.g) { const dx = n.x - P.x, dy = n.y - P.y; if (Math.hypot(dx, dy) < 8) { n.g.rotation.y = Math.atan2(-dx, dy); } }
   }
+  function choose(k) {
+    const L = dq.lines[dq.i], c = L?.choices?.[k]; if (!c) return false;
+    (save.choices ||= {})[`${st.q?.id || ''}.${cur()?.id || ''}`] = k;
+    dq.lines = [...dq.lines.slice(0, dq.i), { who: 'player', line: c.text }, ...(c.reply || []), ...dq.lines.slice(dq.i + 1)];
+    show(); return true;
+  }
   function advance() {
     if (dlg.hidden) return false;
+    if (dq.lines[dq.i]?.choices) return choose(0);
     if (++dq.i < dq.lines.length) { show(); return true; }
     dlg.hidden = true; bars.classList.remove('on'); const d = dq.done; dq.done = null; d?.(); return true;
   }
@@ -221,9 +236,9 @@ export async function install(game) {
   // player's own third-person camera (main.js places the camera after game.update), so closing the box hands it back.
   const camV = new THREE.Vector3(), camT = new THREE.Vector3();
   // over either shoulder, whichever has a clear line from the target's face (stall canopies, walls); else pulled in
-  function shoulderShot(px, py, pz, nx, ny, hz) {
+  function shoulderShot(px, py, pz, nx, ny, hz, back = 1.5, side = 0.75, eh = 1.8) {
     const dx = nx - px, dy = ny - py, L = Math.hypot(dx, dy); if (L < 0.8 || L > 9) return null;
-    const ux = dx / L, uy = dy / L, back = 1.5, side = 0.75, ez = pz + 1.8;
+    const ux = dx / L, uy = dy / L, ez = pz + eh;
     let best = null;
     for (const sd of [side, -side]) {
       const cx = px - ux * back + uy * sd, cy = py - uy * back - ux * sd, ddx = cx - nx, ddy = cy - ny, ddz = ez - hz, D = Math.hypot(ddx, ddy, ddz);
@@ -233,15 +248,28 @@ export async function install(game) {
     }
     return best;
   }
-  function frameSpeaker() {
-    const n = dq.npc?.g ? dq.npc : st.focus, cam = game.camera; if (!n || !cam) return;
-    const hz = n.hz ?? n.z + 1.62 * (n.scale || 1), k = Math.min(1, (game.time - dq.at0) / 0.45), e = k * k * (3 - 2 * k);
-    const best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz);
-    if (!best || best.f * 1.68 < 0.6 && best.f < 0.5) return;
+  // shot / reverse shot: the NPC speaking is framed tight over the player's shoulder (lens pushed in), the player's
+  // lines are framed over the NPC's shoulder; the camera glides between set-ups and the lens eases back afterwards
+  const cs = { fov0: null, on: false };
+  function frameSpeaker(cam, dt) {
+    const n = dq.npc?.g ? dq.npc : st.focus; if (!n || !cam) return false;
+    const hz = n.hz ?? n.z + 1.62 * (n.scale || 1), who = dlg.hidden ? null : dq.lines[dq.i]?.who;
+    const rev = (who === 'player') && n.g, ph = P.z + 1.62;
+    let best = rev ? shoulderShot(n.x, n.y, n.z ?? P.z, P.x, P.y, ph, 1.0, 0.6, 1.62 * (n.scale || 1) + 0.15) : shoulderShot(P.x, P.y, P.z, n.x, n.y, hz, 0.95, 0.62, 1.78);
+    if (best && best.f < 0.5) best = shoulderShot(P.x, P.y, P.z, n.x, n.y, hz);   // cramped (stall canopy, wall): wider set-up
+    if (!best || best.f < 0.45) return false;
     camT.set(best.x, best.z, -best.y);
-    camV.copy(cam.position).lerp(camT, e); cam.position.copy(camV);
-    cam.lookAt(n.x, hz - 0.15, -n.y);
+    const snap = !cs.on || stage.on || cam.position.distanceToSquared(camV) > 400;
+    if (!cs.on) { cs.fov0 = cam.fov; camV.copy(cam.position); cs.on = true; cs.t0 = game.time; }
+    const a = snap && stage.on ? 1 : 1 - Math.exp(-dt * 6);
+    camV.lerp(camT, a); cam.position.copy(camV);
+    const k = Math.min(1, (game.time - cs.t0) / 0.5), e = stage.on ? 1 : k * k * (3 - 2 * k);
+    const fov = cs.fov0 + ((rev ? 44 : 38) - cs.fov0) * e;
+    if (Math.abs(cam.fov - fov) > 0.05) { cam.fov = fov; cam.updateProjectionMatrix(); }
+    if (rev) cam.lookAt(P.x, ph - 0.1, -P.y); else cam.lookAt(n.x, hz - 0.18 * (n.scale || 1), -n.y);
+    return true;
   }
+  function endFraming(cam) { if (!cs.on) return; cs.on = false; if (cs.fov0 && cam) { cam.fov = cs.fov0; cam.updateProjectionMatrix(); } }
   // boss reveal: when a named-boss step opens, a low shot from behind the player looking up at the boss for ~3 s
   function revealBoss(cam) {
     const R = st.reveal, t = game.time - R.t0; if (t > R.dur) { st.reveal = null; return false; }
@@ -256,7 +284,8 @@ export async function install(game) {
     return true;
   }
   const cam3 = P.applyCamera3;
-  if (cam3) { P.applyCamera3 = function (cam, dt) { cam3.call(this, cam, dt); if (window.__cam) return; if (st.reveal && revealBoss(cam)) return; if ((!dlg.hidden || st.focus) && !st.combat) frameSpeaker(); }; offs.push(() => { P.applyCamera3 = cam3; }); }
+  if (cam3) { P.applyCamera3 = function (cam, dt) { cam3.call(this, cam, dt); if (window.__cam) return; if (st.reveal && revealBoss(cam)) return; if (!((!dlg.hidden || st.focus) && !st.combat && frameSpeaker(cam, dt))) endFraming(cam); }; offs.push(() => { P.applyCamera3 = cam3; }); }
+  function hideCard() { card.style.opacity = 0; st.cardT = 0; }
   function showCard(small, big, sub, secs) { card.innerHTML = `<small>${small}</small><b>${big}</b>${sub ? `<i>${sub}</i>` : ''}`; card.style.opacity = 1; st.cardT = secs; }
 
   // ---------- interaction
@@ -268,7 +297,8 @@ export async function install(game) {
     say([{ who: n.id, line: n.idle || (s ? `${s.text}. I'll be here.` : 'Mind how you go, Warden.') }]); return true;
   }
   listen(window, 'keydown', e => { if (e.target instanceof HTMLInputElement || e.repeat) return; if (e.code === 'KeyE' || e.code === 'Enter') { if (interact()) e.stopPropagation(); } }, true);
-  listen(dlg, 'click', e => { e.stopPropagation(); advance(); });
+  listen(dlg, 'click', e => { e.stopPropagation(); const k = e.target.closest?.('li[data-k]')?.dataset.k; if (k != null) choose(+k); else advance(); });
+  listen(window, 'keydown', e => { const k = /^Digit([1-4])$/.exec(e.code)?.[1]; if (k && !dlg.hidden && dq.lines[dq.i]?.choices && choose(k - 1)) e.stopPropagation(); }, true);
   listen(prompt, 'click', e => { e.stopPropagation(); interact(); });
 
   // ---------- objective / tracker
@@ -301,6 +331,7 @@ export async function install(game) {
     if (st.cardT > 0 && !track.hidden) track.hidden = true;   // the chapter / quest-complete card speaks for the tracker
     const on = st.cardT > 0 || !!st.reveal || (!dlg.hidden && !st.combat) || !!stage.on;
     if (on !== st.cine) { st.cine = on; document.body.classList.toggle('q-cine', on); }
+    const talk = !dlg.hidden && !st.combat; if (talk !== st.talk) { st.talk = talk; document.body.classList.toggle('q-talk', talk); }
   }
   const sysObj = game.add({ update(dt) {
     if (st.cardT > 0 && (st.cardT -= dt) <= 0) card.style.opacity = 0;
@@ -382,8 +413,8 @@ export async function install(game) {
     if (S && step < 8) for (const m of [...game.mobs]) if (!m.dead && !m.removed && !(step === 6 && m.type?.id === 'bellwarden')) S.remove(m);   // a calm square for the scene
     switch (step) {
       case 0: at(0); placeNpcs(q); showCard(q.chapter, q.title, q.summary, 8); return `${q.chapter}: ${q.title}`;
-      case 1: { at(0); const n = npcs.nell || q.npcs.nell; await goNear(n.x, n.y, 3.2, 200); card.style.opacity = 0; return line(q.steps[0].dialogue, 0); }
-      case 2: return line(q.steps[0].dialogue, 3);
+      case 1: { at(0); const n = npcs.nell || q.npcs.nell; await goNear(n.x, n.y, 3.2, 200); hideCard(); return line(q.steps[0].dialogue, 0); }
+      case 2: { const L = q.steps[0].dialogue, k = L.findIndex(l => l.choices); return k < 0 ? line(L, 3) : (line(L, k), 'Reply: ' + L[k].choices.map(c => c.text).join(' / ')); }
       case 3: { at(1); enterStep(); const p = q.steps[1].place, z = game.groundAt(p.x, p.y) ?? P.z; await goNear(p.x, p.y, 6, 30, z + 1.2);
         st.focus = { x: p.x, y: p.y, hz: z + 1.2 }; dq.at0 = game.time - 1; return 'Quest tracker: ' + q.steps[1].text; }
       case 4: { const p = q.steps[1].place, z = game.groundAt(p.x, p.y) ?? P.z; await goNear(p.x, p.y, 2.2, 110, z + 0.7);
@@ -395,7 +426,7 @@ export async function install(game) {
       case 7: { const n = npcs.nell || q.npcs.nell; at(5); await goNear(n.x, n.y, 3.2, 200); line(q.steps[5].dialogue, 2);
         showCard('Quest complete', q.title, `Title earned: ${q.rewards.title} · +${q.rewards.xp} XP · ${ITEMS[q.rewards.items[0]].name}`, 10);
         save.prologue = { step: q.steps.length, done: true }; st.q = null; st.phase = 'staged'; return `Quest complete: ${q.title}`; }
-      default: st.reveal = null; stage.on = false; card.style.opacity = 0; if (S) S.encountersEnabled = true; if (stage.view) P.view = stage.view; if (st.phase === 'staged') { st.phase = 'idle'; } return null;
+      default: st.reveal = null; stage.on = false; hideCard(); if (S) S.encountersEnabled = true; if (stage.view) P.view = stage.view; if (st.phase === 'staged') { st.phase = 'idle'; } return null;
     }
   }
   window.__wicStory = stage;

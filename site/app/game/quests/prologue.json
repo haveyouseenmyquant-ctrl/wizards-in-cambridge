@@ -20,7 +20,13 @@
       "text": "Speak to Nell Tapscott at her flower stall",
       "dialogue": [
         { "who": "nell", "line": "You heard that. Don't pretend you didn't; you flinched like a cat at a firework." },
-        { "who": "player", "line": "The bell struck thirteen. That isn't a thing bells do." },
+        { "who": "player", "line": "The bell struck thirteen. That isn't a thing bells do.", "choices": [
+          { "text": "The bell struck thirteen. That isn't a thing bells do." },
+          { "text": "I didn't flinch. ...All right, I flinched. Who are you?", "reply": [
+            { "who": "nell", "line": "Nell Tapscott. Forty years I've sold flowers on this hill, and I've heard that bell every evening of them. Thirteen is new." } ] },
+          { "text": "Just a clock running fast. I'm going home.", "reply": [
+            { "who": "nell", "line": "Clocks run fast. Bells don't miscount. Stay a minute, love; the market's going to need someone who heard it." } ] }
+        ] },
         { "who": "nell", "line": "Not ours, no. Not unless something has got into the Concord and started unwinding it." },
         { "who": "nell", "line": "The old fountain in the middle of the market. Something fell into it on that last stroke. Go and look, quick as you like." }
       ] },
