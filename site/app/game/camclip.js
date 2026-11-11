@@ -72,21 +72,23 @@ export function install(game) {
     if (L < 0.4) return;
     // also an un-eased line-of-sight ray (combatcam eases its pull-in; the zone can appear mid-fight)
     const occ = pl.camOcclude ? pl.camOcclude(hx, hz, -hy, dx / L, dz / L, -dy / L, L) : Infinity;
-    if (occ >= L && !bad(x, y, z)) { keep = null; return; }
+    // prop boxes count too, unless the chest is in one (standing in a stall strip: the lift above handles that)
+    const props = !hitAny(hx, hz, -hy), badP = (x, y, z) => bad(x, y, z) || (props && !!hitAny(x, z, -y));
+    if (occ >= L && !badP(x, y, z)) { keep = null; return; }
     st.walls++;
     // 1) pull in along the line to just before the first bad point or visual hit, if that leaves a usable boom
-    let r = 0.3; for (; r < L; r += 0.1) if (bad(hx + dx * r / L, hy + dy * r / L, hz + dz * r / L)) break;
+    let r = 0.3; for (; r < L; r += 0.1) if (badP(hx + dx * r / L, hy + dy * r / L, hz + dz * r / L)) break;
     r = Math.min(r, occ);
     if (r - CLEAR >= 1.2) { const f = (r - CLEAR) / L; c.set(hx + dx * f, hz + dz * f, -(hy + dy * f)); keep = null; return; }
     // 2) a clear spot around the player (azimuths from the current camera bearing, then shorter/higher booms)
     const roofed = roofAbove(hx, hy, hz);
     let spot = null;
-    if (keep && (keepT -= dt) > 0) { const k = [hx + keep[0], hy + keep[1], hz + keep[2]]; if (!bad(...k) && lineClear(hx, hy, hz, ...k, roofed)) spot = k; }
+    if (keep && (keepT -= dt) > 0) { const k = [hx + keep[0], hy + keep[1], hz + keep[2]]; if (!badP(...k) && lineClear(hx, hy, hz, ...k, roofed)) spot = k; }
     if (!spot) {
       const a0 = Math.hypot(dx, dy) > 0.2 ? Math.atan2(dy, dx) : Math.atan2(Math.cos(pl.yaw), -Math.sin(pl.yaw));
       search: for (const [R, H] of RH) for (const da of A) {
         const k = [hx + Math.cos(a0 + da) * R, hy + Math.sin(a0 + da) * R, hz + H];
-        if (!bad(...k) && !hitAny(k[0], k[2], -k[1]) && lineClear(hx, hy, hz, ...k, roofed)) { spot = k; break search; }
+        if (!badP(...k) && !hitAny(k[0], k[2], -k[1]) && lineClear(hx, hy, hz, ...k, roofed)) { spot = k; break search; }
       }
       if (spot) { keep = [spot[0] - hx, spot[1] - hy, spot[2] - hz]; keepT = 0.4; st.spots++; }
     }
