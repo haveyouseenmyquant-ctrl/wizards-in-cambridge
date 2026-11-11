@@ -1,4 +1,53 @@
 {
  "main_quests_shipped": 4,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "judged_game_quality": 54.3,
+ "judged_sections": {
+  "Visuals": 51,
+  "Animation": 32,
+  "Combat feel": 60.2,
+  "Story presentation": 66,
+  "UI polish": 68
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 2,
+   "Animation": 0,
+   "Combat feel": 0.5,
+   "Story presentation": 0,
+   "UI polish": 0
+  },
+  "quality_spread": 0.6,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together and is recognisable. It has textured brick and stone facades, Gothic church geometry, market stalls with produce, bikes, railings and trees. Real-time shadows, warm low-sun lighting with some haze, and bloom in combat all help. It still falls short of 60 because the buildings are mostly flat boxy facades with little moulding, wear or clutter. Materials are repetitive and ground planes are plain, shop interiors use primitive block props, and the characters are small, low-detail figures with simple silhouettes. Combat VFX are flat translucent shapes that sit on top of the scene instead of blending into it."
+   },
+   "Animation": {
+    "all": "In the walking frames the wizard looks almost the same each time, with little sign of a real walk cycle or limb movement. In combat, attacks show up mostly as large spell effects and projectiles with little matching body motion; the pyromancer's possible cast pose is the only hint. Enemies are simple blob or sphere shapes, and hit reactions appear as 'STAGGERED' or 'INTERRUPTED' text, not visible body reactions. No enemy wind-ups, death animations, secondary motion or environmental motion such as crowds or foliage can be seen."
+   },
+   "Combat feel": {
+    "hexweaver": "The 60-band features are visible. The boss has a health bar with phase markers and a 'PHASE II' banner. There are damage numbers including crits, STAGGERED/INTERRUPTED/VANQUISHED callouts, a chain counter, ground circles and red telegraph rings, and loot beams coloured by rarity with labelled common to legendary drops. Combat is still far from punchy: enemies are mostly untextured white silhouettes and the VFX are smeary and hard to read. The boss dies by 11.7 s and the player takes only one hit all fight, so the encounter has no tension. Casting leans on hex_dart (51 of 78 casts), several frames have no enemies in range, and in frame 10 the camera is stuck against a wall, so the fight lacks depth and readability.",
+    "pyromancer": "The pyromancer clip clearly shows working combat: six spells with fire ground effects and rings, crit damage numbers, STAGGERED and INTERRUPTED tags, a chain counter, a named boss with a phase bar and an 'enraged' banner, and loot beams and toasts colour-coded by rarity. The big gaps are that the boss dies about 7 s after it appears, a third of the frames have no enemies in them, and some of the screens are muddy, with VFX and HUD text overlapping. It also hits the 'classes play differently' criterion: only one class is recorded, so there is no evidence for it, and none of hit-stop, knockback or a visible enemy windup either.",
+    "stormcaller": "The combat is readable and covers most of the 60 anchor. The stormcaller uses six distinct spells, the screenshots show hit numbers, STAGGERED and INTERRUPTED tags, chain counters and red telegraph rings on the ground, and the Bellwarden boss has a named health bar with phase banners. Loot shows rarity-coloured beams and tags, and 31 kills plus 2787 sound voices point to plenty of feedback. The biggest gaps are that a third of the frames show no combat, spell effects are flat and low-detail with no visible hit-stop or screen shake, and enemy models are crude blobs with little visible variety in formations, so it falls well short of the 80 tier.",
+    "warden": "The hit feedback is solid. Damage numbers and crits show (CRIT 104, max hit 172), along with STAGGERED tags, a boss health bar with a PHASE II banner, rarity-coloured loot beams, chain counters and a VANQUISHED banner. Several distinct warden spells appear, including rootbind's green ring, the quake, boulder leap and granite skin. Readability is badly hurt by a large pale shield sphere that covers the player and targets in most frames, and pebble_shot makes up 55 of 74 casts. The player took 0 hits in 60 s, so no visible enemy attack threatens the player and there's no sign of telegraphs, hit-stop or real tension."
+   },
+   "Story presentation": {
+    "all": "The scene shows named characters with portraits and subtitles (Nell Tapscott, Pip Hobbe) standing in letterboxed over-the-shoulder shots, plus a three-option reply choice. Lines are well written and tied to real Cambridge places (Market Hill, Great St Mary's, the Guildhall), and a quest tracker with distances, a boss reveal and a completion screen with rewards frame the stakes clearly. The gaps: the characters are simple, low-detail figures with no visible facial or gestural performance, there is no sign of voice acting, and the framing is plain, with nothing like a full staged cinematic."
+   },
+   "UI polish": {
+    "all": "The HUD and menus share one themed style: serif titles, gold-on-dark panels, class cards with icons and abilities listed, an inventory with labelled equipment slots and a tooltip with rarity colours, a tiered talent grid with icons, and a spell bar with cooldown numbers and a minimap. The biggest gaps are that combat gets cluttered: banners like 'VANQUISHED' and 'INTERRUPTED' overlap world labels, loot toasts and crit numbers stack on top of each other, and the quest dialogue banner covers the middle of the screen. Small text is often hard to read, and the frames show no evidence of transitions or animation, which keeps it below the polish of the 80 anchor."
+   }
+  }
+ }
 }
