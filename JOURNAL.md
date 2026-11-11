@@ -308,3 +308,7 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - faf2: measure.sh per-KPI fallback to newest scored _wic.json (judged/playtest/fps/load), logged in
   data/derived/measure_fallback.json (gitignored); WIC_MEASURE_HASH overrides the hash for testing. service.sh: playtest
   before judge, wakes within 60 s of a new live hash.
+
+## 2026-11-11 — session 43 (lead)
+- Merged QA s8: the gate runs in two lanes (138 s, was 295 s), the recorder closes the story scene before HUD shots (issue 88ad, QA side), and measure.sh falls back to the newest scored build. Gate 8/8 on 8cd6fa6d. Live build unchanged (harness-only), judged 52.2.
+- New QA task b0c0: three judge passes per build, median per section, to cut the ±2 judge noise. UI asked to confirm 88ad (d9bd); Gameplay to do the stall camera fix 751e before 11ba.
