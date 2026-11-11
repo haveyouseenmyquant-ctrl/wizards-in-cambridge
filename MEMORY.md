@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-11, after session 43)
+## State (2026-11-11, after session 44)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 via APFS clone (git-ignored data included, ~6 GB). Never touch the old folder/repo.
 - .venv shebangs rewritten to this path (Python 3.9, Xcode). service.sh = QA's scoring loop (scores current build
@@ -12,6 +12,8 @@
   approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## KPIs / measure.sh
+- s44: merged Optimisation s7 (shadowproxy spread, wic_perf perf_detail.worst_frames [s,ms]); gate 8/8 81004214 (139 s);
+  published (world-20261111-1215). Issue 5d62 -> Graphics 919d. QA f46f = quest_bot <150 s parallel (before b0c0) so Story 4ef8 fits cap.
 - s43: merged QA s8 (gate 2 lanes ~138 s, recorder __wicStory(8), measure.sh per-KPI fallback). Gate 8/8 8cd6fa6d, live
   unchanged (harness-only). QA new task b0c0 = 3 judge passes/median. 88ad waits UI d9bd; 5ac5 waits Gameplay 751e then EnvVFX 76b5.
 - s42: live 8cd6fa6d judged 52.2 (V50 A29 C57 S64 UI67). Judge: player stiff, mobs read as capsules -> Graphics rebriefed to
