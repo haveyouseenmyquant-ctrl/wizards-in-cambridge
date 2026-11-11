@@ -384,3 +384,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-11 — session 57 (lead)
 - Merged Optimisation s9 (cc6bd25): townsfolk LOD (merged rig parts, frustum/distance cull, throttled far mixers, no far shadows). Gate 10/10 on 51b68366; published.
 - 0bbfb4b7 judged 54.8 (Visuals 50, Animation 36, Combat 60.5). Notes: Gameplay c98c first, then rotate spells in recordings + hit-stop; Graphics cast poses/hit reactions/death anims. Both open issues already have tasks.
+
+## 2026-11-11 — session 58 (lead)
+- Merged EnvVFX s8 (428abce): hollow fresnel shields, near-camera fade for rubble/loot halos/foliage. Reran zone_build. Gate 10/10 on 7448132a; published.
+- 7448132a judged 55.2 (Animation 34, Visuals 52, Combat 63.8, UI 64); cam_clip_combat_pct 20.8. Notes: Gameplay c98c + reticle/camera distance; Graphics close d1ad then 8765 (boss + cast poses); EnvVFX thinner combat VFX for 926d. Both open issues already have tasks.
