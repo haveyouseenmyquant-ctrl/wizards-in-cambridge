@@ -254,7 +254,7 @@ const result = { main_quests_shipped: shipped, quest_bot_pass_pct: runs.length ?
 try {
   const py = fs.existsSync(path.join(ROOT, '.venv/bin/python')) ? path.join(ROOT, '.venv/bin/python') : 'python3';
   const h = spawnSync(py, ['-I', path.join(ROOT, 'scripts/build_hash.py'), SRC], { encoding: 'utf8' }).stdout.trim();
-  if (h) {
+  if (h && !process.env.WIC_QUESTBOT_CLASSES) {   // a class-subset debug run must not overwrite the build's KPI
     const dir = path.join(ROOT, 'data/benchmark/scores'), f = path.join(dir, `${h}_wic.json`);
     fs.mkdirSync(dir, { recursive: true });
     const cur = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
