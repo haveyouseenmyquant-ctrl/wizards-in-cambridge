@@ -1,4 +1,82 @@
 {
  "main_quests_shipped": 5,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "judged_game_quality": 53.4,
+ "judged_sections": {
+  "Visuals": 50.0,
+  "Animation": 34.0,
+  "Combat feel": 59.5,
+  "Story presentation": 64.0,
+  "UI polish": 64.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    50.0,
+    47.0,
+    50.0
+   ],
+   "Animation": [
+    34.0,
+    32.0,
+    34.0
+   ],
+   "Combat feel": [
+    59.5,
+    59.0,
+    59.5
+   ],
+   "Story presentation": [
+    64.0,
+    64.0,
+    64.0
+   ],
+   "UI polish": [
+    64.0,
+    64.0,
+    66.0
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 3.0,
+   "Animation": 2.0,
+   "Combat feel": 0.5,
+   "Story presentation": 0.0,
+   "UI polish": 2.0
+  },
+  "quality_spread": 1.6,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.71",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together and its art direction is consistent. Lighting is warm, with real-time shadows, some atmospheric haze and recognisable landmarks such as the market stalls, the gothic church, bikes and railings. The building surfaces are flat and repetitive, there is little fine detail or clutter, and the characters are simple low-detail figures. The enemies show up as crude flat-coloured blobs (a solid blue figure, low-poly shards), and in the combat frames the camera clips into the geometry or ends up at awkward angles, which produces visible artefacts."
+   },
+   "Animation": {
+    "all": "In the walking frames the player is small and holds nearly the same upright pose each time. There is no visible stride, robe swing or other secondary motion, and nothing in the environment moves: no crowds, foliage or water. In combat, spells mostly show up as projectiles, rings and bursts with no clear matching body motion. Enemies are hard to read, apart from one blue humanoid with raised arms, and hit reactions appear only as 'STAGGERED'/'INTERRUPTED' text, with no distinct cast, hit-reaction or death animations."
+   },
+   "Combat feel": {
+    "hexweaver": "Visible feedback: damage numbers including crits, INTERRUPTED/STAGGERED callouts, chain counters, a boss with a health bar and a 'Phase II' banner, a 'Vanquished' moment, and loot cards coloured by rarity up to epic. The event log adds six distinct spells, mobility (shade_step), enemy windup and stagger states, and a varied enemy roster. The fight is hard to read, though: the camera often clips into stalls and geometry, the effects are mostly vague glows with unclear shapes, and there is no visible hit-stop or knockback. The player was hit only 3 times, so there is little threat. One hexweaver clip can't show differences between classes, and spamming 60 hex_darts makes the fight feel repetitive.",
+    "pyromancer": "The pyromancer has six distinct spells. The frames show crit damage numbers, STAGGERED tags, chain counters, ground telegraph decals and a three-phase boss with a named Clapper Sweep wind-up. Loot drops show rarity labels and pickup toasts, so this clears the 60 anchor. The biggest gaps are flat, low-detail VFX, enemies that read as untextured blobs and statues, no visible hit-stop or screen shake, and only one class shown, so class differences and the depth of crowd control can't be judged.",
+    "stormcaller": "The fight shows real feedback: crit and damage numbers, STAGGERED and INTERRUPTED labels, chain counters, a boss bar with named phases (Phase II, Phase III Enraged), and loot beams and toasts colour-coded by rarity, backed by 78 casts across six spells and 36 kills. Readability falls apart in the big moments, though: frame 3 is a mess of overlapping flat shapes, and frames 4 and 5 are crowded with loot beams and white blobs. About half the clip (frames 6\u201310) has almost no combat, with the camera pressed against walls. There is no visible evidence of hit-stop, knockback or clearly telegraphed enemy attacks, enemies are hard to make out, and this sheet shows only one class, so it can't show how the classes differ.",
+    "warden": "Combat clearly works and has a lot of feedback: floating damage numbers with crits, STAGGERED and INTERRUPTED labels, a chain counter, a named boss with a three-phase bar and a PHASE II callout, coloured loot beams with rarity-tagged pickup cards, and frequent kills and level-ups. Readability is poor, though: a large pale-blue shield sphere hides the player and enemies in most frames, and the enemies look like jumbled dark shards. Depth and threat are thin. Pebble_shot makes up 57 of the 79 casts, the player took 0 hits in 60 s so enemy attacks pose no visible danger, and about 3000 sound voices (roughly 50 per second) suggests noise rather than weight."
+   },
+   "Story presentation": {
+    "all": "Named characters appear on screen with portraits, titles and framed over-the-shoulder shots and letterboxing. The game has a prologue title card, branching reply choices, a quest tracker that shows distances to real Cambridge locations, a boss reveal and a quest-complete card, all with well-written lines in a consistent tone. The biggest gaps are the very basic character models with no visible facial or body animation, and staging that is mostly static camera shots with text boxes rather than real cinematics or performances."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent dark-and-gold theme across the class selection, HUD, inventory and talent screens. The class cards are clear and well laid out, and the spell bar has icons, cooldown numbers, resource bars, a minimap, a boss bar and rarity-tagged loot notices. It falls short of polished because combat gets cluttered: loot toasts, quest panels, damage numbers and nameplates pile up over busy scenes, and some labels are small or clipped. The inventory is sparse and text-heavy, and none of the frames show animation or transitions."
+   }
+  }
+ }
 }
