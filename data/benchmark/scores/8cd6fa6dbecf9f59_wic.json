@@ -1,4 +1,155 @@
 {
  "main_quests_shipped": 4,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "judged_game_quality": 52.2,
+ "judged_sections": {
+  "Visuals": 50,
+  "Animation": 29,
+  "Combat feel": 57,
+  "Story presentation": 64,
+  "UI polish": 67
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0,
+   "Animation": 2,
+   "Combat feel": 0.5,
+   "Story presentation": 0,
+   "UI polish": 2
+  },
+  "quality_spread": 0.2,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The world hangs together: the buildings are recognisable, with brick and stone textures, real-time sun shadows, warm low-angle sky lighting and some atmospheric haze, plus props like bikes, market stalls, railings and a tree. Geometry is still blocky and sparse, though, and the materials look flat and repetitive. Shop shelves are filled with primitive shapes, enemies and combat props are low-poly or plain untextured blocks (frame 12), and the characters are small and simple, which puts this well short of the 60 anchor in detail and lighting richness."
+   },
+   "Animation": {
+    "all": "Across the walking frames the player keeps nearly the same upright pose, with only a slight hint of leg movement. In combat, spells appear as projectiles, beams and ground rings, but the body doesn't visibly move to match them, and the enemies are simple blob or capsule shapes with no readable limbs, attacks, hit reactions or deaths. There is no clear secondary motion on robes or hair and no environmental motion such as crowds or moving foliage."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show working combat with several distinct spells. Hits give clear feedback: damage numbers, CRIT popups, INTERRUPTED tags and chain counters. There is also a two-phase boss with a telegraphed orange AoE, and loot arrives often with rarity colours. The biggest gaps are that the VFX are mostly generic glowing orbs and pillars, and the enemies are simple, toy-like shapes that are hard to read. Busy text overlays crowd the action, the player was hit only twice so the fight has little threat or weight, and only one class is shown, so class differences can't be judged.",
+    "pyromancer": "The visible feedback is fairly rich. Damage numbers include crits, there are STAGGERED tags and chain counters, the boss has a phase bar and an enrage banner, and it telegraphs a named 'Clapper Sweep'. Loot pops up with rarity labels, and the event log shows six distinct spells and a varied enemy roster. Readability is weak, though: the camera often clips into the ground or market stalls (frames 1, 2, 7, 12), and spell VFX are mostly flat glowing blobs and pillars without clear shapes. About half of the frames show no enemies on screen. The boss dies at about 15 s, there's no visible hit-stop or knockback, the player takes almost no damage, and only one class is shown, so I can't judge how the classes differ.",
+    "stormcaller": "The first 17 s show solid mid-tier feedback. There are crit and damage numbers, STAGGERED/INTERRUPTED callouts, and a chain counter. The Bellwarden boss has three phases with named, telegraphed attacks (Belfry Drop, Peal of Shards) and an enrage, and loot shows up as rarity-coloured beams and cards with clear affixes. The weak points are spell VFX that are mostly thin beams and rings with little visible impact or hit-stop, low-detail enemies, and spark_lance making up about two-thirds of all casts. There is also no combat at all from about 20 s to 60 s, so I can't credit pacing, crowd-control depth or differences between classes.",
+    "warden": "Several systems are visible and working: a boss health bar with phase markers and an ENRAGED state, a named boss attack, floating damage numbers including a 157 hit, STAGGERED and INTERRUPTED labels, a chain counter, and loot beams and pickup cards with rarity colours. Six spells were cast, and enemy windups appear in the event log. Readability is the biggest gap: the large blue granite-skin bubble covers the character in many frames, the camera clips into walls and stalls (frames 6 and 9), and pebble_shot makes up 62 of the 82 casts, so impact and spell variety look thin. No hit-stop, strong telegraphs or crowd control that clearly changes the fight is visible."
+   },
+   "Story presentation": {
+    "all": "Named characters (Nell Tapscott, Pip Hobbe) appear on screen with portraits in letterboxed, over-the-shoulder shots. There is a branching reply menu, the writing is distinctive, and the quest tracker shows distances and ties objectives to real Cambridge locations (Market Hill, Great St Mary's, the Guildhall). The premise is clear and original, and there is a boss reveal and a quest-complete card with rewards. The biggest gaps are the simple, low-detail character models with no visible expressions or animation, and the static camera framing. There is no voice evidence, and the 'cinematic' moments are only text boxes over gameplay shots rather than staged cutscenes."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent dark-and-gold serif theme across class selection, the dialogue box, inventory, talents and the combat HUD. The HUD gives clear health and mana bars, a numbered spell bar with readable cooldowns, a quest tracker, a minimap and loot toasts with rarity colours. The weaknesses: talent icons are monochrome placeholders, the inventory is mostly empty grid with small text, a cut-off element sits on the left edge in frame 5, and in combat, loot toasts, the quest panel and damage numbers crowd the view with weak hierarchy."
+   }
+  }
+ },
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 7,
+  "main_quests_shipped": 4,
+  "wall_s": 94,
+  "at": "2026-11-11T10:31:30.618Z"
+ },
+ "fps_median": 60,
+ "load_seconds": 0.62,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 1.38,
+  "programs": [
+   70,
+   84
+  ],
+  "fps_p5": 47,
+  "fps_min": 32,
+  "fight_pct": 100,
+  "casts": 181,
+  "kills": 27,
+  "maxMobs": 36,
+  "dist": 191,
+  "laps": 1,
+  "draw_calls_median": 1319,
+  "tris_median": 6852367,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 7.56,
+  "loadavg_after": 11.19,
+  "waited_s": 1209,
+  "load_ok": false,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.62,
+    "loadavg_before": 7.56,
+    "loadavg_after": 9.82,
+    "fps_p5": 47
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.36,
+    "loadavg_before": 9.82,
+    "loadavg_after": 11.19,
+    "fps_p5": 54
+   }
+  ],
+  "at": "2026-11-11T10:53:44+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true
+ }
 }

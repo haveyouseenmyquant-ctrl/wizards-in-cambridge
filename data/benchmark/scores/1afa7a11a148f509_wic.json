@@ -1,0 +1,216 @@
+{
+ "main_quests_shipped": 4,
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 6.5,
+  "main_quests_shipped": 4,
+  "wall_s": 84,
+  "at": "2026-11-11T13:09:02.340Z"
+ },
+ "judged_game_quality": 52.9,
+ "judged_sections": {
+  "Visuals": 50,
+  "Animation": 32,
+  "Combat feel": 58.1,
+  "Story presentation": 64,
+  "UI polish": 66
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 2,
+  "calls": 16,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0,
+   "Animation": 0,
+   "Combat feel": 0.2,
+   "Story presentation": 0,
+   "UI polish": 0
+  },
+  "quality_spread": 0.1,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city looks coherent and recognisable. It has real-time shadows, warm low-sun lighting with some atmospheric haze, and plenty of props: market stalls, bikes, railings, bollards and a tree, plus a Gothic church with window tracery. The buildings are mostly flat, low-detail fa\u00e7ades, and the materials are simple and repeat across the scenes. Ambient occlusion and fine detail like mouldings, wear and clutter are minimal, the shop shelves hold primitive-shape goods, and the characters are small and chunky with little cloth detail, which puts it at the gap between a prototype and a solid indie game."
+   },
+   "Animation": {
+    "all": "The player character's walking poses vary a little (legs apart in frame 2, a slight change in arm and staff position), which suggests a basic walk cycle. In combat the attacks show up almost entirely as beams, rings and projectiles, with no visible casting or wind-up body motion, and the only hit reaction is a 'STAGGERED' text label. Enemies are tiny and hard to read, with no visible attack or death animations, and there is no environmental motion, crowd or secondary motion on robes or hats."
+   },
+   "Combat feel": {
+    "hexweaver": "Combat is functional and readable. It has six distinct hexweaver spells, crit-tagged damage numbers, INTERRUPTED and stagger states, a chain counter, a ground telegraph ring and a phased boss with an enraged state. Loot drops come with rarity-coloured callouts, and the event log shows heavy hit and sound activity. The biggest gaps are that half the clip is empty traversal with no enemies, spell VFX are mostly small generic orbs and beams with clutter from the camera clipping into stalls, and there is no visible hit-stop, screen feedback or impactful crowd control. Only one class is shown, so class differentiation can't be judged.",
+    "pyromancer": "The frames show real hit feedback: floating damage numbers including crits (171, 222), a chain counter, an 'INTERRUPTED' stagger callout, fire bursts and rings, a boss with a phased health bar that phases twice, and loot beams colour-coded by rarity with stat pop-ups. That meets most of the 60 anchor. The biggest gaps are that the boss dies within about 10 s, 5 of 12 frames show no enemies, and the camera clips into walls and stalls (frames 8 and 12). Enemies are simple blobby shapes with little visible telegraphing or formation, player danger is minimal (2 hits taken), and there is no visible hit-stop or crowd control, which keeps it short of 'punchy'.",
+    "stormcaller": "The visible evidence supports working combat in the 60 band: damage numbers, STAGGERED tags, chain counters, a named boss with phase and attack-name banners (Peal of Shards, Belfry Drop), loot cards with rarity colours and an epic loot beam, and 6 abilities with a wind dash. Most frames are empty plazas or pickup walks, and the spell VFX read as flat shapes or white blobs that are partly hidden behind stalls. The boss died within 14 s and the player took only 27 damage, and no frame shows hit-stop, knockback or crowd control visibly changing a fight. The sheet covers only one class, so differences between classes can't be judged.",
+    "warden": "The frames show several readable earth spells (shockwave rings, granite-skin bubble, rock shards) and the feedback layers are there: damage numbers, STAGGERED/INTERRUPTED/VANQUISHED callouts, chain counters, a phased boss with a PHASE II banner, and loot pickups with rarity-coloured toasts including a legendary drop. On the other hand, the granite-skin bubble often covers the player and enemies, and the effects are flat, low-detail and translucent. Frames 11-12 show the camera facing walls with no combat in view, there's no visible hit-stop or screen shake, and only two hits on the player in 60 s points to low enemy threat."
+   },
+   "Story presentation": {
+    "all": "Named characters (Nell Tapscott, Pip Hobbe) with portraits and titles appear in over-the-shoulder, letterboxed dialogue shots. The game offers branching reply choices and well-written, distinctive lines. A quest tracker gives distance and direction, and the story is tied to real Cambridge locations (Market Hill, Great St Mary's, the Guildhall) with a clear, original premise and a boss reveal. The biggest gaps: the characters are simple low-poly figures with no visible expressions or animation, the portraits are flat icons, there are no voiced or fully staged cinematics, and the camera framing barely changes between shots."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent dark-and-gold style across the class selection, inventory (rarity-coloured items, stat summary), talent tiers and the combat HUD. Health and mana bars, numbered cooldown slots, the quest tracker and the minimap are all readable. During combat the screen gets cluttered and things collide: loot popups stack on the left, damage numbers overlap the quest tracker ('The Thirteent43me'), the 'Parker's Piece Spri\u2026' label is cut off at the screen edge, and text over bright scenes is hard to read. The inventory and talent screens are clear but sparse, with little icon art and no visible animation."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.25,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.67,
+  "programs": [
+   65,
+   81
+  ],
+  "fps_p5": 46,
+  "fps_min": 41,
+  "slow_secs": [
+   [
+    0,
+    47
+   ],
+   [
+    6,
+    45
+   ],
+   [
+    7,
+    43
+   ],
+   [
+    28,
+    46
+   ],
+   [
+    29,
+    41
+   ],
+   [
+    30,
+    49
+   ]
+  ],
+  "long_frames": 23,
+  "worst_frames": [
+   [
+    29.1,
+    84
+   ],
+   [
+    6.1,
+    83
+   ],
+   [
+    29.9,
+    68
+   ],
+   [
+    0.4,
+    67
+   ],
+   [
+    0.1,
+    65
+   ],
+   [
+    0.1,
+    51
+   ],
+   [
+    0.2,
+    51
+   ],
+   [
+    7.5,
+    51
+   ]
+  ],
+  "fight_pct": 96,
+  "casts": 180,
+  "kills": 23,
+  "maxMobs": 36,
+  "dist": 222,
+  "laps": 1,
+  "draw_calls_median": 1334,
+  "tris_median": 6510701,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.29,
+  "loadavg_after": 11.05,
+  "waited_s": 91,
+  "load_ok": true,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.25,
+    "loadavg_before": 3.29,
+    "loadavg_after": 4.05,
+    "fps_p5": 46
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.41,
+    "loadavg_before": 4.05,
+    "loadavg_after": 11.05,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-11T13:19:25+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_classes": true,
+  "test_feel": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true
+ }
+}

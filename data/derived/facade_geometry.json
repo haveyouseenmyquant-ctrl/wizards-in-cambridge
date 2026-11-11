@@ -1,6 +1,6 @@
 {
  "zone": "market_square",
- "built": "2026-11-09T22:41:31Z",
+ "built": "2026-11-11T12:42:32Z",
  "walls": [
   {
    "id": "way/40937938:44",
@@ -17,7 +17,7 @@
     "string_course": 1,
     "window": 3
    },
-   "tris": 408
+   "tris": 3786
   },
   {
    "id": "way/40937938:45",
@@ -87,7 +87,7 @@
     "string_course": 1,
     "window": 2
    },
-   "tris": 200
+   "tris": 1038
   },
   {
    "id": "way/119881004:7",
@@ -104,7 +104,7 @@
     "string_course": 1,
     "window": 1
    },
-   "tris": 188
+   "tris": 946
   },
   {
    "id": "way/134387866:3",
@@ -120,7 +120,7 @@
     "shopfront": 1,
     "window": 6
    },
-   "tris": 1016
+   "tris": 2234
   },
   {
    "id": "way/134387870:4",
@@ -136,7 +136,7 @@
     "shopfront": 1,
     "window": 6
    },
-   "tris": 644
+   "tris": 5674
   },
   {
    "id": "way/134387872:0",
@@ -151,7 +151,7 @@
     "shop_door": 1,
     "shopfront": 1
    },
-   "tris": 132
+   "tris": 1008
   },
   {
    "id": "way/134387872:3",
@@ -168,7 +168,7 @@
     "string_course": 2,
     "window": 4
    },
-   "tris": 454
+   "tris": 5898
   },
   {
    "id": "way/134387879:0",
@@ -186,7 +186,7 @@
     "string_course": 1,
     "window": 6
    },
-   "tris": 570
+   "tris": 1738
   },
   {
    "id": "way/137017428:10",
@@ -280,7 +280,7 @@
     "string_course": 1,
     "window": 12
    },
-   "tris": 708
+   "tris": 16526
   },
   {
    "id": "way/212711605:8",
@@ -295,7 +295,7 @@
     "shopfront": 1,
     "window": 4
    },
-   "tris": 318
+   "tris": 6698
   },
   {
    "id": "way/229680560:20",
@@ -312,7 +312,7 @@
     "shopfront": 1,
     "window": 6
    },
-   "tris": 860
+   "tris": 5448
   },
   {
    "id": "way/229680560:21",
@@ -328,7 +328,7 @@
     "shopfront": 1,
     "window": 8
    },
-   "tris": 824
+   "tris": 7400
   },
   {
    "id": "way/229680560:22",
@@ -345,7 +345,7 @@
     "shopfront": 1,
     "window": 5
    },
-   "tris": 732
+   "tris": 2088
   },
   {
    "id": "way/1080560696:0",
@@ -363,7 +363,7 @@
     "string_course": 1,
     "window": 1
    },
-   "tris": 365
+   "tris": 1173
   },
   {
    "id": "way/1080560696:2",
@@ -407,7 +407,7 @@
     "shopfront": 2,
     "window": 15
    },
-   "tris": 1206
+   "tris": 10296
   },
   {
    "id": "way/1099847937:0",
@@ -424,7 +424,7 @@
     "string_course": 1,
     "window": 6
    },
-   "tris": 632
+   "tris": 2588
   },
   {
    "id": "way/1099847937:1",
@@ -441,7 +441,7 @@
     "string_course": 1,
     "window": 3
    },
-   "tris": 375
+   "tris": 1483
   },
   {
    "id": "way/1099847937:5",
@@ -491,7 +491,7 @@
     "string_course": 1,
     "window": 4
    },
-   "tris": 559
+   "tris": 667
   },
   {
    "id": "way/1099847939:6",
@@ -523,7 +523,7 @@
     "shopfront": 1,
     "window": 12
    },
-   "tris": 1158
+   "tris": 7750
   },
   {
    "id": "way/1099847940:1",
@@ -603,7 +603,7 @@
     "string_course": 2,
     "window": 9
    },
-   "tris": 1271
+   "tris": 10641
   },
   {
    "id": "way/1211948487:4",
@@ -635,7 +635,7 @@
     "string_course": 2,
     "window": 12
    },
-   "tris": 930
+   "tris": 5136
   },
   {
    "id": "way/1211948488:3",
@@ -652,7 +652,7 @@
     "string_course": 2,
     "window": 6
    },
-   "tris": 667
+   "tris": 6187
   },
   {
    "id": "way/1211948489:2",
@@ -668,7 +668,7 @@
     "shopfront": 1,
     "window": 4
    },
-   "tris": 346
+   "tris": 5560
   },
   {
    "id": "way/1211948490:4",
@@ -686,7 +686,7 @@
     "shopfront": 1,
     "window": 8
    },
-   "tris": 722
+   "tris": 7364
   },
   {
    "id": "way/1211948491:7",
@@ -704,7 +704,7 @@
     "string_course": 1,
     "window": 5
    },
-   "tris": 487
+   "tris": 1855
   },
   {
    "id": "way/1211951044:5",
@@ -720,7 +720,7 @@
     "shopfront": 1,
     "window": 6
    },
-   "tris": 418
+   "tris": 1724
   },
   {
    "id": "way/1211951046:9",
@@ -738,7 +738,7 @@
     "string_course": 1,
     "window": 12
    },
-   "tris": 1448
+   "tris": 13052
   },
   {
    "id": "way/1211951046:10",
@@ -772,7 +772,7 @@
     "string_course": 2,
     "window": 6
    },
-   "tris": 491
+   "tris": 6729
   },
   {
    "id": "way/1211951053:2",
@@ -789,7 +789,7 @@
     "string_course": 2,
     "window": 4
    },
-   "tris": 360
+   "tris": 1806
   },
   {
    "id": "way/1211951054:7",
@@ -806,7 +806,7 @@
     "string_course": 2,
     "window": 9
    },
-   "tris": 928
+   "tris": 3334
   },
   {
    "id": "way/1211951056:6",
@@ -823,7 +823,7 @@
     "string_course": 1,
     "window": 5
    },
-   "tris": 888
+   "tris": 1636
   },
   {
    "id": "way/1211951057:4",
@@ -840,7 +840,7 @@
     "shopfront": 1,
     "window": 8
    },
-   "tris": 690
+   "tris": 12954
   },
   {
    "id": "way/1222243455:2",
@@ -872,7 +872,7 @@
     "shopfront": 6,
     "window": 24
    },
-   "tris": 2666
+   "tris": 11272
   },
   {
    "id": "way/1288730356:0",
@@ -888,7 +888,7 @@
     "shopfront": 1,
     "window": 6
    },
-   "tris": 420
+   "tris": 1966
   },
   {
    "id": "way/1288730358:0",
@@ -906,7 +906,7 @@
     "string_course": 1,
     "window": 18
    },
-   "tris": 1192
+   "tris": 5398
   },
   {
    "id": "way/1288730360:0",
@@ -922,7 +922,7 @@
     "shopfront": 1,
     "window": 9
    },
-   "tris": 772
+   "tris": 6826
   },
   {
    "id": "way/1288730360:1",
@@ -953,7 +953,7 @@
     "shopfront": 1,
     "window": 6
    },
-   "tris": 574
+   "tris": 1602
   }
  ],
  "skipped": [
@@ -2073,7 +2073,7 @@
     "shopfront": 2,
     "window": 15
    },
-   "tris": 1206
+   "tris": 10296
   },
   {
    "id": "way/137017428:2",
@@ -2097,7 +2097,7 @@
     "string_course": 1,
     "window": 6
    },
-   "tris": 632
+   "tris": 2588
   },
   {
    "id": "way/137017428:4",
@@ -2109,7 +2109,7 @@
     "string_course": 1,
     "window": 3
    },
-   "tris": 375
+   "tris": 1483
   },
   {
    "id": "way/137017428:9",
@@ -2132,7 +2132,7 @@
     "string_course": 1,
     "window": 4
    },
-   "tris": 559
+   "tris": 667
   },
   {
    "id": "way/137017430:2",
@@ -2154,7 +2154,7 @@
     "shopfront": 1,
     "window": 12
    },
-   "tris": 1158
+   "tris": 7750
   },
   {
    "id": "way/137017430:5",
@@ -2204,9 +2204,9 @@
   "walls_annotated": 48,
   "walls_total": 153,
   "walls_built": 59,
-  "tris": 792353,
-  "facade_tris": 37254,
-  "prop_tris": 755099,
+  "tris": 1693722,
+  "facade_tris": 200116,
+  "prop_tris": 1493606,
   "facade_area_m2": 5393.5,
   "modelled_detail_area_m2": 2326.0
  }

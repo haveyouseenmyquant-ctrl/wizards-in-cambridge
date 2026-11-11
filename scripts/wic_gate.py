@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Merge gate: runs every game test on a site dir, one at a time (parallel headless browsers time out), and prints one
+"""Merge gate: runs every game test on a site dir in two lanes (test_tutorial | the rest, one at a time), and prints one
 JSON summary as the last stdout line: {"ok", "site", "hash", "secs", "tests": {name: {"ok", "secs", "summary"}}}.
   tools/wic_gate.sh [site_dir]          (env: WIC_GATE_TEST_S per-test timeout, default 300; WIC_GATE_LOG=1 appends the
                                           result to data/derived/wic_gate_log.jsonl; WIC_GATE_ONLY=a,b runs a subset;
@@ -10,7 +10,7 @@ Tests: test_classes, test_feel, test_items, test_mobs, test_progression (if pres
 A test passes when it exits 0 and its JSON output does not say ok:false. A failed test is rerun once
 (WIC_GATE_RETRIES, default 1); a pass on the rerun counts as ok but is marked flaky:true (first failure kept in
 first_fail) and listed in the top-level "flaky". Exit 0 if every test passed, else 1."""
-import json, os, signal, subprocess, sys, time
+import json, os, signal, subprocess, sys, threading, time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -64,13 +64,11 @@ def run(script, extra):
     if d is None: return False, {'error': f'no JSON (exit {p.returncode})', 'stderr': err.strip()[-300:]}
     return p.returncode == 0 and d.get('ok') is not False, summarise(d)
 
-res, t_all = {}, time.time()
-for name, extra in TESTS:
+def run_test(name, extra):
     script = ROOT / 'scripts' / f'{name}.mjs'
-    if only and name not in only: continue
     if not script.exists():
-        if name == 'test_progression': continue
-        res[name] = {'ok': False, 'secs': 0, 'summary': {'error': 'missing script'}}; continue
+        if name != 'test_progression': res[name] = {'ok': False, 'secs': 0, 'summary': {'error': 'missing script'}}
+        return
     first = None
     for attempt in range(1 + retries):
         t0 = time.time(); ok, summ = run(script, extra)
@@ -79,6 +77,17 @@ for name, extra in TESTS:
     res[name] = {'ok': ok, 'secs': round(time.time() - t0, 1), 'summary': summ}
     if first is not None: res[name]['first_fail'] = first; res[name]['flaky'] = ok
     print(f"[gate] {name}: {'PASS' if ok else 'FAIL'}{' (flaky)' if first is not None and ok else ''} {res[name]['secs']} s", flush=True)
+
+# QA a6d7: two lanes in parallel (WIC_GATE_LANES=1 = all sequential): the long test_tutorial on its own, every other
+# test one at a time in the other lane. Two windowed GPU Chromes at once are fine (quest_bot already runs 2 workers).
+res, t_all = {}, time.time()
+todo = [(n, e) for n, e in TESTS if not only or n in only]
+lanes = [todo] if os.environ.get('WIC_GATE_LANES', '2') == '1' else \
+    [l for l in ([t for t in todo if t[0] == 'test_tutorial'], [t for t in todo if t[0] != 'test_tutorial']) if l]
+threads = [threading.Thread(target=lambda l=l: [run_test(*t) for t in l]) for l in lanes]
+for t in threads: t.start()
+for t in threads: t.join()
+res = {n: res[n] for n, _ in TESTS if n in res}
 r = {'ok': bool(res) and all(v['ok'] for v in res.values()), 'site': str(site), 'hash': bh,
      'browser': 'gpu-metal' if gpu == '1' else 'swiftshader', 'query': env['WIC_TEST_QUERY'],
      'secs': round(time.time() - t_all, 1), 'flaky': [k for k, v in res.items() if v.get('flaky')], 'tests': res}

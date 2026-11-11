@@ -38,12 +38,13 @@ export function install(game) {
   for (const n of new Set(Object.values(MOB_MODELS).map(m => m.glb)))
     assets[n] = loader.loadAsync(base(n)).then(g => (assets[n] = g)).catch(e => { console.warn('[mob_rig]', n, e.message); assets[n] = null; });
 
+  const boxes = {};   // 919d: precise skinned bounds per glb (bind pose, same for every clone): ~10 ms per spawn otherwise
   const greyCache = new Map();
   const grey = (tex) => {   // desaturated copy of the palette atlas, for carved-stone and bleached-bone looks
     if (!tex?.image) return tex;
     if (greyCache.has(tex)) return greyCache.get(tex);
     const img = tex.image, c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
-    const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(img, 0, 0);
     const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
     for (let i = 0; i < p.length; i += 4) { const l = 0.3 * p[i] + 0.59 * p[i + 1] + 0.11 * p[i + 2], v = 70 + l * 0.75; p[i] = p[i + 1] = p[i + 2] = v; }
     g.putImageData(d, 0, 0);
@@ -95,7 +96,7 @@ export function install(game) {
     }
     const model = units[0].model; inner.add(model);
     model.updateMatrixWorld(true);
-    const box = new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1, k = procH * 1.05 * (L.size ?? 1) / h;
+    const box = boxes[L.glb] ??= new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1, k = procH * 1.05 * (L.size ?? 1) / h;
     inner.scale.setScalar(k); inner.position.y = (L.y0 ?? (pb.isEmpty() ? 0 : pb.min.y)) - box.min.y * k;
     units.slice(1).forEach((U, i) => { U.model.position.fromArray(L.swarm[i]).multiplyScalar(h); U.model.scale.setScalar(0.85 + 0.1 * i); inner.add(U.model); });
     R.add(inner);
@@ -183,7 +184,11 @@ export function install(game) {
   }
 
   const spawn0 = sys.spawn.bind(sys);
-  sys.spawn = (...args) => { const mob = spawn0(...args); if (MOB_MODELS[mob.type.id]) attach(mob) || (mob.glbPending = true); return mob; };
+  // 919d: at most ATTACH_PER_FRAME skinned clones per frame (an encounter spawning 10 mobs at once was a ~20 ms frame);
+  // the rest keep their procedural body for a frame or two
+  const ATTACH_PER_FRAME = 3; let budget = ATTACH_PER_FRAME;
+  const tryAttach = (mob) => budget > 0 && attach(mob) && (budget--, true);
+  sys.spawn = (...args) => { const mob = spawn0(...args); if (MOB_MODELS[mob.type.id]) tryAttach(mob) || (mob.glbPending = true); return mob; };
   // s4: rigged mobs keep their body after death. The procedural death styles (stretch, spin, swell) would mangle a
   // skinned model, so a rigged mob plays its death clip, flyers drop to the ground, the body lies still, then sinks and
   // fades. The whole thing stays under the 3 s the self-test (__mobTest) allows for removal.
@@ -204,9 +209,10 @@ export function install(game) {
   const update0 = sys.update.bind(sys);
   const tick = (dt) => {
     for (const mob of game.mobs) {
-      if (mob.glbPending && attach(mob)) mob.glbPending = false;
+      if (mob.glbPending && tryAttach(mob)) mob.glbPending = false;
       if (mob.glb && !mob.removed) drive(mob, dt);
     }
+    budget = ATTACH_PER_FRAME;
   };
   sys.update = (dt) => { update0(dt); tick(dt); };
   game.mobRig = { MOB_MODELS, assets, tick, ready: () => Object.values(assets).every(a => a && !(a instanceof Promise)) };

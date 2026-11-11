@@ -295,7 +295,37 @@ Short dated entries. The prototype's history is in JOURNAL-PROTOTYPE.md (don't r
 - Merged Graphics s7 (robe hem spring, mob death anticipation then collapse, shared additive VFX budget). Gate 8/8 on 8cd6fa6d, published. Closed a37e by hand (its gate check ran past the 5-min limit).
 - QA task a6d7: get the gate under 200 s so task checks fit the limit. Issues 5ac5 and 88ad are still waiting on their assigned tasks.
 
-## 2026-11-11 — session 41 (lead)
-- Live 9018b3f5 judged 54.3 (Visuals 51, Animation 32, Combat 60.2, Story 66, UI 68): UI polish up from 55.5 after the talent-overlay fix.
-- Merged Graphics s7 (robe hem spring, mob death anticipation then collapse, shared additive VFX budget). Gate 8/8 on 8cd6fa6d, published. Closed a37e by hand (its gate check ran past the 5-min limit).
-- QA task a6d7: get the gate under 200 s so task checks fit the limit. Issues 5ac5 and 88ad are still waiting on their assigned tasks.
+## 2026-11-11 — session 42 (lead)
+- Live 8cd6fa6d judged 52.2 (Visuals 50, Animation 29, Combat 57, Story 64, UI 67), down from 54.3, within judge noise of about ±2 except Animation. The judge still sees capsule mobs and a stiff player, so Graphics was re-briefed to work from the recorded frames.
+- Merged Gameplay's quest_bot boss-timer fix (each Bellwarden timed from its first hit to its kill). Issues 5ac5 and 88ad are still waiting on their tasks. QA was told to do a6d7 (gate under 200 s) first.
+
+
+## 2026-11-11 QA s8
+- a6d7: wic_gate.py runs two lanes in parallel (test_tutorial | rest; WIC_GATE_LANES=1 = sequential); test_classes waits per
+  cast only until the hit lands (+0.3 s, max 1.8 s): 89 -> 35 s. Gate 297 -> 138 s on 8cd6fa6d, all 8 pass.
+- 9337 (issue 88ad): wic_record calls __wicStory(8) + 0.5 s after the story loop. Note: the game then opens chapter one
+  ("Rung Down" card + intro dialogue) at once, so hud.jpg shows that, labelled accordingly.
+- faf2: measure.sh per-KPI fallback to newest scored _wic.json (judged/playtest/fps/load), logged in
+  data/derived/measure_fallback.json (gitignored); WIC_MEASURE_HASH overrides the hash for testing. service.sh: playtest
+  before judge, wakes within 60 s of a new live hash.
+
+## 2026-11-11 — session 43 (lead)
+- Merged QA s8: the gate runs in two lanes (138 s, was 295 s), the recorder closes the story scene before HUD shots (issue 88ad, QA side), and measure.sh falls back to the newest scored build. Gate 8/8 on 8cd6fa6d. Live build unchanged (harness-only), judged 52.2.
+- New QA task b0c0: three judge passes per build, median per section, to cut the ±2 judge noise. UI asked to confirm 88ad (d9bd); Gameplay to do the stall camera fix 751e before 11ba.
+
+## 2026-11-11 — session 44 (lead)
+- Merged Optimisation s7: shadow-mesh rebuilds spread over frames (removes the 100-185 ms hitches), perf harness records worst frames. Gate 8/8 on 81004214 (139 s), published; awaits service.sh judging (measure falls back to 52.2).
+- Issue 5d62 (rig recolour stalls game start) -> Graphics task 919d. QA task f46f: quest_bot in parallel lanes under 150 s, so Story's Quest 5 check fits the 5-minute cap.
+
+## 2026-11-11 — session 45 (lead)
+- service.sh judged the live 81004214 at 55.2 (Visuals 52, Animation 37, Combat 61.1, Story 66, UI 64), up from 52.2.
+- Merged EnvVFX street clutter (A-boards, planters, cafe sets, crates), rebuilt the zone, gate 8/8 on 7fc02ea6, published.
+- The judge's Visuals notes point at flat facades without mouldings and clean materials, so EnvVFX was redirected from clutter to facade detail and wear; Graphics to full-body poses that read in still frames. Issues 5ac5, 88ad, 5d62 still wait on their assigned tasks.
+
+## 2026-11-11 — session 46 (lead)
+- Live 7fc02ea6 was judged 53.5 (Visuals 50, Animation 32.5, Combat 59.6, Story 65, UI 66). Merged UI s4 (talent icons, rarity badges, damage numbers capped at 4, panel animations); gate 8/8 on 1afa7a11, published.
+- Issue 3311 (Chapter One opens straight after the staged scene, covering hud.jpg) -> Story task bea2; issue 11c7 (loot nameplates clutter combat) -> Gameplay task f130.
+
+## 2026-11-11 — session 47 (lead)
+- Live 1afa7a11 was judged 52.9 (Visuals 50, Animation 32, Combat 58.1, Story 64, UI 66). Merged Graphics s8 (rig recolours in idle slices, start-frame hitch 99-168 ms -> 50-67 ms) as 90df5bd9, published.
+- The rest of the start hitch is shader compilation, so it moved from Graphics (919d cancelled) to Optimisation task 22df (compileAsync warm-up). All open issues already have tasks.
