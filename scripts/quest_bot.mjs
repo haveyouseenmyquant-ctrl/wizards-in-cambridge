@@ -39,11 +39,17 @@ const server = http.createServer((req, res) => {
 });
 await new Promise(ok => server.listen(0, '127.0.0.1', ok));
 const URL0 = `http://127.0.0.1:${server.address().port}/?debug&nopick&q=low`;   // low preset (rendering only): 4 runs 297 s -> 180 s wall, inside the 5 min task-check cap
-const browser = await puppeteer.launch(wicLaunch({
+// QA s9: GPU Chrome is the default (4 parallel lanes, 5 quests: 212 s SwiftShader -> 33 s); WIC_TEST_GPU=0 = headless
+// SwiftShader. If the windowed GPU launch fails (no display session), fall back to SwiftShader rather than fail the run.
+process.env.WIC_TEST_GPU ??= '1';
+const LAUNCH = {
   executablePath: CHROME, headless: true, protocolTimeout: 0,
   args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--window-size=480,270'],
   defaultViewport: { width: 480, height: 270 },
-}));
+};
+let browser;
+try { browser = await puppeteer.launch(wicLaunch(LAUNCH)); }
+catch (e) { if (process.env.WIC_TEST_GPU !== '1') throw e; log('GPU launch failed, using SwiftShader:', e.message); browser = await puppeteer.launch(LAUNCH); }
 
 // ---------------- the in-page bot (window.__qbot)
 function installBot(softS = 0, tileIds = []) {
