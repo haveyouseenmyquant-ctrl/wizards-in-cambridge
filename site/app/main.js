@@ -337,7 +337,7 @@ async function main() {
       window.__explore = QS.has('explore') || !!window.__cam;
       const startGame = () => (gameMod || import('./game/index.js')).then(m => m.startGame({ scene, camera, player, world }))
         .then(g => { window.__game = g; }).catch(e => console.warn('[game] not started', e));
-      if (!window.__explore) startGame();
+      const gameUp = window.__explore ? Promise.resolve() : startGame();
       const exploreRig = () => import('./game/explore_rig.js').then(m => m.install({ scene })).catch(e => console.warn('[explore_rig]', e));   // graphics: rigged wizard in ?explore
       if (window.__explore) exploreRig();
       addEventListener('keydown', e => {
@@ -347,7 +347,8 @@ async function main() {
         document.body.classList.toggle('explore', window.__explore);
       });
       // audio (audio node s1): footsteps, ambience and bells in both modes; music in game mode only
-      import('./game/audio_world.js').then(m => { audioSys = m.install({ player, world, camera }); }).catch(e => console.warn('[audio]', e));
+      // a95b: installed once the game layer is up (creating the AudioContext takes ~60 ms of main thread)
+      gameUp.then(() => import('./game/audio_world.js')).then(m => { audioSys = m.install({ player, world, camera }); }).catch(e => console.warn('[audio]', e));
       console.log(`[walkable] ready ${(performance.now() / 1000).toFixed(2)}s`);
       status('');
       $('help').hidden = false;
