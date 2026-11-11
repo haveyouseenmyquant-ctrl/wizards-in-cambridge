@@ -61,6 +61,9 @@ export function install(game) {
     const inv = new T.Matrix4().copy(R.matrixWorld).invert(), pb = new T.Box3();
     proc.traverse(o => { if (o.isMesh && !o.userData.outline && o.geometry) { o.geometry.computeBoundingBox(); pb.union(o.geometry.boundingBox.clone().applyMatrix4(new T.Matrix4().multiplyMatrices(inv, o.matrixWorld))); } });
     const procH = pb.isEmpty() ? 1.8 : Math.max(0.6, pb.max.y - pb.min.y);
+    // s6: world-space body of the procedural model, for the camera-clearance spheres below (the skinned glbs' own
+    // bounds are metres too big, so combatcam.js hid statues/automata/wraiths from 7 m away and camClear faded them)
+    mob.group.updateMatrixWorld(true); const wb = new T.Box3(); proc.traverse(o => { if (o.isMesh && !o.userData.outline && o.geometry) wb.union(new T.Box3().setFromObject(o)); });
     proc.visible = false;
     const inner = new T.Group(); inner.name = 'glb';
     const made = new Map();   // material per look key, shared by the swarm clones
@@ -102,11 +105,17 @@ export function install(game) {
     }
     const { mixer, acts } = units[0];
     mob.glb = { mixer, acts, units, cur: null, lock: 0, lastState: null, inner };
-    mob.camBody = null;
+    mob.camBody = mob.ccBody = null;
+    if (!wb.isEmpty() && !L.mats) {
+      const c = wb.getCenter(new T.Vector3()), sz = wb.getSize(new T.Vector3()), oy = c.y - mob.group.position.y;
+      mob.camBody = { oy, r: Math.max(0.6, sz.y * 0.4) };   // from the height: the width includes the flat aura disc
+      mob.ccBody = { oy, r: Math.max(0.4, sz.y * 0.28) };
+    }
     if (L.mats) {   // Quaternius rigs give a huge loose skinned box, which made camClear fade them from metres away: measure precisely
       mob.group.updateMatrixWorld(true);
       const bb = new T.Box3().setFromObject(inner, true), c = bb.getCenter(new T.Vector3()), sz = bb.getSize(new T.Vector3());
       mob.camBody = { oy: c.y - mob.group.position.y, r: Math.max(0.6, Math.min(sz.x, sz.z) * 0.5, sz.y * 0.4) };
+      mob.ccBody = { oy: mob.camBody.oy, r: Math.max(0.4, Math.min(sz.x, sz.z) * 0.5) };
     }
     play(mob, mob.dead ? 'death' : 'idle', 0, 1);
     acts.idle && (acts.idle.time = Math.random() * acts.idle.getClip().duration);   // desync packs
