@@ -258,23 +258,29 @@ async function main() {
   {
     // Optimisation s2: zone looked up once (not a whole-scene search per ray) and rays use rayaccel.js's triangle grid
     const sph = new THREE.Sphere(), o = new THREE.Vector3(), dv = new THREE.Vector3();
-    let near = [], nearT = 0, zone = null;
+    let near = [], cut = [], nearT = 0, zone = null;
     player.camOcclude = (x, y, z, dx, dy, dz, far) => {
       if (!zone || !zone.parent) { if ((nearT -= 1) > 0) return Infinity; zone = scene.getObjectByName('zone'); nearT = 0; }
       if (!zone) { nearT = 30; return Infinity; }
       o.set(x, y, z);
       if ((nearT -= 1) <= 0) {
-        nearT = 30; near = [];
+        nearT = 30; near = []; cut = [];
         zone.traverse(m => {
           if (!m.isMesh || !m.visible || !m.geometry) return;
-          if (m.material === zoneMatCut && zoneCut.value.w > 0) return;   // s62: canopy cut away around the player
           if (!m.geometry.boundingSphere) m.geometry.computeBoundingSphere();
           sph.copy(m.geometry.boundingSphere).applyMatrix4(m.matrixWorld);
-          if (sph.center.distanceTo(o) < sph.radius + 12) near.push(m);
+          // s62 stalls: the shader only discards fragments ABOVE zoneCut.y inside the disc, so their walls still block
+          if (sph.center.distanceTo(o) < sph.radius + 12) (m.material === zoneMatCut ? cut : near).push(m);
         });
       }
-      if (!near.length) return Infinity;
-      return raycastNearest(near, o, dv.set(dx, dy, dz).normalize(), 0.1, far);
+      dv.set(dx, dy, dz).normalize();
+      let hit = near.length ? raycastNearest(near, o, dv, 0.1, far) : Infinity;
+      if (cut.length) {   // Gameplay s6 (9e85): stall walls below the cut plane count; the part of the ray above it doesn't
+        const C = zoneCut.value; let f = Math.min(far, hit);
+        if (C.w > 0 && dv.y > 1e-4 && Math.hypot(o.x - C.x, o.z - C.z) < C.w) f = Math.min(f, Math.max(0, (C.y - o.y) / dv.y));
+        if (f > 0.1) hit = Math.min(hit, raycastNearest(cut, o, dv, 0.1, f));
+      }
+      return hit;
     };
   }
   const shadowLod = sun.castShadow ? installShadowLod(THREE, scene, camera, QP.shadowLod) : () => {};   // Optimisation s2: small far casters off
