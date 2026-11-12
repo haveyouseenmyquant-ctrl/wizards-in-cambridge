@@ -1,5 +1,292 @@
 {
  "main_quests_shipped": 7,
  "quest_bot_pass_pct": 100,
- "quest_bot_fails": []
+ "quest_bot_fails": [],
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 22,
+  "main_quests_shipped": 7,
+  "wall_s": 140,
+  "at": "2026-11-12T07:25:46.568Z"
+ },
+ "cam_clip_pct": 0,
+ "cam_clip_combat_pct": 0,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [],
+ "player_pose_dev_deg": 16.89,
+ "player_pose_step_deg": 78.01,
+ "mob_pose_dev_deg": 13.98,
+ "npc_pose_dev_deg": 22.3,
+ "cast_pose_frames_pct": 61.4,
+ "rigid_mob_pct": 3.8,
+ "rigid_npc_pct": 0,
+ "anim_probe_detail": {
+  "frames_probed": 68,
+  "player_frames": 56,
+  "game_frames": 44,
+  "cast_frames": 27,
+  "cast_window_frames": 27,
+  "errors": 0,
+  "player_rest_frames": [],
+  "mobs_seen": 120,
+  "npcs_seen": 141,
+  "cast_arm_deg": 20,
+  "rigid_deg": 1,
+  "rigid_mobs": [
+   "menus|soot_sprite#77 (procedural, 3 fr)",
+   "combat_pyromancer|bell_bats#71 (skinned, 1 fr)",
+   "combat_pyromancer|bell_bats#72 (skinned, 1 fr)",
+   "combat_warden|automaton#44 (procedural, 2 fr)"
+  ],
+  "mob_types": {
+   "ink_imp": {
+    "seen": 30,
+    "rigid": 0,
+    "mean_dev_deg": 21.62
+   },
+   "wisp": {
+    "seen": 21,
+    "rigid": 0,
+    "mean_dev_deg": 7.54
+   },
+   "bog_hag": {
+    "seen": 5,
+    "rigid": 0,
+    "mean_dev_deg": 3.52
+   },
+   "bellwarden": {
+    "seen": 6,
+    "rigid": 0,
+    "mean_dev_deg": 8.97
+   },
+   "automaton": {
+    "seen": 15,
+    "rigid": 1,
+    "mean_dev_deg": 22.13
+   },
+   "gargoyle": {
+    "seen": 10,
+    "rigid": 0,
+    "mean_dev_deg": 7.33
+   },
+   "bell_bats": {
+    "seen": 31,
+    "rigid": 2,
+    "mean_dev_deg": 11.09
+   },
+   "soot_sprite": {
+    "seen": 2,
+    "rigid": 1,
+    "mean_dev_deg": 0
+   }
+  }
+ },
+ "judged_game_quality": 57.2,
+ "judged_sections": {
+  "Visuals": 54,
+  "Animation": 41,
+  "Combat feel": 61.5,
+  "Story presentation": 64,
+  "UI polish": 70
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    50,
+    54,
+    55
+   ],
+   "Animation": [
+    42,
+    41,
+    38
+   ],
+   "Combat feel": [
+    61.2,
+    62,
+    61.5
+   ],
+   "Story presentation": [
+    63,
+    64,
+    64
+   ],
+   "UI polish": [
+    70,
+    70,
+    70
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 5,
+   "Animation": 4,
+   "Combat feel": 0.8,
+   "Story presentation": 1,
+   "UI polish": 0
+  },
+  "quality_spread": 1.1,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city looks coherent and consistent: recognisable textured buildings, a gothic church, market stalls, bikes, railings and trees, plus real-time shadows and warm low-sun lighting with some haze. Geometry is mostly simple boxes, though. Facades are flat with little moulding, wear or clutter, shop interiors are filled with primitive shapes, and the chibi characters and bell-boss enemies are low-detail and look like toys. The combat frames also show heavy bloom and VFX washing out the scene. This puts it well short of the 60 anchor for density, materials and characters."
+   },
+   "Animation": {
+    "all": "The player character changes pose a little between the walking frames, holding the staff and moving the legs. The bell boss also changes pose between frames (raised arms, tilting body, a sweep), and there are a few background NPCs and a cyclist. Casting reads mostly through projectiles, rings and text labels such as 'STAGGERED' and 'INTERRUPTED' rather than clear body wind-ups or hit reactions. There is no visible secondary motion, no varied death animations and only a sparse crowd, so the result is basic looping and rigid-part motion rather than distinct, blended animation sets."
+   },
+   "Combat feel": {
+    "hexweaver": "The fight is readable and full of feedback. There are distinct spells, large damage numbers and crits, red ground telegraphs, named boss attacks, stagger and interrupt tags, a combo chain counter, and a three-phase boss with an enrage state. Loot drops with rarity labels, and the event log reports level-ups and dense sound. The biggest gaps are the visuals: the VFX are blobby and often fill the screen (pale overlays, big green pillars that hide the action). There is no visible hit-stop or knockback. The view is dominated by one boss, with mostly basic-dart spam and little sign that crowd control or mobility changes the fight. Only one class is shown, so I can't judge whether the classes play differently.",
+    "pyromancer": "The visible features cover the 60 anchor and a little more. There are six spells with cooldowns, damage and CRIT numbers, INTERRUPTED and STAGGERED states, combo chain counters, a named three-phase boss with a telegraphed attack ('Clapper Sweep'), ground telegraph cones, loot beams with rarity-coloured pickup cards, a low-health red vignette, and 3599 sound voices. The gaps are a cluttered, washed-out screen where white effects overlap and blur the boss and enemies, small fire VFX with weak shapes, no visible hit-stop, knockback or crowd control changing the fight, a player death to the boss, and only one class shown, so class variety can't be judged.",
+    "stormcaller": "The fight shows a boss with three named phases (enrage, Great Toll telegraphs, red ground AoE circles), damage numbers including crits, stagger and interrupt labels, chain counters, six distinct stormcaller spells, a dash, and loot beams with rarity colour. Readability is weak: in many frames the camera is cluttered or badly placed (frame 9 looks down at the floor), spell VFX are mostly vague glows with unclear shapes, and there's no visible hit-stop or knockback. Only one class is shown, so differences between classes can't be judged, and the 3840 sound voices in 60 s suggest audio spam.",
+    "warden": "The warden has six distinct spells, and their effects are readable: rock-shard bursts, a quake ring and root effects. Hits show damage numbers, crits, a chain counter and STAGGERED/INTERRUPTED tags. Boss attacks are telegraphed with named ground markers (Great Toll, Clapper Sweep, Peal of Shards), and a three-phase boss bar is shown moving from phase I to phase II. Several frames are muddy, with heavy bloom, clipped geometry and a camera that ends up inside the environment. No hit-stop or screen shake is visible, loot drops have no visible rarity moments (only 1 of 15 picked up), and only one class appears, so differences between classes can't be judged."
+   },
+   "Story presentation": {
+    "all": "The frames show letterboxed, over-the-shoulder conversation shots with named speakers and portraits (Nell Tapscott, Pip Hobbe). There is a three-option reply choice, the lines are well written with a clear original premise tied to a real location (Market Hill, Great St Mary's), and the quest runs from a title card through a boss reveal to a completion screen. The biggest gaps are the simple low-poly characters with no visible expressions or performance. The camera framing is basic, frame 4 shows no world marker or waypoint, and there is no evidence of voice acting or real cinematics."
+   },
+   "UI polish": {
+    "all": "The UI keeps one dark-and-gold serif style across the class select, HUD, inventory and talent screens. Every screen has icons and clear hierarchy: class cards with ability lists, cooldown numbers on the spell bar, a boss bar with phase marks, rarity colours with collection counters, and tiered talent cards. The gaps: menus are dense with small text, the HUD elements are fairly generic, and in combat the damage numbers and reticle crowd the centre of the screen. Transitions and animation aren't visible, and some talent text spills past its card's bottom edge."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.28,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.8,
+  "programs": [
+   102,
+   128
+  ],
+  "fps_p5": 54,
+  "fps_min": 51,
+  "slow_secs": [],
+  "long_frames": 7,
+  "worst_frames": [
+   [
+    0,
+    52
+   ],
+   [
+    0.9,
+    35
+   ],
+   [
+    1.2,
+    35
+   ],
+   [
+    2.5,
+    35
+   ],
+   [
+    32.4,
+    35
+   ],
+   [
+    49.9,
+    35
+   ],
+   [
+    56.6,
+    35
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 183,
+  "kills": 26,
+  "maxMobs": 36,
+  "dist": 190,
+  "laps": 1,
+  "draw_calls_median": 1410,
+  "tris_median": 7037795,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.76,
+  "loadavg_after": 10.56,
+  "waited_s": 46,
+  "load_ok": true,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.28,
+    "loadavg_before": 3.76,
+    "loadavg_after": 9.05,
+    "fps_p5": 54
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.35,
+    "loadavg_before": 9.05,
+    "loadavg_after": 10.56,
+    "fps_p5": 58
+   }
+  ],
+  "at": "2026-11-12T07:36:25+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_modload": true,
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
+ }
 }
