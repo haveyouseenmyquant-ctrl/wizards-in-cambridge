@@ -500,3 +500,9 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Merged EnvVFX 926d (real shop interiors behind the Market Square shop glass). The merged tree hashes to 986a34b4, EnvVFX's gated hash, so no re-gate. Rebuilt the zone, pushed, published.
 - Issues eb30/0362/b8f9 still wait on QA 15db, Story f5b8, UI a0e4.
 - Game KPIs: 4 classes, 12 mob types, 62 equipment effects, playtest 100.
+
+## 2026-11-12 — session 79 (lead)
+- Live 986a34b4 scored by service: judge 57.4 (Visuals 52, Animation 38, Combat 63.2, Story 70, UI 70), playtest 100, quest_bot 100 with no fails.
+- Merged UI 000748d (a0e4: lock-on ring at the feet + head chevron, damage numbers beside the silhouette, faster fade). Merged tree = UI's gated hash 5ee9c38e, no re-gate. Pushed, published. Resolved b8f9.
+- New UI task 5a63: the judge saw the combat camera clip into geometry (pyromancer frames 1, 4, 12); extend test_camclip to buildings and shop interiors and fix.
+- eb30/0362 still on QA 15db and Story f5b8. Game KPIs: 4 classes, 12 mob types, 62 equipment effects, playtest 100.

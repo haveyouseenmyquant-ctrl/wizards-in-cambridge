@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-12, after session 78)
+## State (2026-11-12, after session 79)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,6 +9,8 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s79: 986a34b4 judged 57.4 (Vis 52, Anim 38, Combat 63.2, Story 70, UI 70). Merged UI a0e4 -> 5ee9c38e (UI's gated hash), published.
+  Resolved b8f9. New UI task 5a63 (camera clips geometry in judged frames). eb30/0362 wait on QA 15db, Story f5b8.
 - s78: 98c39b9f judged 57.2 (Vis 54, Anim 41 -> 8765 met, Combat 61.5, Story 64, UI 70 -> 3daf met; noted owners to close).
   Merged EnvVFX 926d shop interiors -> 986a34b4 (their gated hash, no re-gate), published. Issues eb30/0362/b8f9 still on QA 15db, Story f5b8, UI a0e4.
 - s77: 96d70420 judged 56.1 (Vis 52, Anim 38, Combat 61, Story 67, UI 68). Merged Opt 8b647f7 (22df) -> 98c39b9f. Resolved 5d62.
@@ -16,7 +18,6 @@
 - s76: ee8eb14c judged 55.5 (Vis 52, Anim 36, Combat 61.8, Story 64, UI 68). Merged Story c0361e0 (d698 pyro partial) + QA s13 -> 96d70420 gate 11/11, published.
   d698/05d8 checks were >5 min (3x quest_bot site 8 ~380 s): re-issued as Story f5b8 (1 run, bossFights pyro lion ttk<60) and QA 15db (2x site 4).
   Rule: quest_bot site 8 ~127 s; never put >2 runs in a check.
-- s75: no team commits; nothing merged. ee8eb14c judge pending (quest_bot 100). Notes: UI close 3daf, Story land d698 first.
 - s74: 2c541244 judged 55.1 (Vis 50, Anim 34, Combat 63, Story 64, UI 70 -> 3daf met; UI to re-check+close). Merged Graphics s12
   -> ee8eb14c (Graphics' gated hash, no re-gate), published. Filed b8f9 (reticle hides boss) -> UI task a0e4.
   Tip: if `scripts/build_hash.py site` of merged tree == team's gated hash, skip the gate.
