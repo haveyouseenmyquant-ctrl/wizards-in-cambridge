@@ -43,10 +43,12 @@ const EFFECT = [
   [/radius|x2/i, '<circle cx="24" cy="24" r="4" fill="currentColor"/><circle cx="24" cy="24" r="11"/><circle cx="24" cy="24" r="19" stroke-dasharray="4 4"/>'],
   [/slow|sap/i, '<path d="M8 36 L40 36"/><path d="M14 36 C10 24 20 14 28 20 C34 25 28 32 23 29 C19 26 23 22 25 24"/><path d="M34 36 L40 26"/>'],
   [/curse|damage taken|conductive|cracks/i, '<circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="7"/><path d="M24 4 L21 13 L27 18 L22 24 M40 30 L32 28"/>'],
-  [/distance|longer|twice as often/i, '<path d="M6 30 Q20 8 42 12 Q30 16 26 24 Q36 22 40 26 Q28 30 20 38 Z" fill="currentColor" fill-opacity=".2"/><path d="M6 40 L30 40"/>'],
+  [/range|reach|distance|longer|twice as often/i, '<path d="M6 30 Q20 8 42 12 Q30 16 26 24 Q36 22 40 26 Q28 30 20 38 Z" fill="currentColor" fill-opacity=".2"/><path d="M6 40 L30 40"/>'],
   [/damage|dmg/i, '<path d="M24 6 L32 18 L27 18 L27 42 L21 42 L21 18 L16 18 Z" fill="currentColor" fill-opacity=".3"/>'],
 ];
-const effectIcon = (nm, desc) => (EFFECT.find(([re]) => re.test(desc)) || [])[1] || RUNES[hash(nm) % RUNES.length];
+// s8: the earliest keyword in the text wins (the main effect comes first) and no icon repeats within one tree
+const effectIcon = (nm, desc, used) => { const m = EFFECT.map(([re, ic]) => [desc.search(re), ic]).filter(([i]) => i >= 0).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+  const ic = m.find(x => !used?.has(x)) || RUNES.find(x => !used?.has(x) && !m.includes(x)) || m[0] || RUNES[hash(nm) % RUNES.length]; used?.add(ic); return ic; };
 const svg = (inner, cls = '') => `<svg class="${cls}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">${inner}</svg>`;
 const hash = s => { let h = 7; for (const c of s) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
 const PCT = ['critChance', 'cdr', 'speedMult', 'power', 'critMult'];
@@ -90,6 +92,14 @@ body.wic-gridinv #inv-panel { display: none !important; }
 #wic-inv .wi-tile.empty { --rc: #4a4438; cursor: default; background: rgba(10,9,8,.6); border-style: dashed; }
 #wic-inv .wi-tile .wi-pip { position: absolute; right: 3px; top: 3px; width: 7px; height: 7px; border-radius: 50%; background: var(--rc); box-shadow: 0 0 4px var(--rc); }
 #wic-inv .wi-hint { margin-top: 6px; color: #9a8a6a; font-style: italic; font-size: 12px; }
+#wic-inv .wi-tile.unk { --rc: #8a7a58; cursor: default; border-style: solid; border-color: #3e3628; background: radial-gradient(circle at 30% 50%, rgba(217,180,90,.07), rgba(10,9,8,.62) 70%); }
+#wic-inv .wi-tile.unk svg { opacity: .5; color: #a8946a; } #wic-inv .wi-tile.unk .wi-name { color: #b9a77f; font-style: italic; }
+#wic-inv .wi-tile.unk small { display: block; margin-top: 2px; font: 600 11px/1 system-ui; color: #8f7f5e; }
+#wic-inv .wi-tile.unk::before { content: '?'; position: absolute; right: 7px; top: 5px; font: 700 13px/1 Georgia, serif; color: #6f6248; }
+#wic-inv .wi-bag .wi-tile.unk { color: var(--rc); border-color: color-mix(in srgb, var(--rc) 35%, #2a251c); }
+#wic-inv .wi-bag .wi-tile.unk svg { opacity: .38; filter: blur(.4px) drop-shadow(0 0 6px var(--rc)); color: var(--rc); }
+#wic-inv .wi-bag .wi-tile.unk::before { color: var(--rc); opacity: .8; }
+#wic-inv .wi-head span, #wic-inv .wi-hint { font-size: 13px !important; } #wic-inv .wi-slotn { font-size: 10px !important; } #wic-inv .wi-name { font-size: 13px !important; }
 #wic-inv .wi-cell.empty { width: 58px; height: 58px; border-radius: 5px; border: 1px dashed #3a3428; background: rgba(10,9,8,.45); }
 #wic-inv .wi-det { --rc: #888; margin-top: 12px; min-height: 96px; padding: 10px 12px; border-left: 3px solid var(--rc); background: linear-gradient(90deg, color-mix(in srgb, var(--rc) 14%, rgba(0,0,0,.4)), rgba(0,0,0,.25)); border-radius: 0 4px 4px 0; }
 #wic-inv .wi-det b { display: block; font: 600 18px/1.2 Georgia, serif; color: var(--rc); }
@@ -129,8 +139,8 @@ body.wic-gridinv #inv-panel { display: none !important; }
 #game-hud .gh-talents:not([hidden]) > .gh-tier:nth-of-type(4) { animation-delay: .15s; }
 @keyframes wu-in { from { opacity: 0; transform: translateY(10px) scale(.985); } }
 /* combat readability: damage numbers a size smaller, and at most NUM_CAP on screen (crits and newest first) */
-#game-hud .gh-num { font-size: 22px; } #game-hud .gh-num.big { font-size: 27px; } #game-hud .gh-num.crit { font-size: 31px; }
-#game-hud .gh-num.crit::before { font-size: 12px; }
+#game-hud .gh-num { font-size: 18px; } #game-hud .gh-num.big { font-size: 21px; } #game-hud .gh-num.crit { font-size: 25px; }
+#game-hud .gh-num.crit::before { font-size: 10px; }
 #game-hud .gh-num.wu-cap { visibility: hidden; }
 /* s7: inventory collection ledger (fills the satchel on a fresh save with real progress), talent progress strip,
    locked tiers, gold numbers in talent text, slow sheen on panel frames */
@@ -147,7 +157,8 @@ body.wic-gridinv #inv-panel { display: none !important; }
 #game-hud .gh-talents .wt-prog u { display: block; width: 160px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; }
 #game-hud .gh-talents .wt-prog u s { display: block; height: 100%; min-width: 3px; background: linear-gradient(90deg, #8a6a2a, #f2d36b); }
 #game-hud .gh-talents .wt-prog b { color: #f3ead6; }
-#game-hud .gh-talents .gh-tier.wt-lock .gh-talent { filter: saturate(.35) brightness(.78); }
+#game-hud .gh-talents .gh-tier.wt-lock .gh-talent { filter: saturate(.6) brightness(.9); } #game-hud .gh-talents .gh-tier.wt-next .gh-talent { filter: none; }
+#game-hud .gh-talent { min-height: 80px !important; font-size: 14px !important; } #game-hud .gh-talent .wt-tx b { font-size: 15.5px !important; } #game-hud .gh-talent .wt-tx span { color: #ece3cc !important; }
 #game-hud .gh-talents .gh-tier.wt-next { border-color: #b8933f; box-shadow: 0 0 0 1px rgba(242,211,107,.25), 0 6px 20px rgba(0,0,0,.5); }
 #game-hud .gh-talents .gh-tier-lv .wt-pad { display: inline-block; width: 9px; height: 7px; margin-right: 5px; border-radius: 1px; background: currentColor; position: relative; top: -1px; }
 #game-hud .gh-talents .gh-tier-lv .wt-pad::before { content: ''; position: absolute; left: 1.5px; top: -5px; width: 4px; height: 5px; border: 1.5px solid currentColor; border-bottom: 0; border-radius: 3px 3px 0 0; }
@@ -171,7 +182,9 @@ export function install(game) {
   const old = document.getElementById('inv-panel');
   let sel = null;   // item id shown in the details pane
   const tile = (id, slot) => {
-    if (!id) return `<div class="wi-tile empty" title="${slot}: empty">${svg(ICON[slot] || '')}${slot ? `<span><span class="wi-slotn">${slot}</span><span class="wi-name" style="color:#7a7060">empty</span></span>` : ''}</div>`;
+    if (!id && slot) { const n = Object.keys(ITEMS).filter(k => ITEMS[k].slot === slot && !items.S.owns(k)).length;   // s8: an empty slot is a lead, not a hole
+      return `<div class="wi-tile unk" title="${slot}: not yet found">${svg(ICON[slot] || '')}<span><span class="wi-slotn">${slot}</span><span class="wi-name">Not yet found</span><small>${n} to discover</small></span></div>`; }
+    if (!id) return `<div class="wi-tile empty"></div>`;
     const d = ITEMS[id], rc = RARITY[d.rarity].color;
     return `<div class="wi-tile${sel === id ? ' sel' : ''}" data-id="${id}" data-slot="${slot || ''}" style="--rc:${rc}" title="${esc(d.name)}">${svg(ICON[d.slot] || '')}`
       + (slot ? `<span><span class="wi-slotn">${slot}</span><span class="wi-name">${esc(d.name)}</span></span>` : `<i class="wi-pip"></i>`) + `</div>`;
@@ -183,6 +196,12 @@ export function install(game) {
     return `<div class="wi-det" style="--rc:${RARITY[d.rarity].color}"><div class="wi-dh">${svg(ICON[d.slot] || '', 'wi-dic')}<span><b>${esc(d.name)}</b><div class="wi-r"><em class="wi-rb">${'◆'.repeat(RARITY[d.rarity].order + 1)} ${d.rarity}</em> ${d.slot}${d.unique ? ' · unique' : ''}${d.set ? ' · set' : ''}</div></span></div>`
       + `<ul>${statLines(d.stats).map(l => `<li>${l}</li>`).join('')}</ul>${d.desc ? `<p>${esc(d.desc)}</p>` : ''}`
       + `<div class="wi-act">${worn ? 'Worn · click to take off' : `In bag · click to equip${sv.eq[d.slot] ? ` (replaces ${esc(ITEMS[sv.eq[d.slot]]?.name)})` : ''}`}</div></div>`;
+  }
+  function ghosts(n) {   // s8: free bag cells preview unfound gear (silhouette, rarity glow) instead of dashed boxes
+    const un = Object.keys(ITEMS).filter(k => !items.S.owns(k)), out = [], seen = new Set();
+    const by = Object.keys(RARITY).map(r => un.filter(k => ITEMS[k].rarity === r && !seen.has(ITEMS[k].slot + r) && seen.add(ITEMS[k].slot + r)));
+    for (let i = 0; out.length < n && by.some(l => l.length > i); i++) by.forEach((l, j) => { const k = l[(i + 2 * j) % Math.max(1, l.length)]; if (i < l.length && k && out.length < n) out.push(k); });
+    return out.map(k => `<div class="wi-tile unk" style="--rc:${RARITY[ITEMS[k].rarity].color}" title="Undiscovered ${ITEMS[k].rarity} ${ITEMS[k].slot}">${svg(ICON[ITEMS[k].slot] || '')}</div>`).join('') + '<div class="wi-cell empty"></div>'.repeat(Math.max(0, n - out.length));
   }
   function collection() {   // s7: found / total per rarity, from what the player owns now
     const own = new Set([...sv.inv, ...SLOTS.map(k => sv.eq[k]).filter(Boolean)]), all = Object.keys(ITEMS);
@@ -199,7 +218,7 @@ export function install(game) {
     const s = game.stats, chests = items.chests?.length ?? 8;
     inv.innerHTML = `<div class="wi-box"><div class="wi-head"><h2>Satchel</h2><span>${bag.length} in bag · ${SLOTS.filter(k => sv.eq[k]).length}/${SLOTS.length} worn</span><button class="wi-x">Close (I)</button></div>`
       + `<div><h3>Equipped</h3><div class="wi-doll">${SLOTS.map(k => tile(sv.eq[k], k)).join('')}</div></div>`
-      + `<div><h3>Bag</h3><div class="wi-bag">${bag.map(id => tile(id)).join('')}${'<div class="wi-cell empty"></div>'.repeat(cells - bag.length)}</div>${bag.length ? '' : '<div class="wi-hint">Empty. Drops from foes, chests at real places and bosses land here.</div>'}<div class="wi-detwrap">${details(sel)}</div>${collection()}</div>`
+      + `<div><h3>Bag</h3><div class="wi-bag">${bag.map(id => tile(id)).join('')}${ghosts(cells - bag.length)}</div>${bag.length ? '' : '<div class="wi-hint">Still to find: foes, chests at real places and bosses drop these.</div>'}<div class="wi-detwrap">${details(sel)}</div>${collection()}</div>`
       + `<div class="wi-foot"><span>Health <b>${Math.ceil(s.hp)}/${s.maxHp}</b></span><span>Mana <b>${Math.floor(s.mana)}/${s.maxMana}</b></span>`
       + `<span>Spell power <b>${Math.round(s.power * 100)}%</b></span><span>Crit <b>${Math.round(s.critChance * 100)}%</b></span><span>Armour <b>${Math.round(s.armor)}</b></span>`
       + `<span>Chests opened <b>${sv.chests.length}/${chests}</b></span></div></div>`;
@@ -223,6 +242,7 @@ export function install(game) {
     if (!tal || tal.hidden || decorating || tal.querySelector('.wt-ic')) return;
     decorating = true;
     const c = game.caster, lv = game.stats.level;
+    const used = new Set();
     tal.querySelectorAll('.gh-tier').forEach((row, t) => {
       const need = c?.talentLevels?.[t], lab = row.querySelector('.gh-tier-lv');
       if (lab && need != null) lab.innerHTML = `${lv < need ? '<i class="wt-pad"></i>' : ''}Tier ${['I', 'II', 'III', 'IV'][t] || t + 1}<small>${lv >= need ? `level ${need} · open` : `unlocks at level ${need}`}</small>`;
@@ -232,7 +252,7 @@ export function install(game) {
         const dtx = b.querySelector('span')?.textContent || '', sp = c?.classes?.[c.cls]?.spells?.find(x => dtx.includes(x.name) || nm.includes(x.name.split(' ')[0]));
         // effect glyph as the icon, the spell it modifies as a small badge in the corner
         const dh = ds ? `<span>${esc(dtx).replace(/([+\-\u2212]?\d+(?:\.\d+)?(?:\s?%|\s?s\b|\/s)?)/g, '<em class="wt-n">$1</em>')}</span>` : '';
-        b.innerHTML = `<i class="wt-icw">${svg(effectIcon(nm, dtx), 'wt-ic')}${sp && KIND[sp.kind] ? svg(KIND[sp.kind], 'wt-sp') : ''}</i><div class="wt-tx"><b>${esc(nm)}</b>${dh}</div>`;
+        b.innerHTML = `<i class="wt-icw">${svg(effectIcon(nm, dtx, used), 'wt-ic')}${sp && KIND[sp.kind] ? svg(KIND[sp.kind], 'wt-sp') : ''}</i><div class="wt-tx"><b>${esc(nm)}</b>${dh}</div>`;
         const cc = c?.classes?.[c.cls]?.color; if (cc) b.style.setProperty('--cc', cc);
       });
     });
