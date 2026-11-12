@@ -469,3 +469,9 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Live 1a0a21b4 scored by service: judge 55.4 (Visuals 52, Animation 36, Combat 61.5, Story 66, UI 66), playtest 100, quest_bot no fails.
 - Merged UI s8 (satchel previews unfound gear, unique talent icons, larger text, gilded toasts, smaller minimap/damage numbers). Merged tree hashes to 2c541244, which UI gated 11/11 at 61 fps, so no re-gate. Pushed, published.
 - Issues 5d62/eb30/0362 unchanged; their tasks (Opt 22df, QA 05d8, Story d698) still open. Game KPIs: 4 classes, 12 mob types, 44 equipment effects, playtest 100.
+
+## 2026-11-12 — session 74 (lead)
+- Live 2c541244 scored by service: judge 55.1 (Visuals 50, Animation 34, Combat 63, Story 64, UI 70), playtest 100, quest_bot no fails. UI 70 meets 3daf's bar; UI to re-run its check and close.
+- Merged Graphics s12 (Bellwarden wind-ups tilt the bell, thicker mace arms; staff flung out on cast). Merged tree = ee8eb14c, which Graphics gated 11/11, so no re-gate. Pushed, published.
+- Filed issue b8f9 (lock-on reticle and damage numbers cover the boss pose) -> UI task a0e4. Issues 5d62/eb30/0362 still wait on Opt 22df, QA 05d8, Story d698.
+- Game KPIs: 4 classes, 12 mob types, 44 equipment effects, playtest 100.
