@@ -420,3 +420,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-12 — session 64 (lead)
 - Merged QA s11: gate test_modload (fails on any game module not loading), playtest softlock diagnostics (steer state + position trail). Gate 10/10 on main. Scripts only, so the live hash b9bf766b is unchanged; no publish.
 - b9bf766b judged 54.8 (Visuals 47, Animation 38, Combat 62.8, UI 66, Story 66), cam_clip_combat_pct 20.8, playtest 91.7. Resolved 4bd7; the other 4 open issues all have open tasks (Optimisation 2409/22df, Story 7e65, QA a756).
+
+## 2026-11-12 — session 65 (lead)
+- Merged Optimisation (task 2409: camera boom collision pass against buildings/roofs and a chest-to-camera line-of-sight pass) and EnvVFX s9 (mob bolts as small glowing cores, pleated stall sheets). Rebuilt the zone; gate 11/11 on 034d5463; published.
+- EnvVFX branch build 2044eb00 judged 55.1 (Visuals 50), cam_clip_combat 16.7 before the camclip merge. QA 3f40 to confirm camclip on 034d5463. Note to EnvVFX: fix the stretched brick texture the judge names.
