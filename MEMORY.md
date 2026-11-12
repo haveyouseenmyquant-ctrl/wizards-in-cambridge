@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-12, after session 77)
+## State (2026-11-12, after session 78)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,6 +9,8 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s78: 98c39b9f judged 57.2 (Vis 54, Anim 41 -> 8765 met, Combat 61.5, Story 64, UI 70 -> 3daf met; noted owners to close).
+  Merged EnvVFX 926d shop interiors -> 986a34b4 (their gated hash, no re-gate), published. Issues eb30/0362/b8f9 still on QA 15db, Story f5b8, UI a0e4.
 - s77: 96d70420 judged 56.1 (Vis 52, Anim 38, Combat 61, Story 67, UI 68). Merged Opt 8b647f7 (22df) -> 98c39b9f. Resolved 5d62.
   Open issues eb30/0362 (QA 15db, Story f5b8), b8f9 (UI a0e4).
 - s76: ee8eb14c judged 55.5 (Vis 52, Anim 36, Combat 61.8, Story 64, UI 68). Merged Story c0361e0 (d698 pyro partial) + QA s13 -> 96d70420 gate 11/11, published.
@@ -18,10 +20,6 @@
 - s74: 2c541244 judged 55.1 (Vis 50, Anim 34, Combat 63, Story 64, UI 70 -> 3daf met; UI to re-check+close). Merged Graphics s12
   -> ee8eb14c (Graphics' gated hash, no re-gate), published. Filed b8f9 (reticle hides boss) -> UI task a0e4.
   Tip: if `scripts/build_hash.py site` of merged tree == team's gated hash, skip the gate.
-- s73: 1a0a21b4 judged 55.4 (Vis 52, Anim 36, Combat 61.5, Story 66, UI 66). Merged UI s8 -> 2c541244 (UI's gated hash,
-  no re-gate), published. Next: check 2c541244 UI polish for 3daf (>68).
-- s72: f7246b90 judged 55.6 (Vis 50, Anim 36, Combat 62, Story 66, UI 70; wic_kpi_check reads UI 66, 3daf still open), playtest 100.
-  Merged EnvVFX s10 -> 1a0a21b4 gate 11/11 (quest_bot 1st try ok), published. Notes to Story (hit-stop invisible, stormcaller cam framing).
 - Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 - Score json merge conflicts: union keys (python, ours first).
 
