@@ -64,6 +64,11 @@ body.wic-menu #menu, body.wic-menu #wic-q, body.wic-menu #touch-buttons, body.wi
 /* ---- one column for toasts + loot on the left, clear of the tracker (right) and the boss bar (top centre) */
 body #game-hud .gh-toasts { left: 18px; top: 24%; transform: none; align-items: flex-start; max-width: 300px; }
 body #game-hud .gh-loots { left: 18px; right: auto; top: 40%; bottom: auto; max-height: 30%; align-items: flex-start; }
+/* s8: toasts as small gilded plates (were bare grey boxes), minimap smaller with a gold rim, smaller still in fights */
+body #game-hud .gh-toast { font: 600 13px/1.25 Georgia, serif !important; color: #f3ead6; padding: 6px 14px 6px 12px !important; border-radius: 3px; background: linear-gradient(90deg, rgba(22,17,11,.94), rgba(22,17,11,.72)) !important; border: 1px solid #6a5630; border-left: 3px solid #d9b45a; box-shadow: 0 2px 8px rgba(0,0,0,.5); letter-spacing: .02em; }
+#minimap { width: 144px !important; height: 144px !important; border: 2px solid #b8975a !important; box-shadow: 0 0 0 3px rgba(20,15,9,.8), 0 0 0 4px #5a4626, 0 3px 10px rgba(0,0,0,.55) !important; transition: width .3s, height .3s, opacity .3s; }
+body.wic-fight #minimap, body.wic-boss #minimap { width: 112px !important; height: 112px !important; opacity: .85; }
+@media (pointer: coarse) { #minimap { width: 104px !important; height: 104px !important; } }
 body.wic-story #game-hud .gh-toasts, body.wic-story #game-hud .gh-loots { visibility: hidden; }
 body.wic-qcard #wic-q .q-track { opacity: 0 !important; }
 #wic-q .q-track { transition: opacity .3s; }
