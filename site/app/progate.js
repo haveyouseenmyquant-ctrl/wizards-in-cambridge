@@ -32,7 +32,7 @@ export function installProgGate(THREE, renderer, scene, camera, target = () => n
   if (/[?&]debug/.test(location.search)) {
     window.__progGate = stats; stats.log = [];
     // ?debug: name the object whose first draw (main or shadow pass) linked a program
-    const path = o => { const n = []; for (; o && n.length < 4; o = o.parent) n.push(o.name || o.type); return n.join('<'); };
+    const path = o => { const n = [], g = o.geometry?.type, m = [o.material].flat()[0]; for (; o && n.length < 4; o = o.parent) n.push(o.name || o.type); return n.join("<") + ` [${g} ${m?.type} ${m?.name || ""}]`; };
     const spy = pass => function () {
       const ps = renderer.info.programs || [];
       for (; nProg < ps.length; nProg++) stats.log.push([ps[nProg].cacheKey, +(performance.now() / 1000).toFixed(2), pass + ':' + path(this)]);

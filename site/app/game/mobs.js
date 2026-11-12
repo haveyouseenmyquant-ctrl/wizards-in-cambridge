@@ -92,6 +92,9 @@ const TEX = (() => {
     x.fillStyle = g; x.fillRect(0, 0, w, h); });
   return { grain, scribble, blazer, sally, env, aura };
 })();
+// Optimisation s12 (task 22df): main.js converts this equirect env map to its PMREM cube-UV form while the tiles load;
+// on the first mob draw it was a 13-program, 20-render-pass stall as play began
+export const ENV_MAP = TEX.env;
 
 const std = (o) => new THREE.MeshStandardMaterial(o);
 const metal = (color, roughness, o) => std({ color, roughness, metalness: 0.85, envMap: TEX.env, envMapIntensity: 1.1, bumpMap: TEX.grain, bumpScale: 0.3, ...o });

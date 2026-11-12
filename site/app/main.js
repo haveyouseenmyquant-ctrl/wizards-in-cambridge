@@ -304,6 +304,11 @@ async function main() {
   const mainMerge = installMainMerge(THREE, scene, sun.castShadow ? sun : null, QP.merge);   // Optimisation s3: static meshes drawn as merged batches
   const instPool = installInstPool(THREE, scene, camera, sun.castShadow ? sun : null);   // Optimisation s5: per-tile tree/hedge/object instances drawn as cross-tile pools
   status('Loading tiles…');
+  // Optimisation s12 (task 22df): three.js turns an equirect envMap into a PMREM cube-UV map on the first compile of a
+  // standard material using it (13 programs + 20 cube renders, synchronously): do it for the mobs' env map during loading
+  if (gameMod) gameMod.then(() => import('./game/mobs.js')).then(m => {
+    if (m.ENV_MAP) renderer.compile(new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshStandardMaterial({ envMap: m.ENV_MAP })), camera);
+  }).catch(() => {});
   let last = performance.now(), streamT = 0, ready = false, hudT = 0, audioSys = null;
   // ?debug (Optimisation s11): window.__ft keeps the last 600 frames' section times [t s, frame start..tiles, player, game, camera, avatar..sun, perf modules, render] ms
   const FT = /[?&]debug/.test(location.search) ? (window.__ft = []) : null;

@@ -41,7 +41,7 @@ function* renderRows(col) {
     if (t < 0) continue;
     const c = col.kind[t] === 0 ? rgb.wall : rgb[col.surface[t]] || rgb[0], o = (j * W + i) * 4;
     px[o] = c[0]; px[o + 1] = c[1]; px[o + 2] = c[2]; px[o + 3] = 255;
-    if (i === W - 1 && (j & 7) === 7) yield;
+    if (i === W - 1 && (j & 1) === 1) yield;   // s12: every 2 rows (8 rows was a 5-9 ms step under load)
   }
   g.putImageData(img, 0, 0);
   return { canvas: cv, x0: col.x0, y1: col.y1, mpp };

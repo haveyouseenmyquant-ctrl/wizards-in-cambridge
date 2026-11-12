@@ -147,6 +147,15 @@ async function main() {
         const inRaf = id => { for (let x = id; x; x = parent.get(x)) if (idx.get(x).callFrame.functionName === 'onAnimationFrame') return true; return false; };
         for (let i = best[0]; i <= best[1]; i++) { const id = profile.samples[i], d = td[i + 1] || 200; if (process.env.WIC_PROF_NORAF && inRaf(id)) continue; const k = key(idx.get(id).callFrame); self[k] = (self[k] || 0) + d;
           const seen = new Set(); for (let x = id; x; x = parent.get(x)) { const kk = key(idx.get(x).callFrame); if (!seen.has(kk)) { seen.add(kk); incl[kk] = (incl[kk] || 0) + d; } } }
+        if (process.env.WIC_PROF_RUNS) {   // every off-rAF busy run > 8 ms in the window: start s, ms, top self frames and the task's entry frame
+          let r0 = -1; const flush = i => { if (r0 < 0) return; const ms = (times[i] - times[r0]) / 1000; if (ms > 8) { const sf = {}, ent = {};
+            for (let j = r0; j < i; j++) { const id = profile.samples[j], d = td[j + 1] || 200; const k = key(idx.get(id).callFrame); sf[k] = (sf[k] || 0) + d;
+              let x = id, top = id; for (; parent.get(x) && idx.get(parent.get(x)).callFrame.functionName !== '(root)'; x = parent.get(x)) top = parent.get(x); const ek = key(idx.get(x).callFrame); ent[ek] = (ent[ek] || 0) + d; }
+            const fmt = o => Object.entries(o).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([k, v]) => (v / 1000).toFixed(1) + ' ' + k).join(' | ');
+            log('run', (times[r0] / 1e6 + Number(PROFILE_AT)).toFixed(2), 's', ms.toFixed(0), 'ms\n    self:', fmt(sf), '\n    entry:', fmt(ent)); } r0 = -1; };
+          profile.samples.forEach((id, i) => { const fn = idx.get(id).callFrame.functionName; if (fn === '(idle)' || fn === '(program)' && false || inRaf(id)) flush(i); else if (r0 < 0) r0 = i; });
+          flush(profile.samples.length - 1);
+        }
         log('--self'); for (const [k, v] of Object.entries(self).sort((a, b) => b[1] - a[1]).slice(0, 15)) log((v / 1000).toFixed(1).padStart(6), k);
         log('--incl'); for (const [k, v] of Object.entries(incl).sort((a, b) => b[1] - a[1]).slice(0, 40)) log((v / 1000).toFixed(1).padStart(6), k);
         return;
