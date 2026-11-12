@@ -1,4 +1,142 @@
 {
  "main_quests_shipped": 7,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 22,
+  "main_quests_shipped": 7,
+  "wall_s": 132,
+  "at": "2026-11-12T00:51:33.953Z"
+ },
+ "cam_clip_pct": 1.8,
+ "cam_clip_combat_pct": 2.1,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [
+  {
+   "frame": "combat/pyromancer/frame_05.jpg",
+   "scene": "combat_pyromancer",
+   "pos": [
+    -106.82,
+    75.12,
+    12.67
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: zone/market_stallsway400160680 3.6 m from camera, 5.1 m to player"
+   ]
+  }
+ ],
+ "judged_game_quality": 55.5,
+ "judged_sections": {
+  "Visuals": 50.0,
+  "Animation": 36.0,
+  "Combat feel": 60.2,
+  "Story presentation": 70.0,
+  "UI polish": 68.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    50.0,
+    50.0,
+    50.0
+   ],
+   "Animation": [
+    34.0,
+    36.0,
+    36.0
+   ],
+   "Combat feel": [
+    60.2,
+    61.2,
+    60.2
+   ],
+   "Story presentation": [
+    72.0,
+    70.0,
+    70.0
+   ],
+   "UI polish": [
+    68.0,
+    68.0,
+    68.0
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0.0,
+   "Animation": 2.0,
+   "Combat feel": 1.0,
+   "Story presentation": 2.0,
+   "UI polish": 0.0
+  },
+  "quality_spread": 0.4,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city looks coherent and recognisable. It has textured brick and stone facades, Gothic church detail, bikes, bollards, railings and market stalls, with warm low-sun lighting and real-time shadows that give some atmosphere. Geometry is blocky (boxy produce and shop wares, flat building masses), materials repeat, and there is little clutter, wear or vegetation. Characters are small, low-detail chibi figures, and the combat frames are muddied by flat, overlapping VFX, so it sits between prototype and mid-tier quality."
+   },
+   "Animation": {
+    "all": "The walking frames show a small stylised wizard with some leg and arm offset, so there is probably a basic walk cycle. NPCs stand in place, and the bell boss is a rigid prop that moves by sliding or rotating, with no limb movement. In combat, nearly all the motion comes from projectiles, rings, numbers and the 'STAGGERED' and 'INTERRUPTED' text. No player cast pose or hit reaction is visible, and there are no enemy wind-up or death animations, secondary motion or environmental motion."
+   },
+   "Combat feel": {
+    "hexweaver": "Combat is readable and has visible feedback. There are large damage numbers and INTERRUPTED/STAGGERED/VANQUISHED callouts, a three-phase named boss with telegraphed moves ('Clapper Sweep', 'Great Toll') and ground rings, a chain counter, and loot toasts colour-coded by rarity across six distinct skills. Impact is still weak, with no visible hit-stop, knockback or screen feedback. Several frames are cluttered: camera clipping into stall canvas, oversized pale blobs, and the hexweaver's VFX reading as generic orbs. The cast mix leans heavily on a single dart (70 of 98), and only one class is shown, so class variety and crowd-control depth can't be credited.",
+    "pyromancer": "The rubric's 60 tier is clearly met. The Bellwarden boss has three phases with an enraged state, a named telegraphed attack ('Clapper Sweep') and a 'VANQUISHED' banner. Hits show crit and damage numbers, STAGGERED and INTERRUPTED states, and a chain counter, and loot drops with rarity-coloured beams and labelled common/rare/epic pickups. It falls short of 80 because 87 of the 111 casts were the single ember_bolt, so the fight is repetitive. Spell VFX are mostly small and hard to see apart from frame 1. There is no visible hit-stop, screen shake or crowd control that changes the fight, and only one class is shown. The on-screen numbers (453, 517, 857) also do not match the logged max hit of 68.",
+    "stormcaller": "The visible feedback is solid: damage numbers with crits, STAGGERED tags, a red ground telegraph for the boss's named Clapper Sweep, a three-phase boss bar ending in ENRAGED, a combo chain counter, and loot callouts in rarity colours with stat text. Several spells are cast, and the log shows dashes, crowd control and level-ups. However, spark_lance makes up 59 of the 85 casts, and the spell VFX are small and hard to make out against the busy market stalls. The second half of the clip has almost no combat (frames 6-12 show the player wandering streets), and nothing visible shows hit-stop, screen feedback or varied enemy formations.",
+    "warden": "The frames show real combat systems at work. There's a three-phase boss with a named health bar and an enraged state, plus damage numbers, crits, STAGGERED and INTERRUPTED states, a chain counter, telegraph rings, loot beams colored by rarity with item cards, and six spells on cooldown. The log also backs up the depth, with about 4.7k damage, 30 kills, crowd control and level-ups. Readability is weak, though: the camera often clips into geometry or sits at odd angles (frames 4, 9), the VFX are blocky and muddled, and pebble_shot makes up 74 of 95 casts. Only one class is shown, so differences between classes and hit-stop/impact weight can't be verified."
+   },
+   "Story presentation": {
+    "all": "The dialogue scenes are framed like cutscenes: black bars top and bottom, over-the-shoulder shots, and named speakers with portraits and roles (Nell Tapscott, Pip Hobbe). There are numbered branching replies, a boss reveal (the Bellwarden), title cards for the prologue and quest completion, and well-written lines set in a real place (Market Hill, Great St Mary's). The biggest gaps are the simple, expressionless character models with no visible acting or animation, no sign of voice acting, and no visible objective marker or waypoint in the quest tracker frame, so it falls short of 80."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent dark-and-gold style across the class select, HUD, inventory and talent screens. Those screens have icons, a rarity tag (Common), clear tiers and readable cooldown numbers on the spell bar, and the boss bar shows its phase. The biggest gaps: the inventory is sparse, with a mostly empty bag grid and an equipped item cut off ('Pyromancer's Matriculation...'). In combat, the HUD text is small and large damage numbers and effects clutter the centre (the warden frame is hard to read). Nothing shows animation or transitions."
+   }
+  }
+ }
 }
