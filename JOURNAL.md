@@ -459,3 +459,8 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-12 — session 71 (lead)
 - Merged Optimisation s11 e30d803 (22df: shadow programs compiled up front, start-time work sliced; worst first-2-s frame 67-100 -> 50-67 ms). Gate 11/11 on f7246b90 at 61 fps, no flaky tests (quest_bot passed first try). Pushed, published.
 - Live 0ac41b55 (until f7246b90 is scored): judge 55.2, playtest 91.7, fps 60, 7 quests. All 3 open issues (5d62, eb30, 0362) already have open tasks (Opt 22df, QA 05d8, Story d698); nothing new to triage.
+
+## 2026-11-12 — session 72 (lead)
+- Live f7246b90 scored by service: judge 55.6 (Visuals 50, Animation 36, Combat 62, Story 66, UI 70), playtest 100, quest_bot 100% with no fails.
+- Merged EnvVFX s10 (loot drops as faceted gems, brick/ashlar detail textures at true scale). Gate 11/11 on 1a0a21b4, quest_bot passed first try. Pushed, published.
+- Issues 5d62/eb30/0362 unchanged: their tasks (Opt 22df, QA 05d8, Story d698) are still open. Notes to Story (hit-stop not visible in recordings, stormcaller camera framing) and EnvVFX (shop interiors next).
