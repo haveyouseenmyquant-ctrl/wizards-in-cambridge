@@ -55,7 +55,9 @@ def earcut2d(poly):
 # Surface material ids (per triangle; zone_build writes them as the _MAT vertex attribute, site/app/zone.js shades
 # them procedurally: brick coursing, ashlar joints, render noise, glass reflection, painted timber sheen).
 MATS = {"plain": 0, "brick": 1, "stone": 2, "render": 3, "stucco": 3, "timber": 4, "frame": 4, "glass": 5,
-        "flint": 6, "trim": 7}
+        "flint": 6, "trim": 7, "interior": 8, "lamp": 9, "shopglass": 10}
+# s11 EnvVFX: 8 = shop interior surfaces (self-lit warm in zone.js: inside the tile building's shadow), 9 = lamp bulbs /
+# lit shades (emissive), 10 = see-through shop glass (zone_build moves it to the transparent "shopglass" node)
 
 
 def mat_id(m, default=0):
@@ -92,6 +94,7 @@ class Parts:
         self.wall_col = None if wall_col is None else np.asarray(wall_col, float)
         self.counts = {}
         self.detail_area = 0.0   # facade area (m2, projected on the wall) covered by modelled 3D elements
+        self.cuts = []           # (x0, x1, z0, z1) in the wall frame: tile wall cut away behind see-through shop glass
 
     def count(self, kind, k=1):
         self.counts[kind] = self.counts.get(kind, 0) + k
@@ -320,23 +323,23 @@ DISPLAY_COLS = ["#8c2a24", "#24406e", "#2f5a34", "#d8cdb0", "#3a3330", "#c08a2e"
                 "#b8442c", "#2c6a6a"]
 
 
-def window_display(P, a, b, sr, ztop, key):
+def window_display(P, a, b, sr, ztop, key, y0=None, pm="plain"):
     """s3 EnvVFX (judge: "shop windows empty planes"): a stocked window display as real geometry in the glazing
     reveal: a display board on the stallriser, a stepped riser and a glass shelf, goods by a per-window theme
     (books, bottles/jars, dressed torso stands, gift boxes) and white price cards. All within GLASS..GLASS+0.16."""
     rng = np.random.default_rng(int(hashlib.md5(key.encode()).hexdigest()[:8], 16))
     if b - a < 0.6 or ztop - sr < 0.9:
         return
-    y0, dy = GLASS + 0.004, 0.15
-    pm = "plain"
+    y0, dy = (GLASS + 0.004 if y0 is None else y0), 0.15
+    mb, mt = ("timber", "trim") if pm == "plain" else (pm, pm)
     col = lambda: shade(rgb(DISPLAY_COLS[rng.integers(len(DISPLAY_COLS))]), rng.uniform(0.85, 1.1))  # noqa: E731
     board = shade(rgb("#6b4a32"), rng.uniform(0.8, 1.2))
-    P.box(a, b, y0, y0 + dy, sr, sr + 0.03, board, bottom=False, mat="timber")                 # display board
+    P.box(a, b, y0, y0 + dy, sr, sr + 0.03, board, bottom=False, mat=mb)                 # display board
     theme = int(rng.integers(4))
     zs = sr + 0.75
     shelf = theme != 2 and ztop - zs > 0.35
     if shelf:
-        P.box(a, b, y0, y0 + dy * 0.8, zs, zs + 0.015, rgb("#c9d4d4"), mat="trim")               # glass shelf
+        P.box(a, b, y0, y0 + dy * 0.8, zs, zs + 0.015, rgb("#c9d4d4"), mat=mt)               # glass shelf
     z = sr + 0.03
     x = a + 0.06
     while x < b - 0.12:
@@ -409,6 +412,90 @@ def window_display(P, a, b, sr, ztop, key):
                 P.box(x, x + w, y0 + 0.01, y0 + dy * 0.75, zs + 0.015, zs + 0.015 + h, col(), mat=pm)
             x += w + rng.uniform(0.02, 0.1)
 
+SHOP_INTERIORS = False   # zone_build turns this on only for the generic walls (they export tile cuts + the glass node)
+INTERIOR_WALLS = ["#2f4a3e", "#5a2a2a", "#d9cfb8", "#27324a", "#8a7f6e", "#e4ddd0", "#3d3530"]
+
+
+def shop_interior(P, x0, x1, zf, key, D=2.8):
+    """s11 EnvVFX (judge: "box-shaped shop windows", "shop interiors use primitive shapes"): a real shop room behind the
+    see-through glass, inside the tile building (its wall is cut away there, zone.json "cuts"): plank floor, painted
+    back and side walls, ceiling, stocked shelving units on the back wall, a counter with a till, a display table and
+    pendant lamps. Everything uses the self-lit interior material (the room sits in the building's shadow)."""
+    rng = np.random.default_rng(int(hashlib.md5(("in" + key).encode()).hexdigest()[:8], 16))
+    m = "interior"
+    yb, yf, zc = -D, GLASS - 0.01, zf + 0.15
+    wall = rgb(INTERIOR_WALLS[int(rng.integers(len(INTERIOR_WALLS)))])
+    wood = shade(rgb("#6b4a32"), rng.uniform(0.7, 1.25))
+    col = lambda: shade(rgb(DISPLAY_COLS[rng.integers(len(DISPLAY_COLS))]), rng.uniform(0.8, 1.1))  # noqa: E731
+    P.quad((x0, yb, 0.002), (x1, yb, 0.002), (x1, yf, 0.002), (x0, yf, 0.002), (0, 0, 1), shade(wood, 0.8), m)   # floor
+    P.quad((x0, yb, zc), (x0, yf, zc), (x1, yf, zc), (x1, yb, zc), (0, 0, -1), rgb("#e8e2d6"), m)               # ceiling
+    P.quad((x0, yb, 0), (x1, yb, 0), (x1, yb, zc), (x0, yb, zc), (0, 1, 0), wall, m)                           # back wall
+    P.quad((x0, yf, 0), (x0, yb, 0), (x0, yb, zc), (x0, yf, zc), (1, 0, 0), shade(wall, 0.9), m)               # sides
+    P.quad((x1, yb, 0), (x1, yf, 0), (x1, yf, zc), (x1, yb, zc), (-1, 0, 0), shade(wall, 0.9), m)
+    # stocked shelving units along the back wall
+    nu = max(1, int((x1 - x0 - 0.2) / 0.95))
+    uw = (x1 - x0 - 0.2) / nu
+    sd = 0.36
+    levels = [z for z in (0.12, 0.55, 0.98, 1.41, 1.84, 2.27) if z < zc - 0.45]
+    for u in range(nu):
+        a, b = x0 + 0.1 + u * uw, x0 + 0.1 + (u + 1) * uw
+        top = levels[-1] + 0.42
+        P.box(a, b, yb, yb + 0.02, 0, top, shade(wood, 0.75), bottom=False, mat=m)                  # unit back
+        for xa in (a, b - 0.04):
+            P.box(xa, xa + 0.04, yb, yb + sd, 0, top, wood, bottom=False, mat=m)                 # uprights
+        P.box(a, b, yb, yb + sd + 0.03, top, top + 0.06, wood, bottom=False, mat=m)              # cornice
+        for z in levels:
+            P.box(a + 0.04, b - 0.04, yb, yb + sd, z - 0.025, z, wood, bottom=False, mat=m)      # shelf
+            kind = int(rng.integers(3))
+            x = a + 0.07
+            while x < b - 0.1:
+                if kind == 0:     # books / boxed goods, spines out
+                    w, h = rng.uniform(0.03, 0.07), rng.uniform(0.18, 0.32)
+                    P.box(x, x + w, yb + 0.06, yb + sd - 0.03, z, z + h, col(), top=True, bottom=False, mat=m)
+                    x += w + (0.003 if rng.random() < 0.85 else 0.06)
+                elif kind == 1:   # jars / tins, turned
+                    r, h = rng.uniform(0.03, 0.05), rng.uniform(0.08, 0.2)
+                    c = col()
+                    P.lathe(x + r, yb + sd * 0.55, [(r, z), (r, z + h), (r * 0.7, z + h + 0.02)], c, n=6, mat=m)
+                    x += 2 * r + rng.uniform(0.01, 0.04)
+                else:             # folded / boxed stock in stacks
+                    w = rng.uniform(0.14, 0.24)
+                    h = 0.0
+                    c = col()
+                    for k in range(int(rng.integers(1, 4))):
+                        hh = rng.uniform(0.05, 0.1)
+                        P.box(x, x + w, yb + 0.04, yb + sd - 0.02, z + h, z + h + hh, shade(c, 0.9 + 0.1 * k), bottom=False, mat=m)
+                        h += hh
+                    x += w + rng.uniform(0.02, 0.06)
+    # counter with a till at one end, a display table in the middle
+    cl = rng.random() < 0.5
+    ca, cb = (x0 + 0.15, x0 + min(1.5, (x1 - x0) * 0.35)) if cl else (x1 - min(1.5, (x1 - x0) * 0.35), x1 - 0.15)
+    P.box(ca, cb, yb + 0.9, yb + 1.5, 0, 0.92, shade(wood, 0.85), bottom=False, mat=m)
+    P.box(ca - 0.03, cb + 0.03, yb + 0.87, yb + 1.53, 0.92, 0.96, shade(wood, 1.15), bottom=False, mat=m)
+    tx = (ca + cb) / 2
+    P.box(tx - 0.15, tx + 0.15, yb + 1.0, yb + 1.3, 0.96, 1.12, rgb("#2a2a2a"), bottom=False, mat=m)
+    ta, tb = (cb + 0.5, cb + 1.7) if cl else (ca - 1.7, ca - 0.5)
+    if ta > x0 + 0.2 and tb < x1 - 0.2:
+        tc = shade(wood, 1.1)
+        P.box(ta, tb, yf - 1.6, yf - 0.9, 0.72, 0.76, tc, mat=m)
+        for lx in (ta + 0.05, tb - 0.09):
+            for ly in (yf - 1.55, yf - 0.99):
+                P.box(lx, lx + 0.04, ly, ly + 0.04, 0, 0.72, shade(tc, 0.8), top=False, bottom=False, mat=m)
+        x = ta + 0.08
+        while x < tb - 0.15:
+            w, h = rng.uniform(0.12, 0.25), rng.uniform(0.05, 0.22)
+            P.box(x, x + w, yf - 1.45, yf - 1.05, 0.76, 0.76 + h, col(), bottom=False, mat=m)
+            x += w + rng.uniform(0.05, 0.15)
+    # pendant lamps: cord, conical shade, glowing bulb
+    nl = max(1, int((x1 - x0) / 1.8))
+    for i in range(nl):
+        lx, ly = x0 + (x1 - x0) * (i + 0.5) / nl, yb + 1.3
+        zl = zc - 0.65
+        P.box(lx - 0.006, lx + 0.006, ly - 0.006, ly + 0.006, zl + 0.2, zc, rgb("#1c1c1c"), top=False, bottom=False, mat=m)
+        P.lathe(lx, ly, [(0.2, zl), (0.17, zl + 0.04), (0.06, zl + 0.2), (0.0, zl + 0.21)], rgb("#26352e"), n=10, mat=m)
+        P.lathe(lx, ly, [(0.0, zl - 0.03), (0.06, zl + 0.02), (0.0, zl + 0.06)], rgb("#fff1d0"), n=8, mat="lamp")
+    P.count("shop_interior")
+
 
 def shopfront(P, el, wall_col, trim_col, yb=SKIN):
     x0, x1, z1 = el["x0"], el["x1"], el.get("z1", 3.3)
@@ -430,19 +517,30 @@ def shopfront(P, el, wall_col, trim_col, yb=SKIN):
             continue
         if sr > 0.05:
             P.box(a, b, GLASS, GLASS + 0.12, 0, sr, shade(fcol, 0.85), bottom=False)
-        P.face_xz(box(a, sr, b, zf), GLASS, rgb(GLASS_COL))
+        if not SHOP_INTERIORS:
+            P.face_xz(box(a, sr, b, zf), GLASS, rgb(GLASS_COL))
+        else:
+            P.face_xz(box(a, sr, b, zf), GLASS, rgb(GLASS_COL), mat="shopglass")   # see-through (s11)
+            P.cuts.append((a, b, sr, zf))
+            P.box(a, b, GLASS - 0.62, GLASS - 0.01, 0, sr, shade(fcol, 0.6), bottom=False, mat="interior")  # display bed
         nm = max(1, round((b - a) / 1.4))
         for i in range(1, nm):
             x = a + (b - a) * i / nm
             P.box(x - 0.03, x + 0.03, GLASS, GLASS + 0.06, sr, zf, fcol, top=False, bottom=False)
         P.box(a, b, GLASS, GLASS + 0.06, zf - 0.55, zf - 0.5, fcol)   # transom
-        window_display(P, a, b, sr, zf - 0.55, f"{x0:.2f}:{a:.2f}:{el.get('fascia_colour', '')}")
+        if SHOP_INTERIORS:
+            window_display(P, a, b, sr, zf - 0.55, f"{x0:.2f}:{a:.2f}:{el.get('fascia_colour', '')}", y0=GLASS - 0.36,
+                           pm="interior")
+        else:
+            window_display(P, a, b, sr, zf - 0.55, f"{x0:.2f}:{a:.2f}:{el.get('fascia_colour', '')}")
     if dx is not None:   # recessed door: deep frame, glazed leaf
         P.face_xz(box(dx - dw / 2, 0, dx + dw / 2, zf), GLASS - 0.01, shade(fcol, 0.7))
         P.face_xz(box(dx - dw / 2 + 0.12, 0.9, dx + dw / 2 - 0.12, zf - 0.7), GLASS, rgb(GLASS_COL))
         for x in (dx - dw / 2, dx + dw / 2 - 0.06):
             P.box(x, x + 0.06, GLASS, GLASS + 0.12, 0, zf, fcol, top=False, bottom=False)
         P.count("shop_door")
+    if SHOP_INTERIORS:
+        shop_interior(P, gx0, gx1, zf, f"{x0:.2f}:{el.get('fascia_colour', '')}")
     for a in (x0, x1 - pil):              # end pilasters with corbels
         P.box(a, a + pil, yb, yb + 0.1, 0, zf, fcol, bottom=False)
     P.box(x0 - 0.05, x1 + 0.05, yb, yb + 0.12, zf, z1 - 0.12, fcol)                       # fascia board

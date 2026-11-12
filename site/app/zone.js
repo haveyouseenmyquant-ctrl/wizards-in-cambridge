@@ -12,6 +12,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MeshoptDecoder } from '../vendor/meshoptimizer/meshopt_decoder.module.js';
+import { setTileCuts } from './materials.js';
 
 const Q = new URLSearchParams(location.search);
 // session 57: ?stoneboost=<0..1> scales the pale-stone lift below (1 = session 55's full boost)
@@ -82,6 +83,9 @@ const COLOR = `
     vec3 flint = mix(zc, mix(fl, vec3(0.70, 0.67, 0.60), b.x), fv);
     diffuseColor.rgb = mix(zc, flint, 0.85);
     zSpec = 0.15; zShin = 50.0;
+  } else if (zm > 7.5) {               // s11 shop interior (8) / lamp (9): lit in EMIT
+    diffuseColor.rgb = zc * (zm > 8.5 ? 0.2 : 0.5);
+    zSpec = 0.05;
   } else if (zm > 6.5) {               // trim: dressed stone / painted mouldings, very faint grain
     diffuseColor.rgb = zc * (0.985 + 0.03 * zn(zp * 6.0));
     zSpec = 0.06; zShin = 30.0;
@@ -90,7 +94,7 @@ const COLOR = `
   // St Mary's...) rendered mid-grey: the lights are scaled to LK 0.45 for the whole city, so a 0.89 albedo came out at
   // ~0.17 linear radiance, darker than in photos. Lift pale ashlar/trim towards the warm cream seen in non-held-out
   // photos; brick, render, timber and dark stone keep their colour.
-  if (zm > 1.5 && zm < 2.5 || zm > 6.5) {
+  if (zm > 1.5 && zm < 2.5 || zm > 6.5 && zm < 7.5) {
     float zl = dot(zc, vec3(0.299, 0.587, 0.114));
     float zg = smoothstep(0.55, 0.75, zl);
     diffuseColor.rgb *= mix(vec3(1.0), vec3(1.85, 1.74, 1.50), zg * ${ZSB.toFixed(3)});
@@ -106,7 +110,7 @@ const COLOR = `
   }
   // Environment & VFX s2: weathering on walls (not glass / painted timber): soft vertical rain streaks and a damp,
   // darker splash band along the base (zGnd = the player's ground height; the centre of Cambridge is nearly flat).
-  if (abs(zN.y) < 0.5 && !(zm > 3.5 && zm < 5.5)) {
+  if (abs(zN.y) < 0.5 && !(zm > 3.5 && zm < 5.5) && zm < 7.5) {
     float wf = 1.0 - smoothstep(0.04, 0.15, zaa);
     float st = zn(vec2(zp.x * 5.0, zp.y * 0.13)) * 0.7 + zn(vec2(zp.x * 23.0, zp.y * 0.5)) * 0.3;
     diffuseColor.rgb *= 1.0 - 0.13 * smoothstep(0.55, 0.9, st) * wf;
@@ -126,6 +130,10 @@ const LIGHTS = `
 // and (b) a reflection of the golden-hour sky (warm horizon towards the sun, blue zenith, sun glint) over a ragged
 // skyline of the buildings opposite. Before this the panes read as "flat dark panels" to the judge.
 const EMIT = `
+  // s11: real shop interiors behind the see-through shop glass sit in the tile building's shadow: warm self-light,
+  // brighter towards the ceiling lamps; the bulbs glow (bloom)
+  if (zm > 7.5 && zm < 8.5) totalEmissiveRadiance += zc * vec3(1.0, 0.80, 0.58) * (0.08 + 0.2 * smoothstep(0.2, 2.8, zWP.y - zGnd));
+  if (zm > 8.5 && zm < 9.5) totalEmissiveRadiance += zc * vec3(3.2, 2.6, 1.8);
   if (zm > 4.5 && zm < 5.5) {
     vec3 zV = normalize(vViewPosition);
     vec3 zR = (vec4(reflect(-zV, normal), 0.0) * viewMatrix).xyz;   // world-space reflected direction
@@ -207,6 +215,34 @@ function makeMat(cut = false) {
   return m;
 }
 export const zoneMat = makeMat();
+// s11: see-through shop glass over the real shop interiors: reflection only (golden sky over a ragged skyline, sun
+// glint), alpha by Fresnel; drawn after the opaque pass without depth writes.
+export const shopGlassMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, depthWrite: false });
+shopGlassMat.onBeforeCompile = sh => {
+  sh.uniforms.zSunD = zoneSun;
+  sh.vertexShader = sh.vertexShader
+    .replace('#include <common>', '#include <common>\nvarying vec3 zWP; varying vec3 zWN;')
+    .replace('#include <worldpos_vertex>', `#include <worldpos_vertex>
+      zWP = (modelMatrix * vec4(transformed, 1.0)).xyz; zWN = normalize(mat3(modelMatrix) * normal);`);
+  sh.fragmentShader = sh.fragmentShader
+    .replace('#include <common>', '#include <common>\nvarying vec3 zWP; varying vec3 zWN; uniform vec3 zSunD;\n' +
+      'float zh(vec2 c) { return fract(sin(dot(c, vec2(127.1, 311.7))) * 43758.5453); }\n' +
+      'float zn(vec2 p) { vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);' +
+      ' return mix(mix(zh(i), zh(i + vec2(1.0, 0.0)), f.x), mix(zh(i + vec2(0.0, 1.0)), zh(i + vec2(1.0, 1.0)), f.x), f.y); }')
+    .replace('#include <opaque_fragment>', `
+      vec3 zV = normalize(cameraPosition - zWP), zNn = normalize(zWN);
+      vec3 zR = reflect(-zV, zNn);
+      float ndv = saturate(dot(zNn, zV));
+      vec3 sky = mix(vec3(0.95, 0.66, 0.42), vec3(0.36, 0.50, 0.72), smoothstep(0.02, 0.6, zR.y));
+      float sil = 0.10 + 0.18 * zn(vec2(atan(zR.x, zR.z) * 6.0, 0.5));
+      vec3 env = zR.y > sil ? sky : (zR.y > -0.05 ? vec3(0.30, 0.22, 0.16) * (0.7 + 0.6 * zn(zWP.xz * 0.7 + zR.xz * 4.0)) : vec3(0.12, 0.10, 0.09));
+      env += vec3(6.0, 4.4, 2.8) * pow(saturate(dot(normalize(zR), zSunD)), 900.0);
+      float fr = 0.16 + 0.6 * pow(1.0 - ndv, 4.0);
+      outgoingLight = env;
+      diffuseColor.a = fr;
+      #include <opaque_fragment>`);
+};
+shopGlassMat.customProgramCacheKey = () => 'wc_shopglass1';
 export const zoneMatCut = makeMat(true);
 const isStall = o => /^market_stalls/.test(o.name) || /^market_stalls/.test(o.parent?.name || '');   // GLTFLoader strips the ':' and '/'
 
@@ -267,16 +303,17 @@ export async function loadZone(base, scene) {
     root.traverse(o => {
       if (!o.isMesh) return;
       o.material?.dispose?.();
-      o.material = isStall(o) ? zoneMatCut : zoneMat;
+      o.material = isStall(o) ? zoneMatCut : /^shopglass/.test(o.name) ? shopGlassMat : zoneMat;
       const g = o.geometry;
       if (!g.getAttribute('_mat')) {   // older GLBs without material ids: everything plain
         g.setAttribute('_mat', new THREE.BufferAttribute(new Float32Array(g.getAttribute('position').count), 1));
       }
-      o.castShadow = true; o.receiveShadow = true;
+      o.castShadow = o.material !== shopGlassMat; o.receiveShadow = true;
       o.matrixAutoUpdate = false; o.updateMatrix();
     });
     scene.add(root);
     zone.root = root;
+    setTileCuts(zone.cuts || []);
     // complete bespoke buildings (zone.json "hide"): hide their tile body now and in tiles that load later (tiles.js)
     window.__zoneHide = new Set((zone.hide || []).map(id => 'b:' + id));
     scene.traverse(o => { if (o.isMesh && window.__zoneHide.has(o.userData.name || o.parent?.userData.name)) o.visible = false; });

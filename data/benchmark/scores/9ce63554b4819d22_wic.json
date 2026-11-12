@@ -1,0 +1,137 @@
+{
+ "fps_median": 57,
+ "load_seconds": 0.53,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 1.31,
+  "programs": [
+   105,
+   125
+  ],
+  "fps_p5": 39,
+  "fps_min": 33,
+  "slow_secs": [
+   [
+    0,
+    45
+   ],
+   [
+    1,
+    33
+   ],
+   [
+    2,
+    45
+   ],
+   [
+    3,
+    48
+   ],
+   [
+    6,
+    46
+   ],
+   [
+    7,
+    48
+   ],
+   [
+    8,
+    39
+   ],
+   [
+    9,
+    40
+   ],
+   [
+    10,
+    37
+   ],
+   [
+    12,
+    48
+   ],
+   [
+    13,
+    48
+   ],
+   [
+    14,
+    49
+   ],
+   [
+    17,
+    41
+   ],
+   [
+    18,
+    37
+   ],
+   [
+    20,
+    39
+   ],
+   [
+    21,
+    42
+   ],
+   [
+    50,
+    49
+   ]
+  ],
+  "long_frames": 68,
+  "worst_frames": [
+   [
+    1.2,
+    134
+   ],
+   [
+    1.4,
+    84
+   ],
+   [
+    4,
+    84
+   ],
+   [
+    18.1,
+    84
+   ],
+   [
+    21.8,
+    84
+   ],
+   [
+    12.2,
+    83
+   ],
+   [
+    17.7,
+    82
+   ],
+   [
+    9.7,
+    68
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 181,
+  "kills": 26,
+  "maxMobs": 36,
+  "dist": 191,
+  "laps": 1,
+  "draw_calls_median": 1294,
+  "tris_median": 7242639,
+  "tiles": 17,
+  "errors": 1,
+  "first_errors": [
+   "+2.6s console: THREE.WebGLProgram: Shader Error 0 - VALIDATE_STATUS false\n\nMaterial Name: \nMaterial Type: MeshBasicMaterial\n\nProgram Info Log: Vertex shader is not compiled.\nVERTEX\n\nERROR: 0:552: 'objectNormal' : undeclared identifier\nERROR: 0:552: 'normalize' : no matching overloaded function found\nERROR: 0:552: '=' : dimension mismatch\nERROR: 0:552: 'assign' : cannot convert from 'const mediump float' to 'out highp 3-component vector of float'\n\n  547: \t#ifdef USE_INSTANCING\n  548: \t\tworldPosition = instanceMatrix * worldPosition;\n  549: \t#endif\n  550: \tworldPosition = modelMatrix * worldPosition;\n  551: #endif\n> 552:       zWP = (modelMatrix * vec4(transformed, 1.0)).xyz; zWN = normalize(mat3(modelMatrix) * objectNormal);\n  553: #ifdef USE_ENVMAP\n  554: \t#ifdef ENV_WORLDPOS\n  555: \t\tvWorldPosition = worldPosition.xyz;\n  556: \t#else\n  557: \t\tvec3 cameraToVertex;\n  558: \t\tif ( isOrthographic ) {\n"
+  ],
+  "at": "2026-11-12T07:38:00.984Z"
+ }
+}
