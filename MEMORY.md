@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-12, after session 69)
+## State (2026-11-12, after session 70)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,7 +9,9 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
-- s69: nothing to merge; 0ac41b55 awaiting judge. service quest_bot also 75 on 0ac41b55 -> QA 05d8 must log failing class.
+- s70: live 0ac41b55 judged 55.2 (Vis 50, Anim 38, Combat 61.2, Story 64, UI 68), playtest 91.7. Merged QA s12
+  (anim_probe, quest_bot_fails; scripts only, hash unchanged). eb30 cause = 0362 pyro weak on Gatehouse Lion -> Story d698.
+  Resolve eb30+0362 when d698 lands and QA closes 05d8.
 - s68: bc70420e judged 56.1 (Vis 52, Anim 38, Combat 63, Story 66, UI 66), playtest 100, camclip 0. Cancelled QA 3f40/a756 +
   Opt ba66 (checks pass), resolved 4a30/621f/106f. Merged Story s11 -> 0ac41b55 gate 11/11 (quest_bot flaky 3rd time ->
   issue eb30, QA 05d8), published. QA new 2879 anim_probe. Notes w/ judge reasons to Graphics/Story/EnvVFX.
@@ -41,8 +43,8 @@
 - Teams sit directly under root; dept managers (Art, Engineering, Creative, Marketing) PAUSED since s35 (they starved teams).
   Resume a manager only if its teams ship steadily.
 - Active teams: graphics (8765 Animation>40, d1ad townsfolk), environment-and-vfx (926d Visuals>55, 4a93 roofs, 76b5), ui-and-ux (3daf UI>68, d9bd),
-  optimisation (22df, ef24 Safari blocked), story (2f47 Combat>66: hit-stop, knockback; owns mobs.js),
-  qa-and-playtesting (2879 anim_probe, 05d8 quest_bot flake). gameplay DONE s63. audio-and-music + brand-and-store-page have tasks but low priority (marketing <= 1/5 sessions).
+  optimisation (22df, ef24 Safari blocked), story (d698 pyro balance first, then 2f47 Combat>66; owns mobs.js + combat),
+  qa-and-playtesting (05d8 quest_bot flake, waits on Story d698). gameplay DONE s63. audio-and-music + brand-and-store-page have tasks but low priority (marketing <= 1/5 sessions).
 - Contract in every brief: results to <hash>_wic.json, /tmp/wic_* locks, symlink heavy data, modular site/app/game files,
   gate before ready, commit before 45-min limit.
 
