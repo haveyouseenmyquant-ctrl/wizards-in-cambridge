@@ -191,5 +191,99 @@
     "all": "The UI has one consistent style throughout: dark panels with gold trim and serif headings on class selection, inventory and talents. The HUD reads clearly, with health and mana bars, a numbered spell bar with cooldown numbers, a boss bar showing phase and attack name, a quest toast, a minimap and colour-coded rarity in the collection list. The main gaps are that the inventory is mostly empty slots and the talent icons look generic. Text is small, and in combat the effects and target rings crowd the scene. No animation or transitions can be seen in these frames."
    }
   }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.27,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.95,
+  "programs": [
+   107,
+   131
+  ],
+  "fps_p5": 55,
+  "fps_min": 29,
+  "slow_secs": [
+   [
+    58,
+    39
+   ],
+   [
+    59,
+    29
+   ]
+  ],
+  "long_frames": 15,
+  "worst_frames": [
+   [
+    59.5,
+    179
+   ],
+   [
+    59.3,
+    134
+   ],
+   [
+    0.5,
+    83
+   ],
+   [
+    59.5,
+    71
+   ],
+   [
+    58.7,
+    68
+   ],
+   [
+    60,
+    67
+   ],
+   [
+    57.9,
+    65
+   ],
+   [
+    58.5,
+    64
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 187,
+  "kills": 30,
+  "maxMobs": 35,
+  "dist": 197,
+  "laps": 1,
+  "draw_calls_median": 1251,
+  "tris_median": 6957529,
+  "tiles": 19,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.74,
+  "loadavg_after": 4.89,
+  "waited_s": 1088,
+  "load_ok": true,
+  "max_load": 4.0,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.27,
+    "loadavg_before": 3.74,
+    "loadavg_after": 3.58,
+    "fps_p5": 55
+   },
+   {
+    "fps_median": 53,
+    "load_seconds": 0.45,
+    "loadavg_before": 3.58,
+    "loadavg_after": 4.89,
+    "fps_p5": 35
+   }
+  ],
+  "at": "2026-11-12T04:28:29+00:00"
  }
 }
