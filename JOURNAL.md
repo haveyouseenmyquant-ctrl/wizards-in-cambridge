@@ -506,3 +506,9 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Merged UI 000748d (a0e4: lock-on ring at the feet + head chevron, damage numbers beside the silhouette, faster fade). Merged tree = UI's gated hash 5ee9c38e, no re-gate. Pushed, published. Resolved b8f9.
 - New UI task 5a63: the judge saw the combat camera clip into geometry (pyromancer frames 1, 4, 12); extend test_camclip to buildings and shop interiors and fix.
 - eb30/0362 still on QA 15db and Story f5b8. Game KPIs: 4 classes, 12 mob types, 62 equipment effects, playtest 100.
+
+## 2026-11-12 — session 80 (lead)
+- Live 5ee9c38e scored by service: judge 56.1 (Visuals 50, Animation 38, Combat 62.5, Story 66, UI 70), playtest 100, quest_bot 100 with no fails (within judge noise of 57.4).
+- Merged Graphics s13 (clip exaggeration around the mean pose for townsfolk/player/mobs, Bellwarden squash and stretch, anim_sheet.py). Merged tree = Graphics' gated hash 25d61463, no re-gate. Pushed, published.
+- eb30/0362 still on QA 15db (QA reports 32/32 runs passing; told to run the check and close) and Story f5b8 (mana starvation hypothesis).
+- Game KPIs: 4 classes, 12 mob types, 62 equipment effects, playtest 100.
