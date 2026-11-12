@@ -210,6 +210,50 @@ export const zoneMat = makeMat();
 export const zoneMatCut = makeMat(true);
 const isStall = o => /^market_stalls/.test(o.name) || /^market_stalls/.test(o.parent?.name || '');   // GLTFLoader strips the ':' and '/'
 
+// Optimisation s12 (task 22df): GLTFLoader parsed the 79 MB zone GLB in one 60-75 ms task as play began (+14 ms closing
+// FileLoader's progress stream, + a 79 MB copy of the BIN chunk). Now: one native arrayBuffer(), the JSON chunk parsed in
+// its own task, buffer views sliced straight from the GLB, and meshes released to the parser in batches of ~4 MB of
+// accessor data per task (a mesh's whole accessor/geometry chain runs in that task's microtasks), so frames render in
+// between. ?zoneslice=0 = one-shot GLTFLoader.parse.
+const nextTask = (() => {
+  const ch = new MessageChannel(), q = [];
+  ch.port1.onmessage = () => q.shift()?.();
+  return () => new Promise(r => { q.push(r); ch.port2.postMessage(0); });
+})();
+async function parseSliced(buf, base) {
+  const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
+  if (Q.get('zoneslice') === '0') return loader.parseAsync(buf, base);
+  const dv = new DataView(buf), jsonLen = dv.getUint32(12, true), binAt = 20 + jsonLen + 8;
+  await nextTask();
+  const json = JSON.parse(new TextDecoder().decode(new Uint8Array(buf, 20, jsonLen)));
+  await nextTask();
+  const bytes = i => (json.meshes[i].primitives || []).reduce((n, p) => n + [...Object.values(p.attributes), p.indices]
+    .reduce((m, a) => m + (a === undefined ? 0 : json.bufferViews[json.accessors[a].bufferView]?.byteLength || 0), 0), 0);
+  const queue = [];
+  let pumping = false;
+  const pump = async () => {
+    pumping = true;
+    while (queue.length) {
+      for (let b = 0; queue.length && b < 4e6;) { const [i, go] = queue.shift(); b += bytes(i); go(); }
+      await nextTask();
+    }
+    pumping = false;
+  };
+  loader.register(parser => ({
+    name: 'wic_zone_slice',
+    loadBufferView(i) {
+      const v = json.bufferViews[i], o = binAt + (v.byteOffset || 0);
+      return v.buffer === 0 ? Promise.resolve(buf.slice(o, o + (v.byteLength || 0))) : null;
+    },
+    loadMesh(i) {
+      const p = new Promise(go => queue.push([i, go])).then(() => parser.loadMesh(i));
+      if (!pumping) pump();
+      return p;
+    },
+  }));
+  return loader.parseAsync(json, base);
+}
+
 export async function loadZone(base, scene) {
   window.__zoneReady = false;
   try {
@@ -217,7 +261,7 @@ export async function loadZone(base, scene) {
     const r = await fetch(base + 'zone/zone.json');
     if (!r.ok) return null;
     const zone = await r.json();
-    const gltf = await new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).loadAsync(base + zone.glb);
+    const gltf = await parseSliced(await (await fetch(base + zone.glb)).arrayBuffer(), base);
     const root = gltf.scene;
     root.name = 'zone';
     root.traverse(o => {
