@@ -6,7 +6,30 @@ const VIEW_MPP = 1.5;  // minimap view: metres per pixel
 
 // Render a tile top-down once into a small image (topmost surface per pixel; buildings dark).
 // Sampling the collision grid is much cheaper than drawing every triangle with canvas paths.
-export function renderTileMap(col) {
+// Optimisation s11 (task 22df): the same, in rows over idle callbacks (a 256x256 tile is ~65k topAt calls, 10-30 ms, and
+// 16 tiles arrive around game start). One queue for all tiles, <= 3 ms per callback (2 ms once it timed out), so tiles
+// never stack their slices into one frame; calls done(map) unless the returned cancel() ran first
+const mapQueue = [];
+let mapIdle = false;
+const idleCb = window.requestIdleCallback ? f => requestIdleCallback(f, { timeout: 1000 }) : f => setTimeout(() => f({ didTimeout: true, timeRemaining: () => 0 }), 30);
+function mapStep(dl) {
+  const t0 = performance.now(), budget = dl.didTimeout ? 2 : Math.min(3, Math.max(1, dl.timeRemaining() - 1));
+  while (mapQueue.length && performance.now() - t0 < budget) {
+    const j = mapQueue[0];
+    if (j.dead) { mapQueue.shift(); continue; }
+    const r = (j.it ||= renderRows(j.col)).next();
+    if (r.done) { mapQueue.shift(); j.done(r.value); }
+  }
+  if (mapQueue.length) idleCb(mapStep); else mapIdle = false;
+}
+export function renderTileMapIdle(col, done) {
+  const j = { col, done, it: null, dead: false };
+  mapQueue.push(j);
+  if (!mapIdle) { mapIdle = true; idleCb(mapStep); }
+  return () => { j.dead = true; };
+}
+export function renderTileMap(col) { const it = renderRows(col); let r; while (!(r = it.next()).done); return r.value; }
+function* renderRows(col) {
   const mpp = Math.max(MAP_MPP, (col.x1 - col.x0) / 256, (col.y1 - col.y0) / 256);
   const W = Math.max(1, Math.ceil((col.x1 - col.x0) / mpp)), H = Math.max(1, Math.ceil((col.y1 - col.y0) / mpp));
   const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
@@ -18,6 +41,7 @@ export function renderTileMap(col) {
     if (t < 0) continue;
     const c = col.kind[t] === 0 ? rgb.wall : rgb[col.surface[t]] || rgb[0], o = (j * W + i) * 4;
     px[o] = c[0]; px[o + 1] = c[1]; px[o + 2] = c[2]; px[o + 3] = 255;
+    if (i === W - 1 && (j & 7) === 7) yield;
   }
   g.putImageData(img, 0, 0);
   return { canvas: cv, x0: col.x0, y1: col.y1, mpp };

@@ -189,8 +189,14 @@ export function install(game) {
   const spawn0 = sys.spawn.bind(sys);
   // 919d: at most ATTACH_PER_FRAME skinned clones per frame (an encounter spawning 10 mobs at once was a ~20 ms frame);
   // the rest keep their procedural body for a frame or two
-  const ATTACH_PER_FRAME = 3; let budget = ATTACH_PER_FRAME;
-  const tryAttach = (mob) => budget > 0 && attach(mob) && (budget--, true);
+  // Optimisation s11 (task 22df): and a second or third one only while this frame's attaches took < 3 ms (each clone is
+  // 5-15 ms at game start, three in one frame were part of the start hitch)
+  const ATTACH_PER_FRAME = 3; let budget = ATTACH_PER_FRAME, tA = 0;
+  const tryAttach = (mob) => {
+    if (budget <= 0 || (budget < ATTACH_PER_FRAME && performance.now() - tA > 3)) return false;
+    if (budget === ATTACH_PER_FRAME) tA = performance.now();
+    return attach(mob) && (budget--, true);
+  };
   sys.spawn = (...args) => { const mob = spawn0(...args); if (MOB_MODELS[mob.type.id]) tryAttach(mob) || (mob.glbPending = true); return mob; };
   // s4: rigged mobs keep their body after death. The procedural death styles (stretch, spin, swell) would mangle a
   // skinned model, so a rigged mob plays its death clip, flyers drop to the ground, the body lies still, then sinks and
