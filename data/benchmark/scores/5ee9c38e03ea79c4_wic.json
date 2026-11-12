@@ -1,0 +1,209 @@
+{
+ "main_quests_shipped": 7,
+ "quest_bot_pass_pct": 100,
+ "quest_bot_fails": [],
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 21.1,
+  "main_quests_shipped": 7,
+  "wall_s": 139,
+  "at": "2026-11-12T08:37:49.433Z"
+ },
+ "cam_clip_pct": 1.8,
+ "cam_clip_combat_pct": 2.1,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [
+  {
+   "frame": "combat/hexweaver/frame_08.jpg",
+   "scene": "combat_hexweaver",
+   "pos": [
+    -91.31,
+    74.08,
+    12.67
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Group/Mesh 1.3 m from camera, 5.1 m to player"
+   ]
+  }
+ ],
+ "player_pose_dev_deg": 16.42,
+ "player_pose_step_deg": 83.28,
+ "mob_pose_dev_deg": 14.74,
+ "npc_pose_dev_deg": 22.19,
+ "cast_pose_frames_pct": 66.7,
+ "rigid_mob_pct": 2,
+ "rigid_npc_pct": 0,
+ "anim_probe_detail": {
+  "frames_probed": 68,
+  "player_frames": 60,
+  "game_frames": 48,
+  "cast_frames": 32,
+  "cast_window_frames": 32,
+  "errors": 0,
+  "player_rest_frames": [],
+  "mobs_seen": 112,
+  "npcs_seen": 148,
+  "cast_arm_deg": 20,
+  "rigid_deg": 1,
+  "rigid_mobs": [
+   "menus|soot_sprite#77 (procedural, 3 fr)",
+   "combat_stormcaller|soot_sprite#39 (procedural, 2 fr)"
+  ],
+  "mob_types": {
+   "ink_imp": {
+    "seen": 28,
+    "rigid": 0,
+    "mean_dev_deg": 25.19
+   },
+   "wisp": {
+    "seen": 23,
+    "rigid": 0,
+    "mean_dev_deg": 8.68
+   },
+   "bog_hag": {
+    "seen": 5,
+    "rigid": 0,
+    "mean_dev_deg": 3.85
+   },
+   "bellwarden": {
+    "seen": 6,
+    "rigid": 0,
+    "mean_dev_deg": 8.98
+   },
+   "automaton": {
+    "seen": 15,
+    "rigid": 0,
+    "mean_dev_deg": 22.89
+   },
+   "gargoyle": {
+    "seen": 10,
+    "rigid": 0,
+    "mean_dev_deg": 8.34
+   },
+   "bell_bats": {
+    "seen": 23,
+    "rigid": 0,
+    "mean_dev_deg": 9.99
+   },
+   "soot_sprite": {
+    "seen": 2,
+    "rigid": 2,
+    "mean_dev_deg": 0
+   }
+  }
+ },
+ "judged_game_quality": 56.1,
+ "judged_sections": {
+  "Visuals": 50.0,
+  "Animation": 38.0,
+  "Combat feel": 62.5,
+  "Story presentation": 66.0,
+  "UI polish": 70.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    50.0,
+    50.0,
+    50.0
+   ],
+   "Animation": [
+    38.0,
+    38.0,
+    38.0
+   ],
+   "Combat feel": [
+    62.2,
+    62.8,
+    62.5
+   ],
+   "Story presentation": [
+    64.0,
+    67.0,
+    66.0
+   ],
+   "UI polish": [
+    70.0,
+    72.0,
+    70.0
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0.0,
+   "Animation": 0.0,
+   "Combat feel": 0.5,
+   "Story presentation": 3.0,
+   "UI polish": 2.0
+  },
+  "quality_spread": 0.9,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The art direction is consistent, with warm low-sun lighting, real-time shadows, some atmospheric haze and a recognisable city of textured brick and stone, plus props like bikes, railings and market stalls. But the geometry is mostly simple boxes, the Market Hill frame has large flat empty facades, shop interiors are crude block fills, and the characters are small, chunky and low-detail. In combat the boss is a flat-shaded blob and translucent VFX shapes wash out the scene, so it reads as a solid prototype well below commercial density and fidelity."
+   },
+   "Animation": {
+    "all": "The player character shows some limb motion: walking frames have different leg strides, and some combat frames show the staff raised or extended, which suggests a basic walk cycle and a simple cast pose. The bell boss is a rigid object that appears to move and swing, and its attacks show up mostly as glowing effects and telegraph rings rather than visible wind-ups or follow-through. The frames show no hit reactions, death animations, secondary motion on robes or hats, or visible motion in the environment beyond a few small pedestrians and a cyclist."
+   },
+   "Combat feel": {
+    "hexweaver": "The core of a 60-level combat game is visible. There are six spells, a three-phase boss whose named attacks (Great Toll, Clapper Sweep, Peal of Shards) are telegraphed with red ground circles, and feedback through damage numbers, crits, STAGGERED tags and a chain counter. Readability is weak, though: a washed-out white flash often blanks the boss and fills the screen (frames 6, 9, 10), the camera clips into enemies in frame 11, and no knockback or hit-stop is visible. None of the 16 loot drops was picked up and no rarity cues show in the frames, and 6588 sound voices in 60 s points to audio spam rather than impact.",
+    "pyromancer": "The core combat systems are in place. A named boss fight shows Phase I/II/III and an enraged state, its attacks are announced with names (Clapper Sweep, Great Toll, Belfry Drop) and red ground rings, and STAGGERED/INTERRUPTED text, damage numbers, a chain counter, a low-health vignette, and loot tooltips with rarity labels and stats are all visible. Six spells were used and the event log shows heavy activity. The biggest problems are readability and impact: the camera is often blocked by stalls, awnings and huge dark foreground shapes; most frames show only one damage number; there is no visible hit-stop or knockback; spell effects are hard to tell apart; and the 5914 sound voices suggest audio spam rather than punchy feedback. Only the pyromancer appears in these frames, so there's no evidence that the other classes play differently.",
+    "stormcaller": "Combat is clearly readable and has depth. You can see a three-phase boss with named attacks (Great Toll, Clapper Sweep, Belfry Drop), ground telegraph rings, crit damage numbers, chain counters, stagger and interrupt states, rarity-coloured loot beams and a death and respawn flow, and the log shows six spells with high cast and kill counts. The main gaps: the camera often frames the action badly, with stalls and a huge enemy model blocking the view. Spell effects are mostly thin streaks or flat colour washes with little visible impact or hit-stop, and the player died twice in 60 s, which suggests the boss's damage is poorly balanced.",
+    "warden": "There is plenty of feedback. The screenshots show damage numbers, combo-chain counters, INTERRUPTED and STAGGERED tags, named boss telegraphs (Clapper Sweep, Peal of Shards) with red ground markers, a three-phase boss bar that moves to phase II, rarity-tagged loot tooltips, and six spells in use, including crowd control and a leap. The view is often muddy, though: frames 1, 8 and 9 are washed out by full-screen effects or blocked by the boss. Only 3 crits in 53 hits and a pebble_shot-dominated rotation (31 casts) suggest little depth, there is no visible hit-stop or strong impact, and only one class can be judged."
+   },
+   "Story presentation": {
+    "all": "The writing is strong. Named characters with titles and portraits (Nell Tapscott, Pip Hobbe) appear on screen in letterboxed over-the-shoulder shots, there are three-way branching replies, and the quest tied to a real place (Market Hill, Great St Mary's) has a title card, an objective tracker, a boss reveal and a completion screen with rewards. The biggest gaps are the simple low-poly character models, which show no visible expression or animation, and the lack of any visible voice acting or truly cinematic camera work. The quest marker in the world is also faint, so this sits just above the 60 anchor rather than near 80."
+   },
+   "UI polish": {
+    "all": "The HUD and menus share one themed style: serif titles, gold trim and dark panels. Class cards are colour-coded with icons, the inventory shows rarity colours and collection tracking, the talent tiers are clear, and in combat there's a boss bar with phase markers, cooldown numbers on the spell icons, and a minimap. The biggest gaps: the inventory and talent text is small and dense, the HUD bars and spell icons are small and look generic next to the busy scene, and nothing in the frames shows animation or transitions."
+   }
+  }
+ }
+}
