@@ -330,7 +330,10 @@ export function install(game) {
     const cls = game.caster?.cls || 'stormcaller';
     if (!R || R.cls !== cls) { destroy(); R = build(cls); }
     R.root.visible = visible;
-    const t = game.time, dt = Math.min(0.1, Math.max(0, t - R.lastT)); R.lastT = t;
+    // s11: catch up in 40 ms sub-steps when the clock jumped (fixed-step recordings advance game time for seconds between
+    // rendered frames; one clamped 0.1 s update left the gait cross-fade, springs and cast blends barely started there)
+    const t = game.time, gap = Math.min(3, Math.max(0, t - R.lastT)); R.lastT = t;
+    const n = gap > 0.1 ? Math.ceil(gap / 0.04) : 1, dt = gap / n;
     if (!visible) return true;
     R.root.position.set(p.x, p.z, -p.y); R.root.rotation.set(0, p.yaw, 0);
     const flying = p.mode === 'broom', sp = p.speed || 0, dead = game.stats.hp <= 0, air = !p.grounded && !flying;
@@ -346,14 +349,18 @@ export function install(game) {
       else if (sp > 0.25) { play('walk'); R.acts.walk.timeScale = Math.max(0.6, Math.min(1.5, sp / 1.8)); }
       else play('idle', 0.25);
     }
-    for (const [b, q] of R.rest) b.quaternion.copy(q);
-    R.mixer.update(dt);
-    R.charge = 0;
-    if (!dead && !flying) { locomotion(dt, sp); upperBody(t, dt); rootPose(t, p); }
+    for (let i = n - 1; i >= 0; i--) {
+      const ts = t - i * dt;
+      for (const [b, q] of R.rest) b.quaternion.copy(q);
+      R.mixer.update(dt);
+      R.charge = 0;
+      if (!dead && !flying) { locomotion(dt, sp); upperBody(ts, dt); if (!i) rootPose(ts, p); }   // rootPose offsets the root: once
+      if (i) { hatSpring(dt, flying ? 0 : sp); robeSpring(dt, flying ? 0 : sp, flying); }
+    }
     if (R.hand) { const c = R.charge || 0; R.hand.visible = c > 0.02; R.hand.scale.setScalar(R.hand.userData.s * (0.35 + 1.1 * c) * (1 + Math.sin(t * 13) * 0.08)); R.hand.material.opacity = Math.min(1, 0.3 + c); }
     hatSpring(dt, flying ? 0 : sp);
     robeSpring(dt, flying ? 0 : sp, flying);
-    if (R.focus) { const ca = R.oneShot?.startsWith('cast') ? 1 : 0; R.focus.rotation.y += dt * 2.5;
+    if (R.focus) { const ca = R.oneShot?.startsWith('cast') ? 1 : 0; R.focus.rotation.y += gap * 2.5;
       R.focus.scale.setScalar(R.focus.userData.s * (1 + 0.8 * ca) * (1 + Math.sin(t * 6) * 0.06)); }
     const hf = game.time - (R.hitT || -9) < 0.25 ? 1 : 0; R.mat.emissive.setRGB(0.5 * hf, 0.06 * hf, 0.04 * hf); R.robe.mat?.emissive.copy(R.mat.emissive);   // red hit flash only
     return true;
