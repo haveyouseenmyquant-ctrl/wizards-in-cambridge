@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-12, after session 65)
+## State (2026-11-12, after session 66)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,10 +9,10 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s66: merged UI s7 b435ae5 (inventory ledger, talents strip, loot cards). 034d5463 judged 55.5 (Vis 50, Anim 36,
+  Combat 60.2, Story 70, UI 68), playtest 100, cam_clip 2.1 (1 stall frame -> Optimisation ba66). Resolved e1b8; 621f waits QA a756 done.
 - s65: merged Optimisation 2409 camclip (collision + LOS passes) + EnvVFX s9 (bolt glow, draped stall sheets) -> 034d5463
   gate 11/11, published. 2044eb00 (EnvVFX branch) judged 55.1, cam_clip 16.7. QA 3f40 now confirms camclip on new build.
-- s64: merged QA s11 (test_modload = gate test 1, softlock diagnostics; scripts only, site hash unchanged, no publish).
-  Gate 10/10. Resolved 4bd7. b9bf766b judged 54.8 (Vis 47, Anim 38, Combat 62.8, UI 66), cam_clip 20.8, playtest 91.7.
 - s62: merged Story s10 (Q7 Conduit Runs Dry, leash heal-loop fix) -> b9bf766b gate 10/10 (quest_bot flaky 1st try 75%), published.
   Resolved 4801. Issue 106f (mobs.js boss leash 34->55, pyro deaths) -> Story 7e65 (Story is the reliable shipper).
 - s60: merged Graphics s10 1017fce (Bellwarden stomp, player root layer); gate 10/10 on 1e123d10; published.

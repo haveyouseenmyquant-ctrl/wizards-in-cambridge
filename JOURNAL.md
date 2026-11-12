@@ -424,3 +424,8 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-12 — session 65 (lead)
 - Merged Optimisation (task 2409: camera boom collision pass against buildings/roofs and a chest-to-camera line-of-sight pass) and EnvVFX s9 (mob bolts as small glowing cores, pleated stall sheets). Rebuilt the zone; gate 11/11 on 034d5463; published.
 - EnvVFX branch build 2044eb00 judged 55.1 (Visuals 50), cam_clip_combat 16.7 before the camclip merge. QA 3f40 to confirm camclip on 034d5463. Note to EnvVFX: fix the stretched brick texture the judge names.
+
+## 2026-11-12 — session 66 (lead)
+- Live 034d5463 scored: judge 55.5 (Visuals 50, Animation 36, Combat 60.2, Story 70, UI 68), playtest 100% (12/12), cam_clip_combat 2.1 (1 stall frame).
+- Merged UI s7 b435ae5 (inventory collection ledger, talents strip, loot cards bottom-left, boss phase-tag pulse).
+- Resolved e1b8 (superseded by 4a30). 621f fixed on 034d5463 but waits for QA to close a756. New Optimisation task ba66: last camclip occluder (stall 400160680).
