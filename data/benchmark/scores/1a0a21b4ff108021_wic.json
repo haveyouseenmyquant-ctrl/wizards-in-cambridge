@@ -42,5 +42,171 @@
   "errors": 0,
   "first_errors": [],
   "at": "2026-11-12T04:13:20.026Z"
+ },
+ "cam_clip_pct": 1.8,
+ "cam_clip_combat_pct": 2.1,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [
+  {
+   "frame": "combat/hexweaver/frame_01.jpg",
+   "scene": "combat_hexweaver",
+   "pos": [
+    -91.84,
+    89.07,
+    10.89
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: zone/market_stallsway400160685 4.2 m from camera, 4.9 m to player"
+   ]
+  }
+ ],
+ "player_pose_dev_deg": 17.14,
+ "player_pose_step_deg": 78.04,
+ "mob_pose_dev_deg": 15.4,
+ "npc_pose_dev_deg": 22.28,
+ "cast_pose_frames_pct": 70.2,
+ "rigid_mob_pct": 1.1,
+ "rigid_npc_pct": 0,
+ "anim_probe_detail": {
+  "frames_probed": 68,
+  "player_frames": 59,
+  "game_frames": 47,
+  "cast_frames": 33,
+  "cast_window_frames": 33,
+  "errors": 0,
+  "player_rest_frames": [],
+  "mobs_seen": 104,
+  "npcs_seen": 147,
+  "cast_arm_deg": 20,
+  "rigid_deg": 1,
+  "rigid_mobs": [
+   "menus|soot_sprite#77 (procedural, 3 fr)"
+  ],
+  "mob_types": {
+   "ink_imp": {
+    "seen": 32,
+    "rigid": 0,
+    "mean_dev_deg": 25.1
+   },
+   "wisp": {
+    "seen": 21,
+    "rigid": 0,
+    "mean_dev_deg": 8.68
+   },
+   "bog_hag": {
+    "seen": 5,
+    "rigid": 0,
+    "mean_dev_deg": 4.56
+   },
+   "bellwarden": {
+    "seen": 6,
+    "rigid": 0,
+    "mean_dev_deg": 6.9
+   },
+   "automaton": {
+    "seen": 14,
+    "rigid": 0,
+    "mean_dev_deg": 22.63
+   },
+   "gargoyle": {
+    "seen": 6,
+    "rigid": 0,
+    "mean_dev_deg": 7.35
+   },
+   "bell_bats": {
+    "seen": 18,
+    "rigid": 0,
+    "mean_dev_deg": 12.23
+   },
+   "soot_sprite": {
+    "seen": 1,
+    "rigid": 1,
+    "mean_dev_deg": 0
+   },
+   "bicycle_golem": {
+    "seen": 1,
+    "rigid": 0,
+    "mean_dev_deg": 31.86
+   }
+  }
+ },
+ "judged_game_quality": 55.4,
+ "judged_sections": {
+  "Visuals": 52.0,
+  "Animation": 36.0,
+  "Combat feel": 61.5,
+  "Story presentation": 66.0,
+  "UI polish": 66.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    52.0,
+    52.0,
+    52.0
+   ],
+   "Animation": [
+    36.0,
+    36.0,
+    36.0
+   ],
+   "Combat feel": [
+    61.2,
+    62.0,
+    61.5
+   ],
+   "Story presentation": [
+    66.0,
+    66.0,
+    66.0
+   ],
+   "UI polish": [
+    66.0,
+    66.0,
+    66.0
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 0.0,
+   "Animation": 0.0,
+   "Combat feel": 0.8,
+   "Story presentation": 0.0,
+   "UI polish": 0.0
+  },
+  "quality_spread": 0.2,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together well: the landmarks are recognisable, the warm low-sun lighting has real-time shadows and some atmospheric haze, and there are props like market stalls, bikes, railings and trees. But the geometry is blocky and the materials are flat and repeated, with plain facades, box-shaped shop goods and simple ground textures. The characters are simple chibi-style figures with little detail, and the enemies and boss are low-detail primitives, so it sits clearly below the 60 anchor in density, material quality and character fidelity."
+   },
+   "Animation": {
+    "all": "The walking frames show the wizard with legs apart in a stride, and the robe and staff positions change a little between frames, so there is a basic walk loop. Combat is carried by projectiles, VFX and floating numbers. The player's body barely changes pose for casts, and the bell boss looks like a rigid prop that tilts and swings with no visible wind-up or deformation. There are no visible hit reactions, enemy death animations or secondary motion, and the background figures look like static or sliding blobs."
+   },
+   "Combat feel": {
+    "hexweaver": "This reaches the 60 anchor. The Bellwarden boss has three named phases, including an 'Enraged' final phase, and a health bar with phase markers. Its 'Clapper Sweep' attacks are telegraphed by red/orange ground zones, and hits show damage numbers, CRIT tags, STAGGERED labels and a chain counter, across six hexweaver skills with distinct cooldowns. What holds it back: the camera clips badly in frames 6 and 11, the on-screen totals (607, 896) don't match the 77 max hit in the event log, loot rarity and impact effects like hit-stop or knockback aren't visible, and only one class is shown, so differences between classes can't be judged.",
+    "pyromancer": "Combat is clearly working and readable. There are six distinct pyromancer spells with cooldowns, crit-styled damage numbers, STAGGERED states, a chain counter, ground-marker telegraphs and named boss attacks (Clapper Sweep, Change-Ringing Cascade), and the three-phase Bellwarden boss goes enraged in phase III with a red screen tint at low health. Varied enemy types, frequent loot with rarity tiers and over 3,000 triggered sound voices add depth. The biggest gaps are muddy, low-contrast VFX in which the boss and effects blur into whitish blobs, no visible hit-stop or knockback, crowd control that barely changes the fight, and only one class shown, so I can't credit class differences.",
+    "stormcaller": "The frames show a boss fight with three named phases (it enrages in phase III) and named attack telegraphs (Great Toll, Peal of Shards, Belfry Drop) shown as red ground lanes. Hit feedback is clear: damage numbers, crit callouts, STAGGERED tags, a low-health red vignette and a death-and-respawn screen. Loot has rarity labels, and the log shows six spells used with mobility (wind_dash). The VFX are thin and often hard to read (a lightning bolt, translucent shapes that make frame 3 a mess). There's no visible hit-stop or knockback, crowd control does little to change the fight, and much of the time is spent alone with the boss with no formations. Only this one class is shown, so there's no evidence that classes play differently.",
+    "warden": "The fight shows real combat feedback: damage numbers, CRIT tags, STAGGERED and INTERRUPTED status text, a combo chain counter, a named boss with three phases and labelled telegraphs (Great Toll, Peal of Shards), red ground markers, a low-health vignette, and a death-and-respawn screen. Readability is the main problem: the camera often sits too close or clips into the geometry (frames 2 and 11), the chaotic frames are hard to read, and pebble_shot makes up 32 of 53 casts, so this class feels repetitive. There's no visible hit-stop, knockback or loot rarity cue, nothing was picked up, and only one class is shown, so differences between classes can't be judged."
+   },
+   "Story presentation": {
+    "all": "The scene uses letterboxed over-the-shoulder shots of named characters, with portraits, speaker titles and well-written lines. It has a three-option reply choice, a quest tracker with a minimap marker, a boss reveal shot at a real Cambridge landmark (Market Hill), and a quest-complete card with rewards. The tone and premise are clear and original. Holding it back: the characters are simple, chunky models with no visible expressions or performance, there is no evidence of voice acting, the staging is static framing rather than real cinematics, and a placeholder grey circle covers the speaker's face in several shots."
+   },
+   "UI polish": {
+    "all": "Class selection, inventory and talent screens all share one dark-and-gold serif theme. They have clear class cards, rarity-coloured collection tracking, numbered spell icons with cooldown numbers, a boss bar with phase label, a minimap, crit damage numbers and a low-health vignette. The gaps: inventory and talent text is small and dense, the inventory bag is empty so no item tooltips with rarity show, and the combat HUD gets cluttered, with damage numbers, target rings and overhead labels piling up over the scene. The spell bar and resource bars are also fairly generic, so it falls short of polished AAA hierarchy."
+   }
+  }
  }
 }
