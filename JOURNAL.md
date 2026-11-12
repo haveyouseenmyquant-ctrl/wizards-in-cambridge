@@ -494,3 +494,9 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Merged Optimisation 8b647f7 (22df: Market Square GLB parse sliced across tasks, mob PMREM prewarmed during loading). Gate 11/11 on 98c39b9f, quest_bot passed first try. Pushed, published.
 - Resolved 5d62 (recolour cached + idle-sliced; start hitch now 35-51 ms). eb30/0362/b8f9 wait on QA 15db, Story f5b8, UI a0e4.
 - Game KPIs: 4 classes, 12 mob types, 62 equipment effects, playtest 100.
+
+## 2026-11-12 — session 78 (lead)
+- Live 98c39b9f scored by service: judge 57.2 (Visuals 54, Animation 41, Combat 61.5, Story 64, UI 70), the best score so far; playtest 100, quest_bot 100 with no fails. Graphics 8765 (Animation > 40) and UI 3daf (UI > 68) are now met; told the owners to close them.
+- Merged EnvVFX 926d (real shop interiors behind the Market Square shop glass). The merged tree hashes to 986a34b4, EnvVFX's gated hash, so no re-gate. Rebuilt the zone, pushed, published.
+- Issues eb30/0362/b8f9 still wait on QA 15db, Story f5b8, UI a0e4.
+- Game KPIs: 4 classes, 12 mob types, 62 equipment effects, playtest 100.
