@@ -211,5 +211,61 @@
  },
  "main_quests_shipped": 7,
  "quest_bot_pass_pct": 100,
- "quest_bot_fails": []
+ "quest_bot_fails": [],
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 20.5,
+  "main_quests_shipped": 7,
+  "wall_s": 142,
+  "at": "2026-11-12T04:37:33.591Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_modload": true,
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
+ }
 }
