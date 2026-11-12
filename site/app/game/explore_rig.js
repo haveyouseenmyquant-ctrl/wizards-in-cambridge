@@ -12,13 +12,16 @@ export function install({ scene }) {
   if (done) return; done = true;
   let cls = 'stormcaller';
   try { cls = JSON.parse(localStorage.getItem(SAVE_KEY))?.cls || cls; } catch {}
+  // s11: the player's own clock (fixed-step recordings advance it between rendered frames; wall time did not)
+  let pl = null;
   const root = new THREE.Group(); root.name = 'explore_rig'; scene.add(root);
-  const shim = { THREE, root, get time() { return performance.now() / 1000; }, caster: { cls }, stats: { hp: 1 },
+  const shim = { THREE, root, get time() { return pl ? pl.t : performance.now() / 1000; }, caster: { cls }, stats: { hp: 1 },
     on: () => () => {}, add: (s) => s };
   const base = Avatar.prototype.update;
   installRig(shim);
   const rigged = Avatar.prototype.update;
   Avatar.prototype.update = function (p, dt, visible) {
+    pl = p;
     rigged.call(this, p, dt, visible);
     root.visible = true;
     if (shim.wizardRig?.model?.root.visible) { this.root.visible = false; }
