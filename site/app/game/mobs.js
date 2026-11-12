@@ -1029,7 +1029,7 @@ export const MOB_TYPES = [
       loot: [{ rarity: 'common', chance: 0.65 }, { rarity: 'uncommon', chance: 0.32 }, { rarity: 'rare', chance: 0.1 }],
       attacks: [A({ name: 'Freewheel Charge', kind: 'charge', range: 13, minRange: 3, len: 14, w: 1.6, windup: 1.0, cd: 4.5, dmg: 16, speed: 17 }),
                 A({ name: 'Chain Lash', kind: 'line', range: 3, len: 3.5, w: 2.6, windup: 0.7, cd: 2.4, dmg: 11 })] }),
-  D({ id: 'bellwarden', death: 'crumble', name: 'The Bellwarden of Market Hill', boss: true, hp: 900, speed: 2.4, radius: 1.6, xp: 400, aggro: 16, leash: 34,
+  D({ id: 'bellwarden', death: 'crumble', name: 'The Bellwarden of Market Hill', boss: true, hp: 900, speed: 2.4, radius: 1.6, xp: 400, aggro: 16, leash: 55,
       color: 0xffa020, knockResist: 1,
       loot: [{ rarity: 'uncommon', chance: 1 }, { rarity: 'rare', chance: 0.8 }, { rarity: 'epic', chance: 0.4 }, { rarity: 'legendary', chance: 0.12 }],
       phases: [
@@ -1042,7 +1042,7 @@ export const MOB_TYPES = [
                 A({ id: 'peal', name: 'Peal of Shards', kind: 'nova', range: 18, n: 10, windup: 1.2, cd: 6, dmg: 12, speed: 12 }),
                 A({ id: 'leap', name: 'Belfry Drop', kind: 'leap', range: 16, minRange: 6, r: 4.5, windup: 1.3, cd: 8, dmg: 30, recover: 1.2 }),
                 A({ id: 'cascade', name: 'Change-Ringing Cascade', kind: 'cascade', range: 22, n: 4, r: 2.6, windup: 1.1, cd: 7, dmg: 18 })] }),
-  D({ id: 'chimekeeper', death: 'crumble', name: "The Chime-keeper of St Mary's", boss: true, hp: 1100, speed: 2.2, radius: 1.5, xp: 480, aggro: 16, leash: 32,
+  D({ id: 'chimekeeper', death: 'crumble', name: "The Chime-keeper of St Mary's", boss: true, hp: 1100, speed: 2.2, radius: 1.5, xp: 480, aggro: 16, leash: 55,
       color: 0xffd060, knockResist: 1, deathDur: 2.2,
       loot: [{ rarity: 'uncommon', chance: 1 }, { rarity: 'rare', chance: 1 }, { rarity: 'epic', chance: 0.5 }, { rarity: 'legendary', chance: 0.15 }],
       phases: [   // I: the quarters; II: the hour strikes (hands race, pendulum swings free); III: curfew (face burns red)
@@ -1057,7 +1057,7 @@ export const MOB_TYPES = [
                 A({ id: 'pendulum', name: 'Pendulum Swing', kind: 'charge', range: 14, minRange: 4, len: 14, w: 2.4, windup: 1.0, cd: 6, dmg: 24, speed: 15 }),
                 A({ id: 'peal', name: 'Great Peal', kind: 'nova', range: 18, n: 12, windup: 1.1, cd: 7, dmg: 12, speed: 11, color: 0xffe0a0 }),
                 A({ id: 'curfew', name: 'Curfew Bell', kind: 'ring', range: 8, r: 9, windup: 1.8, cd: 9, dmg: 34, recover: 1.2 })] }),
-  D({ id: 'gatehouse_lion', death: 'crumble', name: "The Gatehouse Lion of King's", boss: true, hp: 1000, speed: 3.6, radius: 1.6, xp: 450, aggro: 17, leash: 34,
+  D({ id: 'gatehouse_lion', death: 'crumble', name: "The Gatehouse Lion of King's", boss: true, hp: 1000, speed: 3.6, radius: 1.6, xp: 450, aggro: 17, leash: 55,
       color: 0xffc040, knockResist: 1, deathDur: 2.0,
       loot: [{ rarity: 'rare', chance: 1 }, { rarity: 'rare', chance: 0.6 }, { rarity: 'epic', chance: 0.5 }, { rarity: 'legendary', chance: 0.18 }],
       phases: [   // I: stone lion (maul, roar, pounce); II: gilded rampant (rush, gilt shower, portcullis fall)
@@ -1070,7 +1070,7 @@ export const MOB_TYPES = [
                 A({ id: 'rush', name: 'Gilded Rush', kind: 'charge', range: 16, minRange: 3, len: 16, w: 2.6, windup: 0.9, cd: 5, dmg: 28, speed: 20 }),
                 A({ id: 'gilt', name: 'Shower of Gilt', kind: 'nova', range: 16, n: 14, windup: 1.0, cd: 6, dmg: 11, speed: 13, color: 0xffd040 }),
                 A({ id: 'portcullis', name: 'Portcullis Fall', kind: 'cascade', range: 20, n: 6, r: 2.2, windup: 1.2, cd: 7, dmg: 20 })] }),
-  D({ id: 'quant_king', death: 'crumble', scale: 1.2, name: 'The Quant-King of Magdalene Bridge', boss: true, hp: 1050, speed: 3.0, radius: 1.5, xp: 470, aggro: 17, leash: 34,
+  D({ id: 'quant_king', death: 'crumble', scale: 1.2, name: 'The Quant-King of Magdalene Bridge', boss: true, hp: 1050, speed: 3.0, radius: 1.5, xp: 470, aggro: 17, leash: 55,
       color: 0x40d0c0, knockResist: 1, deathDur: 2.2, deathColor: 0x2a6a80,
       loot: [{ rarity: 'rare', chance: 1 }, { rarity: 'rare', chance: 0.6 }, { rarity: 'epic', chance: 0.5 }, { rarity: 'legendary', chance: 0.18 }],
       phases: [   // I: the ferryman poles (sweep, vault, undertow); II: the flood rises (eyes, heart, bell and weed blaze teal; weir rush, silt, falling poles)
