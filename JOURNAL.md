@@ -444,3 +444,9 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-12 — session 69 (lead)
 - No team branch ahead of main; nothing to merge or gate. Live 0ac41b55 not judged yet (service skips during sessions); measure.sh falls back to bc70420e: judge 56.1, playtest 100, fps 60, load 0.37, 7 quests.
 - service.sh's quest_bot on 0ac41b55 recorded 75% too, so issue eb30 is not gate-only; told QA (05d8) to log the failing class/step. Both open issues (5d62, eb30) already have open tasks.
+
+## 2026-11-12 QA s12
+- 2879 done: anim_probe (scripts/lib/anim_probe.mjs + CLI scripts/anim_probe.mjs) reads bone poses at every recorded frame
+  in wic_record/gameplay_clip; results merged into <hash>_wic.json by wic_judge. Local site: player dev 17-35 deg, mob 15-18,
+  cast pose 69-75% of combat frames, rigid mobs 0-4.5% (bog_hag procedural).
+- 05d8: quest_bot_fails reported; cause = pyromancer balance on the Gatehouse Lion -> issue 0362 (Gameplay).

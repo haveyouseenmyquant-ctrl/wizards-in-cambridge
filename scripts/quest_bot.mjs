@@ -246,7 +246,7 @@ async function runOne(r) {
     }
     const ev = await page.evaluate(() => { const b = window.__qbot; b.dispose(); const q = window.__game.quests;
       return { ...b.ev, completed: q.order.filter(id => q.save[id]?.done) }; });
-    rec = { ...rec, ...ev, gameS: st.t, fail: st.fail || (errors.length ? 'console error: ' + errors[0] : null) || (!st.done ? 'not finished' : null) };
+    rec = { ...rec, ...ev, gameS: st.t, state: st.state, why: st.why, at: [st.x, st.y], fail: st.fail || (errors.length ? 'console error: ' + errors[0] : null) || (!st.done ? 'not finished' : null) };
   } catch (e) { rec.fail = 'harness: ' + e.message; rec.completed = []; }
   await ctx.close().catch(() => {});
   rec.pass = !rec.fail; rec.wallS = Math.round((Date.now() - w0) / 1000);
@@ -266,6 +266,9 @@ finally { await browser.close(); server.close(); }
 const shipped = quests.filter(id => runs.filter(r => r.completed?.includes(id)).length >= Math.max(1, runs.length / 2)).length;
 const result = { main_quests_shipped: shipped, quest_bot_pass_pct: runs.length ? +(100 * runs.filter(r => r.pass).length / runs.length).toFixed(1) : 0,
   quests, runs: runs.sort((a, b) => a.run - b.run).map(r => ({ cls: r.cls, pass: r.pass, fail: r.fail, completed: r.completed, gameS: r.gameS, deaths: r.deaths })),
+  // QA s12 (05d8): which class failed, where in the quest line and why (also merged into <hash>_wic.json and the gate log)
+  quest_bot_fails: runs.filter(r => !r.pass).map(r => ({ cls: r.cls, run: r.run, fail: String(r.fail).slice(0, 300), state: r.state ?? null,
+    last_done: r.completed?.at?.(-1) ?? null, why: r.why ?? null, at: r.at ?? null, gameS: r.gameS ?? null, wallS: r.wallS })),
   bossTTK: Object.fromEntries(runs.filter(r => r.boss?.ttk != null).map(r => [r.cls, r.boss.ttk])),
   wall_s: Math.round((Date.now() - T0) / 1000) };
 try {
@@ -275,7 +278,7 @@ try {
     const dir = path.join(ROOT, 'data/benchmark/scores'), f = path.join(dir, `${h}_wic.json`);
     fs.mkdirSync(dir, { recursive: true });
     const cur = fs.existsSync(f) ? JSON.parse(fs.readFileSync(f, 'utf8')) : {};
-    fs.writeFileSync(f, JSON.stringify({ ...cur, main_quests_shipped: result.main_quests_shipped, quest_bot_pass_pct: result.quest_bot_pass_pct }, null, 1));
+    fs.writeFileSync(f, JSON.stringify({ ...cur, main_quests_shipped: result.main_quests_shipped, quest_bot_pass_pct: result.quest_bot_pass_pct, quest_bot_fails: result.quest_bot_fails }, null, 1));
     result.build_hash = h;
   }
 } catch (e) { log('score merge failed:', e.message); }

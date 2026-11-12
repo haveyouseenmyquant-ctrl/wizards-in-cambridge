@@ -16,6 +16,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { camClipProbe } from './lib/camclip_probe.mjs';
+import { animProbe } from './lib/anim_probe.mjs';
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const puppeteer = createRequire(path.join(ROOT, 'tools/'))('puppeteer-core');
@@ -23,7 +24,8 @@ const SRC = path.resolve(process.argv[2] || path.join(ROOT, 'site'));
 const OUT = path.resolve(process.argv[3] || '/tmp/wc_gameplay_clip');
 const CHROME = process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.glb': 'model/gltf-binary' };
-const CLIP_S = 60, FRAMES = 12, START = [-108.1, 93.97];   // the game's spawn point (hud.js SPAWN), 16 m north of market-north
+const CLIP_S = +(process.env.CLIP_S || 60), FRAMES = +(process.env.CLIP_FRAMES || 12),   // env overrides: anim_probe.mjs quick run
+      START = [-108.1, 93.97];   // the game's spawn point (hud.js SPAWN), 16 m north of market-north
 const T0 = Date.now();
 const log = (...a) => console.error(`[clip ${((Date.now() - T0) / 1000).toFixed(0)}s]`, ...a);
 
@@ -319,9 +321,10 @@ try {
           // one real frame so the render reflects the stepped state (DOM HUD + WebGL), then capture it
           await page.evaluate(() => window.__rafFrame());
           const cam = await page.evaluate(camClipProbe).catch(e => ({ error: e.message }));   // QA s10: camera-clip probe
+          const anim = await page.evaluate(animProbe).catch(e => ({ error: e.message }));   // QA s12: animation probe
           const f = path.join(dir, `frame_${String(k + 1).padStart(2, '0')}.jpg`);
           await page.screenshot({ path: f, type: 'jpeg', quality: 85 });
-          frames.push({ file: path.basename(f), ...s, cam });
+          frames.push({ file: path.basename(f), ...s, cam, anim });
           log(cls, `frame ${k + 1} t=${s.t} hp=${s.hp} mobs=${s.liveMobs.length} sim ${((w1 - w0) / 1000).toFixed(1)}s shot ${((Date.now() - w1) / 1000).toFixed(1)}s`);
         }
         const events = await page.evaluate(() => { const e = window.__clip.events; window.__clip.dispose(); return e; });

@@ -18,6 +18,7 @@ import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import { installCamHook, camClipProbe } from './lib/camclip_probe.mjs';
+import { animProbe, animSummary } from './lib/anim_probe.mjs';   // QA s12 (2879): anim_probe
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const puppeteer = createRequire(path.join(ROOT, 'tools/'))('puppeteer-core');
@@ -86,8 +87,9 @@ async function shot(page, scene, name, label) {
   const dir = path.join(OUT, scene); fs.mkdirSync(dir, { recursive: true });
   await page.evaluate(() => window.__rafHold ? window.__rafFrame() : new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
   const cam = await page.evaluate(camClipProbe).catch(e => ({ error: e.message }));   // QA s10: camera-clip probe
+  const anim = await page.evaluate(animProbe).catch(e => ({ error: e.message }));   // QA s12: animation probe
   await page.screenshot({ path: path.join(dir, name), type: 'jpeg', quality: 85 });
-  (manifest.scenes[scene].frames ||= []).push({ file: `${scene}/${name}`, label, cam });
+  (manifest.scenes[scene].frames ||= []).push({ file: `${scene}/${name}`, label, cam, anim });
   log(scene, name, label);
 }
 // step the player (and the game when present) by `secs` of game time at 20 Hz while holding `keys`
@@ -198,7 +200,7 @@ if (fs.existsSync(cdir)) for (const cls of fs.readdirSync(cdir).sort()) {
   const e = JSON.parse(fs.readFileSync(ev));
   manifest.scenes[`combat_${cls}`] = {
     desc: `Scripted 60 s fight as the ${cls} class (third-person combat camera), frames evenly spaced in time`, events: `combat/${cls}/events.json`,
-    frames: e.frames.map(f => ({ file: `combat/${cls}/${f.file}`, label: `t = ${f.t} s`, cam: f.cam })),
+    frames: e.frames.map(f => ({ file: `combat/${cls}/${f.file}`, label: `t = ${f.t} s`, cam: f.cam, anim: f.anim })),
   };
 }
 // QA s10 (task 9be5): camera-clip summary over the explore and combat frames (menus/story frames have no world camera)
@@ -214,6 +216,9 @@ if (fs.existsSync(cdir)) for (const cls of fs.readdirSync(cdir).sort()) {
     cam_clip_probed: probed.length, cam_clip_frames: clip };
   log('cam clip', `${clip.length}/${probed.length} frames`);
 }
+// QA s12 (task 2879): anim_probe summary over every recorded frame (bone poses read at capture time, no extra pass)
+manifest.anim_probe = animSummary(Object.entries(manifest.scenes).flatMap(([k, sc]) => sc.frames.map(f => ({ scene: k, file: f.file, anim: f.anim }))));
+log('anim probe', JSON.stringify(Object.fromEntries(Object.entries(manifest.anim_probe).filter(([k]) => k !== 'anim_probe_detail'))));
 fs.writeFileSync(path.join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 1));
-console.log(JSON.stringify({ out: OUT, wall_s: +((Date.now() - T0) / 1000).toFixed(0), scenes: Object.fromEntries(Object.entries(manifest.scenes).map(([k, v]) => [k, v.frames.length])), errors: manifest.errors.length, cam_clip_pct: manifest.cam_clip?.cam_clip_pct, harness_fail: harnessFail }));
+console.log(JSON.stringify({ out: OUT, wall_s: +((Date.now() - T0) / 1000).toFixed(0), scenes: Object.fromEntries(Object.entries(manifest.scenes).map(([k, v]) => [k, v.frames.length])), errors: manifest.errors.length, cam_clip_pct: manifest.cam_clip?.cam_clip_pct, cast_pose_frames_pct: manifest.anim_probe?.cast_pose_frames_pct, rigid_mob_pct: manifest.anim_probe?.rigid_mob_pct, harness_fail: harnessFail }));
 process.exit(harnessFail ? 1 : 0);

@@ -20,7 +20,7 @@ only = [t for t in os.environ.get('WIC_GATE_ONLY', '').split(',') if t]
 TESTS = [('test_modload', []), ('test_classes', []), ('test_feel', []), ('test_camclip', []), ('test_items', []), ('test_mobs', []), ('test_progression', []),
          ('test_audio', []), ('test_tutorial', []), ('quest_bot', ['4']), ('test_townsfolk', [])]
 KEYS = ('ok', 'error', 'load_s', 'fps', 'equipment_effects', 'total', 'failed', 'mob_types_ok', 'bosses_ok',
-        'main_quests_shipped', 'quest_bot_pass_pct', 'audio_coverage_pct', 'tutorial_pass', 'reason', 'errors',
+        'main_quests_shipped', 'quest_bot_pass_pct', 'quest_bot_fails', 'audio_coverage_pct', 'tutorial_pass', 'reason', 'errors',
         'camclip_frames_inside', 'modules', 'samples', 'walkers', 'moving_pct', 'page_errors')
 
 def parse(out):
