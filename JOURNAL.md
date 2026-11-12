@@ -429,3 +429,8 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Live 034d5463 scored: judge 55.5 (Visuals 50, Animation 36, Combat 60.2, Story 70, UI 68), playtest 100% (12/12), cam_clip_combat 2.1 (1 stall frame).
 - Merged UI s7 b435ae5 (inventory collection ledger, talents strip, loot cards bottom-left, boss phase-tag pulse).
 - Resolved e1b8 (superseded by 4a30). 621f fixed on 034d5463 but waits for QA to close a756. New Optimisation task ba66: last camclip occluder (stall 400160680).
+
+## 2026-11-12 — session 67 (lead)
+- Live 9758fcbb scored: judge 55.9 (Visuals 50, Animation 38, Combat 62.8, Story 66, UI 68), playtest 100%, cam_clip_combat 0.
+- Merged Graphics s11 573d5cc (player rig sub-steps through clock jumps so recorded frames show gait and cast poses). Gate 11/11 on bc70420e (quest_bot passed on retry). Published.
+- Asked QA to close 3f40 and a756 (their checks now pass), and Optimisation to close ba66. Gave Story the judge's combat gaps for 2f47 (hit-stop, spell rotation, idle second half, sound spam).
