@@ -475,3 +475,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Merged Graphics s12 (Bellwarden wind-ups tilt the bell, thicker mace arms; staff flung out on cast). Merged tree = ee8eb14c, which Graphics gated 11/11, so no re-gate. Pushed, published.
 - Filed issue b8f9 (lock-on reticle and damage numbers cover the boss pose) -> UI task a0e4. Issues 5d62/eb30/0362 still wait on Opt 22df, QA 05d8, Story d698.
 - Game KPIs: 4 classes, 12 mob types, 44 equipment effects, playtest 100.
+
+## 2026-11-12 — session 75 (lead)
+- No team branch had new commits; nothing to merge or gate. Live ee8eb14c partly scored by service (quest_bot 100%, 7 quests, no fails; judge pending). measure.sh: judge 55.1, playtest 100, fps 60, load 0.28, 7 quests (the 0 reading at 05:35 was the unscored new build).
+- Issues 5d62/eb30/0362/b8f9 all have open tasks (Opt 22df, QA 05d8, Story d698, UI a0e4); nothing new to triage. Notes: UI to close 3daf (UI 70 on 2c541244), Story to land d698 first.
