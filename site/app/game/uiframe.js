@@ -69,16 +69,24 @@ body.wic-qcard #wic-q .q-track { opacity: 0 !important; }
 #wic-q .q-track { transition: opacity .3s; }
 body.wic-fight #wic-q .q-track, body.wic-boss #wic-q .q-track { opacity: 0 !important; }   /* s6: judge 'quest banner stays up through fights' */
 body.wic-fight #wic-q .q-track .q-ob { display: none; }
-body.wic-boss #game-hud .gh-banner { top: 21% !important; }   /* s6: clear of the status words above the crosshair */
+body.wic-boss #game-hud .gh-banner { opacity: 0 !important; }   /* s7: the boss bar's phase tag carries phase/enrage news (pulses below) */
+#game-hud .gh-boss .bt.wu-flash { animation: wu-flash 1.6s ease-out; }
+@keyframes wu-flash { 0%, 30% { transform: scale(1.25); box-shadow: 0 0 18px 2px rgba(255,120,40,.85); color: #fff; } }
+/* s7: loot cards bottom-left above the bars on a solid plate, never over the fight */
+body #game-hud .gh-loots { top: auto !important; bottom: 128px; max-height: 26%; justify-content: flex-end; }
+#game-hud .gh-loot { background: linear-gradient(90deg, rgba(14,11,9,.92), rgba(24,19,14,.88)) !important; border-right: 0 !important; border-left: 3px solid var(--rc); align-items: flex-start !important; border-radius: 2px 4px 4px 2px !important; padding: 5px 10px !important; }
+#game-hud .gh-loot-e { text-align: left !important; }
 /* ---- combat callouts kept out of the centre (judge: 'Vanquished' / 'Chain' / 'Staggered' text piles over the fight).
    Banner: small caps strip near the top; status words above the crosshair, not over the player; chain count as a
    small tag above the class label, by the bars */
 #game-hud .gh-banner { top: 12% !important; font-size: 17px !important; letter-spacing: .28em !important; text-transform: uppercase;
   text-shadow: 0 0 10px rgba(255,106,16,.7), 0 2px 3px #000 !important; padding: 4px 22px; background: linear-gradient(90deg, transparent, rgba(10,8,6,.55) 20%, rgba(10,8,6,.55) 80%, transparent); }
-.gf-word { top: calc(50% - 64px) !important; font-size: 14px !important; letter-spacing: .16em !important; text-transform: uppercase; }
+.gf-word { top: auto !important; bottom: 118px; font-size: 12px !important; letter-spacing: .2em !important; text-transform: uppercase;   /* s7: above the spell bar, off the boss */
+  padding: 4px 14px; background: linear-gradient(90deg, transparent, rgba(10,8,6,.7) 20%, rgba(10,8,6,.7) 80%, transparent); text-shadow: 0 1px 2px #000 !important; }
 .gf-chain { left: calc(50% + 182px) !important; top: auto !important; bottom: 30px; font-size: 13px !important;   /* s6: beside the spell bar, not on the class label */
   text-shadow: 0 0 5px rgba(255,122,32,.7), 0 1px 2px #000 !important; }
 .gf-chain small { font-size: 9px !important; }
+body:has(#game-hud .gh-lowtag:not([hidden])) .gf-word { bottom: 142px; }   /* s7: clear of the LOW HEALTH tag */
 body.wic-menu .gf-word, body.wic-menu .gf-chain, body.wic-story .gf-chain { display: none !important; }
 /* ---- s6 boss bar: phase tag on a dark plate so it reads over bright scenes */
 #game-hud .gh-boss .bt { display: table; margin: 5px auto 6px; padding: 3px 10px; font-size: 11px; color: #f4e2b8; background: rgba(8,6,4,.72); border-radius: 2px; text-shadow: 0 1px 2px #000; }
@@ -144,7 +152,7 @@ export function install(game) {
   const mo = new MutationObserver(() => syncStory());
   let watched = null;
   offs.push(() => mo.disconnect());
-  let tick = 0;
+  let tick = 0, lastBt = "";
   game.add({
     update(dt) {
       if ((tick -= dt) > 0) return; tick = 0.1;
@@ -157,6 +165,8 @@ export function install(game) {
       syncStory();
       const fight = !!game.uiScreens?.inCombat?.(); B.toggle('wic-fight', fight);
       B.toggle('wic-boss', (game.mobs || []).some(m => m.boss && !m.dead && Math.hypot(m.x - game.px, m.y - game.py) < 40));
+      const bt = document.querySelector('#game-hud .gh-boss .bt'), btx = bt?.textContent || '';
+      if (bt && btx !== lastBt) { if (lastBt && btx) { bt.classList.remove('wu-flash'); void bt.offsetWidth; bt.classList.add('wu-flash'); } lastBt = btx; }
     },
     dispose() { for (const f of offs) f(); },
   });
