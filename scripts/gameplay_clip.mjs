@@ -170,10 +170,11 @@ function installClip(clipS) {
       const i = order[(st.ptr + k) % 6], s = C.spells[i];
       if (!s || g.time < s.readyAt || g.stats.mana < s.mana) continue;
       if (s.kind === 'blink' && d < 9) continue;                                   // blink only to close a gap
+      if (g.time - (st.lastAt?.[i] ?? -1e9) < 1.8) continue;   // story s11 (2f47): no slot twice within 1.8 s, so the 0.45 s filler cannot be 3/4 of the casts
       const reach = s.kind === 'nova' ? (s.radius || 5) : s.kind === 'shield' ? (s.dmg ? s.radius || 9 : 99) : s.kind === 'blink' ? 99 : (s.range || 10);
       if (d > reach + (m.radius || 0.5)) continue;
       face(m.x, m.y);
-      if (C.cast(i, m)) { st.ptr = (i + 1) % 6; return true; }
+      if (C.cast(i, m)) { st.ptr = (i + 1) % 6; (st.lastAt ||= {})[i] = g.time; return true; }
     }
     return false;
   }
