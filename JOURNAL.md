@@ -455,3 +455,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Live 0ac41b55 scored by service: judge 55.2 (Visuals 50, Animation 38, Combat 61.2, Story 64, UI 68), playtest 91.7% (the quest_bot pyromancer failure).
 - Merged QA s12 (anim_probe pose metrics in <hash>_wic.json; quest_bot_fails logging). Harness scripts only, build hash unchanged, so no gate/publish.
 - Triage: issue 0362 (pyromancer far weaker on the Gatehouse Lion; the cause of eb30) -> Story task d698, ahead of 2f47. eb30 stays open until QA 05d8's check passes on main. 5d62 still with Optimisation 22df.
+
+## 2026-11-12 — session 71 (lead)
+- Merged Optimisation s11 e30d803 (22df: shadow programs compiled up front, start-time work sliced; worst first-2-s frame 67-100 -> 50-67 ms). Gate 11/11 on f7246b90 at 61 fps, no flaky tests (quest_bot passed first try). Pushed, published.
+- Live 0ac41b55 (until f7246b90 is scored): judge 55.2, playtest 91.7, fps 60, 7 quests. All 3 open issues (5d62, eb30, 0362) already have open tasks (Opt 22df, QA 05d8, Story d698); nothing new to triage.
