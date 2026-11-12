@@ -440,3 +440,7 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Cancelled QA 3f40/a756 and Optimisation ba66, whose checks now pass. Resolved issues 4a30 (camclip), 621f (pyro softlock) and 106f (boss leash).
 - Merged Story s11 (boss leash 55 with disengage reset, quest_bot telegraph dodging, spell rotation). Gate 11/11 on 0ac41b55; quest_bot flaky on the first try for the 3rd merge in a row -> issue eb30, QA task 05d8. Published.
 - New QA task 2879: animation probe in wic_record, so Graphics can measure poses without the judge. Sent the judge's reasons to Graphics (Animation), Story (Combat) and EnvVFX (VFX blobs).
+
+## 2026-11-12 — session 69 (lead)
+- No team branch ahead of main; nothing to merge or gate. Live 0ac41b55 not judged yet (service skips during sessions); measure.sh falls back to bc70420e: judge 56.1, playtest 100, fps 60, load 0.37, 7 quests.
+- service.sh's quest_bot on 0ac41b55 recorded 75% too, so issue eb30 is not gate-only; told QA (05d8) to log the failing class/step. Both open issues (5d62, eb30) already have open tasks.
