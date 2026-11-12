@@ -125,9 +125,14 @@ def jobs(man, rec):
     return out
 
 
-def merge_cam(out, cc):
+ANIM_KEYS = ("player_pose_dev_deg", "player_pose_step_deg", "mob_pose_dev_deg", "npc_pose_dev_deg", "cast_pose_frames_pct",
+             "rigid_mob_pct", "rigid_npc_pct", "anim_probe_detail")
+
+
+def merge_cam(out, cc, anim=None):
     cur = json.load(open(out)) if os.path.exists(out) and os.path.getsize(out) else {}
     cur.update({k: cc[k] for k in ("cam_clip_pct", "cam_clip_combat_pct", "cam_clip_probed", "cam_clip_frames") if k in cc})
+    cur.update({k: anim[k] for k in ANIM_KEYS if k in (anim or {})})   # QA s12: anim_probe
     os.makedirs(SCORES, exist_ok=True)
     with open(out + ".tmp", "w") as f:
         json.dump(cur, f, indent=1)
@@ -147,8 +152,8 @@ def main():
     out = os.path.join(SCORES, f"{h}_wic.json")
     cur = json.load(open(out)) if os.path.exists(out) and os.path.getsize(out) else {}
     man = json.load(open(os.path.join(rec, "manifest.json")))
-    if "cam_clip" in man:   # QA s10: the recording's camera-clip probe (not shown to the judge)
-        merge_cam(out, man["cam_clip"])
+    if "cam_clip" in man or "anim_probe" in man:   # QA s10/s12: camera-clip + animation probes (not shown to the judge)
+        merge_cam(out, man.get("cam_clip", {}), man.get("anim_probe"))
     if "-f" not in a and cur.get("judge_meta", {}).get("rubric_sha") == rsha and "judged_game_quality" in cur:
         print(json.dumps({k: cur[k] for k in ("judged_game_quality", "judged_sections")}))
         return
