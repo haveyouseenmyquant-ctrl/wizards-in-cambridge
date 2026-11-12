@@ -8,6 +8,7 @@ import { Avatar } from '../avatar.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { MeshoptDecoder } from '../../vendor/meshoptimizer/meshopt_decoder.module.js';
+import { exaggerator } from './npc_rig.js';
 
 const URL_GLB = new URL('../../models/player/wizard.glb', import.meta.url).href;
 const HEIGHT = 1.72;   // metres, head to boots (the pointed hat adds ~0.4 m above)
@@ -165,7 +166,7 @@ export function install(game) {
     for (const n of ['Foot.L', 'Foot.R']) { const o = model.getObjectByName(n.replace(/\./g, '')) || model.getObjectByName(n); if (o) bones[n] = o; }
     const rest = Object.values(bones).filter(b => !/^Foot/.test(b.name)).map(b => [b, b.quaternion.clone()]);
     game.root.add(root);
-    return { cls, root, mixer, acts, mat, focus, hat, bones, rest, robe, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time, castT: -9, castRaise: false, hitT: -9, lw: 0, roll: 0, lastSp: 0, ready: 0, charge: 0, hand };
+    return { cls, root, model, mixer, acts, mat, focus, hat, bones, rest, robe, cur: null, oneShot: null, oneShotEnd: 0, lastT: game.time, castT: -9, castRaise: false, hitT: -9, lw: 0, roll: 0, lastSp: 0, ready: 0, charge: 0, hand };
   }
 
   function destroy() {
@@ -284,6 +285,16 @@ export function install(game) {
   // s10: whole-body layer on the root (the judge saw 'the same upright pose' in every frame): the hips bob down on each
   // footfall and the body sways over the stance foot; a cast rears back on the wind-up then lunges forward into the
   // thrust; a hit knocks the whole body back. Applied last, as a rotation about the feet.
+  // s13: push the stock clips further from their mean pose (npc_rig.js exaggerator) so the stride, the hit recoil and
+  // the cast body motion read at the recording camera's distance; the procedural layers then add on top
+  const GAIN = { walk: LEGS(1.9), run: LEGS(1.6), hit: 2, cast: 1.6, cast_raise: 1.6, cast_long: 1.5, dash: 1.5, jump: 1.4 };
+  function LEGS(g) { return { 'UpperLeg.L': g, 'UpperLeg.R': g, 'LowerLeg.L': g * 0.85, 'LowerLeg.R': g * 0.85, 'Foot.L': g * 0.7, 'Foot.R': g * 0.7, Hips: 1.6, Abdomen: 1.3, Torso: 1.3 }; }
+  function exaggerate() {
+    for (const n in GAIN) {
+      const a = R.acts[n]; if (!a?.isRunning() || a.getEffectiveWeight() < 0.01) continue;   // unplayed actions report weight 1
+      ((R.ex ??= {})[n] ??= exaggerator(R.model, a.getClip(), GAIN[n]))(a.getEffectiveWeight());
+    }
+  }
   function rootPose(t, p) {
     const ct = R.hold === 'cast' ? 0.3 : R.hold === 'windup' ? 0.08 : t - R.castT;
     const wc = R.hold === 'cast' || R.hold === 'windup' ? 1 : env(ct, 0.06, 0.62, 0.95), wh = R.hold === 'hit' ? 1 : env(t - R.hitT, 0.05, 0.22, 0.55);
@@ -361,6 +372,7 @@ export function install(game) {
       const ts = t - i * dt;
       for (const [b, q] of R.rest) b.quaternion.copy(q);
       R.mixer.update(dt);
+      exaggerate();
       R.charge = 0;
       if (!dead && !flying) { locomotion(dt, sp); upperBody(ts, dt); if (!i) rootPose(ts, p); }   // rootPose offsets the root: once
       if (i) { hatSpring(dt, flying ? 0 : sp); robeSpring(dt, flying ? 0 : sp, flying); }
