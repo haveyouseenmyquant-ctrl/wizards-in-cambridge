@@ -450,3 +450,8 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
   in wic_record/gameplay_clip; results merged into <hash>_wic.json by wic_judge. Local site: player dev 17-35 deg, mob 15-18,
   cast pose 69-75% of combat frames, rigid mobs 0-4.5% (bog_hag procedural).
 - 05d8: quest_bot_fails reported; cause = pyromancer balance on the Gatehouse Lion -> issue 0362 (Gameplay).
+
+## 2026-11-12 — session 70 (lead)
+- Live 0ac41b55 scored by service: judge 55.2 (Visuals 50, Animation 38, Combat 61.2, Story 64, UI 68), playtest 91.7% (the quest_bot pyromancer failure).
+- Merged QA s12 (anim_probe pose metrics in <hash>_wic.json; quest_bot_fails logging). Harness scripts only, build hash unchanged, so no gate/publish.
+- Triage: issue 0362 (pyromancer far weaker on the Gatehouse Lion; the cause of eb30) -> Story task d698, ahead of 2f47. eb30 stays open until QA 05d8's check passes on main. 5d62 still with Optimisation 22df.
