@@ -205,5 +205,62 @@
     "all": "The HUD and menus share one themed style: serif titles, gold trim and dark panels. Class cards are colour-coded with icons, the inventory shows rarity colours and collection tracking, the talent tiers are clear, and in combat there's a boss bar with phase markers, cooldown numbers on the spell icons, and a minimap. The biggest gaps: the inventory and talent text is small and dense, the HUD bars and spell icons are small and look generic next to the busy scene, and nothing in the frames shows animation or transitions."
    }
   }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.34,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.75,
+  "programs": [
+   103,
+   123
+  ],
+  "fps_p5": 59,
+  "fps_min": 51,
+  "slow_secs": [],
+  "long_frames": 1,
+  "worst_frames": [
+   [
+    0.1,
+    50
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 188,
+  "kills": 25,
+  "maxMobs": 37,
+  "dist": 199,
+  "laps": 1,
+  "draw_calls_median": 1359,
+  "tris_median": 7197031,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.94,
+  "loadavg_after": 2.85,
+  "waited_s": 514,
+  "load_ok": true,
+  "max_load": 4.0,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.34,
+    "loadavg_before": 3.94,
+    "loadavg_after": 2.68,
+    "fps_p5": 59
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.34,
+    "loadavg_before": 2.68,
+    "loadavg_after": 2.85,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-12T08:58:11+00:00"
  }
 }
