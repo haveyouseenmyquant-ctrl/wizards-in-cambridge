@@ -122,7 +122,7 @@ body.explore #game-hud .gh-loots{display:none}`;
   offs.push(game.on('cast', ({ slot }) => { const s = slots[slot]; if (s) { s.s.classList.remove('pulse'); void s.s.offsetWidth; s.s.classList.add('pulse'); } }));
 
   // ---- floating damage numbers (pooled)
-  const POOL = 72, pool = [], v = new THREE.Vector3();   // session 48: bigger pool, bigger numbers (CSS above)
+  const POOL = 72, pool = [], v = new THREE.Vector3(), camR = new THREE.Vector3();   // session 48: bigger pool, bigger numbers (CSS above)
   for (let i = 0; i < POOL; i++) { const d = el('div', 'gh-num', nums); d.style.display = 'none'; pool.push({ d, t: 0, life: 0, x: 0, y: 0, z: 0, dx: 0 }); }
   let pi = 0;
   // ---- per-hit feedback: impact flash + sparks at the hit point, an impact sound on every hit, hit-stop on big ones
@@ -154,12 +154,21 @@ body.explore #game-hud .gh-loots{display:none}`;
     n.tgt = target; n.crit = !!crit; n.sum = amount; lastNum.set(target, n);
     // session 48: numbers fan out (no stacking on one spot), linger longer and pop; crits get a CRIT tag + gold
     const big = !crit && (amount >= 0.12 * (target.maxHp || 1e9) || amount >= 40);
-    n.x = target.x + (Math.random() - 0.5) * 0.6; n.y = target.y + (Math.random() - 0.5) * 0.6; n.z = target.z + (target.height ?? 1.6) * (0.75 + Math.random() * 0.4) + 0.2;
-    n.t = 0; n.life = crit ? 1.5 : 1.15; n.dx = (Math.random() - 0.5) * 50; n.jx = (Math.random() - 0.5) * 24; n.born = ++numSeq; n.pop = crit ? 1.1 : big ? 0.7 : 0.45;
+    // UI s9 (issue b8f9): numbers spawn beside the silhouette (alternating sides, pushed out along the camera's right
+    // axis by the target's radius in updateNums), not over its body, and fade faster
+    n.side = (target.numSide = -(target.numSide || -1)); n.off = visHalf(target) + 0.45;
+    n.x = target.x; n.y = target.y; n.z = target.z + (target.height ?? 1.6) * (0.55 + Math.random() * 0.3);
+    n.t = 0; n.life = crit ? 1.05 : 0.8; n.dx = n.side * Math.random() * 30; n.jx = (Math.random() - 0.5) * 24; n.born = ++numSeq; n.pop = crit ? 1.1 : big ? 0.7 : 0.45;
     n.sz = Math.min(1.35, 0.82 + amount / 90);   // s74: number size follows the hit size (small ticks small, heavy hits big)
     n.d.textContent = Math.round(amount); n.d.className = 'gh-num' + (crit ? ' crit' : big ? ' big' : '');
     n.d.style.color = TYPE_COLOR[type] || '#fff'; n.d.style.display = '';
   }));
+  // half-width of a target's visible body (bosses are drawn much wider than their collision radius), measured once
+  const box = new THREE.Box3(), bsz = new THREE.Vector3();
+  function visHalf(t) {
+    if (t._uiHalf == null) { let h = (t.radius || 0.5) * 1.3; try { if (t.group) { box.setFromObject(t.group); box.getSize(bsz); if (isFinite(bsz.x)) h = Math.max(h, Math.min(4, Math.max(bsz.x, bsz.z) / 2)); } } catch (e) { } t._uiHalf = h; }
+    return t._uiHalf;
+  }
   const lastNum = new WeakMap(), placed = [], live = [];
   let numSeq = 0;
   function updateNums(dt) {
@@ -174,10 +183,12 @@ body.explore #game-hud .gh-loots{display:none}`;
       if (n.life <= 0) continue;
       n.t += dt;
       if (n.t >= n.life) { n.life = 0; n.d.style.display = 'none'; continue; }
-      v.set(n.x, n.z + n.t * 1.2, -n.y).project(cam);
+      camR.setFromMatrixColumn(cam.matrixWorld, 0); camR.y = 0; camR.normalize();
+      const o = (n.off || 0) * (n.side || 0);
+      v.set(n.x + camR.x * o, n.z + n.t * 0.9, -n.y + camR.z * o).project(cam);
       if (v.z > 1 || v.z < -1) { n.d.style.opacity = 0; continue; }
       const k = n.t / n.life;
-      n.d.style.opacity = k < 0.7 ? 1 : (1 - k) / 0.3;
+      n.d.style.opacity = k < 0.5 ? 1 : (1 - k) / 0.5;
       // session 56: stack instead of overlap: a number landing within one line of an already placed one moves up
       const sc = (n.sz ?? 1) * (1 + (1 - Math.min(1, n.t * 7)) * (n.pop ?? 0.5));
       const fpx = n.crit ? 40 : n.d.classList.contains('big') ? 34 : 28, chars = String(n.d.textContent).length + (n.crit ? 2.2 : 0);
