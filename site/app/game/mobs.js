@@ -2154,6 +2154,14 @@ class MobSystem {
           P.torso.rotation.x -= 0.65 * hr; P.torso.rotation.z += sd * 0.35 * hr + Math.sin(t * 40) * 0.12 * hr;
           P.armL.rotation.z -= 1.1 * hr; P.armR.rotation.z += 1.1 * hr; P.body.position.y -= 0.2 * hr;
         }
+        // s13: squash and stretch so the bronze reads as a living body, not a rigid construct: it draws up tall through a
+        // wind-up, slams down flat on the strike, flattens on each stomp and wobbles like struck metal when hit
+        {
+          const e = st === 'windup' ? wf * (2 - wf) : 0, a = st === 'active' ? 1 : st === 'recover' ? 0.4 : 0;
+          const step = moving ? Math.max(0, Math.abs(wv) - 0.7) / 0.3 : 0, wob = hr > 0 ? Math.sin(t * 38) * hr : 0;
+          const sy = 1 + 0.22 * e - 0.24 * a - 0.08 * step + 0.14 * wob - (st === 'stagger' ? 0.15 : 0);
+          P.torso.scale.set(1 / Math.sqrt(sy), sy, 1 / Math.sqrt(sy));
+        }
         // the clapper hangs inside the bell and swings behind the bell's own rocking
         P.clapper.position.x = -Math.sin(t * (enr ? 2.6 : 1.6) - 0.7) * 0.55 - P.torso.rotation.z * 1.2 + (st === 'windup' && k === 'nova' ? Math.sin(t * 30) * 0.5 : 0);
         P.lantern.rotation.y = t * 2;
