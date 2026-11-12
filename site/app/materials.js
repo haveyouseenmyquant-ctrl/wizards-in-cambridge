@@ -25,8 +25,9 @@ if (MAT) {
       undefined, () => { console.warn('texture failed', s); if (--pending === 0) window.__texReady = true; });
     t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
     uniforms['t_' + s] = { value: t };
-    // EnvVFX s10: the brick photo holds ~11 courses; at its listed 2 m they were 0.18 m tall (judge: 'stretched brick')
-    sizes[s] = (s === 'brick' ? 0.85 : (meta[s]?.size_m || 2)).toFixed(3);
+    // EnvVFX s10: the brick and ashlar photos both hold ~11 courses; at their listed 2 m the courses were 0.18 m tall
+    // (judge: 'stretched brick' on the near Peas Hill wall) -> brick at true 75 mm courses, ashlar blocks ~0.1 m
+    sizes[s] = ({ brick: 0.85, ashlar: 1.1 }[s] ?? (meta[s]?.size_m || 2)).toFixed(3);
   }
 }
 
