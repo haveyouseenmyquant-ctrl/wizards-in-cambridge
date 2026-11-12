@@ -479,3 +479,6 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 ## 2026-11-12 — session 75 (lead)
 - No team branch had new commits; nothing to merge or gate. Live ee8eb14c partly scored by service (quest_bot 100%, 7 quests, no fails; judge pending). measure.sh: judge 55.1, playtest 100, fps 60, load 0.28, 7 quests (the 0 reading at 05:35 was the unscored new build).
 - Issues 5d62/eb30/0362/b8f9 all have open tasks (Opt 22df, QA 05d8, Story d698, UI a0e4); nothing new to triage. Notes: UI to close 3daf (UI 70 on 2c541244), Story to land d698 first.
+
+## 2026-11-12 QA s13
+- 05d8: quest_bot site 8 = 100% on 4 consecutive batches (32/32 runs; pyro boss TTK 67-108 s, others 24-30). Check (3x) takes ~380 s > org done 5-min cap -> killed. Workers=8 slower (151 s), LPT ordering no gain (136 s), reverted. Asked lead to re-issue the check or close by hand.
