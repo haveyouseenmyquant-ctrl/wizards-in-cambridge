@@ -1882,11 +1882,15 @@ class MobSystem {
       }
     }
   }
-  // story s11 (7e65): a boss past its leash only walks home (healing) once the player has disengaged (> 14 m away), or
-  // past 1.6x leash; its own charges and leaps dragged it past the leash mid-fight and reset nearly-won fights
+  // story s11 (7e65): a boss past its leash only walks home (healing) once the player has disengaged; its own charges and
+  // leaps dragged it past the leash mid-fight and reset nearly-won fights
+  // story s12 (d698): ... and never while the player is still in the fight (within 30 m, up to a hard cap of 2.5x leash): a
+  // pyromancer dodging the Lion's rushes, fighting from range and clearing its adds drew it 60-90 m off its gate and it
+  // reset at 5-30% hp
   leashed(mob, homeD, dist) {
     const L = mob.leash ?? mob.type.leash ?? 40;
-    return mob.boss ? homeD > L * 1.6 || homeD > L && dist > 14 : homeD > L;
+    if (!mob.boss) return homeD > L;
+    return homeD > L * 2.5 || homeD > L && dist > 30;
   }
   recover(mob) { mob.state = 'recover'; mob.stateT = mob.attack.recover; }
   inStrip(x, y, dir, len, w, px, py) {
