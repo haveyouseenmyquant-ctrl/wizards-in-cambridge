@@ -52,10 +52,18 @@ try { browser = await puppeteer.launch(wicLaunch(LAUNCH)); }
 catch (e) { if (process.env.WIC_TEST_GPU !== '1') throw e; log('GPU launch failed, using SwiftShader:', e.message); browser = await puppeteer.launch(LAUNCH); }
 
 // ---------------- the in-page bot (window.__qbot)
-function installBot(softS = 0, tileIds = []) {
+function installBot(softS = 0, tileIds = [], diag = false) {   // diag (WIC_QB_DIAG=1): per-boss damage by spell and time by bot activity
   const g = window.__game, P = window.__p, W = window.__world, C = g.caster, Q = g.quests, DT = 0.05;
   const ev = { kills: 0, deaths: 0, casts: 0, steps: [], talks: 0 };
-  ev.killLog = []; ev.boss = {}; g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; e.target.qbFirst ??= g.time; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; if (e.mob?.type?.id === 'bellwarden' && e.mob.qbFirst != null) { const t = +(g.time - e.mob.qbFirst).toFixed(1); (ev.boss.kills ||= []).push(t); ev.boss.ttk = Math.max(ev.boss.ttk ?? 0, t); } /* per-mob first hit -> kill (a 2nd Bellwarden spawn no longer spans both fights); worst kill reported */ ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => { ev.deaths++; (ev.deathLog ||= []).push(`${(g.time - bot.t0).toFixed(0)} ${bot.why}`.slice(0, 70)); }),
+  ev.killLog = []; ev.boss = {}; ev.fights = {};   // per boss type: worst first-hit -> kill time and player deaths during that fight
+  const fightOf = m => (ev.fights[m.type.id] ||= { ttk: 0, deaths: 0 });
+  g.on('hit', e => { const m = e.target; if (m?.boss && !m.dead) { if (m.qbFight == null) m.qbFight = g.time; if (diag) { const f = fightOf(m), by = (f.by ||= {}), k = e.spell?.id || e.spell || e.source; by[k] = (by[k] || 0) + Math.round(e.amount); (f.hits ||= {})[k] = (f.hits[k] || 0) + 1; } } });
+  g.on('cast', e => { const m = bot.tgt; if (diag && m?.boss && !m.dead) { const f = fightOf(m); (f.casts ||= {})[e.spell] = (f.casts[e.spell] || 0) + 1; } });
+  g.on('kill', e => { const m = e.mob; if (m?.boss && m.qbFight != null) { const f = fightOf(m); f.ttk = Math.max(f.ttk, +(g.time - m.qbFight).toFixed(1)); } });
+  g.on('playerHit', e => { if (e.amount > 0) { const m = e.source; ev.lastHits = [...(ev.lastHits || []).slice(-3), `${m?.type?.id || '?'}:${m?.attack?.id || m?.state || ''}:${e.amount}`]; } });
+  g.on('playerDeath', () => { (ev.deathBlows ||= []).push((ev.lastHits || []).join(' ')); ev.lastHits = []; });
+  g.on('playerDeath', () => { for (const m of g.mobs) if (m.boss && !m.dead && m.qbFight != null && Math.hypot(m.x - P.x, m.y - P.y) < 60) fightOf(m).deaths++; });
+  g.on('hit', e => { if (e.target?.type?.id === 'bellwarden') { const b = ev.boss; e.target.qbFirst ??= g.time; b.first ??= +(g.time - bot.t0).toFixed(1); b.dmg = (b.dmg || 0) + e.amount; const k = e.spell?.id || e.spell || e.source; (b.by ||= {})[k] = ((b.by ||= {})[k] || 0) + e.amount; } }); const offs = [g.on('kill', e => { ev.kills++; if (e.mob?.type?.id === 'bellwarden' && e.mob.qbFirst != null) { const t = +(g.time - e.mob.qbFirst).toFixed(1); (ev.boss.kills ||= []).push(t); ev.boss.ttk = Math.max(ev.boss.ttk ?? 0, t); } /* per-mob first hit -> kill (a 2nd Bellwarden spawn no longer spans both fights); worst kill reported */ ev.killLog.push(`${e.mob?.type?.id}@${(g.time - bot.t0).toFixed(0)}`); }), g.on('cast', () => ev.casts++), g.on('playerDeath', () => { ev.deaths++; (ev.deathLog ||= []).push(`${(g.time - bot.t0).toFixed(0)} ${bot.why}`.slice(0, 70)); }),
     g.on('questStep', e => ev.steps.push(`${e.quest}:${e.step}@${(g.time - bot.t0).toFixed(0)}`)),
     g.on('levelup', () => { for (let t = 0; t < 3; t++) if (C.picks[t] == null && g.stats.level >= C.talentLevels[t]) C.pickTalent(t, t % 2); })];
   function plan(sx, sy, sz, tx, ty, tol, fine = true) {   // A* on a 1 m grid; walkable = world.standAt from the neighbour's feet height
@@ -134,7 +142,9 @@ function installBot(softS = 0, tileIds = []) {
   offs.push(g.on('kill', prog), g.on('hit', e => { if (e.target && e.target !== P && e.target.type) prog(); }));
   bot.step = function (dt) {
     if (bot.done || bot.fail) return;
+    if (diag) for (const m of g.mobs) if (m.boss && !m.dead && m.qbFight != null && Math.hypot(m.x - P.x, m.y - P.y) < 60) { const w = (fightOf(m).why ||= {}), k = String(bot.why).split(' ').slice(0, 2).join(' '); w[k] = (w[k] || 0) + dt; }
     for (const m of g.mobs) if (m.boss && !m.dead) {   // a boss that walks home heals to full: log every leash reset
+      if (m.state === 'return' && m._qbSt !== 'return' && g.stats.hp > 0) m.qbFight = null;   // disengaged, not a death: the next fight starts its own clock
       if (m.state === 'return' && m._qbSt !== 'return') (ev.resets ||= []).push(`${m.type.id}@${(g.time - bot.t0).toFixed(0)} hp ${Math.round(m.hp)} home ${Math.round(Math.hypot(m.x - m.home.x, m.y - m.home.y))} pl ${Math.round(Math.hypot(m.x - P.x, m.y - P.y))} php ${Math.round(g.stats.hp)}`);
       else if (m._qbSt === 'return' && m.state !== 'return' && m.state !== 'idle') ev.resets.push(`->${m.state} home ${Math.round(Math.hypot(m.x - m.home.x, m.y - m.home.y))}`);
       m._qbSt = m.state; }
@@ -166,7 +176,12 @@ function installBot(softS = 0, tileIds = []) {
       }
       if (ex == null) continue;
       P.yaw = Math.atan2(-ex, ey); P.keys.add('KeyW'); P.keys.add('ShiftLeft'); bot.path = null; bot.goal = null;
-      bot.why = `dodge ${m.type.id} ${a.id}`; ev.dodges = (ev.dodges || 0) + 1; return;
+      bot.why = `dodge ${m.type.id} ${a.id}`; ev.dodges = (ev.dodges || 0) + 1;
+      // s12: strafe-casting, as a player does: keep firing at the nearest hostile while stepping out (casts aim at the
+      // target, not the facing); the pyromancer spent ~30% of the Lion fight dodging without casting
+      let nm = null, nd = 30; for (const q of g.mobs) if (!q.dead && !q.removed && !['idle', 'patrol', 'return', 'dead'].includes(q.state)) { const d = Math.hypot(q.x - P.x, q.y - P.y); if (d < nd) { nd = d; nm = q; } }
+      if (nm) castAt(nm);
+      return;
     }
     // fight: objective mobs, else anything hostile close by
     const hostile = m => !['idle', 'patrol', 'return', 'dead'].includes(m.state);
@@ -176,12 +191,20 @@ function installBot(softS = 0, tileIds = []) {
       const d = Math.hypot(m.x - P.x, m.y - P.y), mine = o.mobs?.includes(m);
       if ((mine && d < 60) || (hostile(m) && d < 14)) { if (d < bd) { bd = d; tgt = m; } }
     }
+    bot.tgt = tgt;
     if (tgt) {
       const L = bot.lastDmg.get(tgt) || { hp: tgt.hp, t: g.time, t0: g.time };
       if (tgt.hp < L.hp) { L.hp = tgt.hp; L.t = g.time; } bot.lastDmg.set(tgt, L);
       // a passer-by we cannot hurt (a swarm over a roof): walk on, as a player would; objective mobs are never dropped
       if (!o.mobs?.includes(tgt) && g.time - L.t > 25) { bot.ignore.add(tgt); bot.goal = null; bot.path = null; return; }
       if (g.time - L.t0 > (tgt.boss ? 400 : 150)) { bot.fail = `stuck mob: ${tgt.type.id} not killed in time (${bot.why})`; return; }
+      // peel: a boss in melee range gets a movement spell away from it (Flame Step / Shade Step / Wind Dash), as a player
+      // would; the pyromancer died at 2-3 m to the Lion's maul and rush (issue 0362)
+      if (tgt.boss && bd < 4) { const i = C.spells.findIndex(s => s.kind === 'blink' && !s.landing);
+        const s = C.spells[i]; if (s && g.time >= s.readyAt && g.stats.mana >= s.mana) {
+          const ax = (P.x - tgt.x) / (bd || 1), ay = (P.y - tgt.y) / (bd || 1), hx = tgt.home.x - P.x, hy = tgt.home.y - P.y,
+            sg = hx * -ay + hy * ax >= 0 ? 1 : -1, dx = ax * 0.5 - ay * sg, dy = ay * 0.5 + ax * sg;   // sideways-back, on the boss's home side
+          P.yaw = Math.atan2(-dx, dy); if (C.cast(i, null /* no soft lock-on: blink along the facing */)) { ev.peels = (ev.peels || 0) + 1; bot.why = `peel ${tgt.type.id}`; bot.goal = null; bot.path = null; return; } } }
       P.yaw = Math.atan2(-(tgt.x - P.x), tgt.y - P.y);
       const cast = castAt(tgt), want = tgt.boss ? 9 : 7;
       bot.why = `fight ${tgt.type.id} d ${bd.toFixed(1)} hp ${Math.round(tgt.hp)} ${tgt.state} dmg ${Math.round(g.time - L.t)}s ago`;
@@ -235,7 +258,7 @@ async function runOne(r) {
     await page.evaluate(() => window.__player.teleport(-108.1, 93.97));
     await page.waitForFunction('!window.__player.pendingPlace && window.__player.settled(120)', { timeout: 300000, polling: 500 });
     quests = await page.evaluate(() => window.__game.quests.order);
-    await page.evaluate(installBot, SOFT_S, TILE_IDS);
+    await page.evaluate(installBot, SOFT_S, TILE_IDS, !!process.env.WIC_QB_DIAG);
     let st;
     for (let k = 0; ; k++) {
       st = await page.evaluate(() => window.__qbot.chunk(6, 4000));
@@ -251,7 +274,7 @@ async function runOne(r) {
   await ctx.close().catch(() => {});
   rec.pass = !rec.fail; rec.wallS = Math.round((Date.now() - w0) / 1000);
   runs.push(rec);
-  log(cls, r, rec.pass ? 'PASS' : 'FAIL ' + rec.fail, JSON.stringify({ completed: rec.completed, gameS: rec.gameS, kills: rec.kills, deaths: rec.deaths, steps: rec.steps, killLog: rec.killLog, boss: rec.boss, resets: rec.resets, deathLog: rec.deathLog }));
+  log(cls, r, rec.pass ? 'PASS' : 'FAIL ' + rec.fail, JSON.stringify({ completed: rec.completed, gameS: rec.gameS, kills: rec.kills, deaths: rec.deaths, steps: rec.steps, killLog: rec.killLog, boss: rec.boss, fights: rec.fights, resets: rec.resets, deathLog: rec.deathLog, deathBlows: rec.deathBlows, peels: rec.peels }));
 }
 try {
   const jobs = Array.from({ length: RUNS }, (_, r) => r);
@@ -269,6 +292,7 @@ const result = { main_quests_shipped: shipped, quest_bot_pass_pct: runs.length ?
   // QA s12 (05d8): which class failed, where in the quest line and why (also merged into <hash>_wic.json and the gate log)
   quest_bot_fails: runs.filter(r => !r.pass).map(r => ({ cls: r.cls, run: r.run, fail: String(r.fail).slice(0, 300), state: r.state ?? null,
     last_done: r.completed?.at?.(-1) ?? null, why: r.why ?? null, at: r.at ?? null, gameS: r.gameS ?? null, wallS: r.wallS })),
+  bossFights: runs.reduce((o, r) => { for (const [id, f] of Object.entries(r.fights || {})) { const w = ((o[r.cls] ||= {})[id] ||= { ttk: 0, deaths: 0 }); w.ttk = Math.max(w.ttk, f.ttk); w.deaths = Math.max(w.deaths, f.deaths); } return o; }, {}),
   bossTTK: Object.fromEntries(runs.filter(r => r.boss?.ttk != null).map(r => [r.cls, r.boss.ttk])),
   wall_s: Math.round((Date.now() - T0) / 1000) };
 try {

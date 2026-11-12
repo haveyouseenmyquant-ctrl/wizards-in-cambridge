@@ -20,14 +20,17 @@ export const CLASSES = {
     // session 78: boss median TTK 30.3 s vs an all-class median of ~18 s (stormcaller 14.9, warden 18.0, hexweaver 18.2).
     // Ember Bolt was the weakest filler by far (16 dmg / 5 mana = 3.2 dmg per mana vs 5-7 for the other classes), so it
     // goes to 19 (all fights), and boss damage gets x1.3 (boss fights only); together ~x1.45 on the boss -> ~20 s.
+    // story s12 (d698): the pyromancer was the only class with no close-range answer (it died 1-3x per boss to the Lion's
+    // maul and rush while warden/hexweaver/stormcaller died 0x): Kindle Ring now dazes (0.6 s stun, which cancels a boss
+    // windup) and slows for 2 s, a self-peel like the warden's Quake Stomp
     bossMult: 1.3,
     name: 'Pyromancer', color: '#ff7a2a', blurb: 'Fire and burst damage. Burns linger, explosions stack, and Ember Bolt cauterises your wounds.',
     spells: [
-      { id: 'ember_bolt', name: 'Ember Bolt', glyph: '✦', kind: 'bolt', type: 'fire', mana: 5, cd: 0.45, dmg: 19, speed: 48, range: 45, splash: 1.2, drain: 0.1, color: 0xff7a2a, sfx: 'ember', look: 'ember' },
+      { id: 'ember_bolt', name: 'Ember Bolt', glyph: '✦', kind: 'bolt', type: 'fire', mana: 5, cd: 0.45, dmg: 19, speed: 48, range: 45, splash: 1.2, drain: 0.1, home: 6, color: 0xff7a2a, sfx: 'ember', look: 'ember' },
       { id: 'cinder_spray', name: 'Cinder Spray', glyph: '≋', kind: 'cone', type: 'fire', mana: 14, cd: 3, dmg: 14, range: 9, angle: 0.6, burn: { dps: 6, dur: 3 }, color: 0xffa040, sfx: 'spray', look: 'spray' },
-      { id: 'fireburst', name: 'Fireburst Orb', glyph: '◉', kind: 'bolt', type: 'fire', mana: 22, cd: 6, dmg: 24, speed: 22, range: 50, splash: 4.5, color: 0xff5010, sfx: 'orb', look: 'orb', size: 1.6 },
+      { id: 'fireburst', name: 'Fireburst Orb', glyph: '◉', kind: 'bolt', type: 'fire', mana: 22, cd: 6, dmg: 24, speed: 22, range: 50, splash: 4.5, home: 3, color: 0xff5010, sfx: 'orb', look: 'orb', size: 1.6 },
       { id: 'flame_step', name: 'Flame Step', glyph: '➚', kind: 'blink', type: 'fire', mana: 15, cd: 5, dist: 11, invuln: 0.4, dmg: 18, radius: 3, color: 0xff9a30, sfx: 'flamestep', look: 'flamestep' },
-      { id: 'kindle_ring', name: 'Kindle Ring', glyph: '◎', kind: 'nova', type: 'fire', mana: 24, cd: 9, dmg: 24, radius: 5.5, knock: 3, burn: { dps: 5, dur: 3 }, color: 0xff6a00, sfx: 'kindle', look: 'kindle' },
+      { id: 'kindle_ring', name: 'Kindle Ring', glyph: '◎', kind: 'nova', type: 'fire', mana: 24, cd: 9, dmg: 24, radius: 5.5, knock: 3, stun: 0.6, slow: 2, burn: { dps: 5, dur: 3 }, color: 0xff6a00, sfx: 'kindle', look: 'kindle' },
       { id: 'sunfall', name: 'Sunfall', glyph: '☀', kind: 'zone', type: 'fire', mana: 50, cd: 60, dmg: 11, radius: 7, dur: 3, interval: 0.22, tick: 'meteor', splash: 2.5, range: 40, color: 0xffc040, sfx: 'sunfall', look: 'sunfall', ult: true },
     ],
     talents: [
@@ -295,9 +298,9 @@ export function install(game) {
 
   // ---------- projectiles ----------
   const projs = [], projPool = [];
-  function fireBolt(sp, dirx, diry, dirz) {
+  function fireBolt(sp, dirx, diry, dirz, target) {
     const b = projPool.pop() || { hits: new Set() };
-    Object.assign(b, { sp, x: A.x, y: A.y, z: A.z, dx: dirx, dy: diry, dz: dirz, trav: 0, vz: 0, pierce: sp.pierce || 0 });
+    Object.assign(b, { sp, x: A.x, y: A.y, z: A.z, dx: dirx, dy: diry, dz: dirz, trav: 0, vz: 0, pierce: sp.pierce || 0, tgt: sp.home && target && !target.dead ? target : null });
     b.hits.clear();
     const ms = LOOK[sp.look]?.missile;
     b.orb = ms ? vfx.missile(b.x, b.y, b.z, sp.color, ms) : vfx.orb(b.x, b.y, b.z, sp.color, (sp.size || 0.6) * 0.6);
@@ -312,6 +315,14 @@ export function install(game) {
     for (let i = projs.length - 1; i >= 0; i--) {
       const b = projs[i], sp = b.sp; let done = false;
       const n = Math.max(1, Math.ceil(sp.speed * dt / 1.2)), h = sp.speed * dt / n;
+      // story s12 (d698): sp.home = turn rate (rad/s) toward the locked target. Ember Bolt landed 37% of its casts on the
+      // charging Gatehouse Lion (spark lance ~100%), so the pyromancer's boss fights ran 3-4x longer than any other class
+      const T = b.tgt;
+      if (T && !T.dead) {
+        const tx = T.x - b.x, ty = T.y - b.y, tz = T.z + mobH(T) * 0.5 - b.z, l = Math.hypot(tx, ty, tz) || 1, k = Math.min(1, sp.home * dt);
+        let dx = b.dx + (tx / l - b.dx) * k, dy = b.dy + (ty / l - b.dy) * k, dz = b.dz + (tz / l - b.dz) * k; const L = Math.hypot(dx, dy, dz) || 1;
+        b.dx = dx / L; b.dy = dy / L; b.dz = dz / L;
+      }
       for (let s = 0; s < n && !done; s++) {
         if (sp.grav) b.vz -= sp.grav * dt / n;
         b.x += b.dx * h; b.y += b.dy * h; b.z += b.dz * h + b.vz * dt / n; b.trav += h;
@@ -461,11 +472,11 @@ export function install(game) {
     return true;
   }
   const KIND = {
-    bolt(sp) {
+    bolt(sp, target) {
       const n = sp.count || 1;
       for (let k = 0; k < n; k++) {
         const a = (k - (n - 1) / 2) * 0.12, c = Math.cos(a), s = Math.sin(a);
-        fireBolt(sp, A.dx * c - A.dy * s, A.dx * s + A.dy * c, A.dz);
+        fireBolt(sp, A.dx * c - A.dy * s, A.dx * s + A.dy * c, A.dz, target);
       }
       vfx.burst(A.x + A.dx * 0.6, A.y + A.dy * 0.6, A.z + A.dz * 0.6, 8, { tex: sp.type === 'fire' ? 'flame' : sp.type === 'hex' ? 'wisp' : sp.type === 'stone' ? 'shard' : 'spark', color: sp.color, speed: 3, size: 0.22, life: 0.25, dx: A.dx, dy: A.dy, dz: A.dz });
     },
