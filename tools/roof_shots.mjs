@@ -93,7 +93,7 @@ const gate = page => page.evaluate(() => {
 });
 
 // roof_shots: fixed debug cameras (window.__cam) for roof before/after: street level and aerial-ish
-const VIEWS = [
+const VIEWS = process.env.VIEWS_JSON ? JSON.parse(process.env.VIEWS_JSON) : [
   { name: 'market_hill', walk: [-108, 94], pos: [-75, 62, 0], at: [-140, 130, 0], up: 6, atUp: 14 },
   { name: 'market_aerial', walk: [-108, 94], pos: [-20, 20, 0], at: [-120, 110, 0], up: 55, atUp: 0 },
   { name: 'petty_cury', walk: [-50, 30], pos: [-75, 45, 0], at: [22, -6, 0], up: 16, atUp: 4 },

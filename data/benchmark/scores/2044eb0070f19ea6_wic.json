@@ -1,0 +1,245 @@
+{
+ "fps_median": 60,
+ "load_seconds": 0.35,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.67,
+  "programs": [
+   66,
+   85
+  ],
+  "fps_p5": 59,
+  "fps_min": 46,
+  "slow_secs": [
+   [
+    0,
+    46
+   ]
+  ],
+  "long_frames": 4,
+  "worst_frames": [
+   [
+    0.6,
+    84
+   ],
+   [
+    0,
+    68
+   ],
+   [
+    0.1,
+    50
+   ],
+   [
+    0.5,
+    35
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 30,
+  "maxMobs": 36,
+  "dist": 204,
+  "laps": 1,
+  "draw_calls_median": 1375,
+  "tris_median": 6894825,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-12T00:17:15.608Z"
+ },
+ "cam_clip_pct": 14.3,
+ "cam_clip_combat_pct": 16.7,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [
+  {
+   "frame": "combat/warden/frame_01.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -91.55,
+    88.44,
+    12.84
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 2.2 m from camera, 2.9 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_02.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -90.89,
+    86.96,
+    12.58
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_03.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -95.98,
+    92.13,
+    12.56
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_04.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -101.35,
+    78.03,
+    12.46
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.4 m from camera, 5.2 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_06.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -104.28,
+    67.87,
+    12.71
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_08.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -109.91,
+    61.57,
+    12.9
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_09.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -125.16,
+    65.96,
+    14.34
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  },
+  {
+   "frame": "combat/warden/frame_11.jpg",
+   "scene": "combat_warden",
+   "pos": [
+    -108.48,
+    76.4,
+    12.69
+   ],
+   "view": 3,
+   "reasons": [
+    "occluded: game/Mesh 4.3 m from camera, 5.1 m to player"
+   ]
+  }
+ ],
+ "judged_game_quality": 55.1,
+ "judged_sections": {
+  "Visuals": 50,
+  "Animation": 36,
+  "Combat feel": 63.8,
+  "Story presentation": 64,
+  "UI polish": 66
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    50,
+    52,
+    50
+   ],
+   "Animation": [
+    36,
+    35,
+    38
+   ],
+   "Combat feel": [
+    64,
+    63,
+    63.8
+   ],
+   "Story presentation": [
+    64,
+    64,
+    64
+   ],
+   "UI polish": [
+    66,
+    66,
+    70
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 2,
+   "Animation": 3,
+   "Combat feel": 1,
+   "Story presentation": 0,
+   "UI polish": 4
+  },
+  "quality_spread": 0.9,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore Peas Hill yaw 2.6 blocked, used 2.80",
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city holds together well: brick and stone buildings with textures, a Gothic church, market stalls, bikes, railings and trees, plus real-time shadows, warm low-sun lighting and some haze. Geometry is still low-detail and blocky. Shop-window goods are primitive shapes, materials are flat and repeat, the stretched brick texture in frame 4 is obvious, and the streets look empty and clean. The characters are simple and toy-like, the bell boss is made of basic shapes, and in combat the VFX turns into flat translucent blobs, so overall it reads as a strong prototype rather than a 60-level art pass."
+   },
+   "Animation": {
+    "all": "The walking frames show the player from behind in nearly identical upright poses, with only small leg differences between them. Combat reads mostly through projectiles, rings, damage numbers and status text such as INTERRUPTED and STAGGERED rather than body motion; the pyromancer frame has a slight casting-arm pose, but there are no clear wind-ups, hit reactions or deaths. The boss is a rigid bell with segmented arms, there is no visible secondary motion on robes or hats, and the only environmental motion is a few small, static-looking pedestrians."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show real combat feedback: crit and damage numbers, INTERRUPTED and STAGGERED labels, a three-phase boss with an enrage state and a named telegraphed attack (Change-Ringing Cascade) shown on a red ground marker, loot callouts colour-coded by rarity, and six distinct spells (hex_dart, withering_mark, soul_siphon, shade_step, bound_wisps, night_bloom). Readability drops in busy moments, where large white or green blobs and overlapping popups hide the action. Hex_dart makes up 72% of casts, and the low-detail blocky enemies show no visible hit-stop or knockback. Only one class was recorded, so whether classes play differently can't be judged.",
+    "pyromancer": "The frames show solid systems: a three-phase named boss whose attacks are labelled on screen (Clapper Sweep, Great Toll) with ground telegraph rings, enraged and low-health states, white hit flashes, crit damage numbers, STAGGERED and INTERRUPTED tags, chain counters, and loot popups with rarity tags. Readability is the biggest problem. Hit flashes are huge and paint enemies flat white so they cover the screen (frame 10), effects lack clear shapes, and ember_bolt makes up 90 of 111 casts, so the spell rotation looks basic and repetitive. Only one class appears on this sheet, so differences between classes can't be judged, and there is no visible evidence of hit-stop, screen feedback or crowd control changing the fight.",
+    "stormcaller": "The frames show readable working combat: lightning arcs, damage numbers, STAGGERED and INTERRUPTED tags, a chain counter, and a three-phase boss with an enrage, a named 'Great Toll' telegraph and red ground rings. Loot drops show rarity colours and beams, and the 94 casts spread across 6 spells show variety. The biggest gaps are weak impact (spell effects are flat, translucent shapes with no visible hit-stop or screen feedback) and the 3388 sound voices, which point to cluttered audio. Several late frames have no enemies at all, and only one class is shown, so the claim that classes play differently is not supported.",
+    "warden": "Combat is busy and readable for the most part. The frames show big damage numbers, STAGGERED/INTERRUPTED status text, named boss attacks being telegraphed (Clapper Sweep, Peal of Shards), a three-phase boss that goes from enraged to VANQUISHED, rune circles and earth-shard effects, a combo chain counter and loot popups coloured by rarity, which clears the 60 anchor. It falls short of 80 because the effects are often washed-out bloom that hides the action, there is no visible hit-stop or screen shake, and crowd control and mobility (rootbind, boulder_leap) barely show. Most casts are the basic pebble_shot (80 of 103), and only one class is shown, so class differences can't be judged."
+   },
+   "Story presentation": {
+    "all": "Named characters (Nell Tapscott, Pip Hobbe) appear on screen with portraits, titles and over-the-shoulder letterboxed shots. The dialogue has three reply choices and is well written, and the original premise (the bell striking thirteen, the Unwinder, the Bellwarden) is tied to real Cambridge locations like Market Hill and Great St Mary's. The quest has a title card, a tracker and a completion screen with rewards. The biggest gaps: the characters are simple blocky models with no visible expression or animation, the staging is mostly static camera cuts, nothing is visibly voiced, and the boss reveal is shown in a text box rather than a real cinematic."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent gold-on-dark serif theme across the class select, HUD, inventory and talents. Class cards are clear, the boss bar shows its phase, cooldown numbers can be read, the minimap has a styled frame and item rarity tags are coloured. It loses points because combat gets cluttered: damage numbers, the ENRAGED banner and loot tooltips pile up over the boss. The inventory is mostly empty slots and the talent tree is just text boxes, and nothing on the sheet shows any animation or transitions."
+   }
+  }
+ },
+ "main_quests_shipped": 7,
+ "quest_bot_pass_pct": 100
+}
