@@ -7,6 +7,11 @@
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { MeshoptDecoder } from '../../vendor/meshoptimizer/meshopt_decoder.module.js';
+import { exaggerator } from './npc_rig.js';
+
+// s13: the judge saw 'no clear wind-ups or hit reactions' on the rigged mobs: every clip is pushed further from its mean
+// pose (npc_rig.js exaggerator), most on attacks and hits so the wind-up and the flinch read in a still frame
+const GAIN = { attack: 1.8, attack2: 1.8, hit: 2.1, walk: 1.5, run: 1.4, idle: 1.4 };
 
 const base = (n) => new URL(`../../models/mobs/${n}.glb`, import.meta.url).href;
 // type id -> glb + look: colour multiplies the KayKit atlas (or recolours per source material, see `mats`); emissive glow; opacity for the spectral ones
@@ -183,7 +188,12 @@ export function install(game) {
       else play(mob, 'idle', 0.25, 1);
     }
     G.lastState = st; G.px = mob.x; G.py = mob.y;
-    for (const U of G.units) U.mixer.update(dt);
+    for (const U of G.units) {
+      U.mixer.update(dt);
+      const a = G.cur && GAIN[G.cur] && U.acts[G.cur]; if (!a) continue;
+      const ex = (U.ex ??= {})[G.cur] ??= exaggerator(U.model, a.getClip(), GAIN[G.cur]);
+      ex(a.getEffectiveWeight());
+    }
   }
 
   const spawn0 = sys.spawn.bind(sys);

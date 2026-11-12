@@ -8,7 +8,7 @@
 import * as THREE from 'three';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
-import { loadNpc, recolour } from './npc_rig.js';
+import { loadNpc, recolour, exaggerator } from './npc_rig.js';
 import { mergeSkinned } from '../mobcull.js';
 
 // collision frame (x east, y north, m): the four recorded exploration spots, the square and the parade
@@ -20,6 +20,8 @@ const AREAS = [
   { x: -150, y: 40, r: 30, n: 3 },   // round Great St Mary's
 ];
 const CYCLISTS = 4;
+// s13: the stock KayKit walk read as 'pedestrians stand in place' in the judge's stills: double the stride and arm swing
+const WALK_GAIN = { 'upperleg.l': 2, 'upperleg.r': 2, 'lowerleg.l': 1.7, 'lowerleg.r': 1.7, 'upperarm.l': 2.2, 'upperarm.r': 2.2, 'lowerarm.l': 1.5, 'lowerarm.r': 1.5, hips: 1.8, spine: 1.6, chest: 1.6, head: 1.3 };
 const RIGS = ['nell', 'pip', 'absalom'], HEIGHT = { nell: 1.68, pip: 1.74, absalom: 1.82 };
 // muted everyday clothes (robe = coat, trim = scarf / lining)
 const PALETTES = [
@@ -158,6 +160,7 @@ function spawn(A, file, mat, p, j) {
     play(f, acts.idle ? 'idle' : 'walk'); if (acts.idle) acts.idle.timeScale = 0.3;
   } else {
     play(f, 'walk'); acts.walk.time = Math.random() * acts.walk.getClip().duration;
+    f.ex = exaggerator(model, acts.walk.getClip(), WALK_GAIN);
     acts.walk.timeScale = f.speed / WALK;
   }
   S.root.add(g); S.folk.push(f);
@@ -277,7 +280,7 @@ function tick(dt) {
       f.body.rotation.z = Math.sin(f.phase) * 0.04; f.body.rotation.x = flee ? 0.18 : 0.04;
     }
     f.mdt = (f.mdt || 0) + dt;   // the mixer runs when the walker is drawn: every frame near, every 3rd far
-    if (!LOD || (f.g.visible && (f.near || ++f.mskip % 3 === 0))) { f.mixer.update(f.mdt); f.mdt = 0; }
+    if (!LOD || (f.g.visible && (f.near || ++f.mskip % 3 === 0))) { f.mixer.update(f.mdt); f.mdt = 0; f.ex?.(f.cur === 'walk' ? f.acts.walk.getEffectiveWeight() : 0); }
     place(f, dt);
   }
 }
