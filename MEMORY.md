@@ -9,6 +9,7 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s71: merged Opt e30d803 (22df partial) -> f7246b90 gate 11/11, published; awaiting service score. Issues 5d62/eb30/0362 wait on 22df/05d8/d698.
 - s70: live 0ac41b55 judged 55.2 (Vis 50, Anim 38, Combat 61.2, Story 64, UI 68), playtest 91.7. Merged QA s12
   (anim_probe, quest_bot_fails; scripts only, hash unchanged). eb30 cause = 0362 pyro weak on Gatehouse Lion -> Story d698.
   Resolve eb30+0362 when d698 lands and QA closes 05d8.
