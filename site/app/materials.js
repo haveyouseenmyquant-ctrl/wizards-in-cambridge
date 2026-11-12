@@ -161,8 +161,38 @@ const groundFrag = `
   diffuseColor.rgb *= ${GK};
 `;
 
+// Environment & VFX s11: rectangles of tile wall cut away behind the zone's see-through shop glass, so the real shop
+// interiors modelled behind it (zone_build.py shop_interior) show; set from zone.json "cuts" by zone.js (setTileCuts).
+const MAXCUT = 128;
+uniforms.wcCut = { value: Array.from({ length: MAXCUT }, () => new THREE.Vector4()) };
+uniforms.wcCutY = { value: Array.from({ length: MAXCUT }, () => new THREE.Vector2()) };
+uniforms.wcCutN = { value: 0 };
+uniforms.wcCutBox = { value: new THREE.Vector4() };
+export function setTileCuts(cuts) {
+  const n = Math.min(cuts.length, MAXCUT), b = [1e9, 1e9, -1e9, -1e9];
+  for (let i = 0; i < n; i++) {
+    const [x0, z0, x1, z1, y0, y1] = cuts[i];
+    uniforms.wcCut.value[i].set(x0, z0, x1, z1);
+    uniforms.wcCutY.value[i].set(y0 - 0.05, y1);
+    b[0] = Math.min(b[0], x0, x1); b[1] = Math.min(b[1], z0, z1); b[2] = Math.max(b[2], x0, x1); b[3] = Math.max(b[3], z0, z1);
+  }
+  uniforms.wcCutBox.value.set(b[0] - 1, b[1] - 1, b[2] + 1, b[3] + 1);
+  uniforms.wcCutN.value = n;
+}
+const cutPars = `
+uniform vec4 wcCut[${MAXCUT}]; uniform vec2 wcCutY[${MAXCUT}]; uniform int wcCutN; uniform vec4 wcCutBox;
+`;
 const buildingFrag = `
   vec3 n = normalize(vWN);
+  if (wcCutN > 0 && abs(n.y) < 0.5 && vWP.x > wcCutBox.x && vWP.x < wcCutBox.z && vWP.z > wcCutBox.y && vWP.z < wcCutBox.w) {
+    for (int i = 0; i < ${MAXCUT}; i++) {
+      if (i >= wcCutN) break;
+      vec2 a = wcCut[i].xy, d = wcCut[i].zw - a;
+      float L = length(d); vec2 t = d / L, q = vWP.xz - a;
+      float s = dot(q, t), o = abs(q.x * t.y - q.y * t.x);
+      if (o < 0.3 && s > 0.02 && s < L - 0.02 && vWP.y > wcCutY[i].x && vWP.y < wcCutY[i].y) discard;
+    }
+  }
   if (abs(n.y) < 0.5) {   // wall (or steep roof facet): u runs along the wall, v up
     vec2 tg = normalize(vec2(-n.z, n.x) + 1e-5);
     float u = dot(vWP.xz, tg), v = vWP.y;
@@ -194,7 +224,7 @@ function patch(mat, kind) {
       .replace('#include <worldpos_vertex>', `#include <worldpos_vertex>
         vWP = (modelMatrix * vec4(transformed, 1.0)).xyz; vWN = normalize(mat3(modelMatrix) * objectNormal);`);
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\n' + common + (kind === 'b' ? '' : pavingFns))
+      .replace('#include <common>', '#include <common>\n' + common + (kind === 'b' ? cutPars : pavingFns))
       .replace('#include <color_fragment>', '#include <color_fragment>\n' + (kind === 'b' ? buildingFrag : groundFrag));
   };
   mat.customProgramCacheKey = () => 'wc_' + kind;

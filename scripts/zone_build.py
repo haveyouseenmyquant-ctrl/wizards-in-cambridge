@@ -132,6 +132,8 @@ def gl_mesh(name, P, nrm, col, mat=None):
 
 
 HIDE = []
+CUTS = []        # s11: [x0, z0, x1, z1, y0, y1] three.js frame: tile wall rectangles cut away behind shop glass
+SHOPGLASS = []   # s11: see-through shop glass triangles (mat 10)
 ELEMENTS = {}   # wall id -> {"window": n, ...} counted from the geometry of the bespoke modules (their ELEMENTS)
 PROP_BUILDINGS = {"way/400160677", "way/400160686"}   # food trailers: modelled by zone_props.py
 
@@ -311,16 +313,28 @@ def main():
         x0s, x1s = ext[w["id"]]
         if w["id"] in curves:
             P, Pw, Nw, C, M = curved_skin(w, lay, H, *curves[w["id"]])
+            M = np.where(M == F.MATS["shopglass"], F.MATS["glass"], M)   # bent walls: no tile cut, glass stays opaque
         else:
+            F.SHOP_INTERIORS = True
             P = F.wall_facade(L, H, lay, x0s, x1s)
+            F.SHOP_INTERIORS = False
             T, N, C = P.arrays()
             M = P.mats()
             if not len(T):
                 continue
             Pw, Nw = to_collision(w, T, N)
+            for a_, b_, z0_, z1_ in P.cuts:   # s11: tile wall cut away behind see-through shop glass (materials.js)
+                E, _ = to_collision(w, np.array([[[a_, 0, z0_], [b_, 0, z1_], [a_, 0, z1_]]]), np.zeros((1, 3)))
+                g = B.to_gl(E[0])
+                CUTS.append([round(float(v), 3) for v in (g[0][0], g[0][2], g[1][0], g[1][2], g[0][1], g[1][1])])
         Pw, nrm, keep = orient(Pw, Nw)
         col = np.clip(C[keep], 0, 1) ** GAMMA
-        by_b.setdefault(w["osm_id"], []).append((Pw, nrm, col, M[keep]))
+        M = M[keep]
+        sg = M == F.MATS["shopglass"]
+        if sg.any():
+            SHOPGLASS.append((Pw[sg], nrm[sg], col[sg], M[sg]))
+            Pw, nrm, col, M = Pw[~sg], nrm[~sg], col[~sg], M[~sg]
+        by_b.setdefault(w["osm_id"], []).append((Pw, nrm, col, M))
         area = L * H
         tot_area += area
         tot_detail += min(P.detail_area, area)
@@ -330,6 +344,8 @@ def main():
     meshes = []
     for oid, parts in by_b.items():
         meshes.append(gl_mesh("f:" + oid, *(np.concatenate(x) for x in zip(*parts))))
+    if SHOPGLASS:   # one transparent node (zone.js: reflection-only glass over the real shop interiors)
+        meshes.append(gl_mesh("shopglass", *(np.concatenate(x) for x in zip(*SHOPGLASS))))
     nprops = 0
     for oid, fn in bespoke.items():
         try:
@@ -359,7 +375,7 @@ def main():
              "walls_skipped": skipped,
              "tris": ntris, "facade_tris": ntris - nprops, "prop_tris": nprops,
              "facade_area_m2": round(tot_area, 1), "modelled_detail_area_m2": round(tot_detail, 1)}
-    json.dump({"glb": "zone/" + ZONE + ".glb", "centre": centre, "radius": 140, "hide": HIDE, "stats": stats},
+    json.dump({"glb": "zone/" + ZONE + ".glb", "centre": centre, "radius": 140, "hide": HIDE, "cuts": CUTS, "stats": stats},
               open(os.path.join(out, "zone.json"), "w"), indent=1)
     os.makedirs(os.path.join(ROOT, "data/derived"), exist_ok=True)
     built = {r["id"]: r for r in rows}
