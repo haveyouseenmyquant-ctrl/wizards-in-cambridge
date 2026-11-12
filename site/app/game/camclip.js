@@ -71,9 +71,10 @@ export function install(game) {
     const dx = x - hx, dy = y - hy, dz = z - hz, L = Math.hypot(dx, dy, dz);
     if (L < 0.4) return;
     // also an un-eased line-of-sight ray (combatcam eases its pull-in; the zone can appear mid-fight)
-    const occ = pl.camOcclude ? pl.camOcclude(hx, hz, -hy, dx / L, dz / L, -dy / L, L) : Infinity;
-    // prop boxes count too, unless the chest is in one (standing in a stall strip: the lift above handles that)
+    // prop boxes (and this ray) count too, unless the chest is in a box (standing in a stall strip: the lift above
+    // handles that, and a ray from inside the strip would pull the lifted camera back down into it)
     const props = !hitAny(hx, hz, -hy), badP = (x, y, z) => bad(x, y, z) || (props && !!hitAny(x, z, -y));
+    const occ = props && pl.camOcclude ? pl.camOcclude(hx, hz, -hy, dx / L, dz / L, -dy / L, L) : Infinity;
     if (occ >= L && !badP(x, y, z)) { keep = null; return; }
     st.walls++;
     // 1) pull in along the line to just before the first bad point or visual hit, if that leaves a usable boom
