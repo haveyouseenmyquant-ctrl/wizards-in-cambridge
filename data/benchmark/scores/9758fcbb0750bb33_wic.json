@@ -1,4 +1,194 @@
 {
  "main_quests_shipped": 7,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 21.5,
+  "main_quests_shipped": 7,
+  "wall_s": 142,
+  "at": "2026-11-12T01:22:58.351Z"
+ },
+ "cam_clip_pct": 0,
+ "cam_clip_combat_pct": 0,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [],
+ "judged_game_quality": 55.9,
+ "judged_sections": {
+  "Visuals": 50.0,
+  "Animation": 38.0,
+  "Combat feel": 62.8,
+  "Story presentation": 66.0,
+  "UI polish": 68.0
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    52.0,
+    50.0,
+    50.0
+   ],
+   "Animation": [
+    38.0,
+    35.0,
+    40.0
+   ],
+   "Combat feel": [
+    61.5,
+    62.8,
+    63.2
+   ],
+   "Story presentation": [
+    64.0,
+    66.0,
+    66.0
+   ],
+   "UI polish": [
+    68.0,
+    66.0,
+    70.0
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 2.0,
+   "Animation": 5.0,
+   "Combat feel": 1.8,
+   "Story presentation": 2.0,
+   "UI polish": 4.0
+  },
+  "quality_spread": 1.7,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.71",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city's art direction is coherent: brick and stone buildings with window detail, a Gothic church, market stalls, bikes, railings, a tree, warm low-sun lighting with real-time shadows and some atmospheric haze. Geometry is still blocky and sparse, though. Facades are flat and repeated, there is little clutter or wear, and the stripy stall roofs look like flat colour. The chibi-style characters and NPCs have little detail and the boss is a simple shape, so the build sits below the 60 anchor on density, lighting richness and character fidelity."
+   },
+   "Animation": {
+    "all": "The wizard appears in walking poses with some leg and arm variation, and in a few combat frames, such as the pyromancer's, the arm is extended with the staff in what looks like a cast. Most attacks show up only as projectiles, rings, damage numbers and 'STAGGERED' text, with no matching body motion. The bell boss and other enemies look like rigid or simple figures, with no visible wind-ups, hit reactions, death animations, secondary cloth motion or meaningful crowd or foliage movement."
+   },
+   "Combat feel": {
+    "hexweaver": "The visible feedback is fairly complete. There are crit-tinted damage numbers, INTERRUPTED/STAGGERED status labels, a combo chain counter and red ground telegraphs. The named Bellwarden boss has a three-phase bar with an enraged phase and named attacks, and loot drops show rarity-coloured beams and rarity-labelled tooltips. The biggest gaps are effects and impact. Spell VFX are mostly small, flat orbs and thin bolts with weak shapes. Some frames are cluttered or blocked by geometry, and there's no visible evidence of hit-stop, screen shake or knockback. Hex dart makes up 75 of the 104 casts, which reads as repetitive, and the boss went from phase III to defeated within about five seconds.",
+    "pyromancer": "The pyromancer fight shows solid hit feedback. There are crit-tagged damage numbers, STAGGERED and INTERRUPTED states, a chain counter, red ground telegraphs for the boss's named attacks, and a three-phase Bellwarden boss with an enrage state and a VANQUISHED banner. Loot drops show rarity labels and stat cards, and the six-skill hotbar plus the cast log show several distinct spells being used. The gaps are that the VFX are small and hard to make out against busy market stalls, there is no visible hit-stop, knockback or screen shake, the boss dies in about 37 s with little threat to the player (0 deaths, 172 damage taken), and only one class can be judged here.",
+    "stormcaller": "Combat meets most of the 60 anchor. There are floating damage numbers with crit labels, STAGGERED states, a \u00d7N chain counter, a three-phase boss with named telegraphed attacks (Peal of Shards, Belfry Drop) and an enraged phase, loot beams with a rarity card, and readable lightning effects. It falls short of 80 for several reasons: casting is dominated by one spell (spark_lance 61 of 94), and the scene becomes a washed-out blur during the boss fight. The second half of the clip is near-idle with no enemies engaged, there is no visible hit-stop, knockback or crowd-control payoff, only one class can be judged, and 4050 sound voices in 60 s suggests audio spam rather than tuned feedback.",
+    "warden": "Combat is clearly readable. A three-phase boss gets a named health bar with phase markers and an enraged state. Damage and crit numbers, STAGGERED and VANQUISHED callouts, stone-spike and rune-circle VFX, rarity-coloured loot beams, cooldown hotbar icons and a chain counter are all visible, and the event log shows several distinct spells, crowd control, a mobility leap, and enemies in windup and stagger states. It falls short of 80 because the effects are low-detail, there is no visible hit-stop or screen shake, and pebble_shot is 62 of 83 casts, so the rotation is repetitive. The second half of the clip is mostly empty walking with few enemies, and only one class can be judged here."
+   },
+   "Story presentation": {
+    "all": "The scenes have letterboxed over-the-shoulder framing with named characters on screen. Speakers get portraits and titles, there is a three-option reply choice, and the lines are well written with a clear original premise tied to real Cambridge places (Market Hill, Great St Mary's), plus title cards and a boss reveal shot. The gaps: characters are low-detail, blocky figures with no visible facial or gesture performance, there's no evidence of voice acting, and no in-world quest marker or waypoint is visible. The staging and cinematic quality fall well short of a big-budget release."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent dark-and-gold theme across the class selection, HUD, inventory and talent screens. It also has spell icons with numeric cooldowns, a boss bar with phase markers, a minimap, rarity-coloured collection tracking and well-organised talent tiers, which puts it clearly above the 60 anchor. The menus are mostly text panels with small type and little bespoke art, and the inventory is largely empty slots. In combat, damage numbers and the large minimap crowd the scene, and no animation or transitions are visible."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.26,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.76,
+  "programs": [
+   68,
+   83
+  ],
+  "fps_p5": 59,
+  "fps_min": 49,
+  "slow_secs": [
+   [
+    0,
+    49
+   ]
+  ],
+  "long_frames": 2,
+  "worst_frames": [
+   [
+    0.1,
+    67
+   ],
+   [
+    0.6,
+    67
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 25,
+  "maxMobs": 36,
+  "dist": 201,
+  "laps": 1,
+  "draw_calls_median": 1343,
+  "tris_median": 6906668,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 3.42,
+  "loadavg_after": 2.6,
+  "waited_s": 333,
+  "load_ok": true,
+  "max_load": 4.0,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.26,
+    "loadavg_before": 3.42,
+    "loadavg_after": 3.3,
+    "fps_p5": 59
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.35,
+    "loadavg_before": 3.3,
+    "loadavg_after": 2.6,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-12T01:40:10+00:00"
+ }
 }
