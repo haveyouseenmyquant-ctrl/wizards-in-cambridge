@@ -11,7 +11,7 @@
 //   player_pose_dev_deg   mean over frames of the player's mean joint deviation from rest
 //   mob_pose_dev_deg      mean over (frame, mob) of the mob's mean joint deviation from rest
 //   npc_pose_dev_deg      same for NPCs and townsfolk
-//   cast_pose_frames_pct  % of game-mode frames where the player is in a cast pose: rig in its cast window and the
+//   cast_pose_frames_pct  % of combat frames where the player is in a cast pose: rig in its cast window and the
 //                         arm/hand joints >= CAST_ARM_DEG off rest
 //   rigid_mob_pct         % of mobs seen in >= 2 frames whose joints never move > RIGID_DEG between their frames
 //                         (skinned mobs seen once count as rigid if within RIGID_DEG of bind pose; procedural ones seen
@@ -95,7 +95,7 @@ const mean = a => a.length ? +(a.reduce((s, x) => s + x, 0) / a.length).toFixed(
 export function animSummary(samples) {
   const ok = samples.filter(s => s.anim && !s.anim.error);
   const pl = ok.filter(s => s.anim.player?.dev != null);
-  const game = pl.filter(s => !/^explore/.test(s.scene));
+  const game = pl.filter(s => /^combat_/.test(s.scene));   // cast pose: combat frames only
   const cast = game.filter(s => s.anim.player.cast_window && (s.anim.player.arm ?? 0) >= CAST_ARM_DEG);
   const actors = (key) => {
     const by = new Map();
