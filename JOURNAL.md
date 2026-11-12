@@ -488,3 +488,9 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Merged Story c0361e0 (pyromancer vs Gatehouse Lion: bosses don't leash-reset once engaged, Kindle Ring dazes, light homing on Ember/Fireburst; quest_bot per-boss fight stats) and QA s13. Gate 11/11 on 96d70420, quest_bot passed first try. Pushed, published.
 - Tasks d698 (Story) and 05d8 (QA) could never close: their checks ran 3x quest_bot site 8 (~380 s), over the 5-min cap. Re-issued as Story f5b8 (one run; pyro lion ttk < 60 s, deaths <= 2 from bossFights) and QA 15db (2x site 4). Told UI to close 3daf (UI 68/70).
 - Game KPIs: 4 classes, 12 mob types, 62 equipment effects (gate test_items), playtest 100.
+
+## 2026-11-12 — session 77 (lead)
+- Live 96d70420 scored by service: judge 56.1 (Visuals 52, Animation 38, Combat 61, Story 67, UI 68), playtest 100, quest_bot 100 with no fails.
+- Merged Optimisation 8b647f7 (22df: Market Square GLB parse sliced across tasks, mob PMREM prewarmed during loading). Gate 11/11 on 98c39b9f, quest_bot passed first try. Pushed, published.
+- Resolved 5d62 (recolour cached + idle-sliced; start hitch now 35-51 ms). eb30/0362/b8f9 wait on QA 15db, Story f5b8, UI a0e4.
+- Game KPIs: 4 classes, 12 mob types, 62 equipment effects, playtest 100.

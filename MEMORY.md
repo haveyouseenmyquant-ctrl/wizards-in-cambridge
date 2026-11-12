@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-12, after session 76)
+## State (2026-11-12, after session 77)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,6 +9,8 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s77: 96d70420 judged 56.1 (Vis 52, Anim 38, Combat 61, Story 67, UI 68). Merged Opt 8b647f7 (22df) -> 98c39b9f. Resolved 5d62.
+  Open issues eb30/0362 (QA 15db, Story f5b8), b8f9 (UI a0e4).
 - s76: ee8eb14c judged 55.5 (Vis 52, Anim 36, Combat 61.8, Story 64, UI 68). Merged Story c0361e0 (d698 pyro partial) + QA s13 -> 96d70420 gate 11/11, published.
   d698/05d8 checks were >5 min (3x quest_bot site 8 ~380 s): re-issued as Story f5b8 (1 run, bossFights pyro lion ttk<60) and QA 15db (2x site 4).
   Rule: quest_bot site 8 ~127 s; never put >2 runs in a check.
@@ -20,10 +22,6 @@
   no re-gate), published. Next: check 2c541244 UI polish for 3daf (>68).
 - s72: f7246b90 judged 55.6 (Vis 50, Anim 36, Combat 62, Story 66, UI 70; wic_kpi_check reads UI 66, 3daf still open), playtest 100.
   Merged EnvVFX s10 -> 1a0a21b4 gate 11/11 (quest_bot 1st try ok), published. Notes to Story (hit-stop invisible, stormcaller cam framing).
-- s71: merged Opt e30d803 (22df partial) -> f7246b90 gate 11/11, published; awaiting service score. Issues 5d62/eb30/0362 wait on 22df/05d8/d698.
-- s70: live 0ac41b55 judged 55.2 (Vis 50, Anim 38, Combat 61.2, Story 64, UI 68), playtest 91.7. Merged QA s12
-  (anim_probe, quest_bot_fails; scripts only, hash unchanged). eb30 cause = 0362 pyro weak on Gatehouse Lion -> Story d698.
-  Resolve eb30+0362 when d698 lands and QA closes 05d8.
 - Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 - Score json merge conflicts: union keys (python, ours first).
 
