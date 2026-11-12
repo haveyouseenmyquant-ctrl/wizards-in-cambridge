@@ -126,14 +126,22 @@ export function install(game) {
     lockBtn.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); toggleLock(); });
     document.body.appendChild(lockBtn); offs.push(() => lockBtn.remove());
   }
-  // reticle over the current target (a camera-facing ring)
-  const ringTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
-    g.strokeStyle = '#fff'; g.lineWidth = 5; g.beginPath(); g.arc(32, 32, 26, 0, Math.PI * 2); g.stroke();
-    for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; g.beginPath(); g.moveTo(32 + Math.cos(a) * 18, 32 + Math.sin(a) * 18); g.lineTo(32 + Math.cos(a) * 31, 32 + Math.sin(a) * 31); g.stroke(); }
+  // reticle: UI s9 (issue b8f9) - no longer drawn over the target's body: a flat ring on the ground under its feet plus a
+  // small chevron above its head, so the boss silhouette stays readable
+  const ringTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d');
+    g.strokeStyle = '#fff'; g.lineWidth = 7; g.beginPath(); g.arc(64, 64, 54, 0, Math.PI * 2); g.stroke();
+    g.lineWidth = 3; g.globalAlpha = 0.6; g.beginPath(); g.arc(64, 64, 44, 0, Math.PI * 2); g.stroke(); g.globalAlpha = 1;
+    for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + Math.PI / 4; g.beginPath(); g.moveTo(64 + Math.cos(a) * 46, 64 + Math.sin(a) * 46); g.lineTo(64 + Math.cos(a) * 62, 64 + Math.sin(a) * 62); g.stroke(); }
     return new T.CanvasTexture(c); })();
-  const reticle = new T.Sprite(new T.SpriteMaterial({ map: ringTex, color: 0xffffff, transparent: true, depthTest: false, depthWrite: false, fog: false }));
-  reticle.renderOrder = 999; reticle.visible = false; game.root.add(reticle);
-  offs.push(() => { game.root.remove(reticle); reticle.material.dispose(); ringTex.dispose(); });
+  const headTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+    g.fillStyle = '#fff'; g.strokeStyle = '#000a'; g.lineWidth = 4; g.beginPath(); g.moveTo(10, 14); g.lineTo(54, 14); g.lineTo(32, 50); g.closePath(); g.stroke(); g.fill();
+    return new T.CanvasTexture(c); })();
+  const ringMat = new T.MeshBasicMaterial({ map: ringTex, color: 0xffffff, transparent: true, depthWrite: false, fog: false, polygonOffset: true, polygonOffsetFactor: -4 });
+  const reticle = new T.Mesh(new T.PlaneGeometry(1, 1), ringMat); reticle.rotation.x = -Math.PI / 2;
+  reticle.renderOrder = 998; reticle.visible = false; game.root.add(reticle);
+  const marker = new T.Sprite(new T.SpriteMaterial({ map: headTex, color: 0xffffff, transparent: true, depthTest: false, depthWrite: false, fog: false }));
+  marker.renderOrder = 999; marker.visible = false; game.root.add(marker);
+  offs.push(() => { game.root.remove(reticle); game.root.remove(marker); reticle.geometry.dispose(); ringMat.dispose(); marker.material.dispose(); ringTex.dispose(); headTex.dispose(); });
 
   // ---------- poise / stagger, reactions, chain, scaled hit-stop + shake
   const dmgM = game.damageMob;
@@ -201,14 +209,16 @@ export function install(game) {
       }
       if ((softT -= dt) <= 0) { softT = 0.15; F.soft = F.lock || pickTarget(); }
       const tgt = F.lock || F.soft;
-      reticle.visible = !!tgt && !tgt.dead && game.stats.hp > 0;
+      reticle.visible = marker.visible = !!tgt && !tgt.dead && game.stats.hp > 0;
       if (reticle.visible) {
-        const h = (tgt.height ?? 1.6) * (tgt.boss ? 0.6 : 0.55);
-        reticle.position.set(tgt.x, tgt.z + h, -tgt.y);
-        const d = game.camera.position.distanceTo(reticle.position), s = Math.max(0.6, (tgt.radius || 0.5) * 2.4) * (F.lock ? 1 : 0.8);
-        reticle.scale.setScalar(Math.max(s, d * 0.045));
-        reticle.material.color.setHex(F.lock ? 0xff6040 : 0xffffff); reticle.material.opacity = F.lock ? 0.95 : 0.45;
-        reticle.material.rotation += dt * (F.lock ? 1.5 : 0.5);
+        const r = Math.max(0.5, (tgt.radius || 0.5) * 1.4, Math.min(3.5, tgt._uiHalf || 0)), h = tgt.height ?? 1.6;
+        reticle.position.set(tgt.x, (tgt.z || 0) + 0.06, -tgt.y); reticle.scale.setScalar(r * 2);
+        reticle.rotation.z += dt * (F.lock ? 1.2 : 0.4);
+        ringMat.color.setHex(F.lock ? 0xff6040 : 0xffffff); ringMat.opacity = F.lock ? 0.9 : 0.4;
+        marker.position.set(tgt.x, (tgt.z || 0) + h + 0.35 + Math.sin(performance.now() / 260) * 0.06, -tgt.y);
+        const d = game.camera.position.distanceTo(marker.position);
+        marker.scale.setScalar(Math.max(0.28, d * 0.022) * (F.lock ? 1 : 0.8));
+        marker.material.color.setHex(F.lock ? 0xff6040 : 0xffffff); marker.material.opacity = F.lock ? 0.95 : 0.5;
       }
       // words + chain counter
       wordT = Math.max(0, wordT - rdt);
