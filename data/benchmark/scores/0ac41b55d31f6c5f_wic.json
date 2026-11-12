@@ -45,5 +45,191 @@
   "wall_s": 137,
   "at": "2026-11-12T02:52:17.791Z"
  },
- "quest_bot_fails": []
+ "cam_clip_pct": 0,
+ "cam_clip_combat_pct": 0,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [],
+ "judged_game_quality": 55.2,
+ "judged_sections": {
+  "Visuals": 50,
+  "Animation": 38,
+  "Combat feel": 61.2,
+  "Story presentation": 64,
+  "UI polish": 68
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    50,
+    52,
+    50
+   ],
+   "Animation": [
+    38,
+    38,
+    34
+   ],
+   "Combat feel": [
+    61.5,
+    61.2,
+    61.2
+   ],
+   "Story presentation": [
+    64,
+    64,
+    64
+   ],
+   "UI polish": [
+    70,
+    68,
+    68
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 2,
+   "Animation": 4,
+   "Combat feel": 0.2,
+   "Story presentation": 0,
+   "UI polish": 2
+  },
+  "quality_spread": 1.3,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city looks coherent and recognisable, with textured brick and stone facades, Gothic church detail, bicycles, railings, market stalls and warm low-sun lighting with real-time shadows and some atmospheric haze. Geometry is still blocky, though: shop goods are primitive boxes and cylinders, streets are sparse and clean, facades repeat, and there is little clutter or wear. Characters are chunky low-detail figures, and in combat the bell boss and VFX look like simple primitives and flat overlays, well below the detail and lighting of a commercial release."
+   },
+   "Animation": {
+    "all": "The walking frames show some limb movement: the wizard's stride and staff pose change between frames, and there are small pedestrian NPCs. In combat, though, the player's attacks come across mostly as projectiles, rings, flashes and damage numbers, with no clear casting or hit-reaction poses. The bell boss looks like a rigid body with simple arm poses and no visible wind-up or follow-through. There's no visible secondary motion on robes or hair, no movement in foliage, water or crowds, and the timing and quality of the motion can't be judged beyond basic cycles."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show solid combat at roughly the 60 anchor. There are crit and damage numbers, staggered and interrupted states, named and telegraphed boss attacks with red ground AoE markers, a three-phase boss with an enrage, combo chain counters, rarity-labelled loot popups and six distinct spells in heavy use. Readability is the biggest gap: overlapping translucent VFX, enemy silhouettes and camera clipping (frames 7, 10 and 12) make fights muddy, and there is no visible hit-stop, knockback or screen feedback. Loot is mostly common and uncommon with flat popups, and with only one class shown, class variety can't be judged.",
+    "pyromancer": "The pyromancer uses six distinct spells, and the frames show readable feedback: damage numbers, STAGGERED and INTERRUPTED tags, a chain counter, and a low-health vignette. The Bellwarden boss has a three-phase health bar, named telegraphed attacks (Clapper Sweep, Belfry Drop, Peal of Shards) and red ground AoE markers. Hits look weak, with fire VFX that are faint or missing in most frames, no visible hit-stop or knockback, and white placeholder-looking shapes that hurt readability. The boss fight is long and repetitive, with one death, every loot drop is common or uncommon with no rarity cues visible on screen, and only one class is shown, so differences between classes can't be judged.",
+    "stormcaller": "The rubric's 60-level features are all visible. The stormcaller has six spells with cooldowns and a lightning-arc effect. Hits show damage numbers, crit callouts and stagger/interrupt tags, plus a chain counter and a red low-health screen tint. A three-phase bell boss (enraged in phase III) has named attacks telegraphed by red ground rings, and the log reports loot with rarity tiers. Holding the score near 60: the camera is often blocked by market stalls, most effects are simple translucent shapes with no visible hit-stop or knockback, the boss drowns out every other enemy (2 deaths), and only one class is shown, so differences between classes and builds can't be judged.",
+    "warden": "This one warden fight shows several distinct spells, damage numbers with crits, STAGGERED and INTERRUPTED status text, and a combo-chain counter. The three-phase bell boss has named attacks (Great Toll, Peal of Shards, Belfry Drop), red ground telegraphs and an enrage, and loot drops with rarity tags, low-health screen tint and a death/respawn are all shown. The biggest gaps are readability and impact: frames 1, 3 and 4 are washed out by large faceted rock and dust VFX that hide the action, there is no visible hit-stop or knockback, pebble_shot makes up most casts, and only 1 of 7 drops was picked up, so there are few exciting loot moments."
+   },
+   "Story presentation": {
+    "all": "The story is clearly presented. There is a prologue title card, letterboxed over-the-shoulder dialogue shots with named speakers and portraits, three-option reply choices, and an objective tracker. Lines are well written and tied to real locations (Market Hill, Great St Mary's), and a boss reveal and quest-complete card show the stakes. The biggest gaps are the primitive, low-poly characters with no visible expression or animation and the simple static staging. There is no voice acting, no in-world quest markers are visible, and the choices barely change the scene, so it falls well short of staged cinematics."
+   },
+   "UI polish": {
+    "all": "The UI has one consistent dark-and-gold serif theme across the class select, HUD, inventory and talent screens. The class cards are clear, the boss bar shows phase markers, the spell bar has icons with cooldown numbers, and the inventory shows rarity colours plus a collection tracker. The talent tree has a clear tier hierarchy. On the downside, the inventory and talent text is small and low-contrast, and large damage numbers and effects crowd the centre of the screen in combat. No transitions or animation are visible, and the HUD elements are fairly small and generic, short of AAA bespoke craft."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.9,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 1.59,
+  "programs": [
+   67,
+   85
+  ],
+  "fps_p5": 59,
+  "fps_min": 28,
+  "slow_secs": [
+   [
+    0,
+    28
+   ]
+  ],
+  "long_frames": 11,
+  "worst_frames": [
+   [
+    0.3,
+    100
+   ],
+   [
+    1.2,
+    84
+   ],
+   [
+    0.2,
+    68
+   ],
+   [
+    0,
+    67
+   ],
+   [
+    0.4,
+    67
+   ],
+   [
+    0.2,
+    66
+   ],
+   [
+    0.1,
+    50
+   ],
+   [
+    0.6,
+    50
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 188,
+  "kills": 28,
+  "maxMobs": 36,
+  "dist": 201,
+  "laps": 1,
+  "draw_calls_median": 1371,
+  "tris_median": 6944303,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 6.59,
+  "loadavg_after": 3.12,
+  "waited_s": 1211,
+  "load_ok": false,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.9,
+    "loadavg_before": 6.59,
+    "loadavg_after": 3.06,
+    "fps_p5": 59
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.29,
+    "loadavg_before": 3.06,
+    "loadavg_after": 3.12,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-12T03:22:18+00:00"
+ },
+ "quest_bot_fails": [],
+ "gate_ok": true,
+ "gate_tests": {
+  "test_modload": true,
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
+ }
 }

@@ -32,7 +32,7 @@ export function install(game) {
 
   // 919d: recolour the class atlases in idle-time slices once the model arrives, current class first, so neither the
   // first rigged frame at game start nor any later frame pays the ~50 ms of 1024x1024 pixel work in one go
-  let baseMap = null, hatTop = null, src = null;
+  let baseMap = null, hatTop = null, src = null, modelBox = null;
   const jobs = {};
   function prewarm() {
     asset.scene.traverse(o => { if (o.isMesh && !baseMap) baseMap = o.material.map; });
@@ -100,7 +100,7 @@ export function install(game) {
       if (o.name === 'Wizard_Staff') staff = o;
       if (o.name === 'Head') head = o;
     });
-    model.updateMatrixWorld(true); const box = new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1;
+    model.updateMatrixWorld(true); const box = modelBox ??= new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1;   // Optimisation s11: same asset every class, per-vertex skinned bounds once
     inner.scale.setScalar(HEIGHT / h); inner.position.y = -box.min.y * HEIGHT / h; root.updateMatrixWorld(true);
     // robe hem secondary motion (s7): the rig has no cloth bones, so the body material bends the skirt in the vertex
     // shader. robeSpring() drives a damped spring from the root's velocity and turn rate; vertices below the hips are
@@ -239,14 +239,14 @@ export function install(game) {
     if (wc > 0) {
       const th = ease((ct - 0.14) / 0.14);   // 0 = drawn back (wind-up), 1 = thrust at the target
       tiltBone(B.Torso, Rt, (0.22 - 0.42 * th) * wc);                       // rear back, then drive forward into the cast
-      tiltBone(B.Torso, U, (0.35 - 0.6 * th) * wc);                         // shoulders coil, then unwind
+      tiltBone(B.Torso, U, (0.5 - 0.95 * th) * wc);                         // shoulders coil, then unwind well past square (s12: shows the profile from behind)
       if (R.castRaise) {   // area spells: both arms up, staff high
         aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.5, 1, 0.15 + 0.4 * th), wc); aimBone(B['LowerArm.R'], B['Fist.R'], dirv(0.15, 1, 0.3), wc);
         aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.5, 1, 0.15 + 0.4 * th), wc); aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.15, 1, 0.3), wc);
       } else {
-        aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.5, 0.9 - 0.75 * th, -0.6 + 1.6 * th), wc);   // staff over the shoulder -> levelled
-        aimBone(B['LowerArm.R'], B['Fist.R'], dirv(0.1, 1 - 0.55 * th, -0.3 + 1.3 * th), wc);
-        aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.7 + 0.3 * th, 0.1 + 0.25 * th, 0.4 + 0.8 * th), wc);   // free hand pushes out
+        aimBone(B['UpperArm.R'], B['LowerArm.R'], dirv(0.5 + 0.45 * th, 0.9 - 0.4 * th, -0.6 + 1.3 * th), wc);   // staff over the shoulder -> flung out and up to the side (s12: breaks the silhouette from behind)
+        aimBone(B['LowerArm.R'], B['Fist.R'], dirv(0.1 + 0.5 * th, 1 - 0.4 * th, -0.3 + 1.1 * th), wc);
+        aimBone(B['UpperArm.L'], B['LowerArm.L'], dirv(-0.7 - 0.1 * th, 0.1 + 0.35 * th, 0.4 + 0.6 * th), wc);   // free hand pushes out, wide of the body
         aimBone(B['LowerArm.L'], B['Fist.L'], dirv(-0.1, 0.3, 1), wc);
       }
     }
@@ -288,8 +288,8 @@ export function install(game) {
     const ct = R.hold === 'cast' ? 0.3 : R.hold === 'windup' ? 0.08 : t - R.castT;
     const wc = R.hold === 'cast' || R.hold === 'windup' ? 1 : env(ct, 0.06, 0.62, 0.95), wh = R.hold === 'hit' ? 1 : env(t - R.hitT, 0.05, 0.22, 0.55);
     const th = ease((ct - 0.14) / 0.14), lw = R.lw;
-    const rx = (0.14 - 0.34 * th) * wc + 0.28 * wh, rz = -0.11 * lw * R.roll;
-    const dy = lw * (0.06 * (1 - Math.abs(R.s || 0)) - 0.03) - 0.06 * wc * th - 0.05 * wh, fw = 0.18 * wc * th - 0.15 * wh;
+    const rx = (0.18 - 0.42 * th) * wc + 0.36 * wh, rz = -0.11 * lw * R.roll + (0.08 - 0.2 * th) * wc * (R.castRaise ? 0 : 1);   // s12: lean off the staff side
+    const dy = lw * (0.06 * (1 - Math.abs(R.s || 0)) - 0.03) - 0.06 * wc * th - 0.05 * wh, fw = 0.28 * wc * th - 0.22 * wh;
     R.root.rotation.set(rx, p.yaw, rz, 'YXZ');
     R.root.position.x -= Math.sin(p.yaw) * fw; R.root.position.z -= Math.cos(p.yaw) * fw; R.root.position.y += dy;
     R.root.updateMatrixWorld(true);
@@ -328,7 +328,15 @@ export function install(game) {
   function update(p, visible, W) {
     if (!asset) return false;
     const cls = game.caster?.cls || 'stormcaller';
-    if (!R || R.cls !== cls) { destroy(); R = build(cls); }
+    // Optimisation s11 (task 22df): while the class atlas isn't recoloured yet, keep the current rig (or the procedural
+    // wizard before the first one) and run the recolour in <= 4 ms slices (classTexture() finishing it in one go was a
+    // ~25 ms frame at game start)
+    if ((!R || R.cls !== cls) && !texCache[cls] && baseMap?.image) {
+      const job = jobs[cls] ??= recolourJob(cls, baseMap), t0 = performance.now();
+      while (!job.next().done && performance.now() - t0 < 4);
+      if (!texCache[cls] && !R) return false;
+    }
+    if (!R || (R.cls !== cls && (texCache[cls] || !baseMap?.image))) { destroy(); R = build(cls); }
     R.root.visible = visible;
     // s11: catch up in 40 ms sub-steps when the clock jumped (fixed-step recordings advance game time for seconds between
     // rendered frames; one clamped 0.1 s update left the gait cross-fade, springs and cast blends barely started there)

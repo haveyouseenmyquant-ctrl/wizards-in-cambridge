@@ -125,7 +125,7 @@ export function install(game) {
   // s71: pillar height / width step clearly with tier, and the beam colours are saturated per tier (white, green, blue,
   // purple, orange) so a common drop no longer reads like an uncommon one
   const PILLAR = { common: [3.5, 0.08], uncommon: [7, 0.13], rare: [12, 0.18], epic: [19, 0.24], legendary: [30, 0.33] };   // EnvVFX s5: ~0.6x width (judge: washed-out columns)
-  const BEAM_COL = { common: 0xf4f4f4, uncommon: 0x2fe040, rare: 0x2f7dff, epic: 0xb63cff, legendary: 0xff8a10 };
+  const BEAM_COL = { common: 0xd6d2c4, uncommon: 0x2fe040, rare: 0x2f7dff, epic: 0xb63cff, legendary: 0xff8a10 };
   const LINGER = 2.5;
   const beamGeo = new T.CylinderGeometry(1, 1, 1, 14, 1, true); beamGeo.translate(0, 0.5, 0);
   const gemGeo = new T.OctahedronGeometry(0.26);
@@ -169,11 +169,11 @@ export function install(game) {
     const core = new T.Mesh(beamGeo, new T.MeshBasicMaterial(add({ color: 0xffffff, map: pillarTex, opacity: 0.12, fog: false, premultipliedAlpha: true })));
     core.scale.set(pw * 0.3, 0.01, pw * 0.3);
     const pad = new T.Mesh(padGeo, new T.MeshBasicMaterial(add({ color: col, map: padTex, opacity: 0.8, side: T.DoubleSide, premultipliedAlpha: true })));
-    pad.position.y = 0.04; pad.scale.setScalar(1.1 + 0.25 * ord);
+    pad.position.y = 0.04; pad.scale.setScalar(0.8 + 0.25 * ord);
     const ring = new T.Mesh(ringGeo2, new T.MeshBasicMaterial(add({ color: col, opacity: 0.6, side: T.DoubleSide })));
     ring.position.y = 0.06;
-    const gem = new T.Mesh(gemGeo, new T.MeshBasicMaterial({ color: col }));
-    const halo = new T.Sprite(new T.SpriteMaterial(add({ color: col, map: padTex, opacity: 0.9, premultipliedAlpha: true }))); halo.scale.setScalar(1.1 + 0.2 * ord);
+    const gem = new T.Mesh(gemGeo, new T.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.55, metalness: 0.3, roughness: 0.2, flatShading: true }));   // EnvVFX s10: faceted lit gem, not a flat-colour blob
+    const halo = new T.Sprite(new T.SpriteMaterial(add({ color: col, map: padTex, opacity: 0.9, premultipliedAlpha: true }))); halo.scale.setScalar(0.55 + 0.15 * ord);   // EnvVFX s10: was 1.1+0.2*ord (a common drop read as a big white ball)
     // s71: rare+ get a wide soft outer shell, epic+ a turning rune circle on the ground, legendary rising sparkles
     const shell = new T.Mesh(beamGeo, new T.MeshBasicMaterial(add({ color: col, map: pillarTex, opacity: 0.1, side: T.DoubleSide, fog: false, premultipliedAlpha: true })));
     shell.scale.set(pw * 2.6, 0.01, pw * 2.6); shell.visible = ord >= 2;
@@ -235,19 +235,19 @@ export function install(game) {
       pk.beam.scale.x = pk.beam.scale.z = pk.pw * (1 + 0.8 * Math.max(0, 1 - age / 0.4));   // flare wide on landing
       pk.beam.material.opacity = 0.42 + 0.06 * pk.ord + Math.sin(S.t * 3 + pk.t0) * 0.1; pk.core.material.opacity = 0.12 + 0.03 * pk.ord + Math.sin(S.t * 5 + pk.t0) * 0.04;   // session 48: dimmer pillars (s71: brighter per tier)
       { const cd = game.camera ? game.camera.position.distanceTo(pk.g.position) : 9, nf = Math.max(0, Math.min(1, (cd - 2) / 4));   // EnvVFX s8: no flat halo discs right in front of the camera
-        pk.halo.material.opacity = 0.9 * nf; pk.halo.visible = nf > 0.02; pk.pad.material.opacity = 0.8 * (0.3 + 0.7 * nf); }
+        pk.halo.material.opacity = 0.5 * nf; pk.halo.visible = nf > 0.02; }
       pk.shell.scale.y = pk.beam.scale.y * 0.7; pk.shell.material.opacity = 0.16 + Math.sin(S.t * 2 + pk.t0) * 0.05;
       pk.rune.rotation.y += dt * 0.8; pk.rune.scale.setScalar((2.2 + 0.5 * pk.ord) * (0.4 + 0.6 * grow));
       for (let k = 0; k < pk.sparks.length; k++) { const f = (S.t * 0.35 + k / pk.sparks.length) % 1, a = k * 2.4 + S.t * 1.7, rr = 0.25 + 0.5 * f;
         pk.sparks[k].position.set(Math.cos(a) * rr, 0.3 + f * pk.ph * 0.55 * grow, Math.sin(a) * rr); pk.sparks[k].scale.setScalar(0.28 * Math.sin(f * Math.PI) + 0.05); }
-      pk.pad.material.opacity = 0.65 + Math.sin(S.t * 3 + pk.t0) * 0.15;
+      { const cd = game.camera ? game.camera.position.distanceTo(pk.g.position) : 9; pk.pad.material.opacity = (0.4 + Math.sin(S.t * 3 + pk.t0) * 0.1) * (0.3 + 0.7 * Math.max(0, Math.min(1, (cd - 2) / 4))); }
       pk.plate.position.y = 2.2 + Math.sin(age * 2) * 0.05;
       { const cp = game.camera?.position, cd = cp ? Math.hypot(cp.x - pk.x, cp.y - pk.z - 2.1, cp.z + pk.y) : 99;   // session 48: fade out up close
         pk.plate.material.opacity = Math.max(0, Math.min(1, (cd - 3) / 3)); pk.plate.visible = cd > 3 && (!fight || pk.ord >= 2 || near2.has(pk));
         // session 54: the plate keeps a small fixed on-screen size up close (a 2.3 m sprite 4 m away filled the middle of the screen)
         const ks = Math.min(1, cd / 16), pw = fight ? 2.0 : 2.8; pk.plate.scale.set(pw * ks, pw / 4 * ks, 1);
         // session 54: the soft halo sprite fades out near the camera (up close it read as a big flat rarity-coloured disc)
-        pk.halo.material.opacity = 0.9 * Math.max(0, Math.min(1, (cd - 2.5) / 4)); }
+        pk.halo.material.opacity = 0.5 * Math.max(0, Math.min(1, (cd - 2.5) / 4)); }
       const rp = (age * 0.8) % 1; pk.ring.scale.setScalar(pk.rs * (0.3 + rp)); pk.ring.material.opacity = 0.65 * (1 - rp);
       if (Math.random() < dt * (3 + 3 * pk.ord)) { const a = Math.random() * 6.283; fx.stream(v3(pk.x + Math.cos(a) * 0.5, pk.y + Math.sin(a) * 0.5, pk.z + 0.1), v3(pk.x, pk.y, pk.z + 2.5 + pk.ord), pk.col, 1); }
       if (d < 1.8 && Math.abs(dz) < 2.5 && age > 0.3) collect(pk); } }

@@ -797,9 +797,9 @@ const MODELS = {
       straps: merge([-1.1, -0.4, 0.4, 1.1].map(x => box(0.1, 0.38, 0.54, [x, 3.2, 0])), cyl(0.12, 0.12, 0.4, [0, 2.88, 0], [0, 0, 0], 10)),
       clapper: merge(sph(0.42, [0, 0, 0], [1, 1.25, 1], 14, 10), cyl(0.08, 0.08, 2.1, [0, 1.05, 0], [0, 0, 0], 8)),
       eye: sph(0.25, [0, 0, 0], [1, 0.7, 0.5], 14, 10),
-      arm: merge(limb([[0, 0, 0], [0.15, -0.9, 0.1], [0.1, -1.85, 0.15]], 0.2, 0.15, 10, 8), sph(0.42, [0.1, -2.1, 0.15], [1, 1.2, 1], 12, 10),
+      arm: merge(limb([[0, 0, 0], [0.15, -0.9, 0.1], [0.1, -1.85, 0.15]], 0.32, 0.24, 10, 8), sph(0.55, [0.1, -2.1, 0.15], [1, 1.2, 1], 12, 10),
         Array.from({ length: 6 }, (_, i) => { const a = i / 6 * TAU; return cone(0.09, 0.3, [0.1 + Math.cos(a) * 0.42, -2.15, 0.15 + Math.sin(a) * 0.42], [Math.sin(a) * PI / 2, 0, -Math.cos(a) * PI / 2], 6); })),
-      armBrass: merge(sph(0.34, [0, 0, 0], 1, 12, 8), tor(0.19, 0.05, [0.12, -0.9, 0.1], [PI / 2, 0, 0], 5, 14), tor(0.17, 0.05, [0.1, -1.7, 0.15], [PI / 2, 0, 0], 5, 14)),
+      armBrass: merge(sph(0.46, [0, 0, 0], 1, 12, 8), tor(0.3, 0.07, [0.12, -0.9, 0.1], [PI / 2, 0, 0], 5, 14), tor(0.26, 0.07, [0.1, -1.7, 0.15], [PI / 2, 0, 0], 5, 14)),
       lantern: lathe([[0, -0.35], [0.22, -0.28], [0.3, 0], [0.24, 0.26], [0, 0.4]], 8),
       cage: merge(cone(0.42, 0.35, [0, 4.35, 0], [0, 0, 0], 8), tor(0.32, 0.035, [0, 3.5, 0], [PI / 2, 0, 0], 4, 16), sph(0.08, [0, 4.58, 0], 1, 8, 6),
         Array.from({ length: 4 }, (_, i) => { const a = i / 4 * TAU + PI / 4; return cyl(0.025, 0.025, 0.7, [Math.cos(a) * 0.32, 3.85, Math.sin(a) * 0.32], [0, 0, 0], 4); })),
@@ -2116,29 +2116,37 @@ class MobSystem {
         P.body.position.y = moving ? 0.22 * (1 - Math.abs(wv)) - 0.08 : 0.04 * sw;
         P.torso.rotation.set(moving ? 0.12 : 0.04 * sw, wv * 0.18, wv * 0.16 + sw * (enr ? 0.12 : 0.07));
         P.armL.rotation.set(-wv * 0.7 + 0.1 * sw, 0, -0.3); P.armR.rotation.set(wv * 0.7 - 0.1 * sw, 0, 0.3);
+        // s12: the judge still read 'no wind-ups, no hit reactions' because the bell is rotationally symmetric: yaw twists
+        // and small pitches do not change its silhouette. Every wind-up now TILTS the bell hard (roll/pitch 0.6-0.9 rad, so
+        // the mouth and the clapper show), the mace arms go far out past the bell's rim and the body drops into a crouch.
         if (st === 'windup') {
-          const e = wf * (2 - wf), shake = Math.sin(t * 34) * 0.06 * wf;
-          if (k === 'ring' || k === 'leap') {
-            P.armL.rotation.set(-0.5 * e, 0, -2.8 * e); P.armR.rotation.set(-0.5 * e, 0, 2.8 * e);
-            P.torso.rotation.set(-0.4 * e, 0, shake); P.body.position.y = -(k === 'leap' ? 0.55 : 0.3) * e;
-            P.legL.rotation.x = P.legR.rotation.x = 0; P.legL.rotation.z = -0.25 * e; P.legR.rotation.z = 0.25 * e;
-          } else if (k === 'line') {
-            P.torso.rotation.set(-0.15 * e, -1.3 * e, 0.1 * e); P.armR.rotation.set(-1.4 * e, 0, 1.4 * e); P.armL.rotation.set(-0.8 * e, 0, -0.6 * e);
-            P.body.position.y = -0.2 * e;
-          } else if (k === 'nova') {
-            P.armL.rotation.set(0, 0, -1.7 * e); P.armR.rotation.set(0, 0, 1.7 * e);
-            P.torso.rotation.set(-0.25 * e + shake, 0, shake * 2); P.body.position.y = -0.15 * e;
-          } else {
-            P.armL.rotation.set(-2.5 * e, 0, -0.3); P.armR.rotation.set(-2.5 * e, 0, 0.3); P.torso.rotation.set(-0.3 * e, 0, shake);
+          const e = wf * (2 - wf), shake = Math.sin(t * 34) * 0.08 * wf;
+          if (k === 'ring' || k === 'leap') {   // rear right back, mouth to the sky, maces overhead
+            P.armL.rotation.set(-1.0 * e, 0, -2.6 * e); P.armR.rotation.set(-1.0 * e, 0, 2.6 * e);
+            P.torso.rotation.set(-0.75 * e, 0, shake); P.body.position.y = -(k === 'leap' ? 0.7 : 0.45) * e;
+            P.legL.rotation.x = P.legR.rotation.x = 0; P.legL.rotation.z = -0.4 * e; P.legR.rotation.z = 0.4 * e;
+          } else if (k === 'line') {   // sweep: heel over to the left, right mace drawn high behind
+            P.torso.rotation.set(-0.2 * e, -0.5 * e, 0.8 * e); P.armR.rotation.set(-1.2 * e, 0, 2.4 * e); P.armL.rotation.set(0.4 * e, 0, -1.0 * e);
+            P.body.position.y = -0.3 * e; P.legR.rotation.z = 0.35 * e; P.legL.rotation.z = 0.1 * e;
+          } else if (k === 'nova') {   // arms flung wide, the bell shudders on a forward tilt
+            P.armL.rotation.set(0, 0, -1.9 * e); P.armR.rotation.set(0, 0, 1.9 * e);
+            P.torso.rotation.set(0.55 * e + shake, 0, shake * 3); P.body.position.y = -0.35 * e;
+          } else {   // drop / cascade: both maces raised forward, leaning back
+            P.armL.rotation.set(-2.7 * e, 0, -0.6 * e); P.armR.rotation.set(-2.7 * e, 0, 0.6 * e); P.torso.rotation.set(-0.6 * e, 0, shake);
+            P.body.position.y = -0.3 * e;
           }
         } else if (st === 'active' || st === 'recover') {
           const f = st === 'active' ? 1 : 0.6;
-          if (k === 'ring' || k === 'leap') { P.armL.rotation.set(-1.2 * f, 0, -0.6); P.armR.rotation.set(-1.2 * f, 0, 0.6); P.torso.rotation.set(0.4 * f, 0, 0); P.body.position.y = -0.3 * f; }
-          else if (k === 'line') { P.torso.rotation.set(0.2 * f, 1.0 * f, -0.1); P.armR.rotation.set(-1.5 * f, 0, -0.4 * f); }
-          else { P.torso.rotation.x = 0.25 * f; }
+          if (k === 'ring' || k === 'leap') { P.armL.rotation.set(-0.3 * f, 0, -1.2 * f); P.armR.rotation.set(-0.3 * f, 0, 1.2 * f); P.torso.rotation.set(0.7 * f, 0, 0); P.body.position.y = -0.45 * f; }
+          else if (k === 'line') { P.torso.rotation.set(0.15 * f, 0.4 * f, -0.75 * f); P.armR.rotation.set(-1.4 * f, 0, -1.2 * f); P.armL.rotation.set(0, 0, -1.6 * f); }
+          else { P.torso.rotation.x = 0.6 * f; P.armL.rotation.set(-0.8 * f, 0, -0.4); P.armR.rotation.set(-0.8 * f, 0, 0.4); }
         }
-        if (st === 'stagger') { P.torso.rotation.set(0.35 + Math.sin(t * 25) * 0.1, 0, Math.sin(t * 9) * 0.15); P.armL.rotation.set(0.3, 0, -0.1); P.armR.rotation.set(0.3, 0, 0.1); P.body.position.y = -0.35; }
-        if (hr > 0) { P.torso.rotation.x -= 0.4 * hr; P.torso.rotation.z += Math.sin(t * 40) * 0.12 * hr; P.armL.rotation.z -= 0.6 * hr; P.armR.rotation.z += 0.6 * hr; }
+        if (st === 'stagger') { P.torso.rotation.set(0.6 + Math.sin(t * 25) * 0.12, 0, 0.35 + Math.sin(t * 9) * 0.2); P.armL.rotation.set(0.5, 0, -0.2); P.armR.rotation.set(0.3, 0, 1.4); P.body.position.y = -0.5; }
+        if (hr > 0) {   // hit: knocked back and over to one side, arms thrown out
+          const sd = mob.id % 2 ? 1 : -1;
+          P.torso.rotation.x -= 0.65 * hr; P.torso.rotation.z += sd * 0.35 * hr + Math.sin(t * 40) * 0.12 * hr;
+          P.armL.rotation.z -= 1.1 * hr; P.armR.rotation.z += 1.1 * hr; P.body.position.y -= 0.2 * hr;
+        }
         // the clapper hangs inside the bell and swings behind the bell's own rocking
         P.clapper.position.x = -Math.sin(t * (enr ? 2.6 : 1.6) - 0.7) * 0.55 - P.torso.rotation.z * 1.2 + (st === 'windup' && k === 'nova' ? Math.sin(t * 30) * 0.5 : 0);
         P.lantern.rotation.y = t * 2;

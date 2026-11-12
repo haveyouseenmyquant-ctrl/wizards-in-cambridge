@@ -129,7 +129,7 @@ async function main() {
     if (PROFILE) prof = (async () => {
       await sleep((PROFILE_AT != null ? Number(PROFILE_AT) : Math.max(0, (SECONDS - PROFILE) / 2)) * 1000);
       const cdp = await page.createCDPSession();
-      await cdp.send('Profiler.enable'); await cdp.send('Profiler.setSamplingInterval', { interval: 200 }); await cdp.send('Profiler.start');
+      await cdp.send('Profiler.enable'); await cdp.send('Profiler.setSamplingInterval', { interval: Number(process.env.WIC_PROF_US || 200) }); await cdp.send('Profiler.start');
       await sleep(PROFILE * 1000);
       const { profile } = await cdp.send('Profiler.stop');
       const dt = {}, tot = { all: 0 };
@@ -143,7 +143,9 @@ async function main() {
         profile.samples.forEach((id, i) => { if (idx.get(id).callFrame.functionName === '(idle)') cur = i + 1; else if (times[i] - times[cur] > times[best[1]] - times[best[0]]) best = [cur, i]; });
         log('longest busy run ms', ((times[best[1]] - times[best[0]]) / 1000).toFixed(0), 'at', ((times[best[0]]) / 1e6 + Number(PROFILE_AT)).toFixed(2), 's');
         const self = {}, incl = {};
-        for (let i = best[0]; i <= best[1]; i++) { const id = profile.samples[i], d = td[i + 1] || 200; const k = key(idx.get(id).callFrame); self[k] = (self[k] || 0) + d;
+        // WIC_PROF_NORAF=1: only samples outside the rAF callback (loaders, idle callbacks, timers, GC between frames)
+        const inRaf = id => { for (let x = id; x; x = parent.get(x)) if (idx.get(x).callFrame.functionName === 'onAnimationFrame') return true; return false; };
+        for (let i = best[0]; i <= best[1]; i++) { const id = profile.samples[i], d = td[i + 1] || 200; if (process.env.WIC_PROF_NORAF && inRaf(id)) continue; const k = key(idx.get(id).callFrame); self[k] = (self[k] || 0) + d;
           const seen = new Set(); for (let x = id; x; x = parent.get(x)) { const kk = key(idx.get(x).callFrame); if (!seen.has(kk)) { seen.add(kk); incl[kk] = (incl[kk] || 0) + d; } } }
         log('--self'); for (const [k, v] of Object.entries(self).sort((a, b) => b[1] - a[1]).slice(0, 15)) log((v / 1000).toFixed(1).padStart(6), k);
         log('--incl'); for (const [k, v] of Object.entries(incl).sort((a, b) => b[1] - a[1]).slice(0, 40)) log((v / 1000).toFixed(1).padStart(6), k);
