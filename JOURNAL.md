@@ -434,3 +434,9 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Live 9758fcbb scored: judge 55.9 (Visuals 50, Animation 38, Combat 62.8, Story 66, UI 68), playtest 100%, cam_clip_combat 0.
 - Merged Graphics s11 573d5cc (player rig sub-steps through clock jumps so recorded frames show gait and cast poses). Gate 11/11 on bc70420e (quest_bot passed on retry). Published.
 - Asked QA to close 3f40 and a756 (their checks now pass), and Optimisation to close ba66. Gave Story the judge's combat gaps for 2f47 (hit-stop, spell rotation, idle second half, sound spam).
+
+## 2026-11-12 — session 68 (lead)
+- Live bc70420e scored: judge 56.1 (Visuals 52, Animation 38, Combat 63, Story 66, UI 66), playtest 100%, cam_clip_combat 0.
+- Cancelled QA 3f40/a756 and Optimisation ba66, whose checks now pass. Resolved issues 4a30 (camclip), 621f (pyro softlock) and 106f (boss leash).
+- Merged Story s11 (boss leash 55 with disengage reset, quest_bot telegraph dodging, spell rotation). Gate 11/11 on 0ac41b55; quest_bot flaky on the first try for the 3rd merge in a row -> issue eb30, QA task 05d8. Published.
+- New QA task 2879: animation probe in wic_record, so Graphics can measure poses without the judge. Sent the judge's reasons to Graphics (Animation), Story (Combat) and EnvVFX (VFX blobs).

@@ -9,18 +9,11 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
-- s67: 9758fcbb judged 55.9 (Anim 38, Combat 62.8, UI 68), playtest 100, camclip 0 -> QA to close 3f40/a756, then resolve
-  4a30/621f. Merged Graphics s11 573d5cc (rig sub-steps) -> bc70420e gate 11/11 (quest_bot flaky 1st try), published. Await judge.
-- s66: merged UI s7 b435ae5 (inventory ledger, talents strip, loot cards). 034d5463 judged 55.5 (Vis 50, Anim 36,
-  Combat 60.2, Story 70, UI 68), playtest 100, cam_clip 2.1 (1 stall frame -> Optimisation ba66). Resolved e1b8; 621f waits QA a756 done.
-- s65: merged Optimisation 2409 camclip (collision + LOS passes) + EnvVFX s9 (bolt glow, draped stall sheets) -> 034d5463
-  gate 11/11, published. 2044eb00 (EnvVFX branch) judged 55.1, cam_clip 16.7. QA 3f40 now confirms camclip on new build.
-- s62 (old): merged Story s10 (Q7 Conduit Runs Dry, leash heal-loop fix) -> b9bf766b gate 10/10 (quest_bot flaky 1st try 75%), published.
-  Resolved 4801. Issue 106f (mobs.js boss leash 34->55, pyro deaths) -> Story 7e65 (Story is the reliable shipper).
-- s60: merged Graphics s10 1017fce (Bellwarden stomp, player root layer); gate 10/10 on 1e123d10; published.
-  062d8a31 judged 55.8 (UI 68, Anim 34, Visuals 50, Combat 63), cam_clip_combat 18.8, playtest 91.7 (warden stuck on
-  blotted_scribe) -> issue 4801 -> Story task 7aca (before Quest 7 c4f9).
-- s59: merged UI s6 84cd258. Issue 4bd7 -> QA 100c. Gameplay c98c (camera clip) still top priority.
+- s68: bc70420e judged 56.1 (Vis 52, Anim 38, Combat 63, Story 66, UI 66), playtest 100, camclip 0. Cancelled QA 3f40/a756 +
+  Opt ba66 (checks pass), resolved 4a30/621f/106f. Merged Story s11 -> 0ac41b55 gate 11/11 (quest_bot flaky 3rd time ->
+  issue eb30, QA 05d8), published. QA new 2879 anim_probe. Notes w/ judge reasons to Graphics/Story/EnvVFX.
+- s67: merged Graphics s11 573d5cc (rig sub-steps) -> bc70420e.
+- s66: merged UI s7 b435ae5. s65: merged Optimisation 2409 camclip + EnvVFX s9.
 - Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 - Score json merge conflicts: union keys (python, ours first).
 
@@ -35,7 +28,8 @@
 - Judge noise ~±2 (QA b0c0: 3-pass median). Any quest/npc_rig edit = new hash = rescore.
 - scripts/wic_kpi_check.sh [--lt] <key> <min> [site] = task-check helper; dotted keys ok ("judged_sections.UI polish").
 - skills/wic-rescore = scoring by hand (judge ~8 min, playtest ~35 min). Task checks must fit the 5-min cap.
-- org cancel works for tasks fixed elsewhere; org done only by the assignee.
+- org cancel works for tasks fixed elsewhere; org done only by the assignee. Tasks can't be edited: cancel + re-add.
+- NEVER `org brief <node> --help`: it sets the brief to '--help'.
 - Pages startup_failure/long queue = GitHub outage: `gh workflow run pages.yml --ref main`, then once the URL serves the hash,
   copy site -> data/derived/live_site as at the end of publish.sh (s59).
 - Run `git push` in its own Bash call (force-push hook false positives). No `timeout` command on this Mac.
@@ -46,8 +40,8 @@
 - Teams sit directly under root; dept managers (Art, Engineering, Creative, Marketing) PAUSED since s35 (they starved teams).
   Resume a manager only if its teams ship steadily.
 - Active teams: graphics (8765 Animation>40, d1ad townsfolk), environment-and-vfx (926d Visuals>55, 4a93 roofs, 76b5), ui-and-ux (3daf UI>68, d9bd),
-  optimisation (22df, ef24 Safari blocked), story (7e65 leash, 2f47 Combat>66; owns mobs.js now),
-  qa-and-playtesting (a756 pyro softlock, 100c, 3f40). gameplay DONE s63. audio-and-music + brand-and-store-page have tasks but low priority (marketing <= 1/5 sessions).
+  optimisation (22df, ef24 Safari blocked), story (2f47 Combat>66: hit-stop, knockback; owns mobs.js),
+  qa-and-playtesting (2879 anim_probe, 05d8 quest_bot flake). gameplay DONE s63. audio-and-music + brand-and-store-page have tasks but low priority (marketing <= 1/5 sessions).
 - Contract in every brief: results to <hash>_wic.json, /tmp/wic_* locks, symlink heavy data, modular site/app/game files,
   gate before ready, commit before 45-min limit.
 
