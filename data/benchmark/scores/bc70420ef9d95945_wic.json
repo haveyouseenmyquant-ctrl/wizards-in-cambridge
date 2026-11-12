@@ -1,4 +1,208 @@
 {
  "main_quests_shipped": 7,
- "quest_bot_pass_pct": 100
+ "quest_bot_pass_pct": 100,
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 21,
+  "main_quests_shipped": 7,
+  "wall_s": 146,
+  "at": "2026-11-12T01:57:08.539Z"
+ },
+ "cam_clip_pct": 0,
+ "cam_clip_combat_pct": 0,
+ "cam_clip_probed": 56,
+ "cam_clip_frames": [],
+ "judged_game_quality": 56.1,
+ "judged_sections": {
+  "Visuals": 52,
+  "Animation": 38,
+  "Combat feel": 63,
+  "Story presentation": 66,
+  "UI polish": 66
+ },
+ "judge_meta": {
+  "rubric_version": "1",
+  "rubric_sha": "8e0dceab019e",
+  "model": "claude-opus-5-5",
+  "samples": 3,
+  "n_passes": 3,
+  "aggregate": "median over passes",
+  "section_passes": {
+   "Visuals": [
+    52,
+    50,
+    52
+   ],
+   "Animation": [
+    40,
+    38,
+    38
+   ],
+   "Combat feel": [
+    63.2,
+    61.8,
+    63
+   ],
+   "Story presentation": [
+    66,
+    66,
+    66
+   ],
+   "UI polish": [
+    66,
+    66,
+    68
+   ]
+  },
+  "calls": 24,
+  "failed_calls": 0,
+  "section_spread": {
+   "Visuals": 2,
+   "Animation": 2,
+   "Combat feel": 1.5,
+   "Story presentation": 0,
+   "UI polish": 2
+  },
+  "quality_spread": 1.3,
+  "frames": 68,
+  "recording_errors": [
+   "note: explore King's Parade yaw 2.89 blocked, used 1.91",
+   "note: explore Senate House Hill yaw 3.01 blocked, used 4.78"
+  ],
+  "reasons": {
+   "Visuals": {
+    "all": "The city has a consistent art direction: recognisable Cambridge-style buildings with brick and stone textures, real-time sun shadows, warm low-angle light with some atmospheric haze, and props like market stalls, bicycles, railings and trees. The geometry is boxy and simple, though. Shop interiors are blocky placeholder shapes, facades are flat with little moulding or wear, and the characters are small, chunky and stylised with little cloth detail. The combat frames show cluttered, flat-shaded VFX and some clipping or odd geometry near the camera, which keeps it below the 60 anchor."
+   },
+   "Animation": {
+    "all": "The player character shows walking poses with some limb variation across the exploration frames, and there are a few pedestrian NPCs, but there is no visible distinct cast or hit-reaction animation. Combat is carried almost entirely by particle effects, damage numbers and spell circles, with no body motion that matches the attacks. The boss bell and the small enemies look like rigid props, and there is no evidence of enemy wind-ups, death animations, secondary motion on robes or hats, or environmental motion."
+   },
+   "Combat feel": {
+    "hexweaver": "The frames show real combat systems. There are damage numbers including crits, red ground telegraphs and named boss attacks (Great Toll, Change-Ringing Cascade), and a three-phase boss with an enrage state. They also show stagger/interrupt callouts, combo chain counters, and loot beams and toasts that carry rarity labels. Impact is weak, though: the VFX are mostly soft generic orbs and wisps, there is no visible hit-stop or screen feedback, and the busy boss fight is hard to read because big white blobs hide the action. The second half of the clip is mostly empty walking, and only one class is shown, so no difference between classes can be judged.",
+    "pyromancer": "The fight meets most of the 60 anchor. It has six spells with cooldowns, crit and damage numbers, STAGGERED and INTERRUPTED states, a chain counter, and a three-phase named boss whose attacks (Great Toll, Clapper Sweep, Peal of Shards) are telegraphed with labels and danger zones. Loot drops show labelled beams and rarity tags. It falls short of 80 because the VFX are often blobby, washed-out overlays that hide the action, and ember_bolt makes up 76 of the 103 casts. The frames also show no hit-stop or knockback, and the last 20 seconds are mostly empty loot-collecting with no enemies.",
+    "stormcaller": "The fight meets most of the 60 anchor and a little more. A three-phase boss has a health bar, an enraged state and named attacks (Peal of Shards, Change-Ringing Cascade) with red ground telegraphs. Hit feedback is visible as crit and damage numbers, STAGGERED/INTERRUPTED labels and a chain counter, and loot drops in rarity-coloured beams, alongside lightning glyph fields and level-ups. The biggest gaps: one spell (spark_lance) makes up about two-thirds of all casts; there's no visible hit-stop, knockback or screen feedback; and some frames, like 6 and 9, are cluttered and hard to read. On-screen hits of 584 and 237 also don't match the event log's 64 max hit, and only one class is shown, so there's no evidence that classes play differently.",
+    "warden": "The frames show plenty of combat feedback: damage numbers, crit labels, stagger and interrupt text, combo-chain counters, ground rune circles for AoE, and a named boss with a three-phase health bar that ends in an 'Enraged' phase and a 'Vanquished' banner. Loot drops come with rarity-coloured pickup cards and light beams. Combat is lopsided, though: 75 of 95 casts are pebble_shot and the player took only 11 damage, so I saw little visible depth or threat. The effects are often muddy, especially the full-screen amber wash in frames 1 and 9, and I saw no clear enemy telegraphs, hit-stop or crowd control that visibly changes a fight."
+   },
+   "Story presentation": {
+    "all": "The story is clearly staged: letterboxed over-the-shoulder shots, named characters with portraits and role tags (Nell Tapscott, Pip Hobbe), a 3-option reply menu, well-written original lines tied to real Cambridge places (Market Hill, Great St Mary's), and title cards for the prologue and quest completion with rewards. Within the frames, the reply choices don't visibly lead to different outcomes. Characters are simple low-poly figures with no visible expression or animation, and the 'boss wakes' moment is a text box over a static shot rather than a real cinematic. The only sign of a quest marker in the world is a faint reticle."
+   },
+   "UI polish": {
+    "all": "The HUD and menus share one dark-and-gold serif style. The class cards, satchel with rarity-coloured collection bars and the tiered talent grid are clear, and the combat HUD has icons, cooldown numbers, a boss bar showing its phase, and a minimap. The main gaps are clutter during combat: overlapping damage numbers, labels and the target reticle crowd the boss. The small text in the menus and HUD is hard to read, and the frames give no evidence of animated transitions or AAA-level art direction."
+   }
+  }
+ },
+ "fps_median": 60,
+ "load_seconds": 0.37,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.94,
+  "programs": [
+   67,
+   85
+  ],
+  "fps_p5": 59,
+  "fps_min": 49,
+  "slow_secs": [
+   [
+    0,
+    49
+   ]
+  ],
+  "long_frames": 2,
+  "worst_frames": [
+   [
+    0,
+    83
+   ],
+   [
+    0.5,
+    83
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 30,
+  "maxMobs": 36,
+  "dist": 203,
+  "laps": 1,
+  "draw_calls_median": 1329,
+  "tris_median": 6706408,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "loadavg_before": 6.08,
+  "loadavg_after": 3.79,
+  "waited_s": 1208,
+  "load_ok": false,
+  "max_load": 4,
+  "runs": [
+   {
+    "fps_median": 60,
+    "load_seconds": 0.37,
+    "loadavg_before": 6.08,
+    "loadavg_after": 4.31,
+    "fps_p5": 59
+   },
+   {
+    "fps_median": 60,
+    "load_seconds": 0.36,
+    "loadavg_before": 4.31,
+    "loadavg_after": 3.79,
+    "fps_p5": 59
+   }
+  ],
+  "at": "2026-11-12T02:28:48+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_modload": true,
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
+ }
 }
