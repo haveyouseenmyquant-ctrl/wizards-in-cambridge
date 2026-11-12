@@ -26,7 +26,7 @@ f = "data/benchmark/scores/%s_wic.json" % h
 if h and os.path.exists(f):
     out.update({k: v for k, v in json.load(open(f)).items() if k in keys and isinstance(v, (int, float))})
 fb = {}
-for k in ("judged_game_quality", "playtest_pass_pct", "fps_median", "load_seconds"):
+for k in ("judged_game_quality", "main_quests_shipped", "playtest_pass_pct", "fps_median", "load_seconds"):
     if out[k]: continue
     d = "data/benchmark/scores"
     for g in sorted((x for x in os.listdir(d) if x.endswith("_wic.json")), key=lambda x: -os.path.getmtime(os.path.join(d, x))):
