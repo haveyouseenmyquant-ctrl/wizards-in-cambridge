@@ -133,11 +133,11 @@
  },
  "judged_game_quality": 55.4,
  "judged_sections": {
-  "Visuals": 52.0,
-  "Animation": 36.0,
+  "Visuals": 52,
+  "Animation": 36,
   "Combat feel": 61.5,
-  "Story presentation": 66.0,
-  "UI polish": 66.0
+  "Story presentation": 66,
+  "UI polish": 66
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -148,39 +148,39 @@
   "aggregate": "median over passes",
   "section_passes": {
    "Visuals": [
-    52.0,
-    52.0,
-    52.0
+    52,
+    52,
+    52
    ],
    "Animation": [
-    36.0,
-    36.0,
-    36.0
+    36,
+    36,
+    36
    ],
    "Combat feel": [
     61.2,
-    62.0,
+    62,
     61.5
    ],
    "Story presentation": [
-    66.0,
-    66.0,
-    66.0
+    66,
+    66,
+    66
    ],
    "UI polish": [
-    66.0,
-    66.0,
-    66.0
+    66,
+    66,
+    66
    ]
   },
   "calls": 24,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 0.0,
-   "Animation": 0.0,
+   "Visuals": 0,
+   "Animation": 0,
    "Combat feel": 0.8,
-   "Story presentation": 0.0,
-   "UI polish": 0.0
+   "Story presentation": 0,
+   "UI polish": 0
   },
   "quality_spread": 0.2,
   "frames": 68,
@@ -208,5 +208,8 @@
     "all": "Class selection, inventory and talent screens all share one dark-and-gold serif theme. They have clear class cards, rarity-coloured collection tracking, numbered spell icons with cooldown numbers, a boss bar with phase label, a minimap, crit damage numbers and a low-health vignette. The gaps: inventory and talent text is small and dense, the inventory bag is empty so no item tooltips with rarity show, and the combat HUD gets cluttered, with damage numbers, target rings and overhead labels piling up over the scene. The spell bar and resource bars are also fairly generic, so it falls short of polished AAA hierarchy."
    }
   }
- }
+ },
+ "main_quests_shipped": 7,
+ "quest_bot_pass_pct": 100,
+ "quest_bot_fails": []
 }
