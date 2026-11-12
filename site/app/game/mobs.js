@@ -1592,7 +1592,7 @@ class MobSystem {
         break;
       }
       case 'chase': {
-        if (homeD > (mob.leash ?? T.leash) || dist > (mob.leash ?? T.leash) * 1.4 || g.stats.hp <= 0) { mob.state = 'return'; break; }   // mob.leash: per-mob override (story quest arenas)
+        if (this.leashed(mob, homeD, dist) || dist > (mob.leash ?? T.leash) * 1.4 || g.stats.hp <= 0) { mob.state = 'return'; break; }   // mob.leash: per-mob override (story quest arenas)
         const atk = this.pickAttack(mob, dist);
         if (atk) { mob.chaseNoGainT = 0; mob.chaseBest = dist; this.beginAttack(mob, atk); break; }
         // session 55: evade. A walker that cannot close on the player (cornered behind bollards / railings: a statue
@@ -1614,7 +1614,7 @@ class MobSystem {
       case 'windup': this.tickWindup(mob, dt); break;
       case 'active': this.tickActive(mob, dt); moving = 2; break;
       // story s10: a poise-break stagger (feel.js) on a mob walking home must not turn it back into a chase past its leash
-      case 'recover': case 'stagger': mob.stateT -= dt; if (mob.stateT <= 0) mob.state = homeD > (mob.leash ?? T.leash) ? 'return' : 'chase'; break;
+      case 'recover': case 'stagger': mob.stateT -= dt; if (mob.stateT <= 0) mob.state = this.leashed(mob, homeD, dist) ? 'return' : 'chase'; break;
     }
     // vertical: flying hover over ground / bob towards player height; walkers stick to their ground
     if (T.flying) {
@@ -1881,6 +1881,12 @@ class MobSystem {
         this.recover(mob);
       }
     }
+  }
+  // story s11 (7e65): a boss past its leash only walks home (healing) once the player has disengaged (> 14 m away), or
+  // past 1.6x leash; its own charges and leaps dragged it past the leash mid-fight and reset nearly-won fights
+  leashed(mob, homeD, dist) {
+    const L = mob.leash ?? mob.type.leash ?? 40;
+    return mob.boss ? homeD > L * 1.6 || homeD > L && dist > 14 : homeD > L;
   }
   recover(mob) { mob.state = 'recover'; mob.stateT = mob.attack.recover; }
   inStrip(x, y, dir, len, w, px, py) {
