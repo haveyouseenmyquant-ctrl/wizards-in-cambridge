@@ -32,7 +32,7 @@ export function install(game) {
 
   // 919d: recolour the class atlases in idle-time slices once the model arrives, current class first, so neither the
   // first rigged frame at game start nor any later frame pays the ~50 ms of 1024x1024 pixel work in one go
-  let baseMap = null, hatTop = null, src = null;
+  let baseMap = null, hatTop = null, src = null, modelBox = null;
   const jobs = {};
   function prewarm() {
     asset.scene.traverse(o => { if (o.isMesh && !baseMap) baseMap = o.material.map; });
@@ -100,7 +100,7 @@ export function install(game) {
       if (o.name === 'Wizard_Staff') staff = o;
       if (o.name === 'Head') head = o;
     });
-    model.updateMatrixWorld(true); const box = new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1;
+    model.updateMatrixWorld(true); const box = modelBox ??= new T.Box3().setFromObject(model, true), h = box.max.y - box.min.y || 1;   // Optimisation s11: same asset every class, per-vertex skinned bounds once
     inner.scale.setScalar(HEIGHT / h); inner.position.y = -box.min.y * HEIGHT / h; root.updateMatrixWorld(true);
     // robe hem secondary motion (s7): the rig has no cloth bones, so the body material bends the skirt in the vertex
     // shader. robeSpring() drives a damped spring from the root's velocity and turn rate; vertices below the hips are
@@ -328,7 +328,15 @@ export function install(game) {
   function update(p, visible, W) {
     if (!asset) return false;
     const cls = game.caster?.cls || 'stormcaller';
-    if (!R || R.cls !== cls) { destroy(); R = build(cls); }
+    // Optimisation s11 (task 22df): while the class atlas isn't recoloured yet, keep the current rig (or the procedural
+    // wizard before the first one) and run the recolour in <= 4 ms slices (classTexture() finishing it in one go was a
+    // ~25 ms frame at game start)
+    if ((!R || R.cls !== cls) && !texCache[cls] && baseMap?.image) {
+      const job = jobs[cls] ??= recolourJob(cls, baseMap), t0 = performance.now();
+      while (!job.next().done && performance.now() - t0 < 4);
+      if (!texCache[cls] && !R) return false;
+    }
+    if (!R || (R.cls !== cls && (texCache[cls] || !baseMap?.image))) { destroy(); R = build(cls); }
     R.root.visible = visible;
     // s11: catch up in 40 ms sub-steps when the clock jumped (fixed-step recordings advance game time for seconds between
     // rendered frames; one clamped 0.1 s update left the gait cross-fade, springs and cast blends barely started there)

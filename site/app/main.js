@@ -7,7 +7,7 @@ import { Avatar } from './avatar.js';
 import { loadZone, zoneCut, zoneMatCut, zoneSun, zoneGnd } from './zone.js';
 import { GrassField } from './grass.js';
 import { Q as QP, QUALITY, initQualityMenu } from './quality.js';
-import { Minimap, renderTileMap, initLandmarks, mergeLandmarks, initOverlays } from './ui.js';
+import { Minimap, renderTileMap, renderTileMapIdle, initLandmarks, mergeLandmarks, initOverlays } from './ui.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
@@ -191,10 +191,10 @@ async function main() {
   const manifest = await getJSON('manifest.json');
   const world = new CollisionWorld();
   const player = new Player(world, canvas);
-  const minimap = new Minimap($('minimap'));
+  const minimap = new Minimap($('minimap')), mapJobs = new Map();   // tile id -> cancel its idle minimap render
   const tiles = new TileManager(BASE, manifest, scene, world, {
-    onCollision: t => minimap.add(t.m.id, renderTileMap(t.col)),
-    onUnload: t => minimap.remove(t.m.id),
+    onCollision: t => { mapJobs.get(t.m.id)?.(); mapJobs.set(t.m.id, renderTileMapIdle(t.col, map => { mapJobs.delete(t.m.id); minimap.add(t.m.id, map); })); },
+    onUnload: t => { mapJobs.get(t.m.id)?.(); mapJobs.delete(t.m.id); minimap.remove(t.m.id); },
   });
 
   player.canPlace = (x, y) => tiles.settled(x, y);
@@ -305,12 +305,18 @@ async function main() {
   const instPool = installInstPool(THREE, scene, camera, sun.castShadow ? sun : null);   // Optimisation s5: per-tile tree/hedge/object instances drawn as cross-tile pools
   status('Loading tiles…');
   let last = performance.now(), streamT = 0, ready = false, hudT = 0, audioSys = null;
+  // ?debug (Optimisation s11): window.__ft keeps the last 600 frames' section times [t s, frame start..tiles, player, game, camera, avatar..sun, perf modules, render] ms
+  const FT = /[?&]debug/.test(location.search) ? (window.__ft = []) : null;
   renderer.setAnimationLoop(now => {
     const dt = (now - last) / 1000; last = now;
+    const ft = FT && [+(now / 1000).toFixed(3)], mark = FT ? () => { const t = performance.now(); ft.push(+(t - (ft.t ?? now)).toFixed(1)); ft.t = t; } : () => {};
     streamT -= dt;
     if (streamT <= 0) { tiles.update(player.x, player.y); streamT = 0.25; }
+    mark();
     player.update(dt);
+    mark();
     if (window.__game && !window.__explore) window.__game.update(dt);
+    mark();
     audioSys?.update(dt);
     const fc = window.__cam;   // debug/screenshot hook: {pos:[x,y,z], at:[x,y,z], fov?} in the collision frame
     if (fc && fc.fov && camera.fov !== fc.fov) { camera.fov = fc.fov; camera.updateProjectionMatrix(); }
@@ -328,14 +334,18 @@ async function main() {
       gndT = Math.abs(player.z - zoneGnd.value) < 2.5 ? 0 : gndT + dt;
       if (gndT === 0 || gndT > 3) zoneGnd.value = player.z;   // a new level held for 3 s (after teleports, long ramps) wins
     }
+    mark();
     avatar.update(player, dt, player.view === 3 && !fc && !(player.camD < 0.8));   // s60: hide the avatar when the boom is squeezed into it
     if (sun.castShadow) {   // shadow box follows the camera, snapped to shadow texels to avoid shimmering
       const q = 240 / QP.shadow, cx = Math.round(camera.position.x / q) * q, cz = Math.round(camera.position.z / q) * q;
       sun.target.position.set(cx, 0, cz); sun.position.set(cx, 0, cz).addScaledVector(SUN_DIR, 300); sun.target.updateMatrixWorld();
     }
     skyDome.position.copy(camera.position); skyDome.material.uniforms.t.value = performance.now() / 1000;
+    mark();
     instPool(dt); shadowProxies(dt); shadowLod(dt); mainMerge(dt); progGate();
+    mark();
     if (composer) composer.render(dt); else renderer.render(scene, camera);
+    if (FT) { mark(); FT.push(ft); if (FT.length > 600) FT.shift(); }
     if (!ready && !player.pendingPlace && tiles.readyAt(player.x, player.y)) {
       ready = true; window.__walkReadyAt = performance.now(); window.__walkReady = true;
       loadZone(BASE, scene);

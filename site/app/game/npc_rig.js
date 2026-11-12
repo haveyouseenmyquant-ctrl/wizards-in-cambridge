@@ -28,19 +28,32 @@ const hsl = (r, g, b) => {
   return [h / 6, s, l];
 };
 const hue = (p, q, t) => { t = t < 0 ? t + 1 : t > 1 ? t - 1 : t; return t < 1 / 6 ? p + (q - p) * 6 * t : t < 0.5 ? q : t < 2 / 3 ? p + (q - p) * 6 * (2 / 3 - t) : p; };
+const srcCache = new WeakMap();   // source atlas -> its RGBA bytes (read in its own idle slice)
+const srcPixels = tex => {
+  if (!srcCache.has(tex)) srcCache.set(tex, idle().then(() => {
+    const img = tex.image, c = document.createElement('canvas'); c.width = img.width; c.height = img.height;
+    const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(img, 0, 0);
+    return g.getImageData(0, 0, img.width, img.height).data;
+  }));
+  return srcCache.get(tex);
+};
 // sliced over idle callbacks (rows of the 1024x1024 atlas while the frame has time left), one job per cache key
 export async function recolour(tex, n, file) {
   const key = `${file}|${n.robe}|${n.trim}`;
   if (texCache.has(key)) return texCache.get(key);
   let done; texCache.set(key, new Promise(r => { done = r; }));
   let dl = await idle();
+  // Optimisation s11 (task 22df): the source pixels are read once per atlas (each palette job did its own 1024x1024
+  // drawImage + getImageData, ~20 ms); slices end on a clock (a timed-out idle callback has timeRemaining() 0 and still
+  // ran 32 rows, ~5 ms, several jobs stacking up in one start frame)
   const img = tex.image, W = img.width, H = img.height, c = document.createElement('canvas'); c.width = W; c.height = H;
-  const g = c.getContext('2d', { willReadFrequently: true }); g.drawImage(img, 0, 0);
-  const d = g.getImageData(0, 0, W, H), p = d.data, robe = new THREE.Color(n.robe || '#556'), trim = new THREE.Color(n.trim || '#ca6');
+  const g = c.getContext('2d');
+  const d = new ImageData(new Uint8ClampedArray(await srcPixels(tex)), W, H), p = d.data, robe = new THREE.Color(n.robe || '#556'), trim = new THREE.Color(n.trim || '#ca6');
   const R = robe.getHSL({}), Tr = trim.getHSL({});
-  for (let y = 0; y < H; y += 32) {
-    if (dl.timeRemaining() < 3) dl = await idle();
-    for (let i = y * W * 4, e = Math.min(H, y + 32) * W * 4; i < e; i += 4) {
+  let t0 = performance.now();
+  for (let y = 0; y < H; y += 8) {
+    if (performance.now() - t0 > Math.max(2, dl.timeRemaining() - 1)) { dl = await idle(); t0 = performance.now(); }
+    for (let i = y * W * 4, e = Math.min(H, y + 8) * W * 4; i < e; i += 4) {
       const [h, s, l] = hsl(p[i] / 255, p[i + 1] / 255, p[i + 2] / 255);   // raw bytes, as Color.setRGB/getHSL saw them
       if (s < 0.12) continue;
       if (h > 0.02 && h < 0.11 && l > 0.45) continue;   // skin

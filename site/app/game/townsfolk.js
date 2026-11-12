@@ -97,7 +97,10 @@ async function start() {
   for (let i = 0; i < CYCLISTS; i++) jobs.push({ a: AREAS[[0, 2, 4, 2][i % 4]], bike: true, k: k++ });
   for (let tries = 0; jobs.length && tries < 600; tries++) {
     await idle();
+    let t0 = performance.now();
     for (let i = 0; i < jobs.length; i++) {
+      // Optimisation s11 (task 22df): <= ~4 ms of spawning per idle slice (all 28 walkers in one tick was a start hitch)
+      if (performance.now() - t0 > 4) { await idle(); t0 = performance.now(); }
       const j = jobs[i]; if (!S.world.covered(j.a.x, j.a.y)) continue;
       const p = spot(j.a); if (!p) continue;
       const r = j.k % RIGS.length, file = RIGS[r], pal = (j.k / RIGS.length | 0) % 2 ? PALETTES[r * 2 + (j.k % 2)] : {};   // stock or one of two per rig
