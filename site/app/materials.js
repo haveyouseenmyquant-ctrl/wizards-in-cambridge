@@ -25,7 +25,8 @@ if (MAT) {
       undefined, () => { console.warn('texture failed', s); if (--pending === 0) window.__texReady = true; });
     t.wrapS = t.wrapT = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
     uniforms['t_' + s] = { value: t };
-    sizes[s] = (meta[s]?.size_m || 2).toFixed(3);
+    // EnvVFX s10: the brick photo holds ~11 courses; at its listed 2 m they were 0.18 m tall (judge: 'stretched brick')
+    sizes[s] = (s === 'brick' ? 0.85 : (meta[s]?.size_m || 2)).toFixed(3);
   }
 }
 
