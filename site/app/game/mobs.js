@@ -44,7 +44,8 @@ const G = {
   shard: new THREE.TetrahedronGeometry(0.18, 0),
   slash: new THREE.RingGeometry(0.62, 1, 28, 1, -1.15, 2.3).rotateX(-Math.PI / 2),   // s64: melee swoosh crescent, centred on local +X
   orb: new THREE.IcosahedronGeometry(0.2, 1),                                       // s64: wind-up charge orb
-  bolt: new THREE.IcosahedronGeometry(0.28, 1),   // s73: rounder (detail 0 read as flat spinning triangles)
+  bolt: new THREE.IcosahedronGeometry(0.13, 2),   // s73: rounder; EnvVFX s9: smaller core, the colour lives in the additive glow card
+  boltGlow: new THREE.PlaneGeometry(0.9, 0.9),
   pillar: (() => {   // session 54: death light column, open cylinder fading to black (= transparent under additive) at the top
     const g = new THREE.CylinderGeometry(0.55, 1, 1, 20, 4, true).translate(0, 0.5, 0), p = g.attributes.position, c = [];
     for (let i = 0; i < p.count; i++) { const k = Math.pow(1 - p.getY(i), 1.6); c.push(k, k, k); }
@@ -198,13 +199,15 @@ function addOutlines(group, color) {
   for (const [o, h] of list) { const s = new THREE.Mesh(h, mat); s.userData.outline = true; s.castShadow = false; s.receiveShadow = false; o.add(s); }
 }
 const _camBox = new THREE.Box3(), _camS = new THREE.Vector3();
-const HIT_TINT = new THREE.Color(0xfff4e8), _white = new THREE.Color(0xffffff), _camP = new THREE.Vector3(), _batP = new THREE.Vector3();
+const HIT_TINT = new THREE.Color(0xfff4e8), _white = new THREE.Color(0xffffff), _camP = new THREE.Vector3(), _camQ = new THREE.Quaternion(), _batP = new THREE.Vector3();
 const TELE_COLOR = 0xff2a10;   // session 52: the one danger colour for every mob / boss telegraph
 // session 46: soft type-coloured ground aura under every mob (reads as a glow pool in still frames; shared per type)
 const auraMats = {};
 const auraMat = c => auraMats[c] ||= new THREE.MeshBasicMaterial({ color: c, map: TEX.aura, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, polygonOffset: true, polygonOffsetFactor: -2 });
 const boltMats = {};
-const boltMat = c => boltMats[c] ||= new THREE.MeshBasicMaterial({ color: c });
+const boltMat = c => boltMats[c] ||= new THREE.MeshBasicMaterial({ color: new THREE.Color(c).lerp(_white, 0.55) });   // EnvVFX s9: small hot core
+const boltGlowMats = {};
+const boltGlowMat = c => boltGlowMats[c] ||= new THREE.MeshBasicMaterial({ color: c, map: TEX.aura, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending });
 
 // ---------- geometry kit
 const _m4 = new THREE.Matrix4(), _q = new THREE.Quaternion(), _e = new THREE.Euler(), PI = Math.PI;
@@ -1887,7 +1890,8 @@ class MobSystem {
   hit(mob, dmg) { this.game.damagePlayer(dmg, mob); mob.lastHitPlayerAt = this.game.time; }
 
   shoot(mob, dir, a) {
-    const m = new THREE.Mesh(G.bolt, boltMat(a.color ?? (mob.boss ? 0xffa030 : 0x9fe8ff)));
+    const col = a.color ?? (mob.boss ? 0xffa030 : 0x9fe8ff), m = new THREE.Mesh(G.bolt, boltMat(col));
+    const glow = new THREE.Mesh(G.boltGlow, boltGlowMat(col)); glow.renderOrder = 3; m.add(glow);
     // s73: boss shots fly at chest height (1.5 m), not 2.4 m+ where a nova's shots crossed the third-person camera
     const z = mob.z + (mob.type.flying ? 0 : mob.boss ? 1.5 : 1.2 * mob.type.scale);
     this.root.add(m);
@@ -1897,8 +1901,11 @@ class MobSystem {
   updateProjectile(p, dt) {
     const g = this.game;
     p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.z += p.vz * dt;
-    p.m.position.set(p.x, p.z, -p.y); p.m.rotation.x += dt * 9;
-    const cam = g.camera; if (cam) { cam.getWorldPosition(_camP); p.m.visible = p.m.position.distanceToSquared(_camP) > 6.25; }   // s73: never cover the camera
+    p.m.position.set(p.x, p.z, -p.y);
+    const cam = g.camera; if (cam) {   // s73: never cover the camera; EnvVFX s9: shrink over 2.5-5 m instead of popping
+      cam.getWorldPosition(_camP); const d = p.m.position.distanceTo(_camP), k = Math.min(1, Math.max(0, (d - 2.5) / 2.5));
+      p.m.visible = k > 0; p.m.scale.setScalar(k * (1 + 0.15 * Math.sin(g.time * 30 + p.x)));
+      p.m.children[0]?.quaternion.copy(cam.getWorldQuaternion(_camQ)); }
     if (Math.hypot(g.px - p.x, g.py - p.y) < 0.75 && p.z > g.pz - 0.3 && p.z < g.pz + 2.2) { this.hit(p.mob, p.dmg); p.life = 0; this.burst(p.x, p.y, p.z, 0x9fe8ff, 5, 3); }
     if (p.life <= 0) { this.root.remove(p.m); return false; }
     return true;

@@ -440,6 +440,31 @@ def garment(m, top, A3, F3, up, rng):
           tuple(x * 0.75 for x in col))                                                           # hem band
 
 
+
+def draped_sheet(m, o, u, n, h, col, rng):
+    """EnvVFX s9: hanging tarp as real cloth geometry instead of a flat box: vertical pleats (deeper towards the free
+    bottom edge), the top edge sagging between tie points, fold troughs a little darker. o = bottom corner, u = along
+    the sheet, n = unit normal (fold direction), h = up vector (height)."""
+    o, u, n, h = (np.asarray(x, float) for x in (o, u, n, h))
+    L = float(np.linalg.norm(u))
+    nc, nr = max(4, int(L / 0.11)), 4
+    per, ph, amp = rng.uniform(0.28, 0.45), rng.uniform(0, 6.3), rng.uniform(0.03, 0.05)
+    ties = max(1, int(round(L / 1.0)))
+
+    def pt(i, j):
+        s, v = i / nc, j / nr
+        f = np.sin(2 * np.pi * s * L / per + ph) + 0.35 * np.sin(2 * np.pi * s * L / (per * 0.43) + 2 * ph)
+        d = amp * f * (0.45 + 0.55 * (1 - v)) * min(1.0, s * L / 0.1, (1 - s) * L / 0.1 + 0.2)
+        sag = 0.07 * abs(np.sin(np.pi * s * ties)) * v ** 3
+        return o + u * s + h * v - h / np.linalg.norm(h) * sag + n * d, f
+
+    G = [[pt(i, j) for j in range(nr + 1)] for i in range(nc + 1)]
+    for i in range(nc):
+        for j in range(nr):
+            (a, fa), (b, _), (c, _), (d, _) = G[i][j], G[i + 1][j], G[i + 1][j + 1], G[i][j + 1]
+            k = 0.82 + 0.1 * (fa + 1.35) / 2.7 - (0.12 if j == 0 else 0)   # trough shade, darker hem
+            m.quad(a, b, c, d, tuple(x * k for x in col), two=True)
+
 def stall(m, g, c, ax, front, depth, width, rng, ze, hgt, off):
     """Stall under the shared canopy, centred at c; front = unit towards the aisle. Session 39: open-fronted
     trestle stall instead of solid cloth boxes. Trestle table (thin top on thin legs) with a cloth/astroturf top and
@@ -514,11 +539,11 @@ def stall(m, g, c, ax, front, depth, width, rng, ze, hgt, off):
         sc = SHEETS[rng.integers(len(SHEETS))]
         q = c - front * (hd - 0.04)
         zt = ze + hgt([q])[0] - off - 0.02
-        m.box(np.array([*(q - ax * (hw - 0.05)), z + 0.05]), A3 * (width - 0.1), F3 * 0.02, up * (zt - z - 0.05), sc)
+        draped_sheet(m, np.array([*(q - ax * (hw - 0.05)), z + 0.05]), A3 * (width - 0.1), F3, up * (zt - z - 0.05), sc, rng)
         if rng.random() < 0.35:   # s82: one side sheet from the back sheet to ~0.4 m short of the table front
             sd = -1 if rng.random() < 0.5 else 1
             q2 = c + ax * sd * (hw - 0.04) - front * (hd - 0.06)
-            m.box(np.array([*q2, z + 0.05]), F3 * (depth - 0.6), A3 * 0.02, up * (ze - z - 0.25), sc)
+            draped_sheet(m, np.array([*q2, z + 0.05]), F3 * (depth - 0.6), A3, up * (ze - z - 0.25), sc, rng)
     # hanging goods on the front eave rail (non-food stalls mostly) or on the back sheet
     if (not food and rng.random() < 0.8) or rng.random() < 0.15:
         q = c + front * (hd - 0.1)

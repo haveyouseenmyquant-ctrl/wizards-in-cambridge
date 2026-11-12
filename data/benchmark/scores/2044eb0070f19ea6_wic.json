@@ -1,0 +1,55 @@
+{
+ "fps_median": 60,
+ "load_seconds": 0.35,
+ "perf_detail": {
+  "seconds": 60,
+  "viewport": "1280x720",
+  "query": "",
+  "gl": "ANGLE (Apple, ANGLE Metal Renderer: Apple M4, Unspecified Version)",
+  "preset": "high",
+  "game_ready_s": 0.67,
+  "programs": [
+   66,
+   85
+  ],
+  "fps_p5": 59,
+  "fps_min": 46,
+  "slow_secs": [
+   [
+    0,
+    46
+   ]
+  ],
+  "long_frames": 4,
+  "worst_frames": [
+   [
+    0.6,
+    84
+   ],
+   [
+    0,
+    68
+   ],
+   [
+    0.1,
+    50
+   ],
+   [
+    0.5,
+    35
+   ]
+  ],
+  "fight_pct": 100,
+  "casts": 189,
+  "kills": 30,
+  "maxMobs": 36,
+  "dist": 204,
+  "laps": 1,
+  "draw_calls_median": 1375,
+  "tris_median": 6894825,
+  "tiles": 17,
+  "errors": 0,
+  "first_errors": [],
+  "at": "2026-11-12T00:17:15.608Z"
+ }
+}
