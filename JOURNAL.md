@@ -464,3 +464,8 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 - Live f7246b90 scored by service: judge 55.6 (Visuals 50, Animation 36, Combat 62, Story 66, UI 70), playtest 100, quest_bot 100% with no fails.
 - Merged EnvVFX s10 (loot drops as faceted gems, brick/ashlar detail textures at true scale). Gate 11/11 on 1a0a21b4, quest_bot passed first try. Pushed, published.
 - Issues 5d62/eb30/0362 unchanged: their tasks (Opt 22df, QA 05d8, Story d698) are still open. Notes to Story (hit-stop not visible in recordings, stormcaller camera framing) and EnvVFX (shop interiors next).
+
+## 2026-11-12 — session 73 (lead)
+- Live 1a0a21b4 scored by service: judge 55.4 (Visuals 52, Animation 36, Combat 61.5, Story 66, UI 66), playtest 100, quest_bot no fails.
+- Merged UI s8 (satchel previews unfound gear, unique talent icons, larger text, gilded toasts, smaller minimap/damage numbers). Merged tree hashes to 2c541244, which UI gated 11/11 at 61 fps, so no re-gate. Pushed, published.
+- Issues 5d62/eb30/0362 unchanged; their tasks (Opt 22df, QA 05d8, Story d698) still open. Game KPIs: 4 classes, 12 mob types, 44 equipment effects, playtest 100.
