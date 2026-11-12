@@ -1,6 +1,6 @@
 {
  "main_quests_shipped": 7,
- "quest_bot_pass_pct": 75,
+ "quest_bot_pass_pct": 100,
  "playtest_pass_pct": 91.7,
  "per_class": {
   "pyromancer": {
@@ -44,5 +44,6 @@
   "main_quests_shipped": 7,
   "wall_s": 137,
   "at": "2026-11-12T02:52:17.791Z"
- }
+ },
+ "quest_bot_fails": []
 }
