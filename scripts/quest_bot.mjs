@@ -151,6 +151,23 @@ function installBot(softS = 0, tileIds = []) {
     const o = Q.objective();
     if (!o) { bot.why = 'waiting for quest'; bot.idleT = (bot.idleT || 0) + dt; if (bot.idleT > 30) bot.fail = 'no quest objective after 30 s'; return; }
     bot.idleT = 0;
+    // dodge: a player who sees a telegraph decal under them steps out of it (movement keys only, after a human
+    // reaction time of 0.3 s); projectiles (bolt/nova) are not dodged. Mirrors the hit tests in mobs.js tickWindup.
+    for (const m of g.mobs) {
+      if (m.dead || m.state !== 'windup' || !m.attack || !m.aim || m.windupEff - m.stateT < 0.3) continue;
+      const a = m.attack; let ex = null, ey = null;
+      const out = (cx, cy, r) => { const d = Math.hypot(P.x - cx, P.y - cy); if (d <= r + 1) { ex = (P.x - cx) / (d || 1); ey = (P.y - cy) / (d || 1); } };
+      if (a.kind === 'ring') out(m.x, m.y, a.r);
+      else if (a.kind === 'leap') out(m.aim.x, m.aim.y, a.r);
+      else if (a.kind === 'cascade') { for (const q of m.aim.points || []) { out(q.x, q.y, a.r); if (ex != null) break; } }
+      else if (a.kind === 'line' || a.kind === 'charge') {
+        const D = m.aim.dir, rx = P.x - m.x, ry = P.y - m.y, along = rx * D.x + ry * D.y, side = rx * D.y - ry * D.x;
+        if (along >= -1 && along <= a.len + 1 && Math.abs(side) <= a.w / 2 + 1) { const sg = side >= 0 ? 1 : -1; ex = D.y * sg; ey = -D.x * sg; }
+      }
+      if (ex == null) continue;
+      P.yaw = Math.atan2(-ex, ey); P.keys.add('KeyW'); P.keys.add('ShiftLeft'); bot.path = null; bot.goal = null;
+      bot.why = `dodge ${m.type.id} ${a.id}`; ev.dodges = (ev.dodges || 0) + 1; return;
+    }
     // fight: objective mobs, else anything hostile close by
     const hostile = m => !['idle', 'patrol', 'return', 'dead'].includes(m.state);
     let tgt = null, bd = Infinity;
