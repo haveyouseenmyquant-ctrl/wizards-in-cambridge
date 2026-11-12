@@ -132,11 +132,11 @@
  },
  "judged_game_quality": 55.1,
  "judged_sections": {
-  "Visuals": 50.0,
-  "Animation": 34.0,
-  "Combat feel": 63.0,
-  "Story presentation": 64.0,
-  "UI polish": 70.0
+  "Visuals": 50,
+  "Animation": 34,
+  "Combat feel": 63,
+  "Story presentation": 64,
+  "UI polish": 70
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -147,39 +147,39 @@
   "aggregate": "median over passes",
   "section_passes": {
    "Visuals": [
-    50.0,
-    50.0,
-    50.0
+    50,
+    50,
+    50
    ],
    "Animation": [
-    34.0,
-    34.0,
-    36.0
+    34,
+    34,
+    36
    ],
    "Combat feel": [
-    63.0,
-    63.0,
+    63,
+    63,
     62.8
    ],
    "Story presentation": [
-    66.0,
-    64.0,
-    64.0
+    66,
+    64,
+    64
    ],
    "UI polish": [
-    70.0,
-    70.0,
-    70.0
+    70,
+    70,
+    70
    ]
   },
   "calls": 24,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 0.0,
-   "Animation": 2.0,
+   "Visuals": 0,
+   "Animation": 2,
    "Combat feel": 0.2,
-   "Story presentation": 2.0,
-   "UI polish": 0.0
+   "Story presentation": 2,
+   "UI polish": 0
   },
   "quality_spread": 0.3,
   "frames": 68,
@@ -250,7 +250,7 @@
   "loadavg_after": 3.73,
   "waited_s": 756,
   "load_ok": true,
-  "max_load": 4.0,
+  "max_load": 4,
   "runs": [
    {
     "fps_median": 60,
@@ -268,5 +268,19 @@
    }
   ],
   "at": "2026-11-12T05:30:22+00:00"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_modload": true,
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
  }
 }
