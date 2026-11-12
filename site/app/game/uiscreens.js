@@ -132,6 +132,29 @@ body.wic-gridinv #inv-panel { display: none !important; }
 #game-hud .gh-num { font-size: 22px; } #game-hud .gh-num.big { font-size: 27px; } #game-hud .gh-num.crit { font-size: 31px; }
 #game-hud .gh-num.crit::before { font-size: 12px; }
 #game-hud .gh-num.wu-cap { visibility: hidden; }
+/* s7: inventory collection ledger (fills the satchel on a fresh save with real progress), talent progress strip,
+   locked tiers, gold numbers in talent text, slow sheen on panel frames */
+#wic-inv .wi-col { margin-top: 12px; padding: 10px 12px; border: 1px solid #4a3c24; border-radius: 6px; background: rgba(12,10,8,.55); }
+#wic-inv .wi-col h3 { display: flex; justify-content: space-between; margin: 0 0 8px; }
+#wic-inv .wi-col h3 b { color: #f3ead6; font-weight: 600; letter-spacing: 0; text-transform: none; }
+#wic-inv .wi-cr { display: grid; grid-template-columns: 16px 92px 1fr 44px; align-items: center; gap: 8px; margin: 5px 0; font-size: 12px; color: #cbbd99; text-transform: capitalize; }
+#wic-inv .wi-cr i { width: 10px; height: 10px; transform: rotate(45deg); background: var(--rc); box-shadow: 0 0 6px var(--rc); justify-self: center; }
+#wic-inv .wi-cr u { height: 6px; border-radius: 3px; background: rgba(255,255,255,.08); overflow: hidden; text-decoration: none; }
+#wic-inv .wi-cr u s { display: block; height: 100%; min-width: 3px; background: linear-gradient(90deg, color-mix(in srgb, var(--rc) 60%, #000), var(--rc)); }
+#wic-inv .wi-cr em { font-style: normal; text-align: right; color: #f3ead6; font-variant-numeric: tabular-nums; }
+#wic-inv .wi-col p { margin: 8px 0 0; font-size: 11.5px; color: #a8987a; font-style: italic; }
+#game-hud .gh-talents .wt-prog { display: flex; align-items: center; gap: 14px; margin: -2px auto 10px; padding: 6px 14px; width: max-content; font: 600 12px/1 system-ui; letter-spacing: .08em; color: #d9c79a; text-transform: uppercase; border: 1px solid #5a4828; border-radius: 20px; background: rgba(20,16,12,.85); }
+#game-hud .gh-talents .wt-prog u { display: block; width: 160px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.1); overflow: hidden; }
+#game-hud .gh-talents .wt-prog u s { display: block; height: 100%; min-width: 3px; background: linear-gradient(90deg, #8a6a2a, #f2d36b); }
+#game-hud .gh-talents .wt-prog b { color: #f3ead6; }
+#game-hud .gh-talents .gh-tier.wt-lock .gh-talent { filter: saturate(.35) brightness(.78); }
+#game-hud .gh-talents .gh-tier.wt-next { border-color: #b8933f; box-shadow: 0 0 0 1px rgba(242,211,107,.25), 0 6px 20px rgba(0,0,0,.5); }
+#game-hud .gh-talents .gh-tier-lv .wt-pad { display: inline-block; width: 9px; height: 7px; margin-right: 5px; border-radius: 1px; background: currentColor; position: relative; top: -1px; }
+#game-hud .gh-talents .gh-tier-lv .wt-pad::before { content: ''; position: absolute; left: 1.5px; top: -5px; width: 4px; height: 5px; border: 1.5px solid currentColor; border-bottom: 0; border-radius: 3px 3px 0 0; }
+#game-hud .gh-talents .gh-tier-lv { width: 76px !important; white-space: nowrap; } #game-hud .gh-talents .gh-tier-lv small { white-space: normal; }
+#game-hud .gh-talent .wt-n { font-style: normal; font-weight: 700; color: #f2d36b; }
+#wic-inv .wi-box { position: relative; } #wic-inv .wi-box::after, #game-hud .gh-talents .gh-tier.wt-next::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(105deg, transparent 40%, rgba(255,226,150,.07) 50%, transparent 60%) no-repeat; background-size: 250% 100%; animation: wu-sheen 7s linear infinite; }
+@keyframes wu-sheen { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 `;
 const NUM_CAP = 3;
 
@@ -161,6 +184,12 @@ export function install(game) {
       + `<ul>${statLines(d.stats).map(l => `<li>${l}</li>`).join('')}</ul>${d.desc ? `<p>${esc(d.desc)}</p>` : ''}`
       + `<div class="wi-act">${worn ? 'Worn · click to take off' : `In bag · click to equip${sv.eq[d.slot] ? ` (replaces ${esc(ITEMS[sv.eq[d.slot]]?.name)})` : ''}`}</div></div>`;
   }
+  function collection() {   // s7: found / total per rarity, from what the player owns now
+    const own = new Set([...sv.inv, ...SLOTS.map(k => sv.eq[k]).filter(Boolean)]), all = Object.keys(ITEMS);
+    const rows = Object.keys(RARITY).map(r => { const tot = all.filter(id => ITEMS[id].rarity === r).length, got = all.filter(id => ITEMS[id].rarity === r && own.has(id)).length;
+      return `<div class="wi-cr" style="--rc:${RARITY[r].color}"><i></i><span>${r}</span><u><s style="width:${(100 * got / Math.max(1, tot)).toFixed(1)}%"></s></u><em>${got}/${tot}</em></div>`; }).join('');
+    return `<div class="wi-col"><h3>Collection <b>${own.size} of ${all.length} found</b></h3>${rows}<p>Rarer gear waits with the bosses at Cambridge's landmarks.</p></div>`;
+  }
   function render() {
     if (!inv.classList.contains('open')) return;
     if (sel && !items.S.owns(sel)) sel = null;
@@ -170,7 +199,7 @@ export function install(game) {
     const s = game.stats, chests = items.chests?.length ?? 8;
     inv.innerHTML = `<div class="wi-box"><div class="wi-head"><h2>Satchel</h2><span>${bag.length} in bag · ${SLOTS.filter(k => sv.eq[k]).length}/${SLOTS.length} worn</span><button class="wi-x">Close (I)</button></div>`
       + `<div><h3>Equipped</h3><div class="wi-doll">${SLOTS.map(k => tile(sv.eq[k], k)).join('')}</div></div>`
-      + `<div><h3>Bag</h3><div class="wi-bag">${bag.map(id => tile(id)).join('')}${'<div class="wi-cell empty"></div>'.repeat(cells - bag.length)}</div>${bag.length ? '' : '<div class="wi-hint">Empty. Drops from foes, chests at real places and bosses land here.</div>'}<div class="wi-detwrap">${details(sel)}</div></div>`
+      + `<div><h3>Bag</h3><div class="wi-bag">${bag.map(id => tile(id)).join('')}${'<div class="wi-cell empty"></div>'.repeat(cells - bag.length)}</div>${bag.length ? '' : '<div class="wi-hint">Empty. Drops from foes, chests at real places and bosses land here.</div>'}<div class="wi-detwrap">${details(sel)}</div>${collection()}</div>`
       + `<div class="wi-foot"><span>Health <b>${Math.ceil(s.hp)}/${s.maxHp}</b></span><span>Mana <b>${Math.floor(s.mana)}/${s.maxMana}</b></span>`
       + `<span>Spell power <b>${Math.round(s.power * 100)}%</b></span><span>Crit <b>${Math.round(s.critChance * 100)}%</b></span><span>Armour <b>${Math.round(s.armor)}</b></span>`
       + `<span>Chests opened <b>${sv.chests.length}/${chests}</b></span></div></div>`;
@@ -196,15 +225,24 @@ export function install(game) {
     const c = game.caster, lv = game.stats.level;
     tal.querySelectorAll('.gh-tier').forEach((row, t) => {
       const need = c?.talentLevels?.[t], lab = row.querySelector('.gh-tier-lv');
-      if (lab && need != null) lab.innerHTML = `Tier ${['I', 'II', 'III', 'IV'][t] || t + 1}<small>${lv >= need ? `level ${need} · open` : `unlocks at level ${need}`}</small>`;
+      if (lab && need != null) lab.innerHTML = `${lv < need ? '<i class="wt-pad"></i>' : ''}Tier ${['I', 'II', 'III', 'IV'][t] || t + 1}<small>${lv >= need ? `level ${need} · open` : `unlocks at level ${need}`}</small>`;
+      if (need != null) { row.classList.toggle('wt-lock', lv < need); row.classList.toggle('wt-next', lv < need && (t === 0 || lv >= (c.talentLevels[t - 1] ?? 0))); }
       row.querySelectorAll('.gh-talent').forEach(b => {
         const nm = b.querySelector('b')?.textContent || '', ds = b.querySelector('span')?.outerHTML || '';
         const dtx = b.querySelector('span')?.textContent || '', sp = c?.classes?.[c.cls]?.spells?.find(x => dtx.includes(x.name) || nm.includes(x.name.split(' ')[0]));
         // effect glyph as the icon, the spell it modifies as a small badge in the corner
-        b.innerHTML = `<i class="wt-icw">${svg(effectIcon(nm, dtx), 'wt-ic')}${sp && KIND[sp.kind] ? svg(KIND[sp.kind], 'wt-sp') : ''}</i><div class="wt-tx"><b>${esc(nm)}</b>${ds}</div>`;
+        const dh = ds ? `<span>${esc(dtx).replace(/([+\-\u2212]?\d+(?:\.\d+)?(?:\s?%|\s?s\b|\/s)?)/g, '<em class="wt-n">$1</em>')}</span>` : '';
+        b.innerHTML = `<i class="wt-icw">${svg(effectIcon(nm, dtx), 'wt-ic')}${sp && KIND[sp.kind] ? svg(KIND[sp.kind], 'wt-sp') : ''}</i><div class="wt-tx"><b>${esc(nm)}</b>${dh}</div>`;
         const cc = c?.classes?.[c.cls]?.color; if (cc) b.style.setProperty('--cc', cc);
       });
     });
+    if (c?.talentLevels && !tal.querySelector('.wt-prog')) {   // s7: level, XP and choices at a glance
+      const need = game.xpToNext?.() ?? Infinity, f = isFinite(need) ? Math.min(1, game.stats.xp / need) : 1;
+      const open = c.talentLevels.filter(x => lv >= x).length, on = tal.querySelectorAll('.gh-talent.on').length;
+      const pr = document.createElement('div'); pr.className = 'wt-prog';
+      pr.innerHTML = `<span>Level <b>${lv}</b></span><u><s style="width:${(100 * f).toFixed(1)}%"></s></u><span>Talents <b>${on}/${c.talentLevels.length}</b>${open > on ? ` · ${open - on} to choose` : ''}</span>`;
+      tal.querySelector('p')?.after(pr);
+    }
     decorating = false;
   }
   const mo = tal && new MutationObserver(decorate);
@@ -226,7 +264,8 @@ export function install(game) {
     for (const a of old) lq.splice(lq.indexOf(a), 1);
     tq.unshift(stamp([`${old.length} items added to your satchel (I)`]));
   }
-  if (loot0) hud.loot = (...a) => { stamp(a); if (story()) { lq.push(a); if (lq.length > 6) lq.shift(); return null; } if ((inCombat() && shown('gh-loot') >= 1) || shown('gh-loot') >= 3 || lq.length) { if (!lq.some(x => x[0] === a[0])) lq.push(a); if (lq.length > 4) lq.splice(Math.max(0, lq.findIndex(x => x[1] === 'common')), 1); return null; } return loot0(...a); };
+  const minor = a => a[1] === 'common' || a[1] === 'uncommon';   // s7: minor loot waits until the fight is over
+  if (loot0) hud.loot = (...a) => { stamp(a); if (story() || (minor(a) && inCombat())) { if (lq.some(x => x[0] === a[0])) return null; lq.push(a); if (lq.length > 6) lq.shift(); return null; } if ((inCombat() && shown('gh-loot') >= 1) || shown('gh-loot') >= 3 || lq.length) { if (!lq.some(x => x[0] === a[0])) lq.push(a); if (lq.length > 4) lq.splice(Math.max(0, lq.findIndex(x => x[1] === 'common')), 1); return null; } return loot0(...a); };
   if (toast0) hud.toast = (...a) => { stamp(a); if (story()) { if (!tq.some(x => x[0] === a[0])) tq.push(a); return null; } if (inCombat() && (shown('gh-toast') >= 2 || tq.length)) { if (!tq.some(x => x[0] === a[0])) tq.push(a); if (tq.length > 3) tq.shift(); return null; } return toast0(...a); };
   offs.push(() => { if (loot0) hud.loot = loot0; if (toast0) hud.toast = toast0; });
   let qT = 0;
@@ -268,7 +307,8 @@ export function install(game) {
       if ((qT -= dt) > 0 || (!lq.length && !tq.length) || story()) return;
       dropStale();
       const fight = inCombat();
-      if (lq.length && shown('gh-loot') < (fight ? 1 : 3)) { loot0(...lq.shift()); qT = 0.6; }
+      const li = fight ? lq.findIndex(a => !minor(a)) : (lq.length ? 0 : -1);
+      if (li >= 0 && shown('gh-loot') < (fight ? 1 : 3)) { loot0(...lq.splice(li, 1)[0]); qT = 0.6; }
       else if (tq.length && shown('gh-toast') < (fight ? 2 : 3)) { toast0(...tq.shift()); qT = 0.4; }
     },
     dispose() { for (const f of offs) f(); },
