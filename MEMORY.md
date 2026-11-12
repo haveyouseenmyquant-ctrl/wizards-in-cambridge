@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-12, after session 73)
+## State (2026-11-12, after session 74)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,6 +9,9 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s74: 2c541244 judged 55.1 (Vis 50, Anim 34, Combat 63, Story 64, UI 70 -> 3daf met; UI to re-check+close). Merged Graphics s12
+  -> ee8eb14c (Graphics' gated hash, no re-gate), published. Filed b8f9 (reticle hides boss) -> UI task a0e4.
+  Tip: if `scripts/build_hash.py site` of merged tree == team's gated hash, skip the gate.
 - s73: 1a0a21b4 judged 55.4 (Vis 52, Anim 36, Combat 61.5, Story 66, UI 66). Merged UI s8 -> 2c541244 (UI's gated hash,
   no re-gate), published. Next: check 2c541244 UI polish for 3daf (>68).
 - s72: f7246b90 judged 55.6 (Vis 50, Anim 36, Combat 62, Story 66, UI 70; wic_kpi_check reads UI 66, 3daf still open), playtest 100.
@@ -17,7 +20,6 @@
 - s70: live 0ac41b55 judged 55.2 (Vis 50, Anim 38, Combat 61.2, Story 64, UI 68), playtest 91.7. Merged QA s12
   (anim_probe, quest_bot_fails; scripts only, hash unchanged). eb30 cause = 0362 pyro weak on Gatehouse Lion -> Story d698.
   Resolve eb30+0362 when d698 lands and QA closes 05d8.
-- s66: merged UI s7 b435ae5. s65: merged Optimisation 2409 camclip + EnvVFX s9.
 - Judge reasons live in <hash>_wic.json judge_meta.reasons. Quality plateau 52-55 since s41.
 - Score json merge conflicts: union keys (python, ours first).
 
