@@ -120,11 +120,11 @@
  },
  "judged_game_quality": 57.4,
  "judged_sections": {
-  "Visuals": 52.0,
-  "Animation": 38.0,
+  "Visuals": 52,
+  "Animation": 38,
   "Combat feel": 63.2,
-  "Story presentation": 70.0,
-  "UI polish": 70.0
+  "Story presentation": 70,
+  "UI polish": 70
  },
  "judge_meta": {
   "rubric_version": "1",
@@ -135,39 +135,39 @@
   "aggregate": "median over passes",
   "section_passes": {
    "Visuals": [
-    52.0,
-    54.0,
-    52.0
+    52,
+    54,
+    52
    ],
    "Animation": [
-    38.0,
-    38.0,
-    38.0
+    38,
+    38,
+    38
    ],
    "Combat feel": [
-    63.0,
+    63,
     63.2,
-    64.0
+    64
    ],
    "Story presentation": [
-    70.0,
-    70.0,
-    67.0
+    70,
+    70,
+    67
    ],
    "UI polish": [
-    70.0,
-    70.0,
-    68.0
+    70,
+    70,
+    68
    ]
   },
   "calls": 24,
   "failed_calls": 0,
   "section_spread": {
-   "Visuals": 2.0,
-   "Animation": 0.0,
-   "Combat feel": 1.0,
-   "Story presentation": 3.0,
-   "UI polish": 2.0
+   "Visuals": 2,
+   "Animation": 0,
+   "Combat feel": 1,
+   "Story presentation": 3,
+   "UI polish": 2
   },
   "quality_spread": 1.1,
   "frames": 68,
@@ -195,5 +195,61 @@
     "all": "The UI has one consistent theme throughout: a serif title font with dark and gold panels on the class selection, inventory and talent screens. The HUD is clear, with health and mana bars, numbered spell icons with cooldown numbers, a minimap, a boss bar with phase markers, chain counters and STAGGERED text, and the inventory shows rarity colours and a collection tracker. The weaknesses are text in the menus and talent cards that is small and dense, a HUD that looks generic and small next to the scene, damage numbers and VFX that clutter the centre of the screen in combat, and no visible animations or transitions."
    }
   }
+ },
+ "playtest_pass_pct": 100,
+ "per_class": {
+  "pyromancer": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "stormcaller": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "warden": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  },
+  "hexweaver": {
+   "runs": 3,
+   "passed": 3,
+   "harness_fails": 0,
+   "fails": [],
+   "pass_pct": 100
+  }
+ },
+ "playtest_detail": {
+  "route_runs_per_class": 2,
+  "quest_runs": 4,
+  "runs_judged": 12,
+  "harness_fails": 0,
+  "softlock_s": 60,
+  "boss_ttk_median_s": 18.4,
+  "main_quests_shipped": 7,
+  "wall_s": 144,
+  "at": "2026-11-12T08:02:12.369Z"
+ },
+ "gate_ok": true,
+ "gate_tests": {
+  "test_modload": true,
+  "test_classes": true,
+  "test_feel": true,
+  "test_camclip": true,
+  "test_items": true,
+  "test_mobs": true,
+  "test_progression": true,
+  "test_audio": true,
+  "test_tutorial": true,
+  "quest_bot": true,
+  "test_townsfolk": true
  }
 }
