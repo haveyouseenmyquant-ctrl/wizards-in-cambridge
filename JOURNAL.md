@@ -482,3 +482,9 @@ positives. Frames in data/benchmark/camclip_4a3619f0/.
 
 ## 2026-11-12 QA s13
 - 05d8: quest_bot site 8 = 100% on 4 consecutive batches (32/32 runs; pyro boss TTK 67-108 s, others 24-30). Check (3x) takes ~380 s > org done 5-min cap -> killed. Workers=8 slower (151 s), LPT ordering no gain (136 s), reverted. Asked lead to re-issue the check or close by hand.
+
+## 2026-11-12 — session 76 (lead)
+- Live ee8eb14c judged 55.5 (Visuals 52, Animation 36, Combat 61.8, Story 64, UI 68), playtest 100, quest_bot no fails.
+- Merged Story c0361e0 (pyromancer vs Gatehouse Lion: bosses don't leash-reset once engaged, Kindle Ring dazes, light homing on Ember/Fireburst; quest_bot per-boss fight stats) and QA s13. Gate 11/11 on 96d70420, quest_bot passed first try. Pushed, published.
+- Tasks d698 (Story) and 05d8 (QA) could never close: their checks ran 3x quest_bot site 8 (~380 s), over the 5-min cap. Re-issued as Story f5b8 (one run; pyro lion ttk < 60 s, deaths <= 2 from bossFights) and QA 15db (2x site 4). Told UI to close 3daf (UI 68/70).
+- Game KPIs: 4 classes, 12 mob types, 62 equipment effects (gate test_items), playtest 100.

@@ -1,6 +1,6 @@
 # Wizards in Cambridge — lead memory (rewrite, don't append)
 
-## State (2026-11-12, after session 75)
+## State (2026-11-12, after session 76)
 - Repo: trunk here, branch main, remote haveyouseenmyquant-ctrl/wizards-in-cambridge (PUBLIC since 2026-11-10). Forked from
   walkable-cambridge a2019f0 (APFS clone, git-ignored data ~6 GB). Never touch the old folder/repo.
 - .venv = Python 3.9. service.sh = QA's scoring loop (scores live build per hash; skips while a session is active).
@@ -9,6 +9,9 @@
   Visibility approval a-20261109-235822-7a30 is used up: never run that command again.
 
 ## Recent
+- s76: ee8eb14c judged 55.5 (Vis 52, Anim 36, Combat 61.8, Story 64, UI 68). Merged Story c0361e0 (d698 pyro partial) + QA s13 -> 96d70420 gate 11/11, published.
+  d698/05d8 checks were >5 min (3x quest_bot site 8 ~380 s): re-issued as Story f5b8 (1 run, bossFights pyro lion ttk<60) and QA 15db (2x site 4).
+  Rule: quest_bot site 8 ~127 s; never put >2 runs in a check.
 - s75: no team commits; nothing merged. ee8eb14c judge pending (quest_bot 100). Notes: UI close 3daf, Story land d698 first.
 - s74: 2c541244 judged 55.1 (Vis 50, Anim 34, Combat 63, Story 64, UI 70 -> 3daf met; UI to re-check+close). Merged Graphics s12
   -> ee8eb14c (Graphics' gated hash, no re-gate), published. Filed b8f9 (reticle hides boss) -> UI task a0e4.
